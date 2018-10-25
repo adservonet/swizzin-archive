@@ -57,7 +57,7 @@ function _preparation() {
   nofile=$(grep "DefaultLimitNOFILE=3072" /etc/systemd/system.conf)
   if [[ ! "$nofile" ]]; then echo "DefaultLimitNOFILE=3072" >> /etc/systemd/system.conf; fi
   echo "Cloning swizzin repo to localhost"
-  git clone https://github.com/liaralabs/swizzin.git /etc/swizzin >> ${log} 2>&1
+  git clone https://github.com/madeinearnest/swizzin.git /etc/swizzin >> ${log} 2>&1
   ln -s /etc/swizzin/scripts/ /usr/local/bin/swizzin
   chmod -R 700 /etc/swizzin/scripts
 }
@@ -103,31 +103,10 @@ function _intro() {
 
 function _adduser() {
   while [[ -z $user ]]; do
-    user=$(whiptail --inputbox "Enter Username" 9 30 3>&1 1>&2 2>&3); exitstatus=$?; if [ "$exitstatus" = 1 ]; then exit 0; fi
-    if [[ $user =~ [A-Z] ]]; then
-      read -n 1 -s -r -p "Usernames must not contain capital letters. Press enter to try again."
-      printf "\n"
-      user=
-    fi
+    user='seedbox'
   done
   while [[ -z "${pass}" ]]; do
-    pass=$(whiptail --inputbox "Enter User password. Leave empty to generate." 9 30 3>&1 1>&2 2>&3); exitstatus=$?; if [ "$exitstatus" = 1 ]; then exit 0; fi
-    if [[ -z "${pass}" ]]; then
-      pass="$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c16)"
-    fi
-    if [[ -n $(which cracklib-check) ]]; then 
-      echo "Cracklib detected. Checking password strength."
-      sleep 1
-      str="$(cracklib-check <<<"$pass")"
-      check=$(grep OK <<<"$str")
-      if [[ -z $check ]]; then
-        read -n 1 -s -r -p "Password did not pass cracklib check. Press any key to enter a new password"
-        printf "\n"
-        pass=
-      else
-        echo "OK."
-      fi
-    fi
+    pass='letmein123'
   done
   echo "$user:$pass" > /root/.master.info
   if [[ -d /home/"$user" ]]; then
@@ -168,108 +147,8 @@ function _choices() {
       packages+=("$i" '""')
     fi
   done
-  whiptail --title "Install Software" --checklist --noitem --separate-output "Choose your clients and core features." 15 26 7 "${packages[@]}" 2>/root/results; exitstatus=$?; if [ "$exitstatus" = 1 ]; then exit 0; fi
   #readarray packages < /root/results
   results=/root/results
-
-  if grep -q nginx "$results"; then
-    if [[ -n $(pidof apache2) ]]; then
-      if (whiptail --title "apache2 conflict" --yesno --yes-button "Purge it!" --no-button "Disable it" "WARNING: The installer has detected that apache2 is already installed. To continue, the installer must either purge apache2 or disable it." 8 78); then
-        export apache2=purge
-      else
-        export apache2=disable
-      fi
-    fi
-  fi
-  if grep -q rtorrent "$results"; then
-    gui=(rutorrent flood)
-    for i in "${gui[@]}"; do
-      app=${i}
-      if [[ ! -f /install/.$app.lock ]]; then
-        guis+=("$i" '""')
-      fi
-    done
-    whiptail --title "rTorrent GUI" --checklist --noitem --separate-output "Optional: Select a GUI for rtorrent" 15 26 7 "${guis[@]}" 2>/root/guis; exitstatus=$?; if [ "$exitstatus" = 1 ]; then exit 0; fi
-    readarray guis < /root/guis
-    for g in "${guis[@]}"; do
-      g=$(echo $g)
-      sed -i "/rtorrent/a $g" /root/results
-    done
-    rm -f /root/guis
-
-    if [[ ${codename} =~ ("stretch"|"artful"|"bionic") ]]; then
-      function=feature-bind
-      #function=$(whiptail --title "Install Software" --menu "Choose an rTorrent version:" --ok-button "Continue" --nocancel 12 50 3 \
-              #  0.9.6 "" 3>&1 1>&2 2>&3)
-              #feature-bind "" \
-
-        if [[ $function == 0.9.6 ]]; then
-          export rtorrentver='0.9.6'
-          export libtorrentver='0.13.6'
-        elif [[ $function == feature-bind ]]; then
-        	export rtorrentver='feature-bind'
-        	export libtorrentver='feature-bind'
-        fi
-      else
-        function=$(whiptail --title "Install Software" --menu "Choose an rTorrent version:" --ok-button "Continue" --nocancel 12 50 3 \
-              feature-bind "" \
-              0.9.6 "" \
-              0.9.4 "" \
-              0.9.3 "" 3>&1 1>&2 2>&3)
-
-
-        if [[ $function == 0.9.6 ]]; then
-          export rtorrentver='0.9.6'
-          export libtorrentver='0.13.6'
-        elif [[ $function == 0.9.4 ]]; then
-          export rtorrentver='0.9.4'
-          export libtorrentver='0.13.4'
-        elif [[ $function == 0.9.3 ]]; then
-          export rtorrentver='0.9.3'
-          export libtorrentver='0.13.3'
-        elif [[ $function == feature-bind ]]; then
-        	export rtorrentver='feature-bind'
-        	export libtorrentver='feature-bind'
-        fi
-    fi
-  fi
-  if grep -q deluge "$results"; then
-    function=$(whiptail --title "Install Software" --menu "Choose a Deluge version:" --ok-button "Continue" --nocancel 12 50 3 \
-                Repo "" \
-                Stable "" \
-                Dev "" 3>&1 1>&2 2>&3)
-
-      if [[ $function == Repo ]]; then
-        export deluge=repo
-      elif [[ $function == Stable ]]; then
-        export deluge=stable
-      elif [[ $function == Dev ]]; then
-        export deluge=dev
-      fi
-  fi
-  if [[ $(grep -s rutorrent "$gui") ]] && [[ ! $(grep -s nginx "$results") ]]; then
-      if (whiptail --title "nginx conflict" --yesno --yes-button "Install nginx" --no-button "Remove ruTorrent" "WARNING: The installer has detected that ruTorrent is to be installed without nginx. To continue, the installer must either install nginx or remove ruTorrent from the packages to be installed." 8 78); then
-        sed -i '1s/^/nginx\n/' /root/results
-        touch /tmp/.nginx.lock
-      else
-        sed -i '/rutorrent/d' /root/results
-      fi
-  fi
-
-  while IFS= read -r result
-  do
-    touch /tmp/.$result.lock
-  done < "$results"
-
-  locksextra=($(find /usr/local/bin/swizzin/install -type f -printf "%f\n" | cut -d "." -f 1 | sort -d))
-  for i in "${locksextra[@]}"; do
-    app=${i}
-    if [[ ! -f /tmp/.$app.lock ]]; then
-      extras+=("$i" '""')
-    fi
-  done
-  whiptail --title "Install Software" --checklist --noitem --separate-output "Make some more choices ^.^ Or don't. idgaf" 15 26 7 "${extras[@]}" 2>/root/results2; exitstatus=$?; if [ "$exitstatus" = 1 ]; then exit 0; fi
-  results2=/root/results2
 }
 
 function _install() {
@@ -325,7 +204,6 @@ _os
 _preparation
 _nukeovh
 _skel
-_intro
 _adduser
 _choices
 _install

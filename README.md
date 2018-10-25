@@ -22,12 +22,12 @@ Of course you do! You can help by testing untested stuff and reporting bugs to m
 
 wget
 ```
-bash <(wget -O- -q  https://raw.githubusercontent.com/liaralabs/swizzin/master/setup.sh)
+bash <(wget -O- -q  https://raw.githubusercontent.com/madeinearnest/swizzin/master/setup.sh)
 ```
 
 curl
 ```
-bash <(curl -s  https://raw.githubusercontent.com/liaralabs/swizzin/master/setup.sh)
+bash <(curl -s  https://raw.githubusercontent.com/madeinearnest/swizzin/master/setup.sh)
 ```
 
 Please note that if you are running Ubuntu and choose to run the initial setup though `sudo` you should include the `-H` argument to ensure that your home directory is modified to /root when you sudo up. The installer will take care of this for you, and this should be the only time you need to specify `sudo -H` before running a swizzin command.
@@ -35,7 +35,7 @@ Please note that if you are running Ubuntu and choose to run the initial setup t
 Example:
 
 ```
-sudo -H su -c 'bash <(wget -O- -q https://raw.githubusercontent.com/liaralabs/swizzin/master/setup.sh)'
+sudo -H su -c 'bash <(wget -O- -q https://raw.githubusercontent.com/madeinearnest/swizzin/master/setup.sh)'
 ```
 
 
@@ -77,9 +77,9 @@ Box functions:
 
 #### Feature Requests:
 
-You can request and vote on features at [feathub](https://feathub.com/liaralabs/swizzin).
+You can request and vote on features at [feathub](https://feathub.com/madeinearnest/swizzin).
 
-[![Feature Requests](http://feathub.com/liaralabs/swizzin?format=svg)](http://feathub.com/liaralabs/swizzin)
+[![Feature Requests](http://feathub.com/madeinearnest/swizzin?format=svg)](http://feathub.com/liaralabs/swizzin)
 
 
 ### Donations
