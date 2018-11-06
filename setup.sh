@@ -2,7 +2,7 @@
 #################################################################################
 # Installation script for swizzin
 # Many credits to QuickBox for the package repo
-# 
+#
 # Package installers copyright QuickBox.io (2017) where applicable.
 # All other work copyright Swizzin (2017)
 # Licensed under GNU General Public License v3.0 GPL-3 (in short)
@@ -25,25 +25,15 @@ _os() {
   if [ ! -d /install ]; then mkdir /install ; fi
   if [ ! -d /root/logs ]; then mkdir /root/logs ; fi
   export log=/root/logs/install.log
-  echo "Checking OS version and release ... "
   apt-get -y -qq update >> ${log} 2>&1
   apt-get -y -qq install lsb-release >> ${log} 2>&1
   distribution=$(lsb_release -is)
   release=$(lsb_release -rs)
   codename=$(lsb_release -cs)
-    if [[ ! $distribution =~ ("Debian"|"Ubuntu") ]]; then
-      echo "Your distribution ($distribution) is not supported. Swizzin requires Ubuntu or Debian." && exit 1
-    fi
-    if [[ ! $codename =~ ("xenial"|"yakkety"|"artful"|"bionic"|"jessie"|"stretch") ]]; then
-      echo "Your release ($codename) of $distribution is not supported." && exit 1
-    fi
-  echo "I have determined you are using $distribution $release."
 }
 
 function _preparation() {
-  echo "Updating system and grabbing core dependencies."
   if [[ $distribution = "Ubuntu" ]]; then
-    echo "Checking enabled repos"
     if [[ -z $(which add-apt-repository) ]]; then
       apt-get install -y -q software-properties-common >> ${log} 2>&1
     fi
@@ -53,10 +43,9 @@ function _preparation() {
   fi
   apt-get -q -y update >> ${log} 2>&1
   apt-get -q -y upgrade >> ${log} 2>&1
-  apt-get -q -y install whiptail git sudo curl wget lsof fail2ban apache2-utils vnstat tcl tcl-dev build-essential dirmngr apt-transport-https >> ${log} 2>&1
+  apt-get -q -y install git sudo curl wget lsof fail2ban apache2-utils vnstat tcl tcl-dev build-essential dirmngr apt-transport-https >> ${log} 2>&1
   nofile=$(grep "DefaultLimitNOFILE=3072" /etc/systemd/system.conf)
   if [[ ! "$nofile" ]]; then echo "DefaultLimitNOFILE=3072" >> /etc/systemd/system.conf; fi
-  echo "Cloning swizzin repo to localhost"
   git clone https://github.com/madeinearnest/swizzin.git /etc/swizzin >> ${log} 2>&1
   ln -s /etc/swizzin/scripts/ /usr/local/bin/swizzin
   chmod -R 700 /etc/swizzin/scripts
@@ -65,30 +54,18 @@ function _preparation() {
 function _nukeovh() {
   grsec=$(uname -a | grep -i grs)
   if [[ -n $grsec ]]; then
-    echo
-    echo -e "Your server is currently running with kernel version: $(uname -r)"
-    echo -e "While not it is not required to switch, kernels with grsec are not recommend due to conflicts in the panel and other packages."
-    echo
-    echo -ne "Would you like swizzin to install the distribution kernel? (Default: Y) "; read input
-      case $input in
-        [yY] | [yY][Ee][Ss] | "" ) kernel=yes; echo "Your distribution's default kernel will be installed. A reboot will be required."  ;;
-        [nN] | [nN][Oo] ) echo "Installer will continue as is. If you change your mind in the future run `box rmgrsec` after install." ;;
-      *) kernel=yes; echo "Your distribution's default kernel will be installed. A reboot will be required."  ;;
-      esac
-      if [[ $kernel == yes ]]; then
-        if [[ $DISTRO == Ubuntu ]]; then
-          apt-get install -q -y linux-image-generic >>"${OUTTO}" 2>&1
-        elif [[ $DISTRO == Debian ]]; then
-          arch=$(uname -m)
-          if [[ $arch =~ ("i686"|"i386") ]]; then
-            apt-get install -q -y linux-image-686 >>"${OUTTO}" 2>&1
-          elif [[ $arch == x86_64 ]]; then
-            apt-get install -q -y linux-image-amd64 >>"${OUTTO}" 2>&1
-          fi
-        fi
-        mv /etc/grub.d/06_OVHkernel /etc/grub.d/25_OVHkernel
-        update-grub >>"${OUTTO}" 2>&1
+    if [[ $DISTRO == Ubuntu ]]; then
+      apt-get install -q -y linux-image-generic >>"${OUTTO}" 2>&1
+    elif [[ $DISTRO == Debian ]]; then
+      arch=$(uname -m)
+      if [[ $arch =~ ("i686"|"i386") ]]; then
+        apt-get install -q -y linux-image-686 >>"${OUTTO}" 2>&1
+      elif [[ $arch == x86_64 ]]; then
+        apt-get install -q -y linux-image-amd64 >>"${OUTTO}" 2>&1
       fi
+    fi
+    mv /etc/grub.d/06_OVHkernel /etc/grub.d/25_OVHkernel
+    update-grub >>"${OUTTO}" 2>&1
   fi
 }
 
@@ -110,18 +87,15 @@ function _adduser() {
   done
   echo "$user:$pass" > /root/.master.info
   if [[ -d /home/"$user" ]]; then
-    echo "User directory already exists ... "
     #_skel
     #cd /etc/skel
     #cp -R * /home/$user/
-    echo "Changing password to new password"
     chpasswd<<<"${user}:${pass}"
     htpasswd -b -c /etc/htpasswd $user $pass
     mkdir -p /etc/htpasswd.d/
     htpasswd -b -c /etc/htpasswd.d/htpasswd.${user} $user $pass
     chown -R $user:$user /home/${user}
   else
-    echo -e "Creating new user \e[1;95m$user\e[0m ... "
     #_skel
     useradd "${user}" -m -G www-data -s /bin/bash
     chpasswd<<<"${user}:${pass}"
@@ -157,7 +131,6 @@ function _install() {
   readarray result < /root/results
   for i in "${result[@]}"; do
     result=$(echo $i)
-    echo -e "Installing ${result}"
     bash /usr/local/bin/swizzin/install/${result}.sh
     rm /tmp/.$result.lock
   done
@@ -165,14 +138,12 @@ function _install() {
   readarray result < /root/results2
   for i in "${result[@]}"; do
     result=$(echo $i)
-    echo -e "Installing ${result}"
     bash /usr/local/bin/swizzin/install/${result}.sh
   done
   rm /root/results2
   rm /tmp/.install.lock
   termin=$(date +"%s")
   difftimelps=$((termin-begin))
-  echo "Package install took $((difftimelps / 60)) minutes and $((difftimelps % 60)) seconds"
 }
 
 function _post {
@@ -184,25 +155,10 @@ function _post {
   if [[ $distribution = "Ubuntu" ]]; then
     echo 'Defaults  env_keep -="HOME"' > /etc/sudoers.d/env_keep
   fi
-  echo "Installation complete!"
-  echo ""
-  echo "You may now login with the following info: ${user}:${pass}"
-  echo ""
-  if [[ -f /install/.nginx.lock ]]; then
-    echo "Seedbox can be accessed at https://${user}:${pass}@${ip}"
-    echo ""
-  fi
-  if [[ -f /install/.deluge.lock ]]; then
-    echo "Your deluge daemon port is$(cat /home/${user}/.config/deluge/core.conf | grep daemon_port | cut -d: -f2 | cut -d"," -f1)"
-    echo "Your deluge web port is$(cat /home/${user}/.config/deluge/web.conf | grep port | cut -d: -f2 | cut -d"," -f1)"
-    echo ""
-  fi
-  echo -e "\e[1m\e[31mPlease note, certain functions may not be fully functional until your server is rebooted or you log out and back in. However you may issue the command 'source /root/.bashrc' to begin using box and related functions now\e[0m"
 }
 
 _os
 _preparation
-_nukeovh
 _skel
 _adduser
 _choices
