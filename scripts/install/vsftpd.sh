@@ -46,8 +46,8 @@ secure_chroot_dir=/var/run/vsftpd/empty
 #############################################
 #Uncomment these lines to enable FXP support#
 #############################################
-#pasv_promiscuous=YES
-#port_promiscuous=YES
+pasv_promiscuous=YES
+port_promiscuous=YES
 
 ###################
 #Set a custom port#
