@@ -205,7 +205,7 @@ function _adduser {
     pass="$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c16)"
     echo "Password for ${user} has been set to ${pass}"
   fi
-  if [[ -n $(which cracklib-check) ]]; then
+  if [[ -n $(which cracklib-check) ]]; then 
     echo "Cracklib detected. Checking password strength."
     sleep 1
     str="$(cracklib-check <<<"$pass")"
@@ -342,6 +342,7 @@ function _chpasswd {
     systemctl start deluged@${user}
     systemctl start deluge-web@${user}
   fi
+
 }
 
 function _panel () {
@@ -473,4 +474,3 @@ case "$1" in
     exit 1
   ;;
 esac
-
