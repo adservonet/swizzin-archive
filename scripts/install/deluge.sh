@@ -342,18 +342,7 @@ if [[ -n $1 ]]; then
 fi
 
 if [[ -z $deluge ]] && [[ -z $1 ]]; then
-  function=$(whiptail --title "Install Software" --menu "Choose a Deluge version:" --ok-button "Continue" --nocancel 12 50 3 \
-               Repo "" \
-               Stable "" \
-               Dev "" 3>&1 1>&2 2>&3)
-
-    if [[ $function == Repo ]]; then
-      export deluge=repo
-    elif [[ $function == Stable ]]; then
-      export deluge=stable
-    elif [[ $function == Dev ]]; then
-      export deluge=dev
-    fi
+	export deluge=stable
 fi
 
 _deluge
