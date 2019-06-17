@@ -6,6 +6,8 @@
 #
 #   You may copy, distribute and modify the software.
 
+log="/install/.proftpd.log"
+
 apt install debconf-utils -y  >> $log 2>&1
 echo "proftpd-basic shared/proftpd/inetd_or_standalone select standalone" | debconf-set-selections  >> $log 2>&1
 apt install proftpd-basic -y  >> $log 2>&1
