@@ -108,7 +108,7 @@ encoding.add = UTF-8
 encryption = allow_incoming,try_outgoing,enable_retry
 execute.nothrow = chmod,777,/home/${user}/.config/rpc.socket
 execute.nothrow = chmod,777,/home/${user}/.sessions
-network.port_random.set = yes
+network.port_random.set = no
 network.port_range.set = $port-$portend
 network.scgi.open_local = /var/run/${user}/.rtorrent.sock
 schedule2 = chmod_scgi_socket, 0, 0, "execute2=chmod,\"g+w,o=\",/var/run/${user}/.rtorrent.sock"
@@ -123,11 +123,10 @@ throttle.max_peers.normal.set = 100
 throttle.max_peers.seed.set = -1
 throttle.max_uploads.global.set = 100
 throttle.min_peers.normal.set = 1
-throttle.min_peers.seed.set = -1
+throttle.min_peers.seed.set = 2
 trackers.use_udp.set = yes
 
 execute = {sh,-c,/usr/bin/php /srv/rutorrent/php/initplugins.php ${user} &}
-
 # -- END HERE --
 EOF
 chown ${user}.${user} -R /home/${user}/.rtorrent.rc
@@ -219,8 +218,8 @@ libtorrentloc="http://rtorrent.net/downloads/libtorrent-${libtorrentver}.tar.gz"
 xmlrpc="https://svn.code.sf.net/p/xmlrpc-c/code/advanced"
 user=$(cat /root/.master.info | cut -d: -f1)
 rutorrent="/srv/rutorrent/"
-port=$((RANDOM%64025+1024))
-portend=$((${port} + 1500))
+port=$(cat /home/seedit4me/.rtorrent_port)
+portend=$(cat /home/seedit4me/.rtorrent_port)
 
 if [[ -n $1 ]]; then
 	user=$1
