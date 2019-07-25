@@ -49,7 +49,7 @@ echo "Installing plex keys and sources ... "
 echo "Updating system ... "
     apt-get install apt-transport-https -y >/dev/null 2>&1
     apt-get -y update >/dev/null 2>&1
-    apt-get install -o Dpkg::Options::="--force-confold" -y -f plexmediaserver >/dev/null 2>&1
+    apt-get install -o Dpkg::Options::="--force-confold" -y -f plexmediaserver --allow-unauthenticated >/dev/null 2>&1
     #DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical apt-get -q -y -o -f "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" install plexmediaserver >/dev/null 2>&1
     echo
 
