@@ -54,7 +54,7 @@ function _installSonarr1() {
 }
 
 function _installSonarr2() {
-  sudo apt-get install apt-transport-https screen -y >/dev/null 2>&1
+  sudo apt-get install apt-transport-https screen -y --allow-unauthenticated >/dev/null 2>&1
   if [[ $distribution == "Ubuntu" ]]; then
     apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys FDA5DFFC >/dev/null 2>&1
   elif [[ $distribution == "Debian" ]]; then
@@ -76,7 +76,7 @@ function _installSonarr3() {
 }
 
 function _installSonarr4() {
-  sudo apt-get install -y nzbdrone >/dev/null 2>&1
+  sudo apt-get install -y nzbdrone --allow-unauthenticated >/dev/null 2>&1
   touch /install/.sonarr.lock
 }
 
