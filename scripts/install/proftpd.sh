@@ -85,7 +85,19 @@ echo 'ServerIdent on "FTP Server ready."' >> /etc/proftpd/proftpd.conf
 
 mkdir /etc/proftpd/ssl
 
-openssl req -new -x509 -days 365 -nodes -out /etc/proftpd/ssl/proftpd.cert.pem -keyout /etc/proftpd/ssl/proftpd.key.pem -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=[www.example.com](http://www.example.com/)"
+#Required
+domain='ftp.seedit4.me'
+commonname=$domain
+
+#Change to your company details
+country=GB
+state=Nottingham
+locality=Nottinghamshire
+organization='SeedIt4Me'
+organizationalunit=IT
+email=support@seedit4.me
+
+openssl req -new -x509 -days 365 -nodes -out /etc/proftpd/ssl/proftpd.cert.pem -keyout /etc/proftpd/ssl/proftpd.key.pem -subj "/C=$country/ST=$state/L=$locality/O=$organization/OU=$organizationalunit/CN=$commonname/emailAddress=$email"
 
 chmod 600 /etc/proftpd/ssl/proftpd.*
 
