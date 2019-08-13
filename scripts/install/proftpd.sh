@@ -77,4 +77,31 @@ Include /etc/proftpd/conf.d/
 
 PFC
 
+apt install -y openssl
+
+echo 'DefaultRoot ~' >> /etc/proftpd/proftpd.conf
+
+echo 'ServerIdent on "FTP Server ready."' >> /etc/proftpd/proftpd.conf
+
+mkdir /etc/proftpd/ssl
+
+openssl req -new -x509 -days 365 -nodes -out /etc/proftpd/ssl/proftpd.cert.pem -keyout /etc/proftpd/ssl/proftpd.key.pem -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=[www.example.com](http://www.example.com/)"
+
+chmod 600 /etc/proftpd/ssl/proftpd.*
+
+echo 'Include /etc/proftpd/tls.conf' >> /etc/proftpd/proftpd.conf
+echo '<IfModule mod_tls.c>' > /etc/proftpd/tls.conf
+echo 'TLSEngine on' >> /etc/proftpd/tls.conf
+echo 'TLSLog /var/log/proftpd/tls.log' >> /etc/proftpd/tls.conf
+echo 'TLSProtocol TLSv1.2' >> /etc/proftpd/tls.conf
+echo 'TLSCipherSuite AES128+EECDH:AES128+EDH' >> /etc/proftpd/tls.conf
+echo 'TLSOptions NoCertRequest AllowClientRenegotiations' >> /etc/proftpd/tls.conf
+echo 'TLSRSACertificateFile /etc/proftpd/ssl/proftpd.cert.pem' >> /etc/proftpd/tls.conf
+echo 'TLSRSACertificateKeyFile /etc/proftpd/ssl/proftpd.key.pem' >> /etc/proftpd/tls.conf
+echo 'TLSVerifyClient off' >> /etc/proftpd/tls.conf
+echo 'TLSRequired off' >> /etc/proftpd/tls.conf
+echo 'RequireValidShell no' >> /etc/proftpd/tls.conf
+echo '</IfModule>' >> /etc/proftpd/tls.conf
+systemctl restart proftpd.service
+
 touch /install/.proftpd.lock
