@@ -14,5 +14,5 @@ if [[ ! -f /install/.nginx.lock ]]; then
   exit 1
 fi
 
-bash /usr/local/bin/swizzin/nginx/seedit4me.sh
-touch /install/.seedit4me.lock
+bash /usr/local/bin/swizzin/nginx/tools.sh
+touch /install/.tools.lock

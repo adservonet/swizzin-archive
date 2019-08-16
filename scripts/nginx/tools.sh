@@ -18,16 +18,16 @@ else
 fi
 
 cd /srv/
-mkdir seedit4me
-cp /usr/local/bin/swizzin/seedit4me/php/* /srv/seedit4me/
+mkdir tools
+cp /usr/local/bin/swizzin/tools/php/* /srv/tools/
 
-chown -R www-data: /srv/seedit4me
+chown -R www-data: /srv/tools
 
-printf "${IFACE}" > /srv/seedit4me/interface.txt
-printf "${user}" > /srv/seedit4me/master.txt
+printf "${IFACE}" > /srv/tools/interface.txt
+printf "${user}" > /srv/tools/master.txt
 LOCALE=en_GB.UTF-8
 LANG=lang_en
-echo "*/1 * * * * root bash /usr/local/bin/swizzin/seedit4me/set_interface_seedit4me" > /etc/cron.d/set_interface_seedit4me
+echo "*/1 * * * * root bash /usr/local/bin/swizzin/tools/set_interface_tools" > /etc/cron.d/set_interface_tools
 
 if [[ -f /lib/systemd/system/php7.2-fpm.service ]]; then
   sock=php7.2-fpm
@@ -37,9 +37,9 @@ else
   sock=php7.0-fpm
 fi
 
-cat > /etc/nginx/apps/seedit4me.conf <<PAN
-location /seedit4me {
-alias /srv/seedit4me/ ;
+cat > /etc/nginx/apps/tools.conf <<PAN
+location /tools {
+alias /srv/tools/ ;
 try_files \$uri \$uri/ /index.php?q=\$uri&\$args;
 index index.php;
 allow all;
@@ -54,8 +54,8 @@ location ~ \.php$
 
 PAN
 
-cat > /etc/sudoers.d/seedit4me <<SUD
-#secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/bin/swizzin:/usr/local/bin/swizzin/scripts:/usr/local/bin/swizzin/scripts/install:/usr/local/bin/swizzin/scripts/remove:/usr/local/bin/swizzin/seedit4me"
+cat > /etc/sudoers.d/tools <<SUD
+#secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/bin/swizzin:/usr/local/bin/swizzin/scripts:/usr/local/bin/swizzin/scripts/install:/usr/local/bin/swizzin/scripts/remove:/usr/local/bin/swizzin/tools"
 #Defaults  env_keep -="HOME"
 
 # Host alias specification
@@ -63,7 +63,7 @@ cat > /etc/sudoers.d/seedit4me <<SUD
 # User alias specification
 
 # Cmnd alias specification
-Cmnd_Alias   S4CLEANMEM = /usr/local/bin/swizzin/seedit4me/clean_mem
+Cmnd_Alias   S4CLEANMEM = /usr/local/bin/swizzin/tools/clean_mem
 Cmnd_Alias   S4GENERALCMNDS = /usr/sbin/repquota, /bin/systemctl
 
 www-data     ALL = (ALL) NOPASSWD: S4CLEANMEM, S4GENERALCMNDS
