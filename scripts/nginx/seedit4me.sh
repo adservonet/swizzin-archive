@@ -63,10 +63,10 @@ cat > /etc/sudoers.d/seedit4me <<SUD
 # User alias specification
 
 # Cmnd alias specification
-Cmnd_Alias   CLEANMEM = /usr/local/bin/swizzin/seedit4me/clean_mem
-Cmnd_Alias   GENERALCMNDS = /usr/sbin/repquota, /bin/systemctl
+Cmnd_Alias   S4CLEANMEM = /usr/local/bin/swizzin/seedit4me/clean_mem
+Cmnd_Alias   S4GENERALCMNDS = /usr/sbin/repquota, /bin/systemctl
 
-www-data     ALL = (ALL) NOPASSWD: CLEANMEM, SYSCMNDS, GENERALCMNDS
+www-data     ALL = (ALL) NOPASSWD: S4CLEANMEM, S4GENERALCMNDS
 
 SUD
 service nginx force-reload
