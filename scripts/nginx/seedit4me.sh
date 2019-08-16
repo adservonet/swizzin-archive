@@ -38,16 +38,13 @@ else
 fi
 
 cat > /etc/nginx/apps/seedit4me.conf <<PAN
-location / {
+location /seedit4me {
 alias /srv/seedit4me/ ;
-try_files \$uri \$uri/ /index.php?q=\$uri&\$args;
-index index.php;
 allow all;
 location ~ \.php$
   {
     include snippets/fastcgi-php.conf;
     fastcgi_pass unix:/run/php/$sock.sock;
-    #fastcgi_index index.php;
     fastcgi_param SCRIPT_FILENAME /srv/seedit4me\$fastcgi_script_name;
   }
 }
