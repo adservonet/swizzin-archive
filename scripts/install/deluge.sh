@@ -250,7 +250,7 @@ cat > /home/${u}/.config/deluge/blocklist.conf <<DBL
 }{
   "check_after_days": 1,
   "timeout": 180,
-  "url": "http://dashboard.dev.seedit4.me/storage/tracker_ips",
+  "url": "https://dashboard.dev.seedit4.me/storage/tracker_ips.txt",
   "try_times": 3,
   "list_size": 17614,
   "last_update": 1566076973.205842,
