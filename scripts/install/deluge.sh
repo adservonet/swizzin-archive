@@ -118,10 +118,10 @@ function _dconf {
     "format": 1
   }{
     "info_sent": 0.0,
-    "lsd": true,
+    "lsd": false,
     "max_download_speed": -1.0,
     "send_info": false,
-    "natpmp": true,
+    "natpmp": false,
     "move_completed_path": "/home/${u}/Downloads",
     "peer_tos": "0x08",
     "enc_in_policy": 1,
@@ -133,7 +133,7 @@ function _dconf {
     "max_active_limit": -1,
     "geoip_db_location": "/usr/share/GeoIP/GeoIP.dat",
     "upnp": false,
-    "utpex": true,
+    "utpex": false,
     "max_active_downloading": 3,
     "max_active_seeding": -1,
     "allow_remote": true,
@@ -142,7 +142,8 @@ function _dconf {
       0
     ],
     "enabled_plugins": [
-      "ltConfig"
+      "ltConfig",
+      "Blocklist"
     ],
     "max_half_open_connections": 50,
     "download_location": "/home/${u}/torrents/deluge",
@@ -152,7 +153,7 @@ function _dconf {
     "max_connections_global": -1,
     "enc_prefer_rc4": true,
     "cache_expiry": 60,
-    "dht": true,
+    "dht": false,
     "stop_seed_at_ratio": false,
     "stop_seed_ratio": 2.0,
     "max_download_speed_per_torrent": -1,
@@ -242,6 +243,22 @@ cat > /home/${u}/.config/deluge/web.conf <<DWC
   "sidebar_multiple_filters": true
 }
 DWC
+cat > /home/${u}/.config/deluge/blocklist.conf <<DBL
+{
+  "file": 1,
+  "format": 1
+}{
+  "check_after_days": 1,
+  "timeout": 180,
+  "url": "http://dashboard.dev.seedit4.me/storage/tracker_ips",
+  "try_times": 3,
+  "list_size": 17614,
+  "last_update": 1566076973.205842,
+  "list_type": "",
+  "list_compression": "",
+  "load_on_start": true
+}
+DBL
 cat > /home/${u}/.config/deluge/hostlist.conf.1.2 <<DHL
 {
   "file": 1,
