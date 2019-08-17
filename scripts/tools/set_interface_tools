@@ -15,10 +15,10 @@
 #   under the GPL along with build & install instructions.
 #
 
-ADAPT=$(cat /srv/seedit4me/interface.txt);
+ADAPT=$(cat /srv/tools/interface.txt);
 
 
-sed -i "s/INETFACE/${ADAPT}/g" /srv/seedit4me/stat.php;
-sed -i "s/INETFACE/${ADAPT}/g" /srv/seedit4me/data.php;
-sed -i "s/INETFACE/${ADAPT}/g" /srv/seedit4me/bw_tables.php;
+sed -i "s/INETFACE/${ADAPT}/g" /srv/tools/stat.php;
+sed -i "s/INETFACE/${ADAPT}/g" /srv/tools/data.php;
+sed -i "s/INETFACE/${ADAPT}/g" /srv/tools/bw_tables.php;
 

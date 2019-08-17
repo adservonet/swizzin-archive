@@ -16,6 +16,7 @@ if [[ -d /srv/panel ]]; then
     rm -rf /srv/panel
     /etc/sudoers.d/panel
     rm /etc/cron.d/set_interface
+    rm /etc/cron.d/set_interface_tools
 fi
 
 if [[ -d /srv/rutorrent ]]; then
