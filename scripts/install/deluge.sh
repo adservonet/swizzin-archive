@@ -250,13 +250,13 @@ cat > /home/${u}/.config/deluge/blocklist.conf <<DBL
 }{
   "check_after_days": 1,
   "timeout": 180,
-  "url": "",
+  "url": "https://dashboard.dev.seedit4.me/storage/deluge_blocklist.dat",
   "try_times": 3,
-  "list_size": 0,
-  "last_update": 0.0,
-  "list_type": "",
+  "list_size": 22949,
+  "last_update": 1566142180.170619,
+  "list_type": "PeerGuardian",
   "list_compression": "",
-  "load_on_start": false
+  "load_on_start": true
 }
 DBL
 cat > /home/${u}/.config/deluge/hostlist.conf.1.2 <<DHL
