@@ -256,7 +256,7 @@ cat > /home/${u}/.config/deluge/blocklist.conf <<DBL
   "last_update": 1566076973.205842,
   "list_type": "",
   "list_compression": "",
-  "load_on_start": true
+  "load_on_start": false
 }
 DBL
 cat > /home/${u}/.config/deluge/hostlist.conf.1.2 <<DHL
