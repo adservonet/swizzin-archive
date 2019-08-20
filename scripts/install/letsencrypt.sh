@@ -15,7 +15,7 @@ if [[ ! -f /install/.nginx.lock ]]; then
     exit 1
 fi    
 
-ip=$(ip route get 8.8.8.8 | awk '{printf $7}')
+ip=$(ip route get 1 | sed -n 's/^.*src \([0-9.]*\) .*$/\1/p')
 
 echo -e "Enter domain name to secure with LE"
 read -e hostname
@@ -101,6 +101,7 @@ if [[ ! -f /root/.acme.sh/acme.sh ]]; then
 fi
 
 mkdir -p /etc/nginx/ssl/${hostname}
+chmod 700 /etc/nginx/ssl
 
 if [[ ${cf} == yes ]]; then
   /root/.acme.sh/acme.sh --issue --dns dns_cf -d ${hostname} || { echo "ERROR: Certificate could not be issued. Please check your info and try again"; exit 1; }
@@ -121,6 +122,7 @@ if [[ $main == yes ]]; then
   sed -i "s/ssl_certificate_key .*/ssl_certificate_key \/etc\/nginx\/ssl\/${hostname}\/key.pem;/g" /etc/nginx/sites-enabled/default
 fi
 
+# Add LE certs to ZNC, if installed.
 if [[ -f /install/.znc.lock ]]; then
     # Check for LE cert, and copy it if available.
     chkhost="$(find /etc/nginx/ssl/* -maxdepth 1 -type d | cut -f 5 -d '/')"

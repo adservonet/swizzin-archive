@@ -43,10 +43,10 @@ function _preparation() {
   fi
   apt-get -q -y update >> ${log} 2>&1
   apt-get -q -y upgrade >> ${log} 2>&1
-  apt-get -q -y install git sudo curl wget lsof fail2ban apache2-utils vnstat tcl tcl-dev build-essential dirmngr apt-transport-https >> ${log} 2>&1
-  nofile=$(grep "DefaultLimitNOFILE=3072" /etc/systemd/system.conf)
-  if [[ ! "$nofile" ]]; then echo "DefaultLimitNOFILE=3072" >> /etc/systemd/system.conf; fi
-  git clone https://github.com/madeinearnest/swizzin.git /etc/swizzin >> ${log} 2>&1
+apt-get -q -y install nano git sudo curl wget lsof fail2ban apache2-utils vnstat tcl tcl-dev build-essential dirmngr apt-transport-https python-pip >> ${log} 2>&1
+  nofile=$(grep "DefaultLimitNOFILE=500000" /etc/systemd/system.conf)
+  if [[ ! "$nofile" ]]; then echo "DefaultLimitNOFILE=500000" >> /etc/systemd/system.conf; fi
+  git clone https://github.com/illnesse/swizzin.git /etc/swizzin >> ${log} 2>&1
   ln -s /etc/swizzin/scripts/ /usr/local/bin/swizzin
   chmod -R 700 /etc/swizzin/scripts
 }
@@ -147,7 +147,7 @@ function _install() {
 }
 
 function _post {
-  ip=$(ip route get 8.8.8.8 | awk '{printf $7}')
+  ip=$(ip route get 1 | sed -n 's/^.*src \([0-9.]*\) .*$/\1/p')
   echo "export PATH=\$PATH:/usr/local/bin/swizzin" >> /root/.bashrc
   #echo "export PATH=\$PATH:/usr/local/bin/swizzin" >> /home/$user/.bashrc
   #chown ${user}: /home/$user/.profile
