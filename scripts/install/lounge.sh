@@ -14,10 +14,11 @@ fi
 
 npm -g config set user root
 npm install -g thelounge >> $log 2>&1
+sudo -u lounge bash -c "thelounge install thelounge-theme-zenburn" >> $log 2>&1
 
-mkdir -p /home/lounge/.lounge/
+mkdir -p /home/lounge/.thelounge/
 
-cat > /home/lounge/.lounge/config.js<<'EOF'
+cat > /home/lounge/.thelounge/config.js<<'EOF'
 "use strict";
 
 module.exports = {
@@ -74,7 +75,7 @@ module.exports = {
 	// @type     string
 	// @default  "example"
 	//
-	theme: "zenburn",
+	theme: "thelounge-theme-zenburn",
 
 	//
 	// Prefetch URLs
@@ -464,15 +465,15 @@ sleep 3
 }
 
 function _adduser {
-master=$(cat /root/.master.info | cut -d: -f1)
+master=$(cut -d: -f1 < /root/.master.info)
 for u in "${users[@]}"; do
   if [[ $u = "$master" ]]; then
-    password=$(cat /root/.master.info | cut -d: -f2)
+    password=$(cut -d: -f2 < /root/.master.info)
   else
-    password=$(cat /root/$u.info | cut -d: -f2)
+    password=$(cut -d: -f2 < /root/$u.info)
   fi
   crypt=$(node /usr/lib/node_modules/thelounge/node_modules/bcryptjs/bin/bcrypt "${password}")
-  cat > /home/lounge/.lounge/users/$u.json <<EOU
+  cat > /home/lounge/.thelounge/users/$u.json <<EOU
 {
 	"password": "${crypt}",
 	"log": true,
@@ -493,7 +494,7 @@ else
   log="/dev/null"
 fi
 
-users=($(cat /etc/htpasswd | cut -d ":" -f 1))
+users=($(cut -d: -f1 < /etc/htpasswd))
 
 if [[ -n $1 ]]; then
 	users=$1

@@ -98,7 +98,7 @@ if [[ -z $deluge ]]; then
       export deluge=dev
     fi
 fi
-users=($(cat /etc/htpasswd | cut -d ":" -f 1))
+users=($(cut -d: -f1 < /etc/htpasswd))
 
 for u in "${users[@]}"; do
   systemctl stop deluged@${u}

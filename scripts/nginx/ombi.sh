@@ -8,7 +8,7 @@
 #   changes/dates in source files. Any modifications to our software
 #   including (via compiler) GPL-licensed code must also be made available
 #   under the GPL along with build & install instructions.
-MASTER=$(cat /root/.master.info | cut -d: -f1)
+MASTER=$(cut -d: -f1 < /root/.master.info)
 
 if [[ -f /etc/nginx/apps/ombi.conf ]]; then
   if grep -q '$scheme://$host' /etc/nginx/apps/ombi.conf; then
@@ -80,7 +80,7 @@ After=network-online.target
 User=ombi
 Group=nogroup
 WorkingDirectory=/opt/Ombi/
-ExecStart=/opt/Ombi/Ombi --baseurl /ombi --host http://127.0.0.1:3000
+ExecStart=/opt/Ombi/Ombi --baseurl /ombi --host http://127.0.0.1:3000 --storage /etc/Ombi
 Type=simple
 TimeoutStopSec=30
 Restart=on-failure
