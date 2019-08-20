@@ -36,6 +36,7 @@ function _installRapidleech1() {
 function _installRapidleech2() {
   touch /install/.rapidleech.lock
   chown "${MASTER}":"${MASTER}" -R /home/"${MASTER}"/rapidleech
+  chmod -R 777 /home/"${MASTER}"/rapidleech/configs
 }
 function _installRapidleech3() {
   if [[ -f /install/.nginx.lock ]]; then
