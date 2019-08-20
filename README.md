@@ -1,33 +1,27 @@
 ![swizzin](http://i.imgur.com/JZlDKP1.png)
 
 
-# 1.3.0 Headless (WIP)
+# 1.5.1 Stable
 
-[website](https://swizzin.ltd) | [reddit](https://reddit.com/r/swizzinltd)
+[website](https://swizzin.ltd) | [docs](https://docs.swizzin.ltd) | [discord](https://discord.gg/bDFqAUF)
 
-irc: irc.swizzin.ltd 6697 #swizzin #swizzin-dev
-
-Please use reddit/irc for all community functions and leave issues for actual issues and feature requests.
+Please use Discord for all community functions, [feathub](https://feathub.com/liaralabs/swizzin) for feature requests and leave issues for actual issues.
 
 ### What is swizzin?
-Swizzin is a light, modular seedbox solution that can be installed on Debian 8/9 or Ubuntu 16.04 or newer. The QuickBox package repo has been ported over for your installing pleasure, including the panel -- if you so choose!
+Swizzin is a light, modular seedbox solution that can be installed on Debian 8/9/10 or Ubuntu 16.04/18.04. The QuickBox package repo has been ported over for your installing pleasure, including the panel -- if you so choose!
 
 Box has been revamped to reduce and consolidate the amount of commands you need to remember to manage your seedbox. More on this below. In addition to that, additional addon packages can be installed during installation. No need to wait until the installer finishes! I may even add an automated installer hooks in the future.
-
-#### You wanna be a swizzie?
-
-Of course you do! You can help by testing untested stuff and reporting bugs to me by opening an issue here on github or by joining us on irc.swizzin.ltd #swizzin-dev
 
 ### Quick Start:
 
 wget
 ```
-bash <(wget -O- -q  https://raw.githubusercontent.com/madeinearnest/swizzin/master/setup.sh)
+bash <(wget -O- -q  https://raw.githubusercontent.com/liaralabs/swizzin/master/setup.sh)
 ```
 
 curl
 ```
-bash <(curl -s  https://raw.githubusercontent.com/madeinearnest/swizzin/master/setup.sh)
+bash <(curl -s  https://raw.githubusercontent.com/liaralabs/swizzin/master/setup.sh)
 ```
 
 Please note that if you are running Ubuntu and choose to run the initial setup though `sudo` you should include the `-H` argument to ensure that your home directory is modified to /root when you sudo up. The installer will take care of this for you, and this should be the only time you need to specify `sudo -H` before running a swizzin command.
@@ -35,13 +29,22 @@ Please note that if you are running Ubuntu and choose to run the initial setup t
 Example:
 
 ```
-sudo -H su -c 'bash <(wget -O- -q https://raw.githubusercontent.com/madeinearnest/swizzin/master/setup.sh)'
+sudo -H su -c 'bash <(wget -O- -q https://raw.githubusercontent.com/liaralabs/swizzin/master/setup.sh)'
 ```
 
 
-#### Supported:
-* Debian 8/9
-* Ubuntu 16.04 and above
+#### Supported Operating Systems
+
+Long-term support branches only:
+
+* Debian 8/9/10
+* Ubuntu 16.04/18.04
+
+### Support and Help
+
+If you have any questions, please read the [documentation](https://docs.swizzin.ltd) first. If you still have questions or would like to bounce some ideas off other humans, feel free to join us in [discord](https://discord.gg/bDFqAUF).
+
+Do not use GitHub issues for technical support or feature requests. GitHub issues are only to be used to report bugs and other issues with the project
 
 ### This is my box. There are many like it, but this one is mine.
 Box is a great tool, but it didn't quite do everything I wanted it to. That's why I've upgraded it and added a few commands intended to make your life a bit easier.
@@ -71,20 +74,16 @@ Box functions:
 * rtx - starts the r(u)Torrent extras management interface (`rtx` alone will also do)
   * Usage: `box rtx` or `rtx`
 
+### Feature Requests:
 
-#### TODO
-- [ ] Better readme/docs
+You can request and vote on features at [feathub](https://feathub.com/liaralabs/swizzin).
 
-#### Feature Requests:
-
-You can request and vote on features at [feathub](https://feathub.com/madeinearnest/swizzin).
-
-[![Feature Requests](http://feathub.com/madeinearnest/swizzin?format=svg)](http://feathub.com/liaralabs/swizzin)
+[![Feature Requests](http://feathub.com/liaralabs/swizzin?format=svg)](http://feathub.com/liaralabs/swizzin)
 
 
 ### Donations
 
-I accept donations on the [project website](https://swizzin.ltd/#donate). Please consider a donation if you enjoy the project.
+I accept donations on the [project website](https://swizzin.ltd/#donate) and also through [Liberapay](https://liberapay.com/liara/). Please consider a donation if you enjoy the project.
 
 If you don't have spare funds, then you might consider donating the idle cycles on your CPU to my mining pool. Setting it up is easy and will cost you nothing. Simply issue the command:
 ```
