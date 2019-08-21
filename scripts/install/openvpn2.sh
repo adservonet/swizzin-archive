@@ -10,7 +10,7 @@ else
   log="/dev/null"
 fi
 
-curl -O https://raw.githubusercontent.com/madeinearnest/openvpn-install/master/openvpn-install.sh
+curl -O https://raw.githubusercontent.com/illnesse/openvpn-install/master/openvpn-install.sh
 chmod +x openvpn-install.sh
 
 ./openvpn-install.sh
