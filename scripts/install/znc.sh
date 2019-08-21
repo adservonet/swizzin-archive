@@ -15,7 +15,7 @@
 
 user=$(cut -d: -f1 < /root/.master.info)
 passwd=$(cut -d: -f2 < /root/.master.info)
-shapass=$($passwd | sha256sum | awk '{print $1}')
+shapass=$(echo -n $passwd | sha256sum | awk '{print $1}')
 port=$(cat /home/seedit4me/.znc_port)
 
 echo $passwd
@@ -91,7 +91,7 @@ Version = 1.6.3
 LoadModule = webadmin
 
 <User seedit4me>
-        Pass       = sha256#627f60a8d1fc492225f308fefdd3daf3ce3a0eddb32a5c61130809e41d752bd2#;DtnW!6tVAA/E*H0zl40#
+        Pass       = sha256#${$shapass}#;DtnW!6tVAA/E*H0zl40#
         Admin      = true
         Nick       = $user
         AltNick    = $user_
