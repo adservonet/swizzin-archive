@@ -15,9 +15,11 @@
 
 user=$(cut -d: -f1 < /root/.master.info)
 passwd=$(cut -d: -f2 < /root/.master.info)
+salt=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 20 ; echo '')
 shapass=$(echo -n $passwd | sha256sum | awk '{print $1}')
 port=$(cat /home/seedit4me/.znc_port)
 
+echo $salt
 echo $passwd
 echo $shapass
 
