@@ -15,7 +15,7 @@
 
 user=$(cut -d: -f1 < /root/.master.info)
 passwd=$(cut -d: -f2 < /root/.master.info)
-shapass=$($passwd | sha1sum | awk '{print $1}')
+shapass=$($passwd | sha256sum | awk '{print $1}')
 port=$(cat /home/seedit4me/.znc_port)
 
 echo $passwd
