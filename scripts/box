@@ -460,10 +460,6 @@ case "$1" in
     exit 0
   ;;
   "adduser")
-    if [[ -z $2 ]]; then
-      echo "Error: You must specify a user"
-      exit 1
-    fi
     if [[ -n $3 ]]; then
       echo -e "Error: too many arguments\nCorrect usage: box adduser <username>"
       exit 1
@@ -472,10 +468,6 @@ case "$1" in
   exit 0
   ;;
   "deluser")
-    if [[ -z $2 ]]; then
-      echo -e "Error: you must specify a username.\nCorrect usage: box deluser <username>"
-      exit 1
-    fi
     if [[ -n $3 ]]; then
       echo -e "Error: too many arguments\nCorrect usage: box deluser <username>"
       exit 1
@@ -484,7 +476,7 @@ case "$1" in
     exit 0
   ;;
   "chpasswd")
-    if [[ -n $3 ]]; then
+    if [[ -n $4 ]]; then
       echo -e "Error: too many arguments\nCorrect usage: box chpasswd <username>"
       exit 1
     fi
