@@ -43,7 +43,7 @@ function _preparation() {
   fi
   apt-get -q -y update >> ${log} 2>&1
   apt-get -q -y upgrade >> ${log} 2>&1
-apt-get -q -y install nano git sudo curl wget lsof fail2ban apache2-utils vnstat tcl tcl-dev build-essential dirmngr apt-transport-https python-pip >> ${log} 2>&1
+apt-get -q -y install git sudo curl wget lsof fail2ban apache2-utils vnstat tcl tcl-dev build-essential dirmngr apt-transport-https python-pip >> ${log} 2>&1
   nofile=$(grep "DefaultLimitNOFILE=500000" /etc/systemd/system.conf)
   if [[ ! "$nofile" ]]; then echo "DefaultLimitNOFILE=500000" >> /etc/systemd/system.conf; fi
   git clone https://github.com/illnesse/swizzin.git /etc/swizzin >> ${log} 2>&1
@@ -144,6 +144,8 @@ function _install() {
   rm /tmp/.install.lock
   termin=$(date +"%s")
   difftimelps=$((termin-begin))
+
+  apt-get install -y -q nano
 }
 
 function _post {
