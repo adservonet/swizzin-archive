@@ -93,10 +93,10 @@ Version = 1.6.3
 LoadModule = webadmin
 
 <User seedit4me>
-        Pass       = sha256#${$shapass}#;DtnW!6tVAA/E*H0zl40#
-        Admin      = true
-        Nick       = $user
-        AltNick    = $user_
+        Pass       = sha256#${$shapass}#${salt}#
+        Admin      = ${user}
+        Nick       = ${user}
+        AltNick    = ${user}_
         Ident      = $user
         RealName   = Got ZNC?
         LoadModule = chansaver
