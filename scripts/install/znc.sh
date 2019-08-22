@@ -70,8 +70,6 @@ ZNC
 
   mkdir /home/znc/.znc
   mkdir /home/znc/.znc/configs
-  chown -R znc:znc /home/znc/.znc/configs
-  chmod -R 777 /home/znc/.znc/configs
 
   cat > /home/znc/.znc/configs/znc.conf <<ZNCONF
 // WARNING
@@ -104,6 +102,9 @@ LoadModule = webadmin
         LoadModule = controlpanel
 </User>
 ZNCONF
+
+  chown -R znc:znc /home/znc/.znc/configs
+  chmod -R 777 /home/znc/.znc/configs
 
 
 systemctl enable znc
