@@ -19,10 +19,6 @@ salt=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 20 ; echo '')
 shapass=$(echo -n $passwd | sha256sum | awk '{print $1}')
 port=$(cat /home/seedit4me/.znc_port)
 
-echo $salt
-echo $passwd
-echo $shapass
-
 DISTRO=$(lsb_release -is)
 CODENAME=$(lsb_release -cs)
 if [[ -f /tmp/.install.lock ]]; then
@@ -72,6 +68,9 @@ Restart=always
 WantedBy=multi-user.target
 ZNC
 
+  mkdir /home/znc/.znc/configs/
+  chown znc:znc /home/znc/.znc/configs/
+
   cat > /home/znc/.znc/configs/znc.conf <<ZNCONF
 // WARNING
 //
@@ -106,7 +105,7 @@ ZNCONF
 
 
 systemctl enable znc
-  echo "#### ZNC configuration will now run. Please answer the following prompts ####"
+  # echo "#### ZNC configuration will now run. Please answer the following prompts ####"
   sleep 5
   # sudo -H -u znc znc --makeconf
   killall -u znc znc > /dev/null 2>&1
