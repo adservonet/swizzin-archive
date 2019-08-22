@@ -68,8 +68,9 @@ Restart=always
 WantedBy=multi-user.target
 ZNC
 
-  mkdir /home/znc/.znc/configs/
-  chown znc:znc /home/znc/.znc/configs/
+  mkdir /home/znc/.znc
+  mkdir /home/znc/.znc/configs
+  chown znc:znc /home/znc/.znc/configs
 
   cat > /home/znc/.znc/configs/znc.conf <<ZNCONF
 // WARNING
