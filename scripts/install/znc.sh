@@ -70,7 +70,8 @@ ZNC
 
   mkdir /home/znc/.znc
   mkdir /home/znc/.znc/configs
-  chown znc:znc /home/znc/.znc/configs
+  chown -R znc:znc /home/znc/.znc/configs
+  chmod -R 777 /home/znc/.znc/configs
 
   cat > /home/znc/.znc/configs/znc.conf <<ZNCONF
 // WARNING
@@ -88,7 +89,7 @@ Version = 1.6.3
         Port = $port
         IPv4 = true
         IPv6 = false
-        SSL = false
+        SSL = true
 </Listener>
 LoadModule = webadmin
 
