@@ -108,7 +108,7 @@ ZNCONF
 systemctl enable znc
   echo "#### ZNC configuration will now run. Please answer the following prompts ####"
   sleep 5
-  sudo -H -u znc znc --makeconf
+  # sudo -H -u znc znc --makeconf
   killall -u znc znc > /dev/null 2>&1
   sleep 1
   if [[ -f /install/.panel.lock ]]; then
