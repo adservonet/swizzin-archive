@@ -87,7 +87,7 @@ Version = 1.6.3
         Port = $port
         IPv4 = true
         IPv6 = false
-        SSL = true
+        SSL = false
 </Listener>
 LoadModule = webadmin
 
