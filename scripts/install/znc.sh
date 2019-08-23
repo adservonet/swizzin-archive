@@ -120,8 +120,8 @@ systemctl enable znc
   # Check for LE cert, and copy it if available.
   #chkhost="$(find /etc/nginx/ssl/* -maxdepth 1 -type d | cut -f 5 -d '/')"
   #if [[ -n $chkhost ]]; then
-    defaulthost=$(grep -m1 "server_name" /etc/nginx/sites-enabled/default | awk '{print $2}' | sed 's/;//g')
-    cat /etc/ssl/certs/ssl-cert-snakeoil.pem > /home/znc/.znc/znc.pem
+    #defaulthost=$(grep -m1 "server_name" /etc/nginx/sites-enabled/default | awk '{print $2}' | sed 's/;//g')
+    #cat /etc/ssl/certs/ssl-cert-snakeoil.pem > /home/znc/.znc/znc.pem
 
     openssl req -new -x509 -days 365 -nodes -out /home/znc/.znc/znc.pem -keyout /home/znc/.znc/znc.key.pem -subj '/CN=ftp.seedit4.me/O=SeedIt4Me./C=US'
     chown -R znc:znc /home/znc/
