@@ -16,7 +16,7 @@
 user=$(cut -d: -f1 < /root/.master.info)
 passwd=$(cut -d: -f2 < /root/.master.info)
 salt=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 20 ; echo '')
-shapass=$(echo -n $passwd | sha256sum | awk '{print $1}')
+shapass=$(echo -n $salt$passwd | sha256sum | awk '{print $1}')
 port=$(cat /home/seedit4me/.znc_port)
 
 DISTRO=$(lsb_release -is)
@@ -103,8 +103,8 @@ LoadModule = webadmin
 </User>
 ZNCONF
 
-  chown -R znc:znc /home/znc/.znc/configs
-  chmod -R 777 /home/znc/.znc/configs
+chown -R znc:znc /home/znc/.znc/configs
+chmod -R 777 /home/znc/.znc/configs
 
 
 systemctl enable znc
@@ -118,12 +118,12 @@ systemctl enable znc
     echo "$(grep SSL /home/znc/.znc/configs/znc.conf | sed -e 's/^[ \t]*//')" >> /srv/panel/db/znc.txt
   fi
   # Check for LE cert, and copy it if available.
-  chkhost="$(find /etc/nginx/ssl/* -maxdepth 1 -type d | cut -f 5 -d '/')"
-  if [[ -n $chkhost ]]; then
+  #chkhost="$(find /etc/nginx/ssl/* -maxdepth 1 -type d | cut -f 5 -d '/')"
+  #if [[ -n $chkhost ]]; then
     defaulthost=$(grep -m1 "server_name" /etc/nginx/sites-enabled/default | awk '{print $2}' | sed 's/;//g')
-    cat /etc/nginx/ssl/"$defaulthost"/{key,fullchain}.pem > /home/znc/.znc/znc.pem
-    crontab -l > newcron.txt | sed -i  "s#cron#cron --post-hook \"cat /etc/nginx/ssl/"$defaulthost"/{key,fullchain}.pem > /home/znc/.znc/znc.pem\"#g" newcron.txt | crontab newcron.txt | rm newcron.txt
-  fi
+    cat /etc/ssl/certs/ssl-cert-snakeoil.pem > /home/znc/.znc/znc.pem
+    crontab -l > newcron.txt | sed -i  "s#cron#cron --post-hook \"cat /etc/ssl/certs/ssl-cert-snakeoil.pem > /home/znc/.znc/znc.pem\"#g" newcron.txt | crontab newcron.txt | rm newcron.txt
+  #fi
   systemctl start znc
   touch /install/.znc.lock
 echo "#### ZNC now installed! ####"
