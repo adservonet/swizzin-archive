@@ -9,6 +9,8 @@
 #   including (via compiler) GPL-licensed code must also be made available
 #   under the GPL along with build & install instructions.
 MASTER=$(cat /root/.master.info | cut -d: -f1)
+port=$(cat /home/seedit4me/.plexpy_port)
+
 isactive=$(systemctl is-active plexpy)
 if [[ $isactive == "active" ]]; then
   systemctl stop plexpy
@@ -17,7 +19,7 @@ if [[ ! -f /etc/nginx/apps/plexpy.conf ]]; then
   cat > /etc/nginx/apps/plexpy.conf <<RAD
 location /plexpy {
   include /etc/nginx/snippets/proxy.conf;
-  proxy_pass        http://127.0.0.1:8181/plexpy;
+  proxy_pass        http://127.0.0.1:${port}/plexpy;
   auth_basic "What's the password?";
   auth_basic_user_file /etc/htpasswd.d/htpasswd.${MASTER};
 }
