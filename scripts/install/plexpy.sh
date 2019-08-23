@@ -66,7 +66,7 @@ if [[ -f /install/.nginx.lock ]]; then
     sed -i '/^enable_https/d' /opt/plexpy/config.ini
     sed -i '/^https_ip/d' /opt/plexpy/config.ini
     sed -i '/^https_domain/d' /opt/plexpy/config.ini
-    sed -i -e 's/http_port = 8181/http_port = "$port"/g' /opt/plexpy/config.ini
+    sed -i -e "s/http_port = 8181/http_port = $port/g" /opt/plexpy/config.ini
     sleep 2
     systemctl start plexpy
   done
