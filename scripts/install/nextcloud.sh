@@ -13,36 +13,40 @@
 #   including (via compiler) GPL-licensed code must also be made available
 #   under the GPL along with build & install instructions.
 
+user=$(cut -d: -f1 < /root/.master.info)
+nextpass=$(cut -d: -f2 < /root/.master.info)
+password=$(cut -d: -f2 < /root/.master.info
+
 inst=$(which mysql)
 ip=$(ip route get 8.8.8.8 | awk '{printf $7}')
 if [[ ! -f /install/.nginx.lock ]]; then
   echo "ERROR: Web server not detected. Please install nginx and restart panel install."
   exit 1
 else
-echo "Please choose a password for the nextcloud mysql user."
-read -s -p "Password: " 'nextpass'
+#echo "Please choose a password for the nextcloud mysql user."
+#read -s -p "Password: " 'nextpass'
 #Check for existing mysql and install if not found
 if [[ -n $inst ]]; then
   echo -n -e "Existing mysql server detected!\n"
-  echo -n -e "Please enter mysql root password so that installation may continue:\n"
-  read -s -p "Password: " 'password'
-  echo -e "Please wait while nextcloud is installed ... "
+#  echo -n -e "Please enter mysql root password so that installation may continue:\n"
+#  read -s -p "Password: " 'password'
+#  echo -e "Please wait while nextcloud is installed ... "
 
 else
   echo -n -e "No mysql server found! Setup will install. \n"
-  echo -n -e "Please enter a mysql root password \n"
-  while [ -z "$password" ]; do
-    read -s -p "Password: " 'pass1'
-    echo
-    read -s -p "Re-enter password to verify: " 'pass2'
-    if [ $pass1 = $pass2 ]; then
-       password=$pass1
-    else
-       echo
-       echo "Passwords do not match"
-    fi
-  done
-  echo -e "Please wait while nextcloud is installed ... "
+#  echo -n -e "Please enter a mysql root password \n"
+#  while [ -z "$password" ]; do
+#    read -s -p "Password: " 'pass1'
+#    echo
+#    read -s -p "Re-enter password to verify: " 'pass2'
+#    if [ $pass1 = $pass2 ]; then
+#       password=$pass1
+#    else
+#       echo
+#       echo "Passwords do not match"
+#    fi
+#  done
+#  echo -e "Please wait while nextcloud is installed ... "
   DEBIAN_FRONTEND=non‌​interactive apt-get -y install mariadb-server > /dev/null 2>&1
   if [[ $(systemctl is-active mysql) != "active" ]]; then
     systemctl start mysql
