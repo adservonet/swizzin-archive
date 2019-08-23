@@ -52,13 +52,6 @@ Group=nogroup
 WantedBy=multi-user.target
 PPY
 
-sed -i '/^http_root/d' /opt/plexpy/config.ini
-sed -i '/^http_host/d' /opt/plexpy/config.ini
-sed -i '/^enable_https/d' /opt/plexpy/config.ini
-sed -i '/^https_ip/d' /opt/plexpy/config.ini
-sed -i '/^https_domain/d' /opt/plexpy/config.ini
-sed -i -e 's/http_port = 8181/http_port = ${port}/g' /opt/plexpy/config.ini
-
 systemctl enable plexpy > /dev/null 2>&1
 systemctl start plexpy
 
@@ -66,6 +59,16 @@ if [[ -f /install/.nginx.lock ]]; then
   while [ ! -f /opt/plexpy/config.ini ]
   do
     sleep 2
+    systemctl stop plexpy
+    sleep 2
+    sed -i '/^http_root/d' /opt/plexpy/config.ini
+    sed -i '/^http_host/d' /opt/plexpy/config.ini
+    sed -i '/^enable_https/d' /opt/plexpy/config.ini
+    sed -i '/^https_ip/d' /opt/plexpy/config.ini
+    sed -i '/^https_domain/d' /opt/plexpy/config.ini
+    sed -i -e 's/http_port = 8181/http_port = ${port}/g' /opt/plexpy/config.ini
+    sleep 2
+    systemctl start plexpy
   done
   bash /usr/local/bin/swizzin/nginx/plexpy.sh
   service nginx reload
