@@ -21,7 +21,7 @@ else
   OUTTO="/dev/null"
 fi
 MASTER=$(cat /root/.master.info | cut -d: -f1)
-
+port=$(cat /home/seedit4me/.plexpy_port)
 
 cd /opt
 echo "Cloning PlexPy repository" >>"${OUTTO}" 2>&1;
@@ -51,6 +51,13 @@ Group=nogroup
 [Install]
 WantedBy=multi-user.target
 PPY
+
+sed -i '/^http_root/d' /opt/plexpy/config.ini
+sed -i '/^http_host/d' /opt/plexpy/config.ini
+sed -i '/^enable_https/d' /opt/plexpy/config.ini
+sed -i '/^https_ip/d' /opt/plexpy/config.ini
+sed -i '/^https_domain/d' /opt/plexpy/config.ini
+sed -i -e 's/http_port = 8181/http_port = ${port}/g' /opt/plexpy/config.ini
 
 systemctl enable plexpy > /dev/null 2>&1
 systemctl start plexpy
