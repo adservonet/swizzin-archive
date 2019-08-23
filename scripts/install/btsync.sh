@@ -19,6 +19,7 @@
 #
 MASTER=$(cut -d: -f1 < /root/.master.info)
 BTSYNCIP=$(ip route get 1 | sed -n 's/^.*src \([0-9.]*\) .*$/\1/p')
+port=$(cat /home/seedit4me/.btsync_port)
 if [[ -f /tmp/.install.lock ]]; then
   OUTTO="/root/logs/install.log"
 elif [[ -f /install/.panel.lock ]]; then
@@ -57,7 +58,7 @@ function _installBTSync5() {
 
     "webui" :
     {
-        "listen" : "BTSGUIP:8888"
+        "listen" : "BTSGUIP:$port"
     }
 }
 RSCONF
