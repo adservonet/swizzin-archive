@@ -122,7 +122,12 @@ systemctl enable znc
   #if [[ -n $chkhost ]]; then
     defaulthost=$(grep -m1 "server_name" /etc/nginx/sites-enabled/default | awk '{print $2}' | sed 's/;//g')
     cat /etc/ssl/certs/ssl-cert-snakeoil.pem > /home/znc/.znc/znc.pem
-    crontab -l > newcron.txt | sed -i  "s#cron#cron --post-hook \"cat /etc/ssl/certs/ssl-cert-snakeoil.pem > /home/znc/.znc/znc.pem\"#g" newcron.txt | crontab newcron.txt | rm newcron.txt
+
+    openssl req -new -x509 -days 365 -nodes -out /home/znc/.znc/znc.pem -keyout /home/znc/.znc/znc.key.pem -subj '/CN=ftp.seedit4.me/O=SeedIt4Me./C=US'
+    chown -R znc:znc /home/znc/
+    chmod -R 777 /home/znc/.znc/configs
+
+    #crontab -l > newcron.txt | sed -i  "s#cron#cron --post-hook \"cat /etc/ssl/certs/ssl-cert-snakeoil.pem > /home/znc/.znc/znc.pem\"#g" newcron.txt | crontab newcron.txt | rm newcron.txt
   #fi
   systemctl start znc
   touch /install/.znc.lock
