@@ -15,7 +15,7 @@
 
 user=$(cut -d: -f1 < /root/.master.info)
 nextpass=$(cut -d: -f2 < /root/.master.info)
-password=$(cut -d: -f2 < /root/.master.info
+password=$(cut -d: -f2 < /root/.master.info)
 
 inst=$(which mysql)
 ip=$(ip route get 8.8.8.8 | awk '{printf $7}')
