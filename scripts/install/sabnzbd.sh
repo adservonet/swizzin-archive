@@ -103,8 +103,10 @@ if [[ -f /install/.nginx.lock ]]; then
   service nginx reload
 fi
 
+sleep 5s
+
 sed -i -e 's/password = ""/password = "$password" /g' /home/${username}/.sabnzbd/sabnzbd.ini
-sed -i -e 's/username = ""/username = "$username" /g' /home/${username}/.sabnzbd/sabnzbd.ini
+sed -i -e 's/username = ""/username = "$username" /g' /home/seedit4me/.sabnzbd/sabnzbd.ini
 echo test
 
 systemctl restart sabnzbd@${username}.service >/dev/null 2>&1
