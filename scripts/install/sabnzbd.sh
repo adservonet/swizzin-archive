@@ -76,9 +76,6 @@ pip install http://www.golug.it/pub/yenc/yenc-0.4.0.tar.gz >/dev/null 2>&1
 apt-get install p7zip-full -y >/dev/null 2>&1
 touch /install/.sabnzbd.lock
 
-sed -i -e 's/password = ""/password = "$password" /g' /home/seedit4me/.sabnzbd/sabnzbd.ini
-sed -i -e 's/username = ""/username = "$username" /g' /home/seedit4me/.sabnzbd/sabnzbd.ini
-
 cat >/etc/systemd/system/sabnzbd@.service<<EOF
 [Unit]
 Description=sabnzbd
@@ -105,3 +102,8 @@ if [[ -f /install/.nginx.lock ]]; then
   bash /usr/local/bin/swizzin/nginx/sabnzbd.sh
   service nginx reload
 fi
+
+sed -i -e 's/password = ""/password = "$password" /g' /home/seedit4me/.sabnzbd/sabnzbd.ini
+sed -i -e 's/username = ""/username = "$username" /g' /home/seedit4me/.sabnzbd/sabnzbd.ini
+
+systemctl restart sabnzbd@${username}.service >/dev/null 2>&1
