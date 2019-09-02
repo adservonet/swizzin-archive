@@ -18,6 +18,8 @@
 #   under the GPL along with build & install instructions.
 
 username=$(cut -d: -f1 < /root/.master.info)
+password=$(cut -d: -f2 < /root/.master.info)
+
 DISTRO=$(lsb_release -is)
 RELEASE=$(lsb_release -cs)
 PUBLICIP=$(ip route get 1 | sed -n 's/^.*src \([0-9.]*\) .*$/\1/p')
@@ -73,6 +75,9 @@ chown ${username}.${username} -R SABnzbd
 pip install http://www.golug.it/pub/yenc/yenc-0.4.0.tar.gz >/dev/null 2>&1
 apt-get install p7zip-full -y >/dev/null 2>&1
 touch /install/.sabnzbd.lock
+
+sed -i -e 's/password = ""/password = "${password}" /g' /home/seedit4me/.sabnzbd/sabnzbd.ini
+sed -i -e 's/username = ""/username = "${username}" /g' /home/seedit4me/.sabnzbd/sabnzbd.ini
 
 cat >/etc/systemd/system/sabnzbd@.service<<EOF
 [Unit]
