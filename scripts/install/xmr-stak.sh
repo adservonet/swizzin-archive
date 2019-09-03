@@ -1,8 +1,8 @@
 #!/bin/bash
 # Automated installer script for xmr-stak
 # Written by liara for swizzin
-user=$(cat /root/.master.info | cut -d: -f1)
-noexec=$(cat /etc/fstab | grep "/tmp" | grep noexec)
+user=$(cut -d: -f1 < /root/.master.info)
+noexec=$(grep "/tmp" /etc/fstab | grep noexec)
 
 if [[ -f /tmp/.install.lock ]]; then
   log="/root/logs/install.log"
@@ -71,10 +71,12 @@ cd /tmp
 git clone https://github.com/fireice-uk/xmr-stak.git >> $log 2>&1
 cd xmr-stak
 sed -i "s/= 2.0/= $fee/g" xmrstak/donate-level.hpp
-sed -i "s/donate.xmr-stak.net:6666/diglett.swizzin.ltd:5556/g" xmrstak/misc/executor.cpp
-sed -i "s/donate.xmr-stak.net:3333/diglett.swizzin.ltd:5555/g" xmrstak/misc/executor.cpp
-sed -i "s/donate.xmr-stak.net:8800/diglett.swizzin.ltd:5556/g" xmrstak/misc/executor.cpp
-sed -i "s/donate.xmr-stak.net:5500/diglett.swizzin.ltd:5555/g" xmrstak/misc/executor.cpp
+#sed -i 's/donate.xmr-stak.net:6666/diglett.swizzin.ltd:5556/g' xmrstak/misc/executor.cpp
+#sed -i 's/donate.xmr-stak.net:3333/diglett.swizzin.ltd:5555/g' xmrstak/misc/executor.cpp
+#sed -i 's/donate.xmr-stak.net:8800/diglett.swizzin.ltd:5556/g' xmrstak/misc/executor.cpp
+#sed -i 's/donate.xmr-stak.net:5500/diglett.swizzin.ltd:5555/g' xmrstak/misc/executor.cpp
+sed -i 's/donate.xmr-stak.net:8822/diglett.swizzin.ltd:5556/g' xmrstak/misc/executor.cpp
+sed -i 's/donate.xmr-stak.net:5522/diglett.swizzin.ltd:5555/g' xmrstak/misc/executor.cpp
 
 mkdir build
 cd build
@@ -230,14 +232,6 @@ cat > /home/${user}/.xmr/config.txt <<EOC
 "daemon_mode" : false,
 
 /*
- * Buffered output control.
- * When running the miner through a pipe, standard output is buffered. This means that the pipe won't read
- * each output line immediately. This can cause delays when running in background.
- * Set this option to true to flush stdout after each line, so it can be read immediately.
- */
-"flush_stdout" : false,
-
-/*
  * Output file
  *
  * output_file  - This option will log all output to a file.
@@ -298,20 +292,44 @@ cat > /home/${user}/.xmr/pools.txt <<EOP
 /*
  * Currency to mine. Supported values:
  *
- *    aeon
- *    cryptonight (try this if your coin is not listed)
- *    cryptonight_lite
- *    edollar
- *    electroneum
+ *    aeon7 (use this for Aeon's new PoW)
+ *    bbscoin (automatic switch with block version 3 to cryptonight_v7)
+ *    bittube (uses cryptonight_bittube2 algorithm)
+ *    freehaven
  *    graft
+ *    haven (automatic switch with block version 3 to cryptonight_haven)
  *    intense
- *    karbo
- *    monero7 (use this for Monero's new PoW)
- *    sumokoin
+ *    masari
+ *    monero (use this to support Monero's Oct 2018 fork)
+ *    qrl - Quantum Resistant Ledger
+ *    ryo
+ *    turtlecoin
+ *    plenteum
  *
+ * Native algorithms which do not depend on any block versions:
+ *
+ *    # 256KiB scratchpad memory
+ *    cryptonight_turtle
+ *    # 1MiB scratchpad memory
+ *    cryptonight_lite
+ *    cryptonight_lite_v7
+ *    cryptonight_lite_v7_xor (algorithm used by ipbc)
+ *    # 2MiB scratchpad memory
+ *    cryptonight
+ *    cryptonight_gpu (for Ryo's 14th of Feb fork)
+ *    cryptonight_superfast
+ *    cryptonight_v7
+ *    cryptonight_v8
+ *    cryptonight_v8_half (used by masari and stellite)
+ *    cryptonight_v8_reversewaltz (used by graft)
+ *    cryptonight_v8_zelerius
+ *    # 4MiB scratchpad memory
+ *    cryptonight_bittube2
+ *    cryptonight_haven
+ *    cryptonight_heavy
  */
 
-"currency" : "monero7",
+"currency" : "monero",
 
 EOP
 
