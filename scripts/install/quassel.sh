@@ -56,7 +56,7 @@ fi
 fi
 
 
-sed -i -e 's/4242/'$port'/g' /lib/systemd/system/quasselcore.service
+sed -i -e 's/4242/$port/g' /lib/systemd/system/quasselcore.service
 
 mv /etc/init.d/quasselcore /etc/init.d/quasselcore.BAK
 systemctl enable --now quasselcore
