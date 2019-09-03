@@ -49,7 +49,7 @@ echo "Modifying Subsonic startup script ... " >>"${OUTTO}" 2>&1;
 cat > /usr/share/subsonic/subsonic.sh <<SUBS
 #!/bin/sh
 MASTER=$(cut -d: -f1 < /root/.master.info )
-SUBSONICIP=$(ip route get 1 | sed -n 's/^.*src \([0-9.]*\) .*$/\1/p')
+SUBSONICIP=127.0.0.1
 
 SUBSONIC_HOME=/srv/subsonic
 SUBSONIC_HOST=0.0.0.0
