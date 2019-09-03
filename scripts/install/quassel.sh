@@ -15,6 +15,8 @@
 #
 #################################################################################
 
+port=$(cat /home/seedit4me/.quassel_port)
+
 if [[ -f /tmp/.install.lock ]]; then
   OUTTO="/root/logs/install.log"
 elif [[ -f /install/.panel.lock ]]; then
@@ -53,12 +55,15 @@ else
 fi
 fi
 
+
+sed -i -e 's/4242/'$port'/g' /lib/systemd/system/quasselcore.service
+
 mv /etc/init.d/quasselcore /etc/init.d/quasselcore.BAK
 systemctl enable --now quasselcore
 
 echo "Quassel has now been installed! "
 echo "Please install quassel-client on your personal computer "
 echo "and connect to the newly created core at "
-echo "${IP}:4242 to set up your account"
+echo "${IP}:${port} to set up your account"
 
 touch /install/.quassel.lock
