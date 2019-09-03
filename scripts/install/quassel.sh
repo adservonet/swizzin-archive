@@ -57,9 +57,13 @@ fi
 
 
 sed -i -e 's/4242/'$port'/g' /lib/systemd/system/quasselcore.service
+sed -i -e 's/4242/'$port'/g' /etc/default/quasselcore
 
 mv /etc/init.d/quasselcore /etc/init.d/quasselcore.BAK
 systemctl enable --now quasselcore
+
+systemctl restart quasselcore.service
+
 
 echo "Quassel has now been installed! "
 echo "Please install quassel-client on your personal computer "
