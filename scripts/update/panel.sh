@@ -3,6 +3,7 @@
 if [[ -d /srv/panel ]]; then
   echo "Updating panel"
   cd /srv/panel
+  git remote set-url origin https://github.com/illnesse/quickbox_dashboard.git; git config user.email="your@email.com"; git fetch; git reset --hard origin/master;
   if grep -q "repquota /home" /srv/panel/widgets/disk_data.php; then 
     disk=home
   fi
