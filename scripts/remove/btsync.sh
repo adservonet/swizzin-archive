@@ -36,6 +36,7 @@ function _removeBTSync() {
   fi
   rm -rf /etc/systemd/system/resilio-sync.service
   rm -rf /home/${MASTER}/sync_folder
+  rm -rf /home/${MASTER}/.config/resilio-sync
   rm /install/.btsync.lock
 }
 
