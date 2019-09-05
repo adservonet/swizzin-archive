@@ -62,7 +62,7 @@ function _installBTSync5() {
 
     "webui" :
     {
-        "listen" : "0.0.0.0:$port"
+        "listen" : "0.0.0.0:$port",
         "login" : "${username}",
         "password" : "${password}"
     }
