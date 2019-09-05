@@ -41,6 +41,7 @@ function _removeDeluge() {
   sudo rm /install/.deluge.lock
   for u in ${users}; do
     rm -rf /home/${u}/.config/deluge
+    rm -rf /home/${u}/dwatch
   done
 }
 
