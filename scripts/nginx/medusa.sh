@@ -37,6 +37,9 @@ location /medusa {
 }
 SRC
 fi
+
+sleep 5s
+
 sed -i "s/web_root.*/web_root = \"medusa\"/g" /home/"${user}"/.medusa/config.ini
 sed -i "s/web_host.*/web_host = 127.0.0.1/g" /home/"${user}"/.medusa/config.ini
 

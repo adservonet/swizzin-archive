@@ -24,6 +24,9 @@ location /sickchill {
 }
 SRC
 fi
+
+sleep 5s
+
 sed -i "s/web_root.*/web_root = \/sickchill/g" /home/${user}/.sickchill/config.ini
 sed -i "s/web_host.*/web_host = 127.0.0.1/g" /home/${user}/.sickchill/config.ini
 if [[ $isactive == "active" ]]; then
