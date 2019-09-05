@@ -295,7 +295,7 @@ if [[ -n $1 ]]; then
 fi
 
 export deluge=master
-export libtorrent=RC_1_1
+export libtorrent=repo
 
 if [[ -n $noexec ]]; then
 	mount -o remount,exec /tmp
