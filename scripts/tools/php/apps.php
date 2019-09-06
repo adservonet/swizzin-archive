@@ -2,25 +2,29 @@
 include ('cors.php');
 
 function isEnabled($process, $username){
-  $service = $process;
-  if(file_exists('/etc/systemd/system/multi-user.target.wants/'.$process.'@'.$username.'.service') || file_exists('/etc/systemd/system/multi-user.target.wants/'.$process.'.service')){
-    return 1;
-  } else {
-    return 0;
-  }
+    $service = $process;
+    //if(file_exists('/etc/systemd/system/multi-user.target.wants/'.$process.'@'.$username.'.service') || file_exists('/etc/systemd/system/multi-user.target.wants/'.$process.'.service')){
+    if(file_exists('/etc/systemd/system/multi-user.target.wants/'.$process.'@*.service') || file_exists('/etc/systemd/system/multi-user.target.wants/'.$process.'*.service')){
+        return 1;
+    } else {
+        return 0;
+    }
 }
 
 function processExists($processName, $username) {
-  $exists= 0;
-  exec("ps axo user:20,pid,pcpu,pmem,vsz,rss,tty,stat,start,time,comm,cmd|grep $username | grep -iE $processName | grep -v grep", $pids);
-  if (count($pids) > 0) {
-    $exists = 1;
-  }
-  return $exists;
+    $exists= 0;
+    //exec("ps axo user:20,pid,pcpu,pmem,vsz,rss,tty,stat,start,time,comm,cmd|grep $username | grep -iE $processName | grep -v grep", $pids);
+    exec("ps axo user:20,pid,pcpu,pmem,vsz,rss,tty,stat,start,time,comm,cmd| grep -iE $processName | grep -v grep", $pids);
+    if (count($pids) > 0) {
+        $exists = 1;
+    }
+    return $exists;
 }
 
+$username = "seedit4me";
 $apps = array(
 
+    "proftpd" => array( "exists" => processExists("proftpd",$username), "enabled" => isEnabled("proftpd",$username) ),
     "bazarr" => array( "exists" => processExists("bazarr",$username), "enabled" => isEnabled("bazarr",$username) ),
     "btsync" => array( "exists" => processExists("resilio-sync","rslsync"), "enabled" => isEnabled("resilio-sync",rslsync) ),
     "deluged" => array( "exists" => processExists("deluged",$username), "enabled" => isEnabled("deluged", $username) ),
@@ -36,10 +40,10 @@ $apps = array(
     "nzbhydra" => array( "exists" => processExists("nzbhydra",$username), "enabled" => isEnabled("nzbhydra", $username) ),
     "ombi" => array( "exists" => processExists("ombi",$username), "enabled" => isEnabled("ombi", $username) ),
     "plex" => array( "exists" => processExists("Plex","plex"), "enabled" => isEnabled("plexmediaserver",plex) ),
-    "tautulli" => array( "exists" => processExists("Tautulli","tautulli"), "enabled" => isEnabled("tautulli",tautulli) ),
+    "plexpy" => array( "exists" => processExists("Tautulli","tautulli"), "enabled" => isEnabled("tautulli",tautulli) ),
     "pyload" => array( "exists" => processExists("pyload",$username), "enabled" => isEnabled("pyload", $username) ),
     "radarr" => array( "exists" => processExists("radarr",$username), "enabled" => isEnabled("radarr", $username) ),
-    "rtorrent" => array( "exists" => processExists("rtorrent",$username), "enabled" => isEnabled("rtorrent", $username) ),
+    "rutorrent" => array( "exists" => processExists("rtorrent",$username), "enabled" => isEnabled("rtorrent", $username) ),
     "sabnzbd" => array( "exists" => processExists("sabnzbd",$username), "enabled" => isEnabled("sabnzbd", $username) ),
     "sickchill" => array( "exists" => processExists("sickchill",$username), "enabled" => isEnabled("sickchill", $username) ),
     "medusa" => array( "exists" => processExists("medusa",$username), "enabled" => isEnabled("medusa", $username) ),
@@ -59,9 +63,11 @@ $apps = array(
 
 echo json_encode($apps);
 
+
 //isEnabled("rapidleech", $username)
 //isEnabled("x2go", $username)
-?>
+
+
 
 
 /*
