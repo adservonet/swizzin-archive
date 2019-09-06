@@ -27,11 +27,12 @@ function processExists($processName, $username) {
 $username = "seedit4me";
 $apps = array(
 
+    "openvpn2" => array( "exists" => processExists("openvpn",$username), "enabled" => isEnabled("openvpn",$username) ),
     "proftpd" => array( "exists" => processExists("proftpd",$username), "enabled" => isEnabled("proftpd",$username) ),
     "bazarr" => array( "exists" => processExists("bazarr",$username), "enabled" => isEnabled("bazarr",$username) ),
     "btsync" => array( "exists" => processExists("resilio-sync","rslsync"), "enabled" => isEnabled("resilio-sync","rslsync") ),
     "deluged" => array( "exists" => processExists("deluged",$username), "enabled" => isEnabled("deluged", $username) ),
-    "delugedweb" => array( "exists" => processExists("deluge-web",$username), "enabled" => isEnabled("deluge-web", $username) ),
+    "deluge" => array( "exists" => processExists("deluge-web",$username), "enabled" => isEnabled("deluge-web", $username) ),
     "emby" => array( "exists" => processExists("EmbyServer","emby"), "enabled" => isEnabled("emby-server", $username) ),
     "filebrowser" => array( "exists" => processExists("filebrowser",$username), "enabled" => isEnabled("filebrowser", $username) ),
     "flood" => array( "exists" => processExists("flood",$username), "enabled" => isEnabled("flood", $username) ),
