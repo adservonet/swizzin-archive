@@ -204,8 +204,6 @@ cat > /home/${u}/.config/deluge/hostlist.conf${SUFFIX} <<DHL
 }
 DHL
 
-  rm /home/${u}/.config/deluge/blocklist.cache
-  rm /home/${u}/.config/deluge/blocklist.download
   wget -O /home/${u}/.config/deluge/blocklist.cache https://dashboard.dev.seedit4.me/storage/deluge_blocklist.dat
 
   echo "${u}:${pass}:10" > /home/${u}/.config/deluge/auth
@@ -312,6 +310,7 @@ if [[ -n $noexec ]]; then
 	mount -o remount,noexec /tmp
 fi
 
-echo "Configuring Deluge"
+echo "dconf"
 _dconf
+echo "dservice"
 _dservice
