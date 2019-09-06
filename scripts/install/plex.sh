@@ -28,8 +28,6 @@ DISTRO=$(lsb_release -is)
 CODENAME=$(lsb_release -cs)
 master=$(cut -d: -f1 < /root/.master.info)
 
-echo "Please visit https://www.plex.tv/claim, login, copy your plex claim token to your clipboard and paste it here. This will automatically claim your server! Otherwise, you can leave this blank and to tunnel to the port instead."; read 'claim'
-
 #versions=https://plex.tv/api/downloads/1.json
 #wgetresults="$(wget "${versions}" -O -)"
 #releases=$(grep -ioe '"label"[^}]*' <<<"${wgetresults}" | grep -i "\"distro\":\"ubuntu\"" | grep -m1 -i "\"build\":\"linux-ubuntu-x86_64\"")
