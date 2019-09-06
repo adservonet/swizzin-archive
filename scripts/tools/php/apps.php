@@ -28,7 +28,7 @@ $username = "seedit4me";
 $apps = array(
 
     "proftpd" => array( "exists" => processExists("proftpd",$username), "enabled" => isEnabled("proftpd",$username) ),
-    "7bazarr" => array( "exists" => processExists("bazarr",$username), "enabled" => isEnabled("bazarr",$username) ),
+    "bazarr" => array( "exists" => processExists("bazarr",$username), "enabled" => isEnabled("bazarr",$username) ),
     "btsync" => array( "exists" => processExists("resilio-sync","rslsync"), "enabled" => isEnabled("resilio-sync","rslsync") ),
     "deluged" => array( "exists" => processExists("deluged",$username), "enabled" => isEnabled("deluged", $username) ),
     "delugedweb" => array( "exists" => processExists("deluge-web",$username), "enabled" => isEnabled("deluge-web", $username) ),
