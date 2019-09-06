@@ -28,7 +28,8 @@ function _dconf {
   DUDID=$(python ${local_packages}/deluge.addHost.py)
   # -- Secondary awk command -- #
   #DPORT=$(awk -v min=59000 -v max=69024 'BEGIN{srand(); print int(min+rand()*(max-min+1))}')
-  DWPORT=$(shuf -i 10001-11000 -n 1)
+  #DWPORT=10033
+  #$(shuf -i 10001-11000 -n 1)
   ltconfig
   chmod 755 /home/${u}/.config
   chmod 755 /home/${u}/.config/deluge
@@ -143,7 +144,7 @@ cat > /home/${u}/.config/deluge/web.conf <<DWC
   "file": 1,
   "format": 1
 }{
-  "port": ${DWPORT},
+  "port": 10033,
   "enabled_plugins": [],
   "pwd_sha1": "${DWP}",
   "theme": "gray",
