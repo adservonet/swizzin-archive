@@ -10,7 +10,7 @@ if [[ -f /tmp/.install.lock ]]; then
   export log="/root/logs/install.log"
 else
   export log="/dev/null"
-    fi
+fi
 
 . /etc/swizzin/sources/functions/deluge
 whiptail_deluge

@@ -144,8 +144,6 @@ function _install() {
   rm /tmp/.install.lock
   termin=$(date +"%s")
   difftimelps=$((termin-begin))
-
-  apt-get install -y -q nano
 }
 
 function _post {
