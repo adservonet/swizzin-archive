@@ -30,6 +30,7 @@ echo >>"${OUTTO}" 2>&1;
 echo "Installing and enabling service ... " >>"${OUTTO}" 2>&1;
 
 cat > /etc/systemd/system/couchpotato@.service <<CPS
+[Unit]
 Description=CouchPotato
 After=syslog.target network.target
 
