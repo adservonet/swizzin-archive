@@ -19,7 +19,7 @@ fi
 
 cd /srv/
 mkdir tools
-cp /usr/local/bin/swizzin/tools/php/* /srv/tools/
+cp -r /usr/local/bin/swizzin/tools/php/* /srv/tools/
 
 chown -R www-data: /srv/tools
 
