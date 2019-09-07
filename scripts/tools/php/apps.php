@@ -56,6 +56,7 @@ function isEnabled($process, $username = false)
 
         return array( "exists" => +$proc_exists, "enabled" => +$enabled, "active" => +$active );
     }
+    return "";
 }
 
 $username = "seedit4me";
