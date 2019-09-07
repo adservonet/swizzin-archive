@@ -64,7 +64,7 @@ $apps = array(
 
     "openvpn2" => array(        isEnabled("openvpn")),
     "proftpd" => array(         isEnabled("proftpd")),
-    "bazarr" => array(          isEnabled("bazarr",$username)),
+    "bazarr" => array(          isEnabled("bazarr")),
     "btsync" => array(          isEnabled("resilio-sync")),
     "deluged" => array(         isEnabled("deluged", $username)),
     "deluge" => array(          isEnabled("deluge-web", $username)),
@@ -80,6 +80,7 @@ $apps = array(
     "ombi" => array(            isEnabled("ombi")),
     "plex" => array(            isEnabled("plexmediaserver")),
     "plexpy" => array(          isEnabled("plexpy")),
+    "tautulli" => array(        isEnabled("tautulli")),
     "pyload" => array(          isEnabled("pyload", $username)),
     "radarr" => array(          isEnabled("radarr")),
     "rutorrent" => array(       isEnabled("rtorrent", $username)),

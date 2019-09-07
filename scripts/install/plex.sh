@@ -15,6 +15,7 @@
 #   including (via compiler) GPL-licensed code must also be made available
 #   under the GPL along with build & install instructions.
 #
+
 if [[ -f /tmp/.install.lock ]]; then
   log="/root/logs/install.log"
 elif [[ -f /install/.panel.lock ]]; then
@@ -22,10 +23,6 @@ elif [[ -f /install/.panel.lock ]]; then
 else
   log="/dev/null"
 fi
-HOSTNAME1=$(hostname -s)
-PUBLICIP=$(ip route get 8.8.8.8 | awk '{printf $7}')
-DISTRO=$(lsb_release -is)
-CODENAME=$(lsb_release -cs)
 master=$(cut -d: -f1 < /root/.master.info)
 
 #versions=https://plex.tv/api/downloads/1.json
@@ -34,9 +31,9 @@ master=$(cut -d: -f1 < /root/.master.info)
 #latest=$(echo ${releases} | grep -m1 -ioe 'https://[^\"]*')
 
 echo "Installing plex keys and sources ... "
-    wget -q https://downloads.plex.tv/plex-keys/PlexSign.key -O - | sudo apt-key add -
+  wget -q https://downloads.plex.tv/plex-keys/PlexSign.key -O - | sudo apt-key add -
   echo "deb https://downloads.plex.tv/repo/deb public main" > /etc/apt/sources.list.d/plexmediaserver.list     
-    echo
+  echo
 
 echo "Updating system ... "
   apt-get install apt-transport-https -y >> ${log} 2>&1
