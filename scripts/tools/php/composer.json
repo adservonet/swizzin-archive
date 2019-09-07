@@ -1,0 +1,11 @@
+{
+    "name": "seedit4me/tools",
+    "description": "internal shits",
+    "type": "project",
+    "require": {
+        "icanhazstring/systemctl-php": "*"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
+

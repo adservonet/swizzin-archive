@@ -1,67 +1,101 @@
 <?php
 include ('cors.php');
+require 'vendor/autoload.php';
 
+$systemCtl = new SystemCtl\SystemCtl();
+//$systemCtl->setBinary('/bin/systemctl');
+//$systemCtl->setTimeout(10);
+
+/*
 function sff($f){
     $num = count(glob($f));
     if($num == 0) return false;
     else return true;
 }
+*/
 
-function isEnabled($process, $username){
-    if(sff("/etc/systemd/system/multi-user.target.wants/".$process."*.service")) return 1;
-    if(sff("/sys/fs/cgroup/systemd/system.slice/".$process."*.service")) return 1;
-    if(sff("/etc/systemd/system/multi-user.target.wants/".$process."*.service")) return 1;
-    return 0;
-}
+function isEnabled($process, $username = false)
+{
+    global $systemCtl;
 
-function processExists($processName, $username) {
-    $exists= 0;
-    //exec("ps axo user:20,pid,pcpu,pmem,vsz,rss,tty,stat,start,time,comm,cmd|grep $username | grep -iE $processName | grep -v grep", $pids);
-    exec("ps axo user:20,pid,pcpu,pmem,vsz,rss,tty,stat,start,time,comm,cmd| grep -iE $processName | grep -v grep", $pids);
-    if (count($pids) > 0) {
-        $exists = 1;
+    $serv_exists = false;
+    $proc_exists = false;
+
+    $service = false;
+    $enabled = false;
+    $active = false;
+
+    if ($username) $username = "@".$username;
+
+    exec("ps axo user:20,pid,pcpu,pmem,vsz,rss,tty,stat,start,time,comm,cmd| grep -iE $process | grep -v grep", $pids);
+    if (count($pids) > 0) $proc_exists = true;
+
+    if(file_exists("/etc/systemd/system/multi-user.target.wants/".$process.$username.".service")) $serv_exists = true;
+    if(file_exists("/sys/fs/cgroup/systemd/system.slice/".$process.$username.".service")) $serv_exists = true;
+    if(file_exists("/etc/systemd/system/multi-user.target.wants/".$process.$username.".service")) $serv_exists = true;
+
+    if ($serv_exists)
+    {
+        try {$service = $systemCtl->getService($process.$username);}
+        catch (Exception $e) {$service = false; echo $e;}
+
+        if ($service)
+        {
+            try {$enabled = $service->isEnabled();}
+            catch (Exception $e) {$enabled = false;}
+
+            if ($enabled)
+            {
+                try {$active = $service->isActive();}
+                catch (Exception $e) {$active = false;}
+            }
+
+        }
+
+        //echo $process ." exists: ".+$proc_exists ." active: ". +$active ." enabled: ". +$enabled ."\n";
+
+        return array( "exists" => +$proc_exists, "enabled" => +$enabled, "active" => +$active );
     }
-    return $exists;
 }
 
 $username = "seedit4me";
 $apps = array(
 
-    "openvpn2" => array( "exists" => processExists("openvpn",$username), "enabled" => isEnabled("openvpn",$username) ),
-    "proftpd" => array( "exists" => processExists("proftpd",$username), "enabled" => isEnabled("proftpd",$username) ),
-    "bazarr" => array( "exists" => processExists("bazarr",$username), "enabled" => isEnabled("bazarr",$username) ),
-    "btsync" => array( "exists" => processExists("resilio-sync","rslsync"), "enabled" => isEnabled("resilio-sync","rslsync") ),
-    "deluged" => array( "exists" => processExists("deluged",$username), "enabled" => isEnabled("deluged", $username) ),
-    "deluge" => array( "exists" => processExists("deluge-web",$username), "enabled" => isEnabled("deluge-web", $username) ),
-    "emby" => array( "exists" => processExists("EmbyServer","emby"), "enabled" => isEnabled("emby-server", $username) ),
-    "filebrowser" => array( "exists" => processExists("filebrowser",$username), "enabled" => isEnabled("filebrowser", $username) ),
-    "flood" => array( "exists" => processExists("flood",$username), "enabled" => isEnabled("flood", $username) ),
-    "headphones" => array( "exists" => processExists("headphones",$username), "enabled" => isEnabled("headphones", $username) ),
-    "irssi" => array( "exists" => processExists("irssi",$username), "enabled" => isEnabled("irssi", $username) ),
-    "lidarr" => array( "exists" => processExists("lidarr",$username), "enabled" => isEnabled("lidarr", $username) ),
-    "lounge" => array( "exists" => processExists("lounge","lounge"), "enabled" => isEnabled("lounge", "lounge") ),
-    "nzbget" => array( "exists" => processExists("nzbget",$username), "enabled" => isEnabled("nzbget", $username) ),
-    "nzbhydra" => array( "exists" => processExists("nzbhydra",$username), "enabled" => isEnabled("nzbhydra", $username) ),
-    "ombi" => array( "exists" => processExists("ombi",$username), "enabled" => isEnabled("ombi", $username) ),
-    "plex" => array( "exists" => processExists("Plex","plex"), "enabled" => isEnabled("plexmediaserver","plex") ),
-    "plexpy" => array( "exists" => processExists("Tautulli","tautulli"), "enabled" => isEnabled("tautulli","tautulli") ),
-    "pyload" => array( "exists" => processExists("pyload",$username), "enabled" => isEnabled("pyload", $username) ),
-    "radarr" => array( "exists" => processExists("radarr",$username), "enabled" => isEnabled("radarr", $username) ),
-    "rutorrent" => array( "exists" => processExists("rtorrent",$username), "enabled" => isEnabled("rtorrent", $username) ),
-    "sabnzbd" => array( "exists" => processExists("sabnzbd",$username), "enabled" => isEnabled("sabnzbd", $username) ),
-    "sickchill" => array( "exists" => processExists("sickchill",$username), "enabled" => isEnabled("sickchill", $username) ),
-    "medusa" => array( "exists" => processExists("medusa",$username), "enabled" => isEnabled("medusa", $username) ),
-    "netdata" => array( "exists" => processExists("netdata","netdata"), "enabled" => isEnabled("netdata", "netdata") ),
-    "sonarr" => array( "exists" => processExists("nzbdrone",$username), "enabled" => isEnabled("sonarr", $username) ),
-    "subsonic" => array( "exists" => processExists("subsonic",$username), "enabled" => isEnabled("subsonic", "root") ),
-    "syncthing" => array( "exists" => processExists("syncthing",$username), "enabled" => isEnabled("syncthing", $username) ),
-    "jackett" => array( "exists" => processExists("jackett",$username), "enabled" => isEnabled("jackett", $username) ),
-    "couchpotato" => array( "exists" => processExists("couchpotato",$username), "enabled" => isEnabled("couchpotato", $username) ),
-    "quassel" => array( "exists" => processExists("quassel",$username), "enabled" => isEnabled("quassel", $username) ),
-    "shellinabox" => array( "exists" => processExists("shellinabox","shellinabox"), "enabled" => isEnabled("shellinabox","shellinabox") ),
-    "csf" => array( "exists" => processExists("lfd","root"), "enabled" => isEnabled("csf", "root") ),
-    "sickgear" => array( "exists" => processExists("sickgear",$username), "enabled" => isEnabled("sickgear", $username) ),
-    "znc" => array( "exists" => processExists("znc",$username), "enabled" => isEnabled("znc", $username) ),
+    "openvpn2" => array(        isEnabled("openvpn")),
+    "proftpd" => array(         isEnabled("proftpd")),
+    "bazarr" => array(          isEnabled("bazarr",$username)),
+    "btsync" => array(          isEnabled("resilio-sync")),
+    "deluged" => array(         isEnabled("deluged", $username)),
+    "deluge" => array(          isEnabled("deluge-web", $username)),
+    "emby" => array(            isEnabled("emby-server")),
+    "filebrowser" => array(     isEnabled("filebrowser")),
+    "flood" => array(           isEnabled("flood", $username)),
+    "headphones" => array(      isEnabled("headphones")),
+    "irssi" => array(           isEnabled("irssi", $username)),
+    "lidarr" => array(          isEnabled("lidarr", $username)),
+    "lounge" => array(          isEnabled("lounge")),
+    "nzbget" => array(          isEnabled("nzbget", $username)),
+    "nzbhydra" => array(        isEnabled("nzbhydra", $username)),
+    "ombi" => array(            isEnabled("ombi")),
+    "plex" => array(            isEnabled("plexmediaserver")),
+    "plexpy" => array(          isEnabled("plexpy")),
+    "pyload" => array(          isEnabled("pyload", $username)),
+    "radarr" => array(          isEnabled("radarr")),
+    "rutorrent" => array(       isEnabled("rtorrent", $username)),
+    "sabnzbd" => array(         isEnabled("sabnzbd", $username)),
+    "sickchill" => array(       isEnabled("sickchill", $username)),
+    "medusa" => array(          isEnabled("medusa", $username)),
+    "netdata" => array(         isEnabled("netdata")),
+    "sonarr" => array(          isEnabled("sonarr", $username)),
+    "subsonic" => array(        isEnabled("subsonic")),
+    "syncthing" => array(       isEnabled("syncthing", $username)),
+    "jackett" => array(         isEnabled("jackett", $username)),
+    "couchpotato" => array(     isEnabled("couchpotato", $username)),
+    "quassel" => array(         isEnabled("quasselcore")),
+    "shellinabox" => array(     isEnabled("shellinabox")),
+    "csf" => array(             isEnabled("csf")),
+    "sickgear" => array(        isEnabled("sickgear", $username)),
+    "znc" => array(             isEnabled("znc")),
 
 );
 
