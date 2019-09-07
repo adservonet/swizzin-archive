@@ -19,7 +19,7 @@ function isEnabled($process, $username = false)
     global $systemCtl;
 
     $serv_exists = false;
-    $proc_exists = false;
+//    $proc_exists = false;
 
     $service = false;
     $enabled = false;
@@ -27,8 +27,8 @@ function isEnabled($process, $username = false)
 
     if ($username) $username = "@".$username;
 
-    exec("ps axo user:20,pid,pcpu,pmem,vsz,rss,tty,stat,start,time,comm,cmd| grep -iE $process | grep -v grep", $pids);
-    if (count($pids) > 0) $proc_exists = true;
+//    exec("ps axo user:20,pid,pcpu,pmem,vsz,rss,tty,stat,start,time,comm,cmd| grep -iE $process | grep -v grep", $pids);
+//    if (count($pids) > 0) $proc_exists = true;
 
     if(file_exists("/etc/systemd/system/multi-user.target.wants/".$process.$username.".service")) $serv_exists = true;
     if(file_exists("/sys/fs/cgroup/systemd/system.slice/".$process.$username.".service")) $serv_exists = true;
@@ -54,7 +54,7 @@ function isEnabled($process, $username = false)
 
         //echo $process ." exists: ".+$proc_exists ." active: ". +$active ." enabled: ". +$enabled ."\n";
 
-        return array( "exists" => +$proc_exists, "enabled" => +$enabled, "active" => +$active );
+        return array( "exists" => +$serv_exists, "enabled" => +$enabled, "active" => +$active );
     }
     return "";
 }
