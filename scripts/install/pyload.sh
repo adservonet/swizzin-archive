@@ -231,12 +231,12 @@ sleep 3
 cd /home/${MASTER}/.pyload
 user=$(cut -d: -f1 < /root/.master.info)
 passwd=$(cut -d: -f2 < /root/.master.info)
-salt=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 20 ; echo '')
+salt=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 5 ; echo '')
 shapass=$(echo -n $salt$passwd | xxd -r -p | shasum -b | awk '{print $1}')
 #| openssl dgst -sha1 | awk '{print $2}') same shit
 
 sleep 1
-echo "INSERT INTO users (name, password) VALUES ('${user}', '${shapass}');" > sqlquery
+echo "INSERT INTO users (name, password) VALUES ('${user}', '${salt}${shapass}');" > sqlquery
 sleep 1
 sqlite3 files.db ".read sqlquery"
 
