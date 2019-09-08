@@ -92,7 +92,12 @@ Version = 1.6.3
 LoadModule = webadmin
 
 <User seedit4me>
-        Pass       = sha256#${shapass}#${salt}#
+		<Pass password>
+		        Method = sha256
+		        Hash = ${shapass}
+		        Salt = ${salt}
+		</Pass>
+//        Pass       = sha256#${shapass}#${salt}#
         Admin      = ${user}
         Nick       = ${user}
         AltNick    = ${user}_
