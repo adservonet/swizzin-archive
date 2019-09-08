@@ -28,6 +28,53 @@ BAZN
 
 sleep 5s
 
+
+if [[ -f /install/.sonarr.lock ]]; then
+api=$(grep "Api" /home/${user}/.config/NzbDrone/config.xml | cut -d\> -f2 | cut -d\< -f1)
+appport=$(grep "\<Port" /home/${user}/.config/NzbDrone/config.xml | cut -d\> -f2 | cut -d\< -f1)
+cat >> /home/${user}/bazarr/data/config/config.ini <<SONC
+[sonarr]
+apikey = ${api}
+full_update = Daily
+ip = 127.0.0.1
+only_monitored = False
+base_url = /sonarr
+ssl = False
+port = ${appport}
+SONC
+fi
+
+if [[ -f /install/.radarr.lock ]]; then
+api=$(grep "Api" /home/${user}/.config/Radarr/config.xml | cut -d\> -f2 | cut -d\< -f1)
+appport=$(grep "\<Port" /home/${user}/.config/Radarr/config.xml | cut -d\> -f2 | cut -d\< -f1)
+cat >> /home/${user}/bazarr/data/config/config.ini <<RADC
+
+[radarr]
+apikey = ${api}
+full_update = Daily
+ip = 127.0.0.1
+only_monitored = False
+base_url = /radarr
+ssl = False
+port = ${appport}
+RADC
+fi
+
+cat >> /home/${user}/bazarr/data/config/config.ini <<BAZC
+
+[general]
+ip = 0.0.0.0
+base_url =
+BAZC
+
+if [[ -f /install/.sonarr.lock ]]; then
+echo "use_sonarr = True" >> /home/${user}/bazarr/data/config/config.ini
+fi
+
+if [[ -f /install/.radarr.lock ]]; then
+echo "use_radarr = True" >> /home/${user}/bazarr/data/config/config.ini
+fi
+
 sed -i '/\[general\]/,$d' /home/${user}/bazarr/data/config/config.ini
 
 cat >> /home/${user}/bazarr/data/config/config.ini <<BAZC
@@ -44,7 +91,7 @@ if [[ -f /install/.radarr.lock ]]; then
 echo "use_radarr = True" >> /home/${user}/bazarr/data/config/config.ini
 fi
 
-
+chown -R ${user}: /home/${user}/bazarr
 chown -R ${user}: /home/${user}/.config
 
 if [[ $isactive == "active" ]]; then
