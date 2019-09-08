@@ -83,6 +83,7 @@ $apps = array(
     "tautulli" => array(        isEnabled("tautulli")),
     "pyload" => array(          isEnabled("pyload", $username)),
     "radarr" => array(          isEnabled("radarr")),
+    "rclone" => array(          isEnabled("rclone", $username)),
     "rutorrent" => array(       isEnabled("rtorrent", $username)),
     "sabnzbd" => array(         isEnabled("sabnzbd", $username)),
     "sickchill" => array(       isEnabled("sickchill", $username)),
