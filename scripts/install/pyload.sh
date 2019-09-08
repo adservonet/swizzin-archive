@@ -22,7 +22,7 @@
 
 function _installpyLoad1() {
   echo "Installing any additional dependencies needed for pyLoad ... "
-  apt-get install -y tesseract-ocr gocr rhino pyqt4-dev-tools python-imaging python-dev libcurl4-openssl-dev >/dev/null 2>&1
+  apt-get install -y sqlite3 tesseract-ocr gocr rhino pyqt4-dev-tools python-imaging python-dev libcurl4-openssl-dev >/dev/null 2>&1
   apt-get -y autoremove >/dev/null 2>&1
 }
 
@@ -95,11 +95,11 @@ function _installpyLoad7() {
   touch /install/.pyload.lock
   systemctl daemon-reload >/dev/null 2>&1
   echo "#### pyLoad setup will now run ####"
-  if [[ -f /install/.nginx.lock ]]; then
-    echo "#### To ensure proper proxy configuration:"
-    echo "#### please leave remote access enabled ####"
-    echo "#### and do not alter the default port (8000) ####"
-  fi
+#  if [[ -f /install/.nginx.lock ]]; then
+#    echo "#### To ensure proper proxy configuration:"
+#    echo "#### please leave remote access enabled ####"
+#    echo "#### and do not alter the default port (8000) ####"
+#  fi
   sleep 5
 
 cat >/home/${MASTER}/.pyload/pyload.conf<<PYCFG
@@ -182,21 +182,6 @@ PYCFG
 
 sleep 3
 
-  cd /home/${MASTER}/.pyload
-
-  user=$(cut -d: -f1 < /root/.master.info)
-  passwd=$(cut -d: -f2 < /root/.master.info)
-  salt=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 20 ; echo '')
-  shapass=$(echo -n $salt$passwd | xxd -r -p | shasum -b | awk '{print $1}')
-  #| openssl dgst -sha1 | awk '{print $2}') same shit
-
-  sleep 1
-  echo "INSERT INTO users (name, password) VALUES ('${user}', '${shapass}');" > sqlquery
-  sleep 1
-  sqlite3 files.db ".read sqlquery"
-
-sleep 3
-
   #/usr/bin/python /home/${MASTER}/.pyload/pyLoadCore.py --setup --config=/home/${MASTER}/.pyload
   chown -R ${MASTER}: /home/${MASTER}/.pyload
   if [[ -f /install/.nginx.lock ]]; then
@@ -241,5 +226,21 @@ echo "Grabbing latest stable pyLoad repository ... " >>"${OUTTO}" 2>&1;_installp
 echo "Building pyLoad systemd template ... " >>"${OUTTO}" 2>&1;_installpyLoad5
 echo "Adjusting permissions ... " >>"${OUTTO}" 2>&1;_installpyLoad6
 echo "Enabling and starting pyLoad services ... " >>"${OUTTO}" 2>&1;_installpyLoad7
+
+sleep 3
+cd /home/${MASTER}/.pyload
+user=$(cut -d: -f1 < /root/.master.info)
+passwd=$(cut -d: -f2 < /root/.master.info)
+salt=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 20 ; echo '')
+shapass=$(echo -n $salt$passwd | xxd -r -p | shasum -b | awk '{print $1}')
+#| openssl dgst -sha1 | awk '{print $2}') same shit
+
+sleep 1
+echo "INSERT INTO users (name, password) VALUES ('${user}', '${shapass}');" > sqlquery
+sleep 1
+sqlite3 files.db ".read sqlquery"
+
+
+
 _installpyLoad8
 _installpyLoad9
