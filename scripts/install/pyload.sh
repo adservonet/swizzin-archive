@@ -101,7 +101,85 @@ function _installpyLoad7() {
     echo "#### and do not alter the default port (8000) ####"
   fi
   sleep 5
-  /usr/bin/python /home/${MASTER}/.pyload/pyLoadCore.py --setup --config=/home/${MASTER}/.pyload
+
+cat >/home/${MASTER}/.pyload/pyload.conf<<PYCFG
+version: 1
+
+download - "Download":
+        int chunks : "Max connections for one download" = 3
+        str interface : "Download interface to bind (ip or Name)" = None
+        bool ipv6 : "Allow IPv6" = False
+        bool limit_speed : "Limit Download Speed" = False
+        int max_downloads : "Max Parallel Downloads" = 3
+        int max_speed : "Max Download Speed in kb/s" = -1
+        bool skip_existing : "Skip already existing files" = False
+
+downloadTime - "Download Time":
+        time end : "End" = 0:00
+        time start : "Start" = 0:00
+
+general - "General":
+        bool checksum : "Use Checksum" = False
+        bool debug_mode : "Debug Mode" = False
+        folder download_folder : "Download Folder" = Downloads
+        bool folder_per_package : "Create folder for each package" = True
+        en;de;fr;it;es;nl;sv;ru;pl;cs;sr;pt_BR language : "Language" = en
+        int min_free_space : "Min Free Space (MB)" = 200
+        int renice : "CPU Priority" = 0
+
+log - "Log":
+        bool file_log : "File Log" = True
+        int log_count : "Count" = 5
+        folder log_folder : "Folder" = Logs
+        bool log_rotate : "Log Rotate" = True
+        int log_size : "Size in kb" = 100
+
+permission - "Permissions":
+        bool change_dl : "Change Group and User of Downloads" = False
+        bool change_file : "Change file mode of downloads" = False
+        bool change_group : "Change group of running process" = False
+        bool change_user : "Change user of running process" = False
+        str file : "Filemode for Downloads" = 0644
+        str folder : "Folder Permission mode" = 0755
+        str group : "Groupname" = users
+        str user : "Username" = user
+
+proxy - "Proxy":
+        str address : "Address" = "localhost"
+        password password : "Password" = None
+        int port : "Port" = 7070
+        bool proxy : "Use Proxy" = False
+        http;socks4;socks5 type : "Protocol" = http
+        str username : "Username" = None
+
+reconnect - "Reconnect":
+        bool activated : "Use Reconnect" = False
+        time endTime : "End" = 0:00
+        str method : "Method" = None
+        time startTime : "Start" = 0:00
+
+remote - "Remote":
+        bool activated : "Activated" = True
+        ip listenaddr : "Adress" = 0.0.0.0
+        bool nolocalauth : "No authentication on local connections" = True
+        int port : "Port" = 7227
+
+ssl - "SSL":
+        bool activated : "Activated" = False
+        file cert : "SSL Certificate" = ssl.crt
+        file key : "SSL Key" = ssl.key
+
+webinterface - "Webinterface":
+        bool activated : "Activated" = True
+        ip host : "IP" = 127.0.0.1
+        bool https : "Use HTTPS" = False
+        int port : "Port" = 8712
+        str prefix : "Path Prefix" = /pyload
+        builtin;threaded;fastcgi;lightweight server : "Server" = builtin
+        pyplex;classic;modern template : "Template" = modern
+PYCFG
+
+  #/usr/bin/python /home/${MASTER}/.pyload/pyLoadCore.py --setup --config=/home/${MASTER}/.pyload
   chown -R ${MASTER}: /home/${MASTER}/.pyload
   if [[ -f /install/.nginx.lock ]]; then
     bash /usr/local/bin/swizzin/nginx/pyload.sh

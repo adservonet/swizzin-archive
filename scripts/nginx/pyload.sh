@@ -12,8 +12,8 @@ MASTER=$(cut -d: -f1 < /root/.master.info)
 if [[ ! -f /etc/nginx/apps/pyload.conf ]]; then
 cat > /etc/nginx/apps/pyload.conf <<PYLOAD
 location /pyload/ {
-  include /etc/nginx/snippets/proxy.conf;
-  proxy_pass http://127.0.0.1:8000/;
+  #include /etc/nginx/snippets/proxy.conf;
+  proxy_pass http://127.0.0.1:8721/;
   proxy_set_header Accept-Encoding "";
   sub_filter_types text/css text/xml text/javascript;
   sub_filter '/media/' '/pyload/media/';
