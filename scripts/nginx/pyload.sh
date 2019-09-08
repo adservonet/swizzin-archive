@@ -25,6 +25,6 @@ location /pyload/ {
   auth_basic_user_file /etc/htpasswd.d/htpasswd.${MASTER};
 }
 PYLOAD
-sed -i 's/"Path Prefix" = /"Path Prefix" = \/pyload/g' /home/${MASTER}/.pyload/pyload.conf
-sed -i 's/"IP" = 0.0.0.0/"IP" = 127.0.0.1/g' /home/${MASTER}/.pyload/pyload.conf
+#sed -i 's/"Path Prefix" = /"Path Prefix" = \/pyload/g' /home/${MASTER}/.pyload/pyload.conf
+#sed -i 's/"IP" = 0.0.0.0/"IP" = 127.0.0.1/g' /home/${MASTER}/.pyload/pyload.conf
 fi

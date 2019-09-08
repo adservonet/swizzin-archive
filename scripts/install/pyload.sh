@@ -174,10 +174,28 @@ webinterface - "Webinterface":
         ip host : "IP" = 127.0.0.1
         bool https : "Use HTTPS" = False
         int port : "Port" = 8712
-        str prefix : "Path Prefix" = /pyload
+        str prefix : "Path Prefix" = /pyload/pyload
         builtin;threaded;fastcgi;lightweight server : "Server" = builtin
         pyplex;classic;modern template : "Template" = modern
 PYCFG
+
+
+sleep 3
+
+  cd /home/${MASTER}/.pyload
+
+  user=$(cut -d: -f1 < /root/.master.info)
+  passwd=$(cut -d: -f2 < /root/.master.info)
+  salt=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 20 ; echo '')
+  shapass=$(echo -n $salt$passwd | xxd -r -p | shasum -b | awk '{print $1}')
+  #| openssl dgst -sha1 | awk '{print $2}') same shit
+
+  sleep 1
+  echo "INSERT INTO users (name, password) VALUES ('${user}', '${shapass}');" > sqlquery
+  sleep 1
+  sqlite3 files.db ".read sqlquery"
+
+sleep 3
 
   #/usr/bin/python /home/${MASTER}/.pyload/pyLoadCore.py --setup --config=/home/${MASTER}/.pyload
   chown -R ${MASTER}: /home/${MASTER}/.pyload
