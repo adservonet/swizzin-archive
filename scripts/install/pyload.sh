@@ -231,12 +231,26 @@ sleep 3
 cd /home/${MASTER}/.pyload
 user=$(cut -d: -f1 < /root/.master.info)
 passwd=$(cut -d: -f2 < /root/.master.info)
-salt=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 5 ; echo '')
-shapass=$(echo -n $salt$passwd | xxd -r -p | shasum -b | awk '{print $1}')
-#| openssl dgst -sha1 | awk '{print $2}') same shit
+
+cat >/home/${MASTER}/.pyload/adduser.py<<PYAU
+from hashlib import sha1
+import random
+
+strpass = "test123"
+
+salt = reduce(lambda x, y: x + y, [str(random.randint(0, 9)) for i in range(0, 5)])
+h = sha1(salt + strpass)
+password = salt + h.hexdigest()
+
+print(password)
+PYAU
+
+sleep 3
+
+saltedpasswd=$(python /home/${MASTER}/.pyload/adduser.py)
 
 sleep 1
-echo "INSERT INTO users (name, password) VALUES ('${user}', '${salt}${shapass}');" > sqlquery
+echo "INSERT INTO users (name, password) VALUES ('${user}', '${saltedpasswd}');" > sqlquery
 sleep 1
 sqlite3 files.db ".read sqlquery"
 
