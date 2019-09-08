@@ -26,6 +26,8 @@ location /bazarr {
 
 BAZN
 
+sleep 5s
+
 sed -i '/\[general\]/,$d' /home/${user}/bazarr/data/config/config.ini
 
 cat >> /home/${user}/bazarr/data/config/config.ini <<BAZC
