@@ -236,7 +236,7 @@ cat >/home/${MASTER}/.pyload/adduser.py<<PYAU
 from hashlib import sha1
 import random
 
-strpass = "test123"
+strpass = "${passwd}"
 
 salt = reduce(lambda x, y: x + y, [str(random.randint(0, 9)) for i in range(0, 5)])
 h = sha1(salt + strpass)
