@@ -26,7 +26,8 @@ fi
 
 sleep 5
 
-sed -i "s/url_base.*/url_base = \/couchpotato\nhost = 127.0.0.1/g" /home/${MASTER}/.couchpotato/settings.conf
+sed -i 's/url_base.*/url_base = \/couchpotato/g' /home/seedit4me/.couchpotato/settings.conf
+
 if [[ $isactive == "active" ]]; then
   systemctl start couchpotato@$MASTER
 fi
