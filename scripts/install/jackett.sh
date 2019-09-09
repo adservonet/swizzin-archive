@@ -81,6 +81,10 @@ cat > /home/${username}/.config/Jackett/ServerConfig.json <<JSC
 }
 JSC
 
+sleep 2
+
+chmod 777 /home/${username}/.config/Jackett/ServerConfig.json
+
 if [[ -f /install/.nginx.lock ]]; then
   bash /usr/local/bin/swizzin/nginx/jackett.sh
   service nginx reload
