@@ -40,7 +40,7 @@ function _installpyLoad3() {
   pip install ply --upgrade >/dev/null 2>&1
   pip install cryptography --upgrade >/dev/null 2>&1
   pip install distribute >/dev/null 2>&1
-  pip install pyOpenSSL >/dev/null 2>&1
+  #pip install pyOpenSSL >/dev/null 2>&1
   pip install cffi --upgrade >/dev/null 2>&1
   pip install pycurl >/dev/null 2>&1
   pip install django >/dev/null 2>&1
