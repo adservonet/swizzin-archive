@@ -39,7 +39,6 @@ Type=forking
 KillMode=process
 User=%I
 ExecStart=/usr/bin/python /srv/lazylibrarian/LazyLibrarian.py -d
-PIDFile=/home/${MASTER}/.lazylibrarian.pid
 ExecStop=-/bin/kill -HUP
 WorkingDirectory=/srv/lazylibrarian/
 
