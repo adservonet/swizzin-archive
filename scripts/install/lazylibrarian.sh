@@ -20,8 +20,8 @@ chown ${MASTER}: /srv/lazylibrarian
 echo "Downloading lazylibrarian installing ... " >>"${OUTTO}" 2>&1;
 
 
-apt-get install -y -q python python-setuptools python-pip  >>/dev/null 2>&1
-git clone https://gitlab.com/LazyLibrarian/LazyLibrarian.git  /srv/lazylibrarian  >>/dev/null 2>&1
+apt-get install -y -q python python-setuptools python-pip
+git clone https://gitlab.com/LazyLibrarian/LazyLibrarian.git  /srv/lazylibrarian
 
 
 touch /install/.lazylibrarian.lock
@@ -29,7 +29,7 @@ touch /install/.lazylibrarian.lock
 
 echo "Enabling lazylibrarian Systemd configuration" >>"${OUTTO}" 2>&1;
 service stop lazylibrarian >/dev/null 2>&1
-cat > /etc/systemd/system/lazylibrarian.service <<SUBSD
+cat > /etc/systemd/system/lazylibrarian@.service <<SUBSD
 [Unit]
 Description=lazylibrarian
 After=network.target
@@ -50,8 +50,8 @@ SUBSD
 
 
 
-systemctl enable lazylibrarian.service >/dev/null 2>&1
-systemctl start lazylibrarian.service >/dev/null 2>&1
+systemctl enable lazylibrarian@${MASTER}.service >/dev/null 2>&1
+systemctl start lazylibrarian@${MASTER}.service >/dev/null 2>&1
 
 if [[ -f /install/.nginx.lock ]]; then
   bash /usr/local/bin/swizzin/nginx/lazylibrarian.sh
