@@ -24,9 +24,9 @@ allow all;
 location ~ \.php$
   {
     include snippets/fastcgi-php.conf;
-    fastcgi_pass unix:/run/php/php7.0-fpm.sock;
+    fastcgi_pass unix:/run/php/$sock.sock;
     #fastcgi_index index.php;
-    fastcgi_param SCRIPT_FILENAME /srv/organizr$fastcgi_script_name;
+    fastcgi_param SCRIPT_FILENAME /srv$fastcgi_script_name;
   }
 }
 RAP
