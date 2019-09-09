@@ -12,7 +12,7 @@ class Timer extends AbstractUnit
     /**
      * @var string
      */
-    const UNIT = 'timer';
+    public const UNIT = 'timer';
 
     /**
      * @inheritdoc

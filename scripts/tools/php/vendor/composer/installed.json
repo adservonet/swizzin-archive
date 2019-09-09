@@ -1,5 +1,51 @@
 [
     {
+        "name": "icanhazstring/systemctl-php",
+        "version": "0.7.0",
+        "version_normalized": "0.7.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/icanhazstring/systemctl-php.git",
+            "reference": "9cca4f3177cd5903ee2b1a473f74574529d301f5"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/icanhazstring/systemctl-php/zipball/9cca4f3177cd5903ee2b1a473f74574529d301f5",
+            "reference": "9cca4f3177cd5903ee2b1a473f74574529d301f5",
+            "shasum": ""
+        },
+        "require": {
+            "php": "^7.1",
+            "symfony/process": "^3.2"
+        },
+        "require-dev": {
+            "codeclimate/php-test-reporter": "dev-master",
+            "phpunit/phpunit": "^6.1",
+            "squizlabs/php_codesniffer": "^3.0"
+        },
+        "time": "2019-04-01T08:46:22+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "SystemCtl\\": [
+                    "src/"
+                ]
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "icanhazstring",
+                "email": "blubb0r05+github@gmail.com"
+            }
+        ],
+        "description": "PHP wrapper for systemctl"
+    },
+    {
         "name": "symfony/process",
         "version": "v3.4.31",
         "version_normalized": "3.4.31.0",
@@ -17,7 +63,7 @@
         "require": {
             "php": "^5.5.9|>=7.0.8"
         },
-        "time": "2019-08-26 07:52:58",
+        "time": "2019-08-26T07:52:58+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -49,51 +95,5 @@
         ],
         "description": "Symfony Process Component",
         "homepage": "https://symfony.com"
-    },
-    {
-        "name": "icanhazstring/systemctl-php",
-        "version": "0.7.0",
-        "version_normalized": "0.7.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/icanhazstring/systemctl-php.git",
-            "reference": "9cca4f3177cd5903ee2b1a473f74574529d301f5"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/icanhazstring/systemctl-php/zipball/9cca4f3177cd5903ee2b1a473f74574529d301f5",
-            "reference": "9cca4f3177cd5903ee2b1a473f74574529d301f5",
-            "shasum": ""
-        },
-        "require": {
-            "php": "^7.1",
-            "symfony/process": "^3.2"
-        },
-        "require-dev": {
-            "codeclimate/php-test-reporter": "dev-master",
-            "phpunit/phpunit": "^6.1",
-            "squizlabs/php_codesniffer": "^3.0"
-        },
-        "time": "2019-04-01 08:46:22",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "SystemCtl\\": [
-                    "src/"
-                ]
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "icanhazstring",
-                "email": "blubb0r05+github@gmail.com"
-            }
-        ],
-        "description": "PHP wrapper for systemctl"
     }
 ]

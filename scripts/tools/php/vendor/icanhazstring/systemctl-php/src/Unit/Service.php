@@ -12,7 +12,7 @@ class Service extends AbstractUnit
     /**
      * @var string
      */
-    const UNIT = 'service';
+    public const UNIT = 'service';
 
     /**
      * @inheritdoc

@@ -31,7 +31,7 @@ interface UnitInterface
      *
      * @return null|string
      */
-    public function getInstanceName(): string;
+    public function getInstanceName(): ?string;
 
     /**
      * @return CommandInterface

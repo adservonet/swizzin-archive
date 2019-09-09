@@ -23,7 +23,7 @@ class SystemCtl
     /** @var int timeout for commands */
     private static $timeout = 3;
 
-    const AVAILABLE_UNITS = [
+    public const AVAILABLE_UNITS = [
         Service::UNIT,
         'socket',
         'device',
@@ -37,7 +37,7 @@ class SystemCtl
         'scope'
     ];
 
-    const SUPPORTED_UNITS = [
+    public const SUPPORTED_UNITS = [
         Service::UNIT,
         Timer::UNIT,
     ];
@@ -95,7 +95,7 @@ class SystemCtl
      *
      * @return array|\string[]
      */
-    public function listUnits(string $unitPrefix = null, array $unitTypes = self::SUPPORTED_UNITS): array
+    public function listUnits(?string $unitPrefix = null, array $unitTypes = self::SUPPORTED_UNITS): array
     {
         $commands = ['list-units'];
 
@@ -136,7 +136,7 @@ class SystemCtl
      *
      * @return null|string
      */
-    protected function searchForUnitInUnits(string $unitName, array $units): string
+    protected function searchForUnitInUnits(string $unitName, array $units): ?string
     {
         foreach ($units as $unit) {
             if ($unit === $unitName) {
@@ -144,8 +144,7 @@ class SystemCtl
             }
         }
 
-        return "";
-
+        return null;
     }
 
     /**
@@ -153,7 +152,7 @@ class SystemCtl
      *
      * @return Service[]
      */
-    public function getServices(string $unitPrefix = null): array
+    public function getServices(?string $unitPrefix = null): array
     {
         $units = $this->listUnits($unitPrefix, [Service::UNIT]);
 
@@ -185,7 +184,7 @@ class SystemCtl
      *
      * @return Timer[]
      */
-    public function getTimers(string $unitPrefix = null): array
+    public function getTimers(?string $unitPrefix = null): array
     {
         $units = $this->listUnits($unitPrefix, [Timer::UNIT]);
 

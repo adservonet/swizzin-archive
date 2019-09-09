@@ -56,7 +56,7 @@ abstract class AbstractUnit implements UnitInterface
      * @todo: Everything in here should happen inside the constructor and stored
      *      afterwards.
      */
-    public function getInstanceName(): string
+    public function getInstanceName(): ?string
     {
         $instanceName = explode('@', $this->name, 2)[1] ?? null;
 
