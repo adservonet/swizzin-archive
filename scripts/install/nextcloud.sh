@@ -54,7 +54,7 @@ else
   mysqladmin -u root password ${password}
 fi
 #Depends
-apt-get install -y -q unzip php-mysql libxml2-dev php-common php-gd php-json php-curl  php-zip php-xml php-mbstring > /dev/null 2>&1
+apt-get install -y -q unzip php3.7-mysql libxml2-dev php3.7-common php3.7-gd php3.7-json php3.7-curl  php3.7-zip php3.7-xml php3.7-mbstring > /dev/null 2>&1
 #a2enmod rewrite > /dev/null 2>&1
 cd /tmp
 
