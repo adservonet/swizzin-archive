@@ -266,7 +266,9 @@ class ProcessBuilder
         $process = new Process($arguments, $this->cwd, $this->env, $this->input, $this->timeout, $this->options);
         // to preserve the BC with symfony <3.3, we convert the array structure
         // to a string structure to avoid the prefixing with the exec command
+
         //$process->setCommandLine($process->getCommandLine());
+        //added sudo here
         $process->setCommandLine("/usr/bin/sudo " . $process->getCommandLine());
 
         if ($this->inheritEnv) {

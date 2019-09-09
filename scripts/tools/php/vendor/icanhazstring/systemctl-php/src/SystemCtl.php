@@ -144,7 +144,7 @@ class SystemCtl
             }
         }
 
-        return null;
+        return "";
     }
 
     /**
