@@ -73,6 +73,7 @@ $apps = array(
     "flood" => array(           isEnabled("flood", $username)),
     "headphones" => array(      isEnabled("headphones")),
     "autodl" => array(          isEnabled("irssi", $username)),
+    "lazylibrarian" => array(   isEnabled("lazylibrarian", $username)),
     "lidarr" => array(          isEnabled("lidarr")),
     "lounge" => array(          isEnabled("lounge")),
     "nzbget" => array(          isEnabled("nzbget", $username)),
