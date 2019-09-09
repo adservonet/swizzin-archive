@@ -9,10 +9,15 @@
 #   including (via compiler) GPL-licensed code must also be made available
 #   under the GPL along with build & install instructions.
 #
+
+log="/dev/null"
+
 if [[ ! -f /install/.nginx.lock ]]; then
   echo "ERROR: Web server not detected. Please install nginx and restart seedit4me install."
   exit 1
 fi
+
+apt-get -y install nano >> $log 2>&1
 
 bash /usr/local/bin/swizzin/nginx/tools.sh
 touch /install/.tools.lock
