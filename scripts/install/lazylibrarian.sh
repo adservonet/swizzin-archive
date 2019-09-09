@@ -20,8 +20,8 @@ chown ${MASTER}: /srv/lazylibrarian
 echo "Downloading lazylibrarian installing ... " >>"${OUTTO}" 2>&1;
 
 
-apt-get install -y -q python python-setuptools python-pip
-git clone https://gitlab.com/LazyLibrarian/LazyLibrarian.git  /srv/lazylibrarian
+apt-get install -y -q python python-setuptools python-pip  >>/dev/null 2>&1
+git clone https://gitlab.com/LazyLibrarian/LazyLibrarian.git  /srv/lazylibrarian  >>/dev/null 2>&1
 
 
 touch /install/.lazylibrarian.lock
