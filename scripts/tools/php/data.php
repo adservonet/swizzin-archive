@@ -3,11 +3,11 @@ include ('cors.php');
 
 $interface = 'venet0';//INETFACE;
 session_start();
-$rx[] = int(@file_get_contents("/sys/class/net/INETFACE/statistics/rx_bytes"));
-$tx[] = int(@file_get_contents("/sys/class/net/INETFACE/statistics/tx_bytes"));
+$rx[] = intval(@file_get_contents("/sys/class/net/INETFACE/statistics/rx_bytes"));
+$tx[] = intval(@file_get_contents("/sys/class/net/INETFACE/statistics/tx_bytes"));
 sleep(1);
-$rx[] = int(@file_get_contents("/sys/class/net/INETFACE/statistics/rx_bytes"));
-$tx[] = int(@file_get_contents("/sys/class/net/INETFACE/statistics/tx_bytes"));
+$rx[] = intval(@file_get_contents("/sys/class/net/INETFACE/statistics/rx_bytes"));
+$tx[] = intval(@file_get_contents("/sys/class/net/INETFACE/statistics/tx_bytes"));
 $tbps = $tx[1] - $tx[0];
 $rbps = $rx[1] - $rx[0];
 $round_rx=round(($rbps*8)/10000000, 3);
