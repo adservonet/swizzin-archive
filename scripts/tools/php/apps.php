@@ -19,13 +19,11 @@ function isEnabled($process, $username = false)
     global $systemCtl;
 
     $serv_exists = false;
-//    $proc_exists = false;
+    //$proc_exists = false;
 
     $service = false;
     $enabled = false;
     $active = false;
-
-    if ($username) $username = "@".$username;
 
 //    exec("ps axo user:20,pid,pcpu,pmem,vsz,rss,tty,stat,start,time,comm,cmd| grep -iE $process | grep -v grep", $pids);
 //    if (count($pids) > 0) $proc_exists = true;
@@ -107,9 +105,9 @@ if (isset($_GET['servicedisable']))
         if ($process == $app["name"])
         {
             $username = "";
-            if ($app["username"]) $username = "@".$app["username"];
+            if ($app["username"] != "") $username = "@".$app["username"];
             shell_exec("sudo systemctl stop ".$app["service"].$username);
-//            shell_exec("sudo systemctl disable ".$app["service"].$username);
+            //shell_exec("sudo systemctl disable ".$app["service"].$username);
         }
     }
 }
@@ -121,8 +119,8 @@ else if (isset($_GET['servicestart']))
         if ($process == $app["name"])
         {
             $username = "";
-            if ($app["username"]) $username = "@".$app["username"];
-//            shell_exec("sudo systemctl enable ".$app["service"].$username);
+            if ($app["username"] != "") $username = "@".$app["username"];
+            //shell_exec("sudo systemctl enable ".$app["service"].$username);
             shell_exec("sudo systemctl restart ".$app["service"].$username);
         }
     }
@@ -132,9 +130,10 @@ else
     $appstatus = array();
     foreach($apps as $app)
     {
+        $username = "";
+        if ($app["username"] != "") $username = "@".$app["username"];
         $appstatus[$app["name"]] = array (isEnabled($app["service"],$username));
     }
-
     echo json_encode($appstatus);
 }
 ?>
