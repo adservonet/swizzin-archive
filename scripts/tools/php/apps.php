@@ -110,7 +110,7 @@ if (isset($_GET['servicedisable']))
             $username = "";
             if ($app["username"]) $username = "@".$app["username"];
             shell_exec("sudo systemctl stop ".$app["service"].$username);
-            shell_exec("sudo systemctl disable ".$app["service"].$username);
+//            shell_exec("sudo systemctl disable ".$app["service"].$username);
         }
     }
 }
@@ -123,7 +123,7 @@ else if (isset($_GET['servicestart']))
         {
             $username = "";
             if ($app["username"]) $username = "@".$app["username"];
-            shell_exec("sudo systemctl enable ".$app["service"].$username);
+//            shell_exec("sudo systemctl enable ".$app["service"].$username);
             shell_exec("sudo systemctl restart ".$app["service"].$username);
         }
     }
