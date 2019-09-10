@@ -105,7 +105,7 @@ if (isset($_GET['servicedisable']))
         if ($process == $app["name"])
         {
             $username = "";
-            if ($app["username"] != "") $username = "@".$app["user"];
+            if ($app["user"] != "") $username = "@".$app["user"];
             shell_exec("sudo systemctl stop ".$app["service"].$username);
             //shell_exec("sudo systemctl disable ".$app["service"].$username);
         }
@@ -119,7 +119,7 @@ else if (isset($_GET['servicestart']))
         if ($process == $app["name"])
         {
             $username = "";
-            if ($app["username"] != "") $username = "@".$app["user"];
+            if ($app["user"] != "") $username = "@".$app["user"];
             //shell_exec("sudo systemctl enable ".$app["service"].$username);
             shell_exec("sudo systemctl restart ".$app["service"].$username);
         }
@@ -131,7 +131,7 @@ else
     foreach($apps as $app)
     {
         $username = "";
-        if ($app["username"] != "") $username = "@".$app["user"];
+        if ($app["user"] != "") $username = "@".$app["user"];
         $appstatus[$app["name"]] = array (isEnabled($app["service"],$username));
     }
     echo json_encode($appstatus);
