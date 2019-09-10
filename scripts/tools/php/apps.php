@@ -56,6 +56,8 @@ function isEnabled($process, $username = false)
     return "";
 }
 
+$username = "seedit4me";
+
 $apps = array(
     array("name" => "openvpn2",       "service" => "openvpn",           "user" => ""),
     array("name" => "proftpd",        "service" => "proftpd",           "user" => ""),
@@ -101,7 +103,6 @@ $apps = array(
 if (isset($_GET['servicedisable']))
 {
     $process = $_GET['servicedisable'];
-
     foreach($apps as $app)
     {
         if ($process == $app["name"])
@@ -115,8 +116,7 @@ if (isset($_GET['servicedisable']))
 }
 else if (isset($_GET['servicestart']))
 {
-  $process = $_GET['servicestart'];
-
+    $process = $_GET['servicestart'];
     foreach($apps as $app)
     {
         if ($process == $app["name"])
@@ -130,9 +130,7 @@ else if (isset($_GET['servicestart']))
 }
 else
 {
-    $username = "seedit4me";
     $appstatus = array();
-
     foreach($apps as $app)
     {
         $appstatus[$app["name"]] = array (isEnabled($app["service"]));
