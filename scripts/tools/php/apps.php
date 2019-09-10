@@ -41,14 +41,14 @@ function isEnabled($process, $username = false)
 
         if ($service)
         {
-            try {$enabled = $service->isEnabled();}
-            catch (Exception $e) {$enabled = false;}
-
-            if ($enabled)
-            {
+//            try {$enabled = $service->isEnabled();}
+//            catch (Exception $e) {$enabled = false;}
+//
+//            if ($enabled)
+//            {
                 try {$active = $service->isActive();}
                 catch (Exception $e) {$active = false;}
-            }
+//            }
 
         }
         return array( "exists" => +$serv_exists, "enabled" => +$enabled, "active" => +$active );
