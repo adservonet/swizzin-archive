@@ -56,206 +56,88 @@ function isEnabled($process, $username = false)
     return "";
 }
 
+$apps = array(
+    array("name" => "openvpn2",       "service" => "openvpn",           "user" => ""),
+    array("name" => "proftpd",        "service" => "proftpd",           "user" => ""),
+    array("name" => "bazarr",         "service" => "bazarr",            "user" => ""),
+    array("name" => "btsync",         "service" => "resilio-sync",      "user" => ""),
+    array("name" => "deluged",        "service" => "deluged",           "user" => $username),
+    array("name" => "deluge",         "service" => "deluge-web",        "user" => $username),
+    array("name" => "emby",           "service" => "emby-server",       "user" => ""),
+    array("name" => "filebrowser",    "service" => "filebrowser",       "user" => ""),
+    array("name" => "flood",          "service" => "flood",             "user" => $username),
+    array("name" => "headphones",     "service" => "headphones",        "user" => ""),
+    array("name" => "autodl",         "service" => "irssi",             "user" => $username),
+    array("name" => "lazylibrarian",  "service" => "lazylibrarian",     "user" => $username),
+    array("name" => "lidarr",         "service" => "lidarr",            "user" => ""),
+    array("name" => "lounge",         "service" => "lounge",            "user" => ""),
+    array("name" => "nzbget",         "service" => "nzbget",            "user" => $username),
+    array("name" => "nzbhydra",       "service" => "nzbhydra",          "user" => $username),
+    array("name" => "ombi",           "service" => "ombi",              "user" => ""),
+    array("name" => "plex",           "service" => "plexmediaserver",   "user" => ""),
+    array("name" => "plexpy",         "service" => "plexpy",            "user" => ""),
+    array("name" => "tautulli",       "service" => "tautulli",          "user" => ""),
+    array("name" => "pyload",         "service" => "pyload",            "user" => $username),
+    array("name" => "radarr",         "service" => "radarr",            "user" => ""),
+    array("name" => "rclone",         "service" => "rclone",            "user" => $username),
+    array("name" => "rutorrent",      "service" => "rtorrent",          "user" => $username),
+    array("name" => "sabnzbd",        "service" => "sabnzbd",           "user" => $username),
+    array("name" => "sickchill",      "service" => "sickchill",         "user" => $username),
+    array("name" => "medusa",         "service" => "medusa",            "user" => $username),
+    array("name" => "netdata",        "service" => "netdata",           "user" => ""),
+    array("name" => "sonarr",         "service" => "sonarr",            "user" => $username),
+    array("name" => "subsonic",       "service" => "subsonic",          "user" => ""),
+    array("name" => "syncthing",      "service" => "syncthing",         "user" => $username),
+    array("name" => "jackett",        "service" => "jackett",           "user" => $username),
+    array("name" => "couchpotato",    "service" => "couchpotato",       "user" => $username),
+    array("name" => "quassel",        "service" => "quasselcore",       "user" => ""),
+    array("name" => "shellinabox",    "service" => "shellinabox",       "user" => ""),
+    array("name" => "csf",            "service" => "csf",               "user" => ""),
+    array("name" => "sickgear",       "service" => "sickgear",          "user" => $username),
+    array("name" => "znc",            "service" => "znc",               "user" => "")
+);
 
-if (isset($_GET['serviceenable'])) {
-    $process = $_GET['serviceenable'];
-    if ($process == "filebrowser") {
-        shell_exec("sudo systemctl enable $process");
-        shell_exec("sudo systemctl start $process");
-    } elseif ($process == "resilio-sync") {
-        shell_exec("sudo systemctl enable $process");
-        shell_exec("sudo systemctl start $process");
-    } elseif ($process == "shellinabox") {
-        shell_exec("sudo systemctl enable $process");
-        shell_exec("sudo systemctl start $process");
-    } elseif ($process == "emby-server") {
-        shell_exec("sudo systemctl enable $process");
-        shell_exec("sudo systemctl start $process");
-    } elseif ($process == "headphones") {
-        shell_exec("sudo systemctl enable $process");
-        shell_exec("sudo systemctl start $process");
-    } elseif ($process == "medusa") {
-        shell_exec("sudo systemctl disable sickchill@$username");
-        shell_exec("sudo systemctl stop sickchill@$username");
-        shell_exec("sudo systemctl disable sickgear@$username");
-        shell_exec("sudo systemctl stop sickgear@$username");
-        shell_exec("sudo systemctl enable $process@$username");
-        shell_exec("sudo systemctl start $process@$username");
-    } elseif ($process == "netdata") {
-        shell_exec("sudo systemctl enable $process");
-        shell_exec("sudo systemctl start $process");
-    } elseif ($process == "nzbget") {
-        shell_exec("sudo systemctl enable $process@$username");
-        shell_exec("sudo systemctl start $process@$username");
-    } elseif ($process == "plexmediaserver") {
-        shell_exec("sudo systemctl enable $process");
-        shell_exec("sudo systemctl start $process");
-    } elseif ($process == "tautulli") {
-        shell_exec("sudo systemctl enable $process");
-        shell_exec("sudo systemctl start $process");
-    } elseif ($process == "ombi") {
-        shell_exec("sudo systemctl enable $process");
-        shell_exec("sudo systemctl start $process");
-    } elseif ($process == "radarr") {
-        shell_exec("sudo systemctl enable $process");
-        shell_exec("sudo systemctl start $process");
-    } elseif ($process == "sickgear") {
-        shell_exec("sudo systemctl disable medusa@$username");
-        shell_exec("sudo systemctl stop medusa@$username");
-        shell_exec("sudo systemctl disable sickchill@$username");
-        shell_exec("sudo systemctl stop sickchill@$username");
-        shell_exec("sudo systemctl enable $process@$username");
-        shell_exec("sudo systemctl start $process@$username");
-    } elseif ($process == "sickchill") {
-        shell_exec("sudo systemctl disable medusa@$username");
-        shell_exec("sudo systemctl stop medusa@$username");
-        shell_exec("sudo systemctl disable sickgear@$username");
-        shell_exec("sudo systemctl stop sickgear@$username");
-        shell_exec("sudo systemctl enable $process@$username");
-        shell_exec("sudo systemctl start $process@$username");
-    } elseif ($process == "subsonic") {
-        shell_exec("sudo systemctl enable $process");
-        shell_exec("sudo systemctl start $process");
-    } else {
-        shell_exec("sudo systemctl enable $process@$username");
-        shell_exec("sudo systemctl start $process@$username");
-    }
-    //header('Location: https://' . $_SERVER['HTTP_HOST'] . '/');
-}
-else if (isset($_GET['servicedisable'])) {
+
+if (isset($_GET['servicedisable']))
+{
     $process = $_GET['servicedisable'];
-    if ($process == "filebrowser") {
-        shell_exec("sudo systemctl stop $process");
-        shell_exec("sudo systemctl disable $process");
-    } elseif ($process == "resilio-sync") {
-        shell_exec("sudo systemctl stop $process");
-        shell_exec("sudo systemctl disable $process");
-    } elseif ($process == "shellinabox") {
-        shell_exec("sudo systemctl stop $process");
-        shell_exec("sudo systemctl disable $process");
-    } elseif ($process == "emby-server") {
-        shell_exec("sudo systemctl stop $process");
-        shell_exec("sudo systemctl disable $process");
-    } elseif ($process == "headphones") {
-        shell_exec("sudo systemctl stop $process");
-        shell_exec("sudo systemctl disable $process");
-    } elseif ($process == "lounge") {
-        shell_exec("sudo systemctl stop $process");
-        shell_exec("sudo systemctl disable $process");
-    } elseif ($process == "netdata") {
-        shell_exec("sudo systemctl stop $process");
-        shell_exec("sudo systemctl disable $process");
-    } elseif ($process == "plexmediaserver") {
-        shell_exec("sudo systemctl stop $process");
-        shell_exec("sudo systemctl disable $process");
-    } elseif ($process == "tautulli") {
-        shell_exec("sudo systemctl stop $process");
-        shell_exec("sudo systemctl disable $process");
-    } elseif ($process == "ombi") {
-        shell_exec("sudo systemctl stop $process");
-        shell_exec("sudo systemctl disable $process");
-    } elseif ($process == "radarr") {
-        shell_exec("sudo systemctl stop $process");
-        shell_exec("sudo systemctl disable $process");
-    } elseif ($process == "subsonic") {
-        shell_exec("sudo systemctl stop $process");
-        shell_exec("sudo systemctl disable $process");
-    } else {
-        shell_exec("sudo systemctl stop $process@$username");
-        shell_exec("sudo systemctl disable $process@$username");
+
+    foreach($apps as $app)
+    {
+        if ($process == $app["name"])
+        {
+            $username = "";
+            if ($app["username"]) $username = "@".$app["username"];
+            shell_exec("sudo systemctl stop ".$app["service"].$username);
+            shell_exec("sudo systemctl disable ".$app["service"].$username);
+        }
     }
-    //header('Location: https://' . $_SERVER['HTTP_HOST'] . '/');
 }
 else if (isset($_GET['servicestart']))
 {
   $process = $_GET['servicestart'];
-    if ($process == "filebrowser"){
-      shell_exec("sudo systemctl enable $process");
-      shell_exec("sudo systemctl restart $process");
-    } elseif ($process == "resilio-sync"){
-      shell_exec("sudo systemctl enable $process");
-      shell_exec("sudo systemctl restart $process");
-    } elseif ($process == "shellinabox"){
-      shell_exec("sudo systemctl enable $process");
-      shell_exec("sudo systemctl restart $process");
-    } elseif ($process == "emby-server"){
-      shell_exec("sudo systemctl enable $process");
-      shell_exec("sudo systemctl restart $process");
-    } elseif ($process == "headphones"){
-      shell_exec("sudo systemctl enable $process");
-      shell_exec("sudo systemctl restart $process");
-    } elseif ($process == "lounge"){
-      shell_exec("sudo systemctl enable $process");
-      shell_exec("sudo systemctl restart $process");
-    } elseif ($process == "netdata"){
-      shell_exec("sudo systemctl enable $process");
-      shell_exec("sudo systemctl restart $process");
-    } elseif ($process == "plexmediaserver"){
-      shell_exec("sudo systemctl enable $process");
-      shell_exec("sudo systemctl restart $process");
-    } elseif ($process == "tautulli"){
-      shell_exec("sudo systemctl enable $process");
-      shell_exec("sudo systemctl restart $process");
-    } elseif ($process == "ombi"){
-      shell_exec("sudo systemctl enable $process");
-      shell_exec("sudo systemctl restart $process");
-    } elseif ($process == "radarr"){
-      shell_exec("sudo systemctl enable $process");
-      shell_exec("sudo systemctl restart $process");
-    } elseif ($process == "subsonic"){
-      shell_exec("sudo systemctl enable $process");
-      shell_exec("sudo systemctl restart $process");
-    } else {
-      shell_exec("sudo systemctl restart $process@$username");
+
+    foreach($apps as $app)
+    {
+        if ($process == $app["name"])
+        {
+            $username = "";
+            if ($app["username"]) $username = "@".$app["username"];
+            shell_exec("sudo systemctl enable ".$app["service"].$username);
+            shell_exec("sudo systemctl restart ".$app["service"].$username);
+        }
     }
-  //header('Location: https://' . $_SERVER['HTTP_HOST'] . '/');
 }
 else
 {
     $username = "seedit4me";
-    $apps = array(
+    $appstatus = array();
 
-        "openvpn2" => array(        isEnabled("openvpn")),
-        "proftpd" => array(         isEnabled("proftpd")),
-        "bazarr" => array(          isEnabled("bazarr")),
-        "btsync" => array(          isEnabled("resilio-sync")),
-        "deluged" => array(         isEnabled("deluged", $username)),
-        "deluge" => array(          isEnabled("deluge-web", $username)),
-        "emby" => array(            isEnabled("emby-server")),
-        "filebrowser" => array(     isEnabled("filebrowser")),
-        "flood" => array(           isEnabled("flood", $username)),
-        "headphones" => array(      isEnabled("headphones")),
-        "autodl" => array(          isEnabled("irssi", $username)),
-        "lazylibrarian" => array(   isEnabled("lazylibrarian", $username)),
-        "lidarr" => array(          isEnabled("lidarr")),
-        "lounge" => array(          isEnabled("lounge")),
-        "nzbget" => array(          isEnabled("nzbget", $username)),
-        "nzbhydra" => array(        isEnabled("nzbhydra", $username)),
-        "ombi" => array(            isEnabled("ombi")),
-        "plex" => array(            isEnabled("plexmediaserver")),
-        "plexpy" => array(          isEnabled("plexpy")),
-        "tautulli" => array(        isEnabled("tautulli")),
-        "pyload" => array(          isEnabled("pyload", $username)),
-        "radarr" => array(          isEnabled("radarr")),
-        "rclone" => array(          isEnabled("rclone", $username)),
-        "rutorrent" => array(       isEnabled("rtorrent", $username)),
-        "sabnzbd" => array(         isEnabled("sabnzbd", $username)),
-        "sickchill" => array(       isEnabled("sickchill", $username)),
-        "medusa" => array(          isEnabled("medusa", $username)),
-        "netdata" => array(         isEnabled("netdata")),
-        "sonarr" => array(          isEnabled("sonarr", $username)),
-        "subsonic" => array(        isEnabled("subsonic")),
-        "syncthing" => array(       isEnabled("syncthing", $username)),
-        "jackett" => array(         isEnabled("jackett", $username)),
-        "couchpotato" => array(     isEnabled("couchpotato", $username)),
-        "quassel" => array(         isEnabled("quasselcore")),
-        "shellinabox" => array(     isEnabled("shellinabox")),
-        "csf" => array(             isEnabled("csf")),
-        "sickgear" => array(        isEnabled("sickgear", $username)),
-        "znc" => array(             isEnabled("znc")),
+    foreach($apps as $app)
+    {
+        $appstatus[$app["name"]] = array (isEnabled($app["service"]);
+    }
 
-    );
-
-    echo json_encode($apps);
+    echo json_encode($appstatus);
 }
 ?>
