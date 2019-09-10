@@ -135,7 +135,7 @@ else
 
     foreach($apps as $app)
     {
-        $appstatus[$app["name"]] = array (isEnabled($app["service"]);
+        $appstatus[$app["name"]] = array (isEnabled($app["service"]));
     }
 
     echo json_encode($appstatus);
