@@ -31,8 +31,8 @@ function isEnabled($process, $username = false)
 //    if (count($pids) > 0) $proc_exists = true;
 
     if(file_exists("/etc/systemd/system/".$process.$username.".service")) $serv_exists = true;
-    if(file_exists("/etc/systemd/system/multi-user.target.wants/".$process.$username.".service")) $serv_exists = true;
-    if(file_exists("/sys/fs/cgroup/systemd/system.slice/".$process.$username.".service")) $serv_exists = true;
+    else if(file_exists("/etc/systemd/system/multi-user.target.wants/".$process.$username.".service")) $serv_exists = true;
+    else if(file_exists("/sys/fs/cgroup/systemd/system.slice/".$process.$username.".service")) $serv_exists = true;
 
     if ($serv_exists)
     {
