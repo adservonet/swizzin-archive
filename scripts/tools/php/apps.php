@@ -49,7 +49,6 @@ function isEnabled($process, $username = false)
                 try {$active = $service->isActive();}
                 catch (Exception $e) {$active = false;}
 //            }
-
         }
         return array( "exists" => +$serv_exists, "enabled" => +$enabled, "active" => +$active );
     }
@@ -133,7 +132,7 @@ else
     $appstatus = array();
     foreach($apps as $app)
     {
-        $appstatus[$app["name"]] = array (isEnabled($app["service"]));
+        $appstatus[$app["name"]] = array (isEnabled($app["service"],$username));
     }
 
     echo json_encode($appstatus);
