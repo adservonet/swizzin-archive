@@ -1,6 +1,6 @@
 <?php
 include ('cors.php');
-header('Content-Type: text/plain');
+//header('Content-Type: text/plain');
 
 if (false === ($str = @file("/proc/cpuinfo"))) return false;
 $str = implode("", $str);
