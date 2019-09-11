@@ -1,5 +1,6 @@
 <?php
 include ('cors.php');
+header('Content-Type: application/json');
 
 // Timing
 function microtime_float() {

@@ -1,5 +1,7 @@
 <?php
 include ('cors.php');
+header('Content-Type: application/json');
+
 require 'vendor/autoload.php';
 
 $systemCtl = new SystemCtl\SystemCtl();

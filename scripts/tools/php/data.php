@@ -1,5 +1,6 @@
 <?php
 include ('cors.php');
+header('Content-Type: application/json');
 
 $interface = 'venet0';//INETFACE;
 session_start();
