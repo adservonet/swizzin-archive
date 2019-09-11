@@ -21,6 +21,8 @@ cd /srv/
 mkdir tools
 mkdir tools/logs
 chmod 777 tools/logs
+touch /srv/tools/logs/output.log
+
 cp -r /usr/local/bin/swizzin/tools/php/* /srv/tools/
 
 chown -R www-data: /srv/tools
@@ -49,10 +51,10 @@ try_files \$uri \$uri/ /index.php?q=\$uri&\$args;
 index index.php;
 allow all;
 
-add_header 'Access-Control-Allow-Origin' '*';
+add_header 'Access-Control-Allow-Origin' '*' always;
 add_header 'Access-Control-Allow-Credentials' 'true';
 add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
-add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
+add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization,accept,origin,X-Requested-With,X-CSRF-Token' always;
 add_header 'Cache-Control' 'no-store, no-cache, must-revalidate';
 
 add_header 'Access-Control-Max-Age' 1728000;
