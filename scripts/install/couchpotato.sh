@@ -47,8 +47,8 @@ ExecStop=-/bin/kill -HUP
 [Install]
 WantedBy=multi-user.target
 CPS
-systemctl enable couchpotato@${MASTER} >/dev/null 2>&1
-systemctl start couchpotato@${MASTER} >/dev/null 2>&1
+systemctl enable couchpotato@${MASTER} >>"${OUTTO}" 2>&1;
+systemctl start couchpotato@${MASTER} >>"${OUTTO}" 2>&1;
 
 if [[ -f /install/.nginx.lock ]]; then
   bash /usr/local/bin/swizzin/nginx/couchpotato.sh

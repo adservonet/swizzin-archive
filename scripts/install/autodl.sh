@@ -73,7 +73,7 @@ WorkingDirectory=/home/%I/
 WantedBy=multi-user.target
 ADC
 for u in "${users[@]}"; do
-systemctl enable irssi@${u} 2>>$log.log
+systemctl enable irssi@${u} >>"${OUTTO}" 2>&1
 sleep 1
 service irssi@${u} start
 touch /install/.autodl.lock
@@ -85,6 +85,7 @@ if [[ -f /install/.tools.lock ]]; then
 else
   OUTTO="/dev/null"
 fi
+
 users=($(cut -d: -f1 < /etc/htpasswd))
 
 if [[ -n $1 ]]; then

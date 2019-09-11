@@ -34,7 +34,7 @@ function _installBTSync1() {
   #sudo sh -c 'echo "deb http://linux-packages.getsync.com/btsync/deb btsync non-free" > /etc/apt/sources.list.d/btsync.list'
   #wget -qO - http://linux-packages.getsync.com/btsync/key.asc | sudo apt-key add - >/dev/null 2>&1
   sudo sh -c 'echo "deb http://linux-packages.resilio.com/resilio-sync/deb resilio-sync non-free" > /etc/apt/sources.list.d/btsync.list'
-  wget -qO - https://linux-packages.resilio.com/resilio-sync/key.asc | sudo apt-key add - >/dev/null 2>&1
+  wget -qO - https://linux-packages.resilio.com/resilio-sync/key.asc | sudo apt-key add - >>"${OUTTO}" 2>&1;
 }
 function _installBTSync2() {
   sudo apt-get update >/dev/null 2>&1
@@ -75,9 +75,9 @@ RSCONF
 }
 function _installBTSync6() {
   touch /install/.btsync.lock
-  systemctl enable resilio-sync >/dev/null 2>&1
-  systemctl start resilio-sync >/dev/null 2>&1
-  systemctl restart resilio-sync >/dev/null 2>&1
+  systemctl enable resilio-sync >>"${OUTTO}" 2>&1;
+  systemctl start resilio-sync >>"${OUTTO}" 2>&1;
+  systemctl restart resilio-sync >>"${OUTTO}" 2>&1;
 }
 function _installBTSync7() {
   echo "BTSync Install Complete!" >>"${OUTTO}" 2>&1;

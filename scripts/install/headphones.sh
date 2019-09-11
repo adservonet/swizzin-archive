@@ -29,11 +29,14 @@ ENDCOLOR='\033[0m'
 CYAN='\e[96m'
 GREEN='\e[92m'
 
+
 if [[ -f /install/.tools.lock ]]; then
   OUTTO="/srv/tools/logs/output.log"
 else
   OUTTO="/dev/null"
 fi
+
+
 USERNAME=$(cut -d: -f1 < /root/.master.info)
 PASSWD=$(cut -d: -f2 < /root/.master.info)
 

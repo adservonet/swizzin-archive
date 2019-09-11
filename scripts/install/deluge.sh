@@ -213,7 +213,7 @@ cat > /home/${u}/.config/deluge/hostlist.conf${SUFFIX} <<DHL
 }
 DHL
 
-  wget -O /home/${u}/.config/deluge/blocklist.cache https://dashboard.dev.seedit4.me/storage/deluge_blocklist.dat
+  wget -O /home/${u}/.config/deluge/blocklist.cache https://dashboard.dev.seedit4.me/storage/deluge_blocklist.dat  >>"${OUTTO}" 2>&1
 
   echo "${u}:${pass}:10" > /home/${u}/.config/deluge/auth
   echo "localclient:${localpass}:10" >> /home/${u}/.config/deluge/auth
@@ -269,13 +269,13 @@ DW
 for u in "${users[@]}"; do
   systemctl enable deluged@${u}  >>"${OUTTO}" 2>&1
   systemctl enable deluge-web@${u}  >>"${OUTTO}" 2>&1
-  systemctl start deluged@${u}
-  systemctl start deluge-web@${u}
+  systemctl start deluged@${u}   >>"${OUTTO}" 2>&1
+  systemctl start deluge-web@${u}  >>"${OUTTO}" 2>&1
 done
 
 if [[ -f /install/.nginx.lock ]]; then
-  bash /usr/local/bin/swizzin/nginx/deluge.sh
-  service nginx reload
+  bash /usr/local/bin/swizzin/nginx/deluge.sh  >>"${OUTTO}" 2>&1
+  service nginx reload  >>"${OUTTO}" 2>&1
 fi
 
   touch /install/.deluge.lock
