@@ -22,22 +22,22 @@
 
 function _installpyLoad1() {
   echo "Installing any additional dependencies needed for pyLoad ... "
-  apt-get install -y sqlite3 tesseract-ocr gocr rhino pyqt4-dev-tools python-imaging python-dev libcurl4-openssl-dev >/dev/null 2>&1
-  apt-get -y autoremove >/dev/null 2>&1
+  apt-get install -y sqlite3 tesseract-ocr gocr rhino pyqt4-dev-tools python-imaging python-dev libcurl4-openssl-dev >>"${OUTTO}" 2>&1
+  apt-get -y autoremove >>"${OUTTO}" 2>&1
 }
 
 function _installpyLoad2() {
   echo "Setting up python package management system in /home/${MASTER}/.pip ... "
   mkdir /home/${MASTER}/.pip && cd /home/${MASTER}/.pip
-  wget https://bootstrap.pypa.io/get-pip.py >/dev/null 2>&1
-  python get-pip.py >/dev/null 2>&1
+  wget https://bootstrap.pypa.io/get-pip.py >>"${OUTTO}" 2>&1
+  python get-pip.py >>"${OUTTO}" 2>&1
 }
 
 function _installpyLoad3() {
   echo "Installing pyLoad packages ... "
-  pip install wheel --upgrade >/dev/null 2>&1
-  pip install setuptools --upgrade >/dev/null 2>&1
-  pip install ply --upgrade >/dev/null 2>&1
+  pip install wheel --upgrade >>"${OUTTO}" 2>&1
+  pip install setuptools --upgrade >>"${OUTTO}" 2>&1
+  pip install ply --upgrade >>"${OUTTO}" 2>&1
   pip install cryptography --upgrade >/dev/null 2>&1
   pip install distribute >/dev/null 2>&1
   #pip install pyOpenSSL >/dev/null 2>&1
@@ -86,9 +86,9 @@ PYSV
 
 function _installpyLoad6() {
   echo "Adjusting permissions ... "
-  chown -R ${MASTER}.${MASTER} /home/${MASTER}/.pip
-  chown -R ${MASTER}.${MASTER} /home/${MASTER}/.pyload
-  chown -R ${MASTER}.${MASTER} /var/run/pyload
+  chown -R ${MASTER}.${MASTER} /home/${MASTER}/.pip >>"${OUTTO}" 2>&1
+  chown -R ${MASTER}.${MASTER} /home/${MASTER}/.pyload >>"${OUTTO}" 2>&1
+  chown -R ${MASTER}.${MASTER} /var/run/pyload >>"${OUTTO}" 2>&1
 }
 
 function _installpyLoad7() {
@@ -195,7 +195,7 @@ sleep 3
 }
 
 function _installpyLoad8() {
-  echo "pyLoad Install Complete!" >>"${OUTTO}" 2>&1;
+  echo "pyLoad Install Complete!" >>"${OUTTO}" 2>&1
 }
 
 function _installpyLoad9() {

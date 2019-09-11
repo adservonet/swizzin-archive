@@ -20,18 +20,18 @@ else
 fi
 MASTER=$(cut -d: -f1 < /root/.master.info)
 
-apt-get update -y -q >>"${OUTTO}" 2>&1;
+apt-get update -y -q >>"${OUTTO}" 2>&1
 apt-get -y -q install python python-setuptools tzdata >>"${OUTTO}" 2>&1
 cd /opt
 LATEST=$(curl -s https://api.github.com/repos/tautulli/tautulli/releases/latest | grep "\"name\":" | cut -d : -f 2 | tr -d \", | cut -d " " -f 3)
-echo "Downloading latest Tautulli version ${LATEST}" >>"${OUTTO}" 2>&1;
+echo "Downloading latest Tautulli version ${LATEST}" >>"${OUTTO}" 2>&1
 mkdir -p /opt/tautulli
 curl -s https://api.github.com/repos/tautulli/tautulli/releases/latest | grep "tarball" | cut -d : -f 2,3 | tr -d \", | wget -q -i- -O- | tar xz -C /opt/tautulli --strip-components 1
 
-echo "Adding user and setting up Tautulli" >>"${OUTTO}" 2>&1;
+echo "Adding user and setting up Tautulli" >>"${OUTTO}" 2>&1
 adduser --system --no-create-home tautulli >>"${OUTTO}" 2>&1
 
-echo "Adjusting permissions" >>"${OUTTO}" 2>&1;
+echo "Adjusting permissions" >>"${OUTTO}" 2>&1
 chown tautulli:nogroup -R /opt/tautulli
 
 
@@ -68,4 +68,4 @@ if [[ -f /install/.nginx.lock ]]; then
 fi
 touch /install/.tautulli.lock
 
-echo "Tautulli Install Complete!" >>"${OUTTO}" 2>&1;
+echo "Tautulli Install Complete!" >>"${OUTTO}" 2>&1

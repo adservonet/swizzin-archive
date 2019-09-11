@@ -49,7 +49,7 @@ echo "Installing emby keys and sources ... " >>"${OUTTO}" 2>&1;
 
 echo "Updating system & installing emby server ... " >>"${OUTTO}" 2>&1;
     apt-get -y update  >>"${OUTTO}" 2>&1;
-    apt-get install -y --allow-unauthenticated -f emby-server >/dev/null 2>&1 >>"${OUTTO}" 2>&1;
+    apt-get install -y --allow-unauthenticated -f emby-server >>"${OUTTO}" 2>&1;
     echo
     sleep 5
 
