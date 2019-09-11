@@ -22,7 +22,7 @@ port=$(cat /home/seedit4me/.znc_port)
 DISTRO=$(lsb_release -is)
 CODENAME=$(lsb_release -cs)
 if [[ -f /install/.tools.lock ]]; then
-  OUTTO="/srv/tools/log/output.log"
+  OUTTO="/srv/tools/logs/output.log"
 else
   OUTTO="/dev/null"
 fi

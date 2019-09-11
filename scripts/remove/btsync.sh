@@ -19,7 +19,7 @@
 #
 MASTER=$(cut -d: -f1 < /root/.master.info)
 if [[ -f /install/.tools.lock ]]; then
-  OUTTO="/srv/tools/log/output.log"
+  OUTTO="/srv/tools/logs/output.log"
 else
   OUTTO="/dev/null"
 fi

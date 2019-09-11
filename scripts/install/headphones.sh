@@ -30,7 +30,7 @@ CYAN='\e[96m'
 GREEN='\e[92m'
 
 if [[ -f /install/.tools.lock ]]; then
-  OUTTO="/srv/tools/log/output.log"
+  OUTTO="/srv/tools/logs/output.log"
 else
   OUTTO="/dev/null"
 fi
