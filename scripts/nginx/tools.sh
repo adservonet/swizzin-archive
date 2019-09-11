@@ -54,13 +54,13 @@ allow all;
 
 add_header 'Access-Control-Allow-Origin' '*' always;
 add_header 'Access-Control-Allow-Credentials' 'true';
-add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+add_header 'Access-Control-Allow-Methods' '*';
 add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization,accept,origin,X-Requested-With,X-CSRF-Token' always;
 add_header 'Cache-Control' 'no-store, no-cache, must-revalidate';
 
 #add_header 'Access-Control-Max-Age' 1728000;
 #add_header 'Content-Length' 0;
-#add_header 'Content-Type' 'text/plain charset=UTF-8';
+add_header 'Content-Type' 'text/plain charset=UTF-8';
 
 
 location ~ \.php$
@@ -70,17 +70,6 @@ location ~ \.php$
     #fastcgi_index index.php;
     fastcgi_param SCRIPT_FILENAME /srv\$fastcgi_script_name;
   }
-}
-
-location /tools/logs/ {
-alias /srv/tools/logs/ ;
-allow all;
-
-add_header 'Access-Control-Allow-Origin' '*' always;
-add_header 'Access-Control-Allow-Credentials' 'true';
-add_header 'Access-Control-Allow-Methods' '*';
-add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization,accept,origin,X-Requested-With,X-CSRF-Token' always;
-add_header 'Cache-Control' 'no-store, no-cache, must-revalidate';
 }
 
 PAN
