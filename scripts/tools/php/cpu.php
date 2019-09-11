@@ -1,5 +1,5 @@
 <?php
-header('Content-Type: text/plain');
+//header('Content-Type: text/plain');
 
 // Timing
 function microtime_float() {
