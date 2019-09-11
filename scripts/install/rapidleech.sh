@@ -48,10 +48,6 @@ function _installRapidleech4() {
 }
 function _installRapidleech5() {
     echo "Rapidleech Install Complete!" >>"${OUTTO}" 2>&1;
-    sleep 5
-    echo >>"${OUTTO}" 2>&1;
-    echo >>"${OUTTO}" 2>&1;
-    echo "Close this dialog box to refresh your browser" >>"${OUTTO}" 2>&1;
     service nginx reload
 }
 function _installRapidleech6() {
@@ -60,7 +56,7 @@ function _installRapidleech6() {
 
 echo "Installing rapidleech ... " >>"${OUTTO}" 2>&1;_installRapidleech1
 echo "Setting up rapidleech permissions ... " >>"${OUTTO}" 2>&1;_installRapidleech2
-echo "Setting up rapidleech apache configuration ... " >>"${OUTTO}" 2>&1;_installRapidleech3
-echo "Reloading apache ... " >>"${OUTTO}" 2>&1;_installRapidleech4
+echo "Setting up rapidleech nginx configuration ... " >>"${OUTTO}" 2>&1;_installRapidleech3
+echo "Reloading nginx ... " >>"${OUTTO}" 2>&1;_installRapidleech4
 _installRapidleech5
 _installRapidleech6

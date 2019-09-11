@@ -132,9 +132,5 @@ touch /install/.$APPNAME.lock
 echo
 
 echo "$APPTITLE Install Complete!" >>"${OUTTO}" 2>&1;
-sleep 5
-echo >>"${OUTTO}" 2>&1;
-echo >>"${OUTTO}" 2>&1;
-echo "Close this dialog box to refresh your browser" >>"${OUTTO}" 2>&1;
 
 exit

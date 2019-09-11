@@ -64,15 +64,12 @@ echo "rclone installation complete!" >>"${OUTTO}" 2>&1;
 else
     echo "Issue occured during rclone installation." >>"${OUTTO}" 2>&1;
 fi
-echo >>"${OUTTO}" 2>&1;
-echo >>"${OUTTO}" 2>&1;
-echo "Close this dialog box to refresh your browser" >>"${OUTTO}" 2>&1;
 
   if [[ -f /install/.nginx.lock ]]; then
     bash /usr/local/bin/swizzin/nginx/rclone.sh
     service nginx reload
   fi
-  echo "Enabling and starting rclone services ... "
+  echo "Enabling and starting rclone services ... " >>"${OUTTO}" 2>&1;
   systemctl enable rclone@${MASTER}.service >/dev/null >>"${OUTTO}" 2>&1;
   systemctl start rclone@${MASTER}.service >/dev/null >>"${OUTTO}" 2>&1;
   service nginx reload

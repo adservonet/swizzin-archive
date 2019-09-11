@@ -32,7 +32,7 @@ echo "Installing emby keys and sources ... " >>"${OUTTO}" 2>&1;
   if [[ $DISTRO == Debian ]]; then
     version=$(grep VERSION= /etc/os-release| cut -d "\"" -f 2 | cut -d " " -f1).0
     echo "deb http://download.opensuse.org/repositories/home:/emby/$(lsb_release -is)_${version}/ /" > /etc/apt/sources.list.d/emby-server.list
-    wget --quiet http://download.opensuse.org/repositories/home:emby/$(lsb_release -is)_${version}/Release.key -O - | apt-key add - > /dev/null 2>&1
+    wget --quiet http://download.opensuse.org/repositories/home:emby/$(lsb_release -is)_${version}/Release.key -O - | apt-key add - >  >>"${OUTTO}" 2>&1;
   elif [[ $DISTRO == Ubuntu ]]; then
     if [[ $CODENAME =~ ("artful"|"bionic") ]]; then
       current=$(curl -L -s -H 'Accept: application/json' https://github.com/MediaBrowser/Emby.Releases/releases/latest | sed -e 's/.*"tag_name":"\([^"]*\)".*/\1/')
@@ -43,13 +43,13 @@ echo "Installing emby keys and sources ... " >>"${OUTTO}" 2>&1;
     else
       version=$(grep VERSION= /etc/os-release | cut -d "\"" -f 2 | cut -d " " -f1 | cut -d. -f1-2)
       sudo sh -c "echo 'deb http://download.opensuse.org/repositories/home:/emby/x$(lsb_release -is)_${version}/ /' > /etc/apt/sources.list.d/emby-server.list"
-      wget --quiet http://download.opensuse.org/repositories/home:emby/x$(lsb_release -is)_${version}/Release.key -O - | apt-key add - > /dev/null 2>&1
+      wget --quiet http://download.opensuse.org/repositories/home:emby/x$(lsb_release -is)_${version}/Release.key -O - | apt-key add - >  >>"${OUTTO}" 2>&1;
     fi
   fi
 
 echo "Updating system & installing emby server ... " >>"${OUTTO}" 2>&1;
-    apt-get -y update >/dev/null 2>&1
-    apt-get install -y --allow-unauthenticated -f emby-server >/dev/null 2>&1
+    apt-get -y update  >>"${OUTTO}" 2>&1;
+    apt-get install -y --allow-unauthenticated -f emby-server >/dev/null 2>&1 >>"${OUTTO}" 2>&1;
     echo
     sleep 5
 
@@ -59,14 +59,10 @@ echo "Updating system & installing emby server ... " >>"${OUTTO}" 2>&1;
       echo "EMBY_GROUP="${username}"" >> /etc/emby-server.conf
     fi
 
-    systemctl restart emby-server >/dev/null 2>&1
+    systemctl restart emby-server  >>"${OUTTO}" 2>&1;
     touch /install/.emby.lock
     echo
 
 echo "Emby Install Complete!" >>"${OUTTO}" 2>&1;
-    sleep 5
-    echo >>"${OUTTO}" 2>&1;
-    echo >>"${OUTTO}" 2>&1;
-    echo "Close this dialog box to refresh your browser" >>"${OUTTO}" 2>&1;
 
     exit

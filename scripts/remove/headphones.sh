@@ -34,9 +34,9 @@ echo -e "Removing $APPTITLE lock file ..." >>"${OUTTO}" 2>&1;
 rm -f /install/.$APPNAME.lock
 
 # for output to box
-echo -e "Reloading apache ..."
+echo -e "Reloading nginx ..."
 # for output to dashboard
-echo -e "Reloading apache ..." >>"${OUTTO}" 2>&1;
+echo -e "Reloading nginx ..." >>"${OUTTO}" 2>&1;
 service nginx reload
 
 # for output to box

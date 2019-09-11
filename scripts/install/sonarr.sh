@@ -100,9 +100,6 @@ SONARR
 
 function _installSonarr9() {
   echo "Sonarr Install Complete!" >>"${log}" 2>&1;
-  echo >>"${log}" 2>&1;
-  echo >>"${log}" 2>&1;
-  echo "Close this dialog box to refresh your browser" >>"${log}" 2>&1;
 }
 
 function _installSonarr10() {

@@ -81,9 +81,3 @@ echo -en "\rUpdating dependencies ... \033[0K\r";_depends
 echo -en "\rInstalling Ombi ... \033[0K\r";_install
 echo -en "\rInitializing Ombi service ... \033[0K\r";_services
 echo -e "\rOmbi Installation Complete!\033[0K\r"
-  sleep 5
-echo >>"${OUTTO}" 2>&1;
-echo >>"${OUTTO}" 2>&1;
-echo "Close this dialog box to refresh your browser" >>"${OUTTO}" 2>&1;
-
-echo ""

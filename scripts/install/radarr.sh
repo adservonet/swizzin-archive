@@ -91,15 +91,6 @@ EOF
 function _installRadarrFinish() {
   # output to dashboard
   echo "Radarr Install Complete!" >>"${OUTTO}" 2>&1;
-  echo "You can access it at  : http://$ip/radarr" >>"${OUTTO}" 2>&1;
-  echo >>"${OUTTO}" 2>&1;
-  echo >>"${OUTTO}" 2>&1;
-  echo "Close this dialog box to refresh your browser" >>"${OUTTO}" 2>&1;
-  # output to box
-  echo "Radarr Install Complete!"
-  echo "You can access it at  : http://$ip/radarr"
-  echo
-  echo "Close this dialog box to refresh your browser"
 }
 
 function _installRadarrExit() {

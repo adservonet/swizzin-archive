@@ -67,14 +67,7 @@ if [[ -f /install/.nginx.lock ]]; then
 fi
 
 touch /install/.nzbhydra.lock
-# for output to dashboard
-echo >>"${OUTTO}" 2>&1;
-echo >>"${OUTTO}" 2>&1;
-# for output to box
-echo
-echo
-# for output to dashboard
-echo "Close this dialog box to refresh your browser" >>"${OUTTO}" 2>&1;
+echo "nzbhydra installation complete. " >>"${OUTTO}" 2>&1;
 }
 
 if [[ -f /install/.tools.lock ]]; then
