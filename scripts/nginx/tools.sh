@@ -53,8 +53,7 @@ add_header Access-Control-Allow-Origin *;
 add_header Access-Control-Allow-Credentials true;
 add_header Access-Control-Allow-Methods *;
 add_header Access-Control-Allow-Headers Authorization,DNT,User-Agent,Keep-Alive,Content-Type,accept,origin,X-Requested-With,X-CSRF-Token;
-add_header Cache-Control no-store, no-cache, must-revalidate, max-age=0;
-add_header Cache-Control post-check=0, pre-check=0;
+add_header Cache-Control no-cache;
 add_header Pragma no-cache;
 
 location ~ \.php$
