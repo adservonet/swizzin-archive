@@ -1,5 +1,4 @@
 <?php
-include ('cors.php');
 header('Content-Type: text/plain');
 
 // Information obtained depending on the system CPU

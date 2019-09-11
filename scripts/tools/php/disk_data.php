@@ -1,5 +1,4 @@
 <?php
-include ('cors.php');
 header('Content-Type: text/plain');
 
 class DiskStatus {

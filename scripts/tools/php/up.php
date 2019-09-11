@@ -1,5 +1,4 @@
 <?php
-include ('cors.php');
 header('Content-Type: text/plain');
 
 $uptime = intval(shell_exec("cut -d. -f1 /proc/uptime"));
