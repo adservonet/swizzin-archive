@@ -32,18 +32,18 @@ echo "Installing emby keys and sources ... " >>"${OUTTO}" 2>&1;
   if [[ $DISTRO == Debian ]]; then
     version=$(grep VERSION= /etc/os-release| cut -d "\"" -f 2 | cut -d " " -f1).0
     echo "deb http://download.opensuse.org/repositories/home:/emby/$(lsb_release -is)_${version}/ /" > /etc/apt/sources.list.d/emby-server.list
-    wget --quiet http://download.opensuse.org/repositories/home:emby/$(lsb_release -is)_${version}/Release.key -O - | apt-key add - >  >>"${OUTTO}" 2>&1;
+    wget --quiet http://download.opensuse.org/repositories/home:emby/$(lsb_release -is)_${version}/Release.key -O - | apt-key add - >>"${OUTTO}" 2>&1;
   elif [[ $DISTRO == Ubuntu ]]; then
     if [[ $CODENAME =~ ("artful"|"bionic") ]]; then
       current=$(curl -L -s -H 'Accept: application/json' https://github.com/MediaBrowser/Emby.Releases/releases/latest | sed -e 's/.*"tag_name":"\([^"]*\)".*/\1/')
       cd /tmp
-      wget -q -O emby.dpkg https://github.com/MediaBrowser/Emby.Releases/releases/download/${current}/emby-server-deb_${current}_amd64.deb
+      wget -q -O emby.dpkg https://github.com/MediaBrowser/Emby.Releases/releases/download/${current}/emby-server-deb_${current}_amd64.deb  >>"${OUTTO}" 2>&1;
       dpkg -i emby.dpkg >> $OUTTO 2>&1
       rm emby.dpkg
     else
       version=$(grep VERSION= /etc/os-release | cut -d "\"" -f 2 | cut -d " " -f1 | cut -d. -f1-2)
       sudo sh -c "echo 'deb http://download.opensuse.org/repositories/home:/emby/x$(lsb_release -is)_${version}/ /' > /etc/apt/sources.list.d/emby-server.list"
-      wget --quiet http://download.opensuse.org/repositories/home:emby/x$(lsb_release -is)_${version}/Release.key -O - | apt-key add - >  >>"${OUTTO}" 2>&1;
+      wget --quiet http://download.opensuse.org/repositories/home:emby/x$(lsb_release -is)_${version}/Release.key -O - | apt-key add - >>"${OUTTO}" 2>&1;
     fi
   fi
 

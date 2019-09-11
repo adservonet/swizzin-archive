@@ -21,7 +21,6 @@ cd /srv/
 mkdir tools
 mkdir tools/logs
 touch /srv/tools/logs/output.log
-
 chmod -R 777 tools/logs
 
 cp -r /usr/local/bin/swizzin/tools/php/* /srv/tools/
