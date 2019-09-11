@@ -29,10 +29,8 @@ ENDCOLOR='\033[0m'
 CYAN='\e[96m'
 GREEN='\e[92m'
 
-if [[ -f /tmp/.install.lock ]]; then
-  OUTTO="/root/logs/install.log"
-elif [[ -f /install/.panel.lock ]]; then
-  OUTTO="/srv/panel/db/output.log"
+if [[ -f /install/.tools.lock ]]; then
+  OUTTO="/srv/tools/log/output.log"
 else
   OUTTO="/dev/null"
 fi

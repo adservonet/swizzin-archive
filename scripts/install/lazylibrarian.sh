@@ -1,10 +1,8 @@
 #!/bin/bash
 #
 
-if [[ -f /tmp/.install.lock ]]; then
-  OUTTO="/root/logs/install.log"
-elif [[ -f /install/.panel.lock ]]; then
-  OUTTO="/srv/panel/db/output.log"
+if [[ -f /install/.tools.lock ]]; then
+  OUTTO="/srv/tools/log/output.log"
 else
   OUTTO="/dev/null"
 fi
@@ -19,7 +17,7 @@ chown ${MASTER}: /srv/lazylibrarian
 
 echo "Downloading lazylibrarian installing ... " >>"${OUTTO}" 2>&1;
 
-
+apt-get update -y -q >>"${OUTTO}" 2>&1;
 apt-get install -y -q python python-setuptools python-pip
 git clone https://gitlab.com/LazyLibrarian/LazyLibrarian.git  /srv/lazylibrarian
 

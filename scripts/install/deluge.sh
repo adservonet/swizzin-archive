@@ -13,6 +13,14 @@
 #
 #################################################################################
 
+if [[ -f /install/.tools.lock ]]; then
+  OUTTO="/srv/tools/log/output.log"
+else
+  OUTTO="/dev/null"
+fi
+
+
+
 function _dconf {
   for u in "${users[@]}"; do
     if [[ ${u} == ${master} ]]; then
@@ -259,8 +267,8 @@ WantedBy=multi-user.target
 DW
   fi
 for u in "${users[@]}"; do
-  systemctl enable deluged@${u} >>"${log}" 2>&1
-  systemctl enable deluge-web@${u} >>"${log}" 2>&1
+  systemctl enable deluged@${u}  >>"${OUTTO}" 2>&1
+  systemctl enable deluge-web@${u}  >>"${OUTTO}" 2>&1
   systemctl start deluged@${u}
   systemctl start deluge-web@${u}
 done
@@ -273,11 +281,7 @@ fi
   touch /install/.deluge.lock
 }
 
-if [[ -f /tmp/.install.lock ]]; then
-  export log="/root/logs/install.log"
-else
-  export log="/dev/null"
-fi
+
 local_packages=/usr/local/bin/swizzin
 users=($(cut -d: -f1 < /etc/htpasswd))
 master=$(cut -d: -f1 < /root/.master.info)

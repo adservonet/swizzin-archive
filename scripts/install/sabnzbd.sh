@@ -23,10 +23,8 @@ password=$(cut -d: -f2 < /root/.master.info)
 DISTRO=$(lsb_release -is)
 RELEASE=$(lsb_release -cs)
 PUBLICIP=$(ip route get 1 | sed -n 's/^.*src \([0-9.]*\) .*$/\1/p')
-if [[ -f /tmp/.install.lock ]]; then
-  OUTTO="/root/logs/install.log"
-elif [[ -f /install/.panel.lock ]]; then
-  OUTTO="/srv/panel/db/output.log"
+if [[ -f /install/.tools.lock ]]; then
+  OUTTO="/srv/tools/log/output.log"
 else
   OUTTO="/dev/null"
 fi

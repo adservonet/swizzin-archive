@@ -18,10 +18,8 @@
 #   under the GPL along with build & install instructions.
 #
 MASTER=$(cut -d: -f1 < /root/.master.info)
-if [[ -f /tmp/.install.lock ]]; then
-  OUTTO="/root/logs/install.log"
-elif [[ -f /install/.panel.lock ]]; then
-  OUTTO="/srv/panel/db/output.log"
+if [[ -f /install/.tools.lock ]]; then
+  OUTTO="/srv/tools/log/output.log"
 else
   OUTTO="/dev/null"
 fi
