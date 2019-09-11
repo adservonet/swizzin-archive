@@ -18,6 +18,7 @@ if [[ -f /install/.tools.lock ]]; then
 else
   OUTTO="/dev/null"
 fi
+
 MASTER=$(cut -d: -f1 < /root/.master.info)
 
 apt-get update -y -q >>"${OUTTO}" 2>&1
