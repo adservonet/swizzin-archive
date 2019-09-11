@@ -33,7 +33,7 @@ echo "Adding user and setting up Tautulli" >>"${OUTTO}" 2>&1
 adduser --system --no-create-home tautulli >>"${OUTTO}" 2>&1
 
 echo "Adjusting permissions" >>"${OUTTO}" 2>&1
-chown tautulli:nogroup -R /opt/tautulli
+chown tautulli:nogroup -R /opt/tautulli  >>"${OUTTO}" 2>&1
 
 
 
@@ -56,7 +56,7 @@ Group=nogroup
 WantedBy=multi-user.target
 PPY
 
-systemctl enable tautulli > /dev/null 2>&1
+systemctl enable tautulli  >>"${OUTTO}" 2>&1
 systemctl start tautulli
 
 if [[ -f /install/.nginx.lock ]]; then
