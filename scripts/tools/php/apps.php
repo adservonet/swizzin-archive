@@ -1,6 +1,6 @@
 <?php
 include ('cors.php');
-//header('Content-Type: application/json');
+header('Content-Type: application/json');
 
 require 'vendor/autoload.php';
 
