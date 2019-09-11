@@ -49,12 +49,13 @@ try_files \$uri \$uri/ /index.php?q=\$uri&\$args;
 index index.php;
 allow all;
 
-add_header Access-Control-Allow-Origin *;
-add_header Access-Control-Allow-Credentials true;
-add_header Access-Control-Allow-Methods *;
-add_header Access-Control-Allow-Headers Authorization,DNT,User-Agent,Keep-Alive,Content-Type,accept,origin,X-Requested-With,X-CSRF-Token;
-add_header Cache-Control no-cache;
-add_header Pragma no-cache;
+add_header 'Access-Control-Allow-Origin' '*';
+add_header 'Access-Control-Allow-Credentials' 'true';
+add_header 'Access-Control-Allow-Methods' '*';
+add_header 'Access-Control-Max-Age' 1728000;
+add_header 'Content-Type' 'text/plain charset=UTF-8';
+add_header 'Content-Length' 0;
+add_header 'Access-Control-Allow-Headers' 'Authorization,DNT,X-Mx-ReqToken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,accept,origin,X-Requested-With,X-CSRF-Token';
 
 location ~ \.php$
   {
