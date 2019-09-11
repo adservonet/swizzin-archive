@@ -13,9 +13,8 @@ else
   update-alternatives --set php /usr/bin/php7.3
   sed -i "s/php7.0-fpm/php7.3-fpm/g" /etc/nginx/apps/*.conf
 fi
-  cp -r /usr/local/bin/swizzin/tools/php/* /srv/tools/
 
-  chown -R www-data: /srv/tools
-  restart_php_fpm
-  systemctl restart nginx
+  /usr/local/bin/swizzin/remove/tools.sh
+  /usr/local/bin/swizzin/install/tools.sh
+
 fi
