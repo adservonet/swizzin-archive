@@ -4,13 +4,13 @@
 user=$(cut -d: -f1 < /root/.master.info)
 noexec=$(grep "/tmp" /etc/fstab | grep noexec)
 
-if [[ -f /tmp/.install.lock ]]; then
-  log="/root/logs/install.log"
-elif [[ -f /install/.panel.lock ]]; then
-  log="/srv/panel/db/output.log"
-else
-  log="/dev/null"
-fi
+#if [[ -f /tmp/.install.lock ]]; then
+#  log="/root/logs/install.log"
+#elif [[ -f /install/.panel.lock ]]; then
+#  log="/srv/panel/db/output.log"
+#else
+#  log="/dev/null"
+#fi
 
 su - ${user} -c "screen -X -S xmr quit" >> ${SEEDIT_LOG} 2>&1
 

@@ -11,11 +11,11 @@
 #
 IFACE=$(ip link show|grep -i broadcast|grep -m1 UP|cut -d: -f 2|cut -d@ -f 1|sed -e 's/ //g');
 user=$(cut -d: -f1 < /root/.master.info)
-if [[ -f /tmp/.install.lock ]]; then
-  log="/root/logs/install.log"
-else
-  log="/dev/null"
-fi
+#if [[ -f /tmp/.install.lock ]]; then
+#  log="/root/logs/install.log"
+#else
+#  log="/dev/null"
+#fi
 
 cd /srv/
 git clone https://github.com/illnesse/quickbox_dashboard.git panel >>${SEEDIT_LOG} 2>&1

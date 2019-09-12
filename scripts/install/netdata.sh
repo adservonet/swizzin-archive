@@ -2,13 +2,13 @@
 # Netdata installer for swizzin
 # Author: liara
 
-if [[ -f /tmp/.install.lock ]]; then
-  log="/root/logs/install.log"
-elif [[ -f /install/.panel.lock ]]; then
-  log="/srv/panel/db/output.log"
-else
-  log="/dev/null"
-fi
+#if [[ -f /tmp/.install.lock ]]; then
+#  log="/root/logs/install.log"
+#elif [[ -f /install/.panel.lock ]]; then
+#  log="/srv/panel/db/output.log"
+#else
+#  log="/dev/null"
+#fi
 
 bash <(curl -Ss https://my-netdata.io/kickstart.sh) --non-interactive >> ${SEEDIT_LOG} 2>&1
 

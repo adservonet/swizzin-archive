@@ -2,13 +2,13 @@
 # Medusa installer for swizzin
 # Author: liara
 
-if [[ -f /tmp/.install.lock ]]; then
-  log="/root/logs/install.log"
-elif [[ -f /install/.panel.lock ]]; then
-  log="/srv/panel/db/output.log"
-else
-  log="/dev/null"
-fi
+#if [[ -f /tmp/.install.lock ]]; then
+#  log="/root/logs/install.log"
+#elif [[ -f /install/.panel.lock ]]; then
+#  log="/srv/panel/db/output.log"
+#else
+#  log="/dev/null"
+#fi
 distribution=$(lsb_release -is)
 user=$(cut -d: -f1 < /root/.master.info)
 

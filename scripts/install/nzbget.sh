@@ -80,11 +80,11 @@ function _cleanup {
   cd /tmp
   rm -rf nzbget-latest-bin-linux.run
 }
-if [[ -f /tmp/.install.lock ]]; then
-  log="/root/logs/install.log"
-else
-  log="/dev/null"
-fi
+#if [[ -f /tmp/.install.lock ]]; then
+#  log="/root/logs/install.log"
+#else
+#  log="/dev/null"
+#fi
 
 users=($(cut -d: -f1 < /etc/htpasswd))
 master=$(cut -d: -f1 < /root/.master.info)

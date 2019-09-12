@@ -9,13 +9,13 @@
 #   including (via compiler) GPL-licensed code must also be made available
 #   under the GPL along with build & install instructions.
 #
-if [[ -f /tmp/.install.lock ]]; then
-  log="/root/logs/install.log"
-elif [[ -f /install/.panel.lock ]]; then
-  log="/srv/panel/db/output.log"
-else
-  log="/dev/null"
-fi
+#if [[ -f /tmp/.install.lock ]]; then
+#  log="/root/logs/install.log"
+#elif [[ -f /install/.panel.lock ]]; then
+#  log="/srv/panel/db/output.log"
+#else
+#  log="/dev/null"
+#fi
 
 apt-get -y update >> ${SEEDIT_LOG} 2>&1
 apt-get -y install vsftpd ssl-cert>> ${SEEDIT_LOG} 2>&1

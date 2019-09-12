@@ -12,11 +12,11 @@
 distribution=$(lsb_release -is)
 release=$(lsb_release -rs)
 codename=$(lsb_release -cs)
-if [[ -f /tmp/.install.lock ]]; then
-  log="/root/logs/install.log"
-else
-  log="/dev/null"
-fi
+#if [[ -f /tmp/.install.lock ]]; then
+#  log="/root/logs/install.log"
+#else
+#  log="/dev/null"
+#fi
 
 if [[ -n $(pidof apache2) ]]; then
   if [[ -z $apache2 ]]; then

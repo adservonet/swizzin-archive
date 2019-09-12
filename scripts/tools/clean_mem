@@ -18,7 +18,7 @@
 #   under the GPL along with build & install instructions.
 #
 #################################################################################
-log=/srv/panel/db/output.log
+#log=/srv/panel/db/output.log
 
 function _cleanmemcache() {
   echo "Cleaning system memory cache ... " >>"${SEEDIT_LOG}" 2>&1;
