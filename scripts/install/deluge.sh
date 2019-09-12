@@ -13,14 +13,6 @@
 #
 #################################################################################
 
-if [[ -f /install/.tools.lock ]]; then
-  OUTTO="/srv/tools/logs/output.log"
-else
-  OUTTO="/dev/null"
-fi
-
-
-
 function _dconf {
   for u in "${users[@]}"; do
     if [[ ${u} == ${master} ]]; then
@@ -213,7 +205,7 @@ cat > /home/${u}/.config/deluge/hostlist.conf${SUFFIX} <<DHL
 }
 DHL
 
-  wget -O /home/${u}/.config/deluge/blocklist.cache https://dashboard.dev.seedit4.me/storage/deluge_blocklist.dat  >>"${OUTTO}" 2>&1
+  wget -O /home/${u}/.config/deluge/blocklist.cache https://dashboard.dev.seedit4.me/storage/deluge_blocklist.dat
 
   echo "${u}:${pass}:10" > /home/${u}/.config/deluge/auth
   echo "localclient:${localpass}:10" >> /home/${u}/.config/deluge/auth
@@ -267,20 +259,25 @@ WantedBy=multi-user.target
 DW
   fi
 for u in "${users[@]}"; do
-  systemctl enable deluged@${u}  >>"${OUTTO}" 2>&1
-  systemctl enable deluge-web@${u}  >>"${OUTTO}" 2>&1
-  systemctl start deluged@${u}   >>"${OUTTO}" 2>&1
-  systemctl start deluge-web@${u}  >>"${OUTTO}" 2>&1
+  systemctl enable deluged@${u} >>"${log}" 2>&1
+  systemctl enable deluge-web@${u} >>"${log}" 2>&1
+  systemctl start deluged@${u}
+  systemctl start deluge-web@${u}
 done
 
 if [[ -f /install/.nginx.lock ]]; then
-  bash /usr/local/bin/swizzin/nginx/deluge.sh  >>"${OUTTO}" 2>&1
-  service nginx reload  >>"${OUTTO}" 2>&1
+  bash /usr/local/bin/swizzin/nginx/deluge.sh
+  service nginx reload
 fi
 
   touch /install/.deluge.lock
 }
 
+if [[ -f /install/.tools.lock ]]; then
+  export log="/srv/tools/log/output.log"
+else
+  export log="/dev/null"
+fi
 
 local_packages=/usr/local/bin/swizzin
 users=($(cut -d: -f1 < /etc/htpasswd))
