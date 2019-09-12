@@ -106,11 +106,11 @@ function _installSonarr10() {
   exit
 }
 
-if [[ -f /install/.tools.lock ]]; then
-  OUTTO="/srv/tools/logs/output.log"
-else
-  OUTTO="/dev/null"
-fi
+#if [[ -f /install/.tools.lock ]]; then
+#  log="/srv/tools/logs/output.log"
+#else
+#  log="/dev/null"
+#fi
 
 . /etc/swizzin/sources/functions/mono
 username=$(cut -d: -f1 < /root/.master.info)

@@ -22,22 +22,22 @@
 
 function _installpyLoad1() {
   echo "Installing any additional dependencies needed for pyLoad ... "
-  apt-get install -y sqlite3 tesseract-ocr gocr rhino pyqt4-dev-tools python-imaging python-dev libcurl4-openssl-dev >>"${OUTTO}" 2>&1
-  apt-get -y autoremove >>"${OUTTO}" 2>&1
+  apt-get install -y sqlite3 tesseract-ocr gocr rhino pyqt4-dev-tools python-imaging python-dev libcurl4-openssl-dev >>"${log}" 2>&1
+  apt-get -y autoremove >>"${log}" 2>&1
 }
 
 function _installpyLoad2() {
   echo "Setting up python package management system in /home/${MASTER}/.pip ... "
   mkdir /home/${MASTER}/.pip && cd /home/${MASTER}/.pip
-  wget https://bootstrap.pypa.io/get-pip.py >>"${OUTTO}" 2>&1
-  python get-pip.py >>"${OUTTO}" 2>&1
+  wget https://bootstrap.pypa.io/get-pip.py >>"${log}" 2>&1
+  python get-pip.py >>"${log}" 2>&1
 }
 
 function _installpyLoad3() {
   echo "Installing pyLoad packages ... "
-  pip install wheel --upgrade >>"${OUTTO}" 2>&1
-  pip install setuptools --upgrade >>"${OUTTO}" 2>&1
-  pip install ply --upgrade >>"${OUTTO}" 2>&1
+  pip install wheel --upgrade >>"${log}" 2>&1
+  pip install setuptools --upgrade >>"${log}" 2>&1
+  pip install ply --upgrade >>"${log}" 2>&1
   pip install cryptography --upgrade >/dev/null 2>&1
   pip install distribute >/dev/null 2>&1
   pip install pyOpenSSL >/dev/null 2>&1
@@ -195,7 +195,7 @@ sleep 3
 }
 
 function _installpyLoad8() {
-  echo "pyLoad Install Complete!" >>"${OUTTO}" 2>&1
+  echo "pyLoad Install Complete!" >>"${log}" 2>&1
 }
 
 function _installpyLoad9() {
@@ -205,20 +205,20 @@ function _installpyLoad9() {
 
 ip=$(curl -s http://whatismyip.akamai.com)
 MASTER=$(cut -d: -f1 < /root/.master.info)
-if [[ -f /install/.tools.lock ]]; then
-  OUTTO="/srv/tools/logs/output.log"
-else
-  OUTTO="/dev/null"
-fi
+#if [[ -f /install/.tools.lock ]]; then
+#  log="/srv/tools/logs/output.log"
+#else
+#  log="/dev/null"
+#fi
 
 
-echo "Installing any additional dependencies needed for pyLoad ... " >>"${OUTTO}" 2>&1;_installpyLoad1
-echo "Setting up python package management system in /home/${MASTER}/.pip ... " >>"${OUTTO}" 2>&1;_installpyLoad2
-echo "Installing pyLoad packages ... " >>"${OUTTO}" 2>&1;_installpyLoad3
-echo "Grabbing latest stable pyLoad repository ... " >>"${OUTTO}" 2>&1;_installpyLoad4
-echo "Building pyLoad systemd template ... " >>"${OUTTO}" 2>&1;_installpyLoad5
-echo "Adjusting permissions ... " >>"${OUTTO}" 2>&1;_installpyLoad6
-echo "Enabling and starting pyLoad services ... " >>"${OUTTO}" 2>&1;_installpyLoad7
+echo "Installing any additional dependencies needed for pyLoad ... " >>"${log}" 2>&1;_installpyLoad1
+echo "Setting up python package management system in /home/${MASTER}/.pip ... " >>"${log}" 2>&1;_installpyLoad2
+echo "Installing pyLoad packages ... " >>"${log}" 2>&1;_installpyLoad3
+echo "Grabbing latest stable pyLoad repository ... " >>"${log}" 2>&1;_installpyLoad4
+echo "Building pyLoad systemd template ... " >>"${log}" 2>&1;_installpyLoad5
+echo "Adjusting permissions ... " >>"${log}" 2>&1;_installpyLoad6
+echo "Enabling and starting pyLoad services ... " >>"${log}" 2>&1;_installpyLoad7
 
 sleep 3
 cd /home/${MASTER}/.pyload

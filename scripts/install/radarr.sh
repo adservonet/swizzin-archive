@@ -21,9 +21,9 @@ function _string() { perl -le 'print map {(a..z,A..Z,0..9)[rand 62] } 0..pop' 15
 #################################################################################
 
 function _installRadarrIntro() {
-  echo "Radarr will now be installed." >>"${OUTTO}" 2>&1;
-  echo "This process may take up to 2 minutes." >>"${OUTTO}" 2>&1;
-  echo "Please wait until install is completed." >>"${OUTTO}" 2>&1;
+  echo "Radarr will now be installed." >>"${log}" 2>&1;
+  echo "This process may take up to 2 minutes." >>"${log}" 2>&1;
+  echo "Please wait until install is completed." >>"${log}" 2>&1;
   # output to box
   echo "Radarr will now be installed."
   echo "This process may take up to 2 minutes."
@@ -90,18 +90,18 @@ EOF
 
 function _installRadarrFinish() {
   # output to dashboard
-  echo "Radarr Install Complete!" >>"${OUTTO}" 2>&1;
+  echo "Radarr Install Complete!" >>"${log}" 2>&1;
 }
 
 function _installRadarrExit() {
 	exit 0
 }
 
-if [[ -f /install/.tools.lock ]]; then
-  OUTTO="/srv/tools/logs/output.log"
-else
-  OUTTO="/dev/null"
-fi
+#if [[ -f /install/.tools.lock ]]; then
+#  log="/srv/tools/logs/output.log"
+#else
+#  log="/dev/null"
+#fi
 username=$(cut -d: -f1 < /root/.master.info)
 distribution=$(lsb_release -is)
 version=$(lsb_release -cs)
@@ -109,8 +109,8 @@ version=$(lsb_release -cs)
 ip=$(curl -s http://whatismyip.akamai.com)
 
 _installRadarrIntro
-echo "Installing dependencies ... " >>"${OUTTO}" 2>&1;_installRadarrDependencies
-echo "Installing Radar ... " >>"${OUTTO}" 2>&1;_installRadarrCode
-echo "Configuring Radar ... " >>"${OUTTO}" 2>&1;_installRadarrConfigure
+echo "Installing dependencies ... " >>"${log}" 2>&1;_installRadarrDependencies
+echo "Installing Radar ... " >>"${log}" 2>&1;_installRadarrCode
+echo "Configuring Radar ... " >>"${log}" 2>&1;_installRadarrConfigure
 _installRadarrFinish
 _installRadarrExit

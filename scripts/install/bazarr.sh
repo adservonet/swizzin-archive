@@ -11,13 +11,13 @@
 
 user=$(cut -d: -f1 < /root/.master.info )
 
-if [[ -f /install/.tools.lock ]]; then
-  OUTTO="/srv/tools/logs/output.log"
-else
-  OUTTO="/dev/null"
-fi
+#if [[ -f /install/.tools.lock ]]; then
+#  log="/srv/tools/logs/output.log"
+#else
+#  log="/dev/null"
+#fi
 
-apt-get -y -q update >>"${OUTTO}" 2>&1
+apt-get -y -q update >>"${log}" 2>&1
 apt-get -y -q install python-pip > /dev/null 2>&1
 cd /home/${user}
 echo "Cloning into '/home/${user}/bazarr'"

@@ -67,11 +67,11 @@ OMB
 }
 
 
-if [[ -f /install/.tools.lock ]]; then
-  OUTTO="/srv/tools/logs/output.log"
-else
-  OUTTO="/dev/null"
-fi
+#if [[ -f /install/.tools.lock ]]; then
+#  log="/srv/tools/logs/output.log"
+#else
+#  log="/dev/null"
+#fi
 distribution=$(lsb_release -is)
 user=$(cut -d: -f1 < /root/.master.info)
 

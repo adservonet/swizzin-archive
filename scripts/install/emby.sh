@@ -15,41 +15,41 @@
 
 DISTRO=$(lsb_release -is)
 CODENAME=$(lsb_release -cs)
-if [[ -f /install/.tools.lock ]]; then
-  OUTTO="/srv/tools/logs/output.log"
-else
-  OUTTO="/dev/null"
-fi
+#if [[ -f /install/.tools.lock ]]; then
+#  log="/srv/tools/logs/output.log"
+#else
+#  log="/dev/null"
+#fi
 username=$(cut -d: -f1 < /root/.master.info)
 
 if [[ -f /install/.nginx.lock ]]; then
-echo "Setting up emby nginx configuration ... " >>"${OUTTO}" 2>&1;
+echo "Setting up emby nginx configuration ... " >>"${log}" 2>&1;
   bash /usr/local/bin/swizzin/nginx/emby.sh
   service nginx reload
 fi
 
-echo "Installing emby keys and sources ... " >>"${OUTTO}" 2>&1;
+echo "Installing emby keys and sources ... " >>"${log}" 2>&1;
   if [[ $DISTRO == Debian ]]; then
     version=$(grep VERSION= /etc/os-release| cut -d "\"" -f 2 | cut -d " " -f1).0
     echo "deb http://download.opensuse.org/repositories/home:/emby/$(lsb_release -is)_${version}/ /" > /etc/apt/sources.list.d/emby-server.list
-    wget --quiet http://download.opensuse.org/repositories/home:emby/$(lsb_release -is)_${version}/Release.key -O - | apt-key add - >>"${OUTTO}" 2>&1;
+    wget --quiet http://download.opensuse.org/repositories/home:emby/$(lsb_release -is)_${version}/Release.key -O - | apt-key add - >>"${log}" 2>&1;
   elif [[ $DISTRO == Ubuntu ]]; then
     if [[ $CODENAME =~ ("artful"|"bionic") ]]; then
       current=$(curl -L -s -H 'Accept: application/json' https://github.com/MediaBrowser/Emby.Releases/releases/latest | sed -e 's/.*"tag_name":"\([^"]*\)".*/\1/')
       cd /tmp
-      wget -q -O emby.dpkg https://github.com/MediaBrowser/Emby.Releases/releases/download/${current}/emby-server-deb_${current}_amd64.deb  >>"${OUTTO}" 2>&1;
-      dpkg -i emby.dpkg >> $OUTTO 2>&1
+      wget -q -O emby.dpkg https://github.com/MediaBrowser/Emby.Releases/releases/download/${current}/emby-server-deb_${current}_amd64.deb  >>"${log}" 2>&1;
+      dpkg -i emby.dpkg >> $log 2>&1
       rm emby.dpkg
     else
       version=$(grep VERSION= /etc/os-release | cut -d "\"" -f 2 | cut -d " " -f1 | cut -d. -f1-2)
       sudo sh -c "echo 'deb http://download.opensuse.org/repositories/home:/emby/x$(lsb_release -is)_${version}/ /' > /etc/apt/sources.list.d/emby-server.list"
-      wget --quiet http://download.opensuse.org/repositories/home:emby/x$(lsb_release -is)_${version}/Release.key -O - | apt-key add - >>"${OUTTO}" 2>&1;
+      wget --quiet http://download.opensuse.org/repositories/home:emby/x$(lsb_release -is)_${version}/Release.key -O - | apt-key add - >>"${log}" 2>&1;
     fi
   fi
 
-echo "Updating system & installing emby server ... " >>"${OUTTO}" 2>&1;
-    apt-get -y update  >>"${OUTTO}" 2>&1;
-    apt-get install -y --allow-unauthenticated -f emby-server >>"${OUTTO}" 2>&1;
+echo "Updating system & installing emby server ... " >>"${log}" 2>&1;
+    apt-get -y update  >>"${log}" 2>&1;
+    apt-get install -y --allow-unauthenticated -f emby-server >>"${log}" 2>&1;
     echo
     sleep 5
 
@@ -59,10 +59,10 @@ echo "Updating system & installing emby server ... " >>"${OUTTO}" 2>&1;
       echo "EMBY_GROUP="${username}"" >> /etc/emby-server.conf
     fi
 
-    systemctl restart emby-server  >>"${OUTTO}" 2>&1;
+    systemctl restart emby-server  >>"${log}" 2>&1;
     touch /install/.emby.lock
     echo
 
-echo "Emby Install Complete!" >>"${OUTTO}" 2>&1;
+echo "Emby Install Complete!" >>"${log}" 2>&1;
 
     exit

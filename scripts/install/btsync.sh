@@ -24,17 +24,17 @@ port=$(cat /home/seedit4me/.btsync_port)
 username="$(cut -d: -f1 < /root/.master.info)"
 password="$(cut -d: -f2 < /root/.master.info)"
 
-if [[ -f /install/.tools.lock ]]; then
-  OUTTO="/srv/tools/logs/output.log"
-else
-  OUTTO="/dev/null"
-fi
+#if [[ -f /install/.tools.lock ]]; then
+#  log="/srv/tools/logs/output.log"
+#else
+#  log="/dev/null"
+#fi
 
 function _installBTSync1() {
   #sudo sh -c 'echo "deb http://linux-packages.getsync.com/btsync/deb btsync non-free" > /etc/apt/sources.list.d/btsync.list'
   #wget -qO - http://linux-packages.getsync.com/btsync/key.asc | sudo apt-key add - >/dev/null 2>&1
   sudo sh -c 'echo "deb http://linux-packages.resilio.com/resilio-sync/deb resilio-sync non-free" > /etc/apt/sources.list.d/btsync.list'
-  wget -qO - https://linux-packages.resilio.com/resilio-sync/key.asc | sudo apt-key add - >>"${OUTTO}" 2>&1;
+  wget -qO - https://linux-packages.resilio.com/resilio-sync/key.asc | sudo apt-key add - >>"${log}" 2>&1;
 }
 function _installBTSync2() {
   sudo apt-get update >/dev/null 2>&1
@@ -75,22 +75,22 @@ RSCONF
 }
 function _installBTSync6() {
   touch /install/.btsync.lock
-  systemctl enable resilio-sync >>"${OUTTO}" 2>&1;
-  systemctl start resilio-sync >>"${OUTTO}" 2>&1;
-  systemctl restart resilio-sync >>"${OUTTO}" 2>&1;
+  systemctl enable resilio-sync >>"${log}" 2>&1;
+  systemctl start resilio-sync >>"${log}" 2>&1;
+  systemctl restart resilio-sync >>"${log}" 2>&1;
 }
 function _installBTSync7() {
-  echo "BTSync Install Complete!" >>"${OUTTO}" 2>&1;
+  echo "BTSync Install Complete!" >>"${log}" 2>&1;
 }
 function _installBTSync8() {
   exit
 }
 
-echo "Installing btsync keys and sources ... " >>"${OUTTO}" 2>&1;_installBTSync1
-echo "Updating system ... " >>"${OUTTO}" 2>&1;_installBTSync2
-echo "Installing btsync ... " >>"${OUTTO}" 2>&1;_installBTSync3
-echo "Setting up btsync permissions ... " >>"${OUTTO}" 2>&1;_installBTSync4
-echo "Setting up btsync configurations ... " >>"${OUTTO}" 2>&1;_installBTSync5
-echo "Starting btsync ... " >>"${OUTTO}" 2>&1;_installBTSync6
+echo "Installing btsync keys and sources ... " >>"${log}" 2>&1;_installBTSync1
+echo "Updating system ... " >>"${log}" 2>&1;_installBTSync2
+echo "Installing btsync ... " >>"${log}" 2>&1;_installBTSync3
+echo "Setting up btsync permissions ... " >>"${log}" 2>&1;_installBTSync4
+echo "Setting up btsync configurations ... " >>"${log}" 2>&1;_installBTSync5
+echo "Starting btsync ... " >>"${log}" 2>&1;_installBTSync6
 _installBTSync7
 _installBTSync8

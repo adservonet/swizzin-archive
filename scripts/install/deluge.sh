@@ -273,11 +273,11 @@ fi
   touch /install/.deluge.lock
 }
 
-if [[ -f /install/.tools.lock ]]; then
-  export log="/srv/tools/logs/output.log"
-else
-  export log="/dev/null"
-fi
+#if [[ -f /install/.tools.lock ]]; then
+#  export log="/srv/tools/logs/output.log"
+#else
+#  export log="/dev/null"
+#fi
 
 local_packages=/usr/local/bin/swizzin
 users=($(cut -d: -f1 < /etc/htpasswd))

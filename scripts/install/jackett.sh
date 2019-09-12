@@ -17,11 +17,11 @@
 #   including (via compiler) GPL-licensed code must also be made available
 #   under the GPL along with build & install instructions.
 
-if [[ -f /install/.tools.lock ]]; then
-  OUTTO="/srv/tools/logs/output.log"
-else
-  OUTTO="/dev/null"
-fi
+#if [[ -f /install/.tools.lock ]]; then
+#  log="/srv/tools/logs/output.log"
+#else
+#  log="/dev/null"
+#fi
 distribution=$(lsb_release -is)
 version=$(lsb_release -cs)
 username=$(cut -d: -f1 < /root/.master.info)
@@ -29,8 +29,8 @@ jackett=$(curl -s https://api.github.com/repos/Jackett/Jackett/releases/latest |
 #jackettver=$(wget -q https://github.com/Jackett/Jackett/releases/latest -O - | grep -E \/tag\/ | grep -v repository | awk -F "[><]" '{print $3}')
 password=$(cut -d: -f2 < /root/.master.info)
 
-echo >>"${OUTTO}" 2>&1;
-echo "Installing Jackett ... " >>"${OUTTO}" 2>&1;
+echo >>"${log}" 2>&1;
+echo "Installing Jackett ... " >>"${log}" 2>&1;
 
 cd /home/$username
 wget -q $jackett
@@ -99,7 +99,7 @@ curl http://127.0.0.1:9117/jackett/api/v2.0/server/adminpassword -H 'Content-Typ
 
 touch /install/.jackett.lock
 
-echo >>"${OUTTO}" 2>&1;
-echo >>"${OUTTO}" 2>&1;
-echo "Jackett Install Complete!" >>"${OUTTO}" 2>&1;
+echo >>"${log}" 2>&1;
+echo >>"${log}" 2>&1;
+echo "Jackett Install Complete!" >>"${log}" 2>&1;
 

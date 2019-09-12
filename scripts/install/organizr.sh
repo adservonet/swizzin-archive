@@ -1,11 +1,11 @@
 #!/bin/bash
 #
 
-if [[ -f /install/.tools.lock ]]; then
-  OUTTO="/srv/tools/logs/output.log"
-else
-  OUTTO="/dev/null"
-fi
+#if [[ -f /install/.tools.lock ]]; then
+#  log="/srv/tools/logs/output.log"
+#else
+#  log="/dev/null"
+#fi
 MASTER=$(cut -d: -f1 < /root/.master.info)
 
 
@@ -23,4 +23,4 @@ if [[ -f /install/.nginx.lock ]]; then
   service nginx reload
 fi
 
-echo "organizr Install Complete!" >>"${OUTTO}" 2>&1;
+echo "organizr Install Complete!" >>"${log}" 2>&1;

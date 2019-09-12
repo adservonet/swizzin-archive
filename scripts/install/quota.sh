@@ -83,18 +83,18 @@ function _installquota(){
 
   if [[ $DISTRO == Ubuntu ]]; then
     sed -ie '/\'"${loc}"'/ s/'${hook}'/'${hook}',usrjquota=aquota.user,jqfmt=vfsv1/' /etc/fstab
-    apt-get install -y linux-image-extra-virtual quota >>"${OUTTO}" 2>&1
-    mount -o remount ${loc} >>"${OUTTO}" 2>&1
-    quotacheck -auMF vfsv1 >>"${OUTTO}" 2>&1
-    quotaon -uv / >>"${OUTTO}" 2>&1
-    service quota start >>"${OUTTO}" 2>&1
+    apt-get install -y linux-image-extra-virtual quota >>"${log}" 2>&1
+    mount -o remount ${loc} >>"${log}" 2>&1
+    quotacheck -auMF vfsv1 >>"${log}" 2>&1
+    quotaon -uv / >>"${log}" 2>&1
+    service quota start >>"${log}" 2>&1
   elif [[ $DISTRO == Debian ]]; then
     sed -ie '/\'"${loc}"'/ s/'${hook}'/'${hook}',usrjquota=aquota.user,jqfmt=vfsv1/' /etc/fstab
-    apt-get install -y quota >>"${OUTTO}" 2>&1
-    mount -o remount ${loc} >>"${OUTTO}" 2>&1
-    quotacheck -auMF vfsv1 >>"${OUTTO}" 2>&1
-    quotaon -uv / >>"${OUTTO}" 2>&1
-    service quota start >>"${OUTTO}" 2>&1
+    apt-get install -y quota >>"${log}" 2>&1
+    mount -o remount ${loc} >>"${log}" 2>&1
+    quotacheck -auMF vfsv1 >>"${log}" 2>&1
+    quotaon -uv / >>"${log}" 2>&1
+    service quota start >>"${log}" 2>&1
   fi
 
   if [[ -d /srv/rutorrent ]]; then
@@ -131,11 +131,11 @@ fi
 }
 
 
-if [[ -f /install/.tools.lock ]]; then
-  OUTTO="/srv/tools/logs/output.log"
-else
-  OUTTO="/dev/null"
-fi
+#if [[ -f /install/.tools.lock ]]; then
+#  log="/srv/tools/logs/output.log"
+#else
+#  log="/dev/null"
+#fi
 DISTRO=$(lsb_release -is)
 
 

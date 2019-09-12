@@ -9,11 +9,11 @@
 #   including (via compiler) GPL-licensed code must also be made available
 #   under the GPL along with build & install instructions.
 
-if [[ -f /install/.tools.lock ]]; then
-  OUTTO="/srv/tools/logs/output.log"
-else
-  OUTTO="/dev/null"
-fi
+#if [[ -f /install/.tools.lock ]]; then
+#  log="/srv/tools/logs/output.log"
+#else
+#  log="/dev/null"
+#fi
 distribution=$(lsb_release -is)
 ip=$(ip route get 1 | sed -n 's/^.*src \([0-9.]*\) .*$/\1/p')
 u=$(cut -d: -f1 < /root/.master.info)
@@ -50,11 +50,11 @@ if [[ $distribution == "Debian" ]]; then
     echo "deb http://deb.debian.org/debian/ unstable main" > /etc/apt/sources.list.d/unstable.list
     printf 'Package: *\nPin: release a=unstable\nPin-Priority: 150\n\nPackage: *\nPin: release a=stretch-backports\nPin-Priority: 250' > /etc/apt/preferences.d/limit-unstable
 elif [[ $distribution == "Ubuntu" ]]; then
-    add-apt-repository -y ppa:wireguard/wireguard >> $OUTTO 2>&1
+    add-apt-repository -y ppa:wireguard/wireguard >> $log 2>&1
 fi
 
-apt-get -q update >> $OUTTO 2>&1
-apt-get -y install wireguard qrencode >> $OUTTO 2>&1
+apt-get -q update >> $log 2>&1
+apt-get -y install wireguard qrencode >> $log 2>&1
 
 
 if [[ ! -d /etc/wireguard ]]; then

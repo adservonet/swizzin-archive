@@ -1,23 +1,23 @@
 #!/bin/bash
 #
 
-if [[ -f /install/.tools.lock ]]; then
-  OUTTO="/srv/tools/logs/output.log"
-else
-  OUTTO="/dev/null"
-fi
+#if [[ -f /install/.tools.lock ]]; then
+#  log="/srv/tools/logs/output.log"
+#else
+#  log="/dev/null"
+#fi
 MASTER=$(cut -d: -f1 < /root/.master.info)
 
 
-echo "Creating lazylibrarian-tmp install directory ... " >>"${OUTTO}" 2>&1;
+echo "Creating lazylibrarian-tmp install directory ... " >>"${log}" 2>&1;
 
 mkdir /srv/lazylibrarian
 chown ${MASTER}: /srv/lazylibrarian
 
 
-echo "Downloading lazylibrarian installing ... " >>"${OUTTO}" 2>&1;
+echo "Downloading lazylibrarian installing ... " >>"${log}" 2>&1;
 
-apt-get update -y -q >>"${OUTTO}" 2>&1;
+apt-get update -y -q >>"${log}" 2>&1;
 apt-get install -y -q python python-setuptools python-pip
 git clone https://gitlab.com/LazyLibrarian/LazyLibrarian.git  /srv/lazylibrarian
 
@@ -25,7 +25,7 @@ git clone https://gitlab.com/LazyLibrarian/LazyLibrarian.git  /srv/lazylibrarian
 touch /install/.lazylibrarian.lock
 
 
-echo "Enabling lazylibrarian Systemd configuration" >>"${OUTTO}" 2>&1;
+echo "Enabling lazylibrarian Systemd configuration" >>"${log}" 2>&1;
 service stop lazylibrarian >/dev/null 2>&1
 cat > /etc/systemd/system/lazylibrarian@.service <<SUBSD
 [Unit]
@@ -55,4 +55,4 @@ if [[ -f /install/.nginx.lock ]]; then
   service nginx reload
 fi
 
-echo "lazylibrarian Install Complete!" >>"${OUTTO}" 2>&1;
+echo "lazylibrarian Install Complete!" >>"${log}" 2>&1;

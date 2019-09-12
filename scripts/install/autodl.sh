@@ -34,13 +34,13 @@ function _autoconf {
     for u in "${users[@]}"; do
       IRSSI_PASS=$(_string)
       IRSSI_PORT=$(shuf -i 20000-61000 -n 1)
-      mkdir -p "/home/${u}/.irssi/scripts/autorun/" >>"${OUTTO}" 2>&1
+      mkdir -p "/home/${u}/.irssi/scripts/autorun/" >>"${log}" 2>&1
       cd "/home/${u}/.irssi/scripts/"
       curl -sL http://git.io/vlcND | grep -Po '(?<="browser_download_url": ")(.*-v[\d.]+.zip)' | xargs wget --quiet -O autodl-irssi.zip
-      unzip -o autodl-irssi.zip >>"${OUTTO}" 2>&1
+      unzip -o autodl-irssi.zip >>"${log}" 2>&1
       rm autodl-irssi.zip
       cp autodl-irssi.pl autorun/
-      mkdir -p "/home/${u}/.autodl" >>"${OUTTO}" 2>&1
+      mkdir -p "/home/${u}/.autodl" >>"${log}" 2>&1
       touch "/home/${u}/.autodl/autodl.cfg"
 cat >"/home/${u}/.autodl/autodl.cfg"<<ADC
 [options]
@@ -73,18 +73,18 @@ WorkingDirectory=/home/%I/
 WantedBy=multi-user.target
 ADC
 for u in "${users[@]}"; do
-systemctl enable irssi@${u} >>"${OUTTO}" 2>&1
+systemctl enable irssi@${u} >>"${log}" 2>&1
 sleep 1
 service irssi@${u} start
 touch /install/.autodl.lock
 done
 }
 
-if [[ -f /install/.tools.lock ]]; then
-  OUTTO="/srv/tools/logs/output.log"
-else
-  OUTTO="/dev/null"
-fi
+#if [[ -f /install/.tools.lock ]]; then
+#  log="/srv/tools/logs/output.log"
+#else
+#  log="/dev/null"
+#fi
 
 users=($(cut -d: -f1 < /etc/htpasswd))
 

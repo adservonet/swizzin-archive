@@ -21,17 +21,17 @@ port=$(cat /home/seedit4me/.znc_port)
 
 DISTRO=$(lsb_release -is)
 CODENAME=$(lsb_release -cs)
-if [[ -f /install/.tools.lock ]]; then
-  OUTTO="/srv/tools/logs/output.log"
-else
-  OUTTO="/dev/null"
-fi
+#if [[ -f /install/.tools.lock ]]; then
+#  log="/srv/tools/logs/output.log"
+#else
+#  log="/dev/null"
+#fi
 
-echo "Installing ZNC. Please wait ... " >> ${OUTTO} 2>&1
-echo "" >> ${OUTTO} 2>&1
-echo "" >> ${OUTTO} 2>&1
+echo "Installing ZNC. Please wait ... " >> ${log} 2>&1
+echo "" >> ${log} 2>&1
+echo "" >> ${log} 2>&1
 useradd znc -m -s /bin/bash
-passwd znc -l >> ${OUTTO} 2>&1
+passwd znc -l >> ${log} 2>&1
 
 if [[ $CODENAME == jessie ]]; then
   if [[ -z $(cat /etc/apt/sources.list | grep backports) ]]; then

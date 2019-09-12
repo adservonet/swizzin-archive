@@ -20,18 +20,18 @@
 MASTER=$(cut -d: -f1 < /root/.master.info)
 
 
-if [[ -f /install/.tools.lock ]]; then
-  OUTTO="/srv/tools/logs/output.log"
-else
-  OUTTO="/dev/null"
-fi
+#if [[ -f /install/.tools.lock ]]; then
+#  log="/srv/tools/logs/output.log"
+#else
+#  log="/dev/null"
+#fi
 
 
 function _removeBTSync() {
   sudo service resilio-sync stop
-  sudo apt-get -y remove --purge resilio-sync* >>"${OUTTO}" 2>&1
-  deluser rslsync >>"${OUTTO}" 2>&1
-  delgroup rslsync >>"${OUTTO}" 2>&1
+  sudo apt-get -y remove --purge resilio-sync* >>"${log}" 2>&1
+  deluser rslsync >>"${log}" 2>&1
+  delgroup rslsync >>"${log}" 2>&1
   if [[ -d /home/rslsync ]]; then
     rm -rf /home/rslsync
   fi
