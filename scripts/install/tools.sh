@@ -20,7 +20,8 @@ chown -R www-data: /srv/tools
 
 touch /install/.tools.lock
 
-export log=/srv/tools/logs/output.log
+echo "SEEDIT_LOG=/srv/tools/logs/output.log" >> /etc/environment
+export SEEDIT_LOG=/srv/tools/logs/output.log
 
 if [[ -f /lib/systemd/system/php7.3-fpm.service ]]; then
   echo "php setup seems ok"
