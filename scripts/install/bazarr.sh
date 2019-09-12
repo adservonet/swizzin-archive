@@ -17,7 +17,7 @@ user=$(cut -d: -f1 < /root/.master.info )
 #  log="/dev/null"
 #fi
 
-apt-get -y -q update >>"${log}" 2>&1
+apt-get -y -q update >>"${SEEDIT_LOG}" 2>&1
 apt-get -y -q install python-pip > /dev/null 2>&1
 cd /home/${user}
 echo "Cloning into '/home/${user}/bazarr'"

@@ -83,18 +83,18 @@ function _installquota(){
 
   if [[ $DISTRO == Ubuntu ]]; then
     sed -ie '/\'"${loc}"'/ s/'${hook}'/'${hook}',usrjquota=aquota.user,jqfmt=vfsv1/' /etc/fstab
-    apt-get install -y linux-image-extra-virtual quota >>"${log}" 2>&1
-    mount -o remount ${loc} >>"${log}" 2>&1
-    quotacheck -auMF vfsv1 >>"${log}" 2>&1
-    quotaon -uv / >>"${log}" 2>&1
-    service quota start >>"${log}" 2>&1
+    apt-get install -y linux-image-extra-virtual quota >>"${SEEDIT_LOG}" 2>&1
+    mount -o remount ${loc} >>"${SEEDIT_LOG}" 2>&1
+    quotacheck -auMF vfsv1 >>"${SEEDIT_LOG}" 2>&1
+    quotaon -uv / >>"${SEEDIT_LOG}" 2>&1
+    service quota start >>"${SEEDIT_LOG}" 2>&1
   elif [[ $DISTRO == Debian ]]; then
     sed -ie '/\'"${loc}"'/ s/'${hook}'/'${hook}',usrjquota=aquota.user,jqfmt=vfsv1/' /etc/fstab
-    apt-get install -y quota >>"${log}" 2>&1
-    mount -o remount ${loc} >>"${log}" 2>&1
-    quotacheck -auMF vfsv1 >>"${log}" 2>&1
-    quotaon -uv / >>"${log}" 2>&1
-    service quota start >>"${log}" 2>&1
+    apt-get install -y quota >>"${SEEDIT_LOG}" 2>&1
+    mount -o remount ${loc} >>"${SEEDIT_LOG}" 2>&1
+    quotacheck -auMF vfsv1 >>"${SEEDIT_LOG}" 2>&1
+    quotaon -uv / >>"${SEEDIT_LOG}" 2>&1
+    service quota start >>"${SEEDIT_LOG}" 2>&1
   fi
 
   if [[ -d /srv/rutorrent ]]; then

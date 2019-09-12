@@ -59,25 +59,25 @@ APPNEWPASS='$PASSWD'
 
 echo
 sleep 1
-echo -e "Refreshing packages list ..." >>"${log}" 2>&1;
+echo -e "Refreshing packages list ..." >>"${SEEDIT_LOG}" 2>&1;
 echo -e $YELLOW'--->Refreshing packages list...'$ENDCOLOR
 sudo apt-get update
 
 echo
 sleep 1
-echo -e "Installing prerequisites for $APPTITLE ..." >>"${log}" 2>&1;
+echo -e "Installing prerequisites for $APPTITLE ..." >>"${SEEDIT_LOG}" 2>&1;
 echo -e $YELLOW'--->Installing prerequisites for '$APPTITLE'...'$ENDCOLOR
 sudo apt-get -y install $APPDEPS
 
 echo
 sleep 1
-echo -e "Downloading latest $APPTITLE ... " >>"${log}" 2>&1;
+echo -e "Downloading latest $APPTITLE ... " >>"${SEEDIT_LOG}" 2>&1;
 echo -e $YELLOW'--->Downloading latest '$APPTITLE'...'$ENDCOLOR
 git clone $APPGIT $APPPATH || { echo -e $RED'Git not found.'$ENDCOLOR ; exit 1; }
 
 echo
 sleep 1
-echo -e "Setting $APPTITLE permissions for $USERNAME ... " >>"${log}" 2>&1;
+echo -e "Setting $APPTITLE permissions for $USERNAME ... " >>"${SEEDIT_LOG}" 2>&1;
 echo -e $YELLOW'--->Setting '$APPTITLE' permissions for '$USERNAME'...'$ENDCOLOR
 sudo chown -R $USERNAME:$USERNAME $APPPATH >/dev/null 2>&1
 sudo chmod -R 775 $APPPATH >/dev/null 2>&1
@@ -85,7 +85,7 @@ sudo chmod -R g+s $APPPATH >/dev/null 2>&1
 
 echo
 sleep 1
-echo -e "Configuring $APPTITLE Install ..." >>"${log}" 2>&1;
+echo -e "Configuring $APPTITLE Install ..." >>"${SEEDIT_LOG}" 2>&1;
 echo -e $YELLOW'--->Configuring '$APPTITLE' Install...'$ENDCOLOR
 APPSHORTNAMEU="${APPSHORTNAME^^}"
 DEFAULTFILE='/tmp/'$APPNAME'_default'
@@ -114,7 +114,7 @@ WantedBy=multi-user.target
 HEADP
 sed -i "s/USER/${USERNAME}/g" /etc/systemd/system/$APPNAME.service
 
-echo -e "Starting $APPTITLE ... " >>"${log}" 2>&1;
+echo -e "Starting $APPTITLE ... " >>"${SEEDIT_LOG}" 2>&1;
 echo -e $YELLOW'--->Starting '$APPTITLE$ENDCOLOR
 systemctl enable $APPNAME >/dev/null 2>&1
 systemctl start $APPNAME >/dev/null 2>&1
@@ -131,6 +131,6 @@ fi
 touch /install/.$APPNAME.lock
 echo
 
-echo "$APPTITLE Install Complete!" >>"${log}" 2>&1;
+echo "$APPTITLE Install Complete!" >>"${SEEDIT_LOG}" 2>&1;
 
 exit

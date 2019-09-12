@@ -29,8 +29,8 @@ jackett=$(curl -s https://api.github.com/repos/Jackett/Jackett/releases/latest |
 #jackettver=$(wget -q https://github.com/Jackett/Jackett/releases/latest -O - | grep -E \/tag\/ | grep -v repository | awk -F "[><]" '{print $3}')
 password=$(cut -d: -f2 < /root/.master.info)
 
-echo >>"${log}" 2>&1;
-echo "Installing Jackett ... " >>"${log}" 2>&1;
+echo >>"${SEEDIT_LOG}" 2>&1;
+echo "Installing Jackett ... " >>"${SEEDIT_LOG}" 2>&1;
 
 cd /home/$username
 wget -q $jackett
@@ -99,7 +99,7 @@ curl http://127.0.0.1:9117/jackett/api/v2.0/server/adminpassword -H 'Content-Typ
 
 touch /install/.jackett.lock
 
-echo >>"${log}" 2>&1;
-echo >>"${log}" 2>&1;
-echo "Jackett Install Complete!" >>"${log}" 2>&1;
+echo >>"${SEEDIT_LOG}" 2>&1;
+echo >>"${SEEDIT_LOG}" 2>&1;
+echo "Jackett Install Complete!" >>"${SEEDIT_LOG}" 2>&1;
 

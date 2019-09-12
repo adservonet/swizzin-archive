@@ -5,7 +5,7 @@
 function _install {
 
 useradd lounge -m -s /bin/bash
-passwd lounge -l >> ${log} 2>&1
+passwd lounge -l >> ${SEEDIT_LOG} 2>&1
 
 npm -g config set user root
 npm install -g thelounge >> $log 2>&1

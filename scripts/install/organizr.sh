@@ -23,4 +23,4 @@ if [[ -f /install/.nginx.lock ]]; then
   service nginx reload
 fi
 
-echo "organizr Install Complete!" >>"${log}" 2>&1;
+echo "organizr Install Complete!" >>"${SEEDIT_LOG}" 2>&1;

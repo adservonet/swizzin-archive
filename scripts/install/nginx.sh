@@ -30,7 +30,7 @@ if [[ -n $(pidof apache2) ]]; then
     echo "Purging apache2 ... "
     systemctl disable apache2 >> /dev/null 2>&1
     systemctl stop apache2
-    apt-get -y -q purge apache2 >> ${log} 2>&1
+    apt-get -y -q purge apache2 >> ${SEEDIT_LOG} 2>&1
   elif [[ $apache2 == "disable" ]]; then
     echo "Disabling apache2 ... "
     systemctl disable apache2 >> /dev/null 2>&1

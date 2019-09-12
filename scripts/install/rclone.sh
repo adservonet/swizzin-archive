@@ -24,14 +24,14 @@
 #fi
 MASTER=$(cut -d: -f1 < /root/.master.info)
 
-echo "Downloading and installing rclone ..." >>"${log}" 2>&1;
+echo "Downloading and installing rclone ..." >>"${SEEDIT_LOG}" 2>&1;
 
 # One-liner to check arch/os type, as well as download latest rclone for relevant system.
 curl https://rclone.org/install.sh | sudo bash
 
 # Make sure rclone downloads and installs without error before proceeding
 if [ $? -eq 0 ]; then
-    echo "Adding rclone mount service..." >>"${log}" 2>&1;
+    echo "Adding rclone mount service..." >>"${SEEDIT_LOG}" 2>&1;
 
 user=$(cut -d: -f1 < /root/.master.info)
 passwd=$(cut -d: -f2 < /root/.master.info)
@@ -60,16 +60,16 @@ WantedBy=multi-user.target
 EOF
 
 touch /install/.rclone.lock
-echo "rclone installation complete!" >>"${log}" 2>&1;
+echo "rclone installation complete!" >>"${SEEDIT_LOG}" 2>&1;
 else
-    echo "Issue occured during rclone installation." >>"${log}" 2>&1;
+    echo "Issue occured during rclone installation." >>"${SEEDIT_LOG}" 2>&1;
 fi
 
   if [[ -f /install/.nginx.lock ]]; then
     bash /usr/local/bin/swizzin/nginx/rclone.sh
     service nginx reload
   fi
-  echo "Enabling and starting rclone services ... " >>"${log}" 2>&1;
-  systemctl enable rclone@${MASTER}.service >/dev/null >>"${log}" 2>&1;
-  systemctl start rclone@${MASTER}.service >/dev/null >>"${log}" 2>&1;
+  echo "Enabling and starting rclone services ... " >>"${SEEDIT_LOG}" 2>&1;
+  systemctl enable rclone@${MASTER}.service >/dev/null >>"${SEEDIT_LOG}" 2>&1;
+  systemctl start rclone@${MASTER}.service >/dev/null >>"${SEEDIT_LOG}" 2>&1;
   service nginx reload

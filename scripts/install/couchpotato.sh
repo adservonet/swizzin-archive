@@ -13,21 +13,21 @@
 #   under the GPL along with build & install instructions.
 #
 function _install() {
-echo "Installing CouchPotato ... " >>"${log}" 2>&1;
+echo "Installing CouchPotato ... " >>"${SEEDIT_LOG}" 2>&1;
 warning=$(echo -e "[ \e[1;91mWARNING\e[0m ]")
 apt-get -y --force-yes update >/dev/null 2>&1
 apt-get -y --force-yes install git-core python >/dev/null 2>&1;
-echo >>"${log}" 2>&1;
-echo >>"${log}" 2>&1;
-echo "Cloning CouchPotato git ... " >>"${log}" 2>&1;
+echo >>"${SEEDIT_LOG}" 2>&1;
+echo >>"${SEEDIT_LOG}" 2>&1;
+echo "Cloning CouchPotato git ... " >>"${SEEDIT_LOG}" 2>&1;
 git clone -q https://github.com/CouchPotato/CouchPotatoServer.git /home/${MASTER}/.couchpotato || { echo "GIT failed"; exit 1; }
 chown ${MASTER}:${MASTER} -R /home/${MASTER}/.couchpotato
 }
 
 function _services(){
-echo >>"${log}" 2>&1;
-echo >>"${log}" 2>&1;
-echo "Installing and enabling service ... " >>"${log}" 2>&1;
+echo >>"${SEEDIT_LOG}" 2>&1;
+echo >>"${SEEDIT_LOG}" 2>&1;
+echo "Installing and enabling service ... " >>"${SEEDIT_LOG}" 2>&1;
 
 cat > /etc/systemd/system/couchpotato@.service <<CPS
 [Unit]
@@ -47,8 +47,8 @@ ExecStop=-/bin/kill -HUP
 [Install]
 WantedBy=multi-user.target
 CPS
-systemctl enable couchpotato@${MASTER} >>"${log}" 2>&1;
-systemctl start couchpotato@${MASTER} >>"${log}" 2>&1;
+systemctl enable couchpotato@${MASTER} >>"${SEEDIT_LOG}" 2>&1;
+systemctl start couchpotato@${MASTER} >>"${SEEDIT_LOG}" 2>&1;
 
 if [[ -f /install/.nginx.lock ]]; then
   bash /usr/local/bin/swizzin/nginx/couchpotato.sh
@@ -56,9 +56,9 @@ if [[ -f /install/.nginx.lock ]]; then
 fi
 
 touch /install/.couchpotato.lock
-echo >>"${log}" 2>&1;
-echo >>"${log}" 2>&1;
-echo "couchpotato installation complete." >>"${log}" 2>&1;
+echo >>"${SEEDIT_LOG}" 2>&1;
+echo >>"${SEEDIT_LOG}" 2>&1;
+echo "couchpotato installation complete." >>"${SEEDIT_LOG}" 2>&1;
 }
 
 #if [[ -f /install/.tools.lock ]]; then
