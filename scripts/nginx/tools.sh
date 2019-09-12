@@ -11,21 +11,6 @@
 #
 IFACE=$(ip link show|grep -i broadcast|grep -m1 UP|cut -d: -f 2|cut -d@ -f 1|sed -e 's/ //g');
 user=$(cat /root/.master.info | cut -d: -f1)
-if [[ -f /tmp/.install.lock ]]; then
-  log="/root/logs/install.log"
-else
-  log="/dev/null"
-fi
-
-cd /srv/
-mkdir tools
-mkdir tools/logs
-touch /srv/tools/logs/output.log
-chmod -R 777 tools/logs
-
-cp -r /usr/local/bin/swizzin/tools/php/* /srv/tools/
-
-chown -R www-data: /srv/tools
 
 printf "${IFACE}" > /srv/tools/interface.txt
 printf "${user}" > /srv/tools/master.txt

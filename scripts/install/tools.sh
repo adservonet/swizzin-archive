@@ -10,7 +10,17 @@
 #   under the GPL along with build & install instructions.
 #
 
-log="/dev/null"
+cd /srv/
+mkdir tools
+mkdir tools/logs
+touch /srv/tools/logs/output.log
+chmod -R 777 /srv/tools/logs
+cp -r /usr/local/bin/swizzin/tools/php/* /srv/tools/
+chown -R www-data: /srv/tools
+
+touch /install/.tools.lock
+
+export log=/srv/tools/logs/output.log
 
 if [[ -f /lib/systemd/system/php7.3-fpm.service ]]; then
   echo "php setup seems ok"
@@ -29,4 +39,3 @@ if [[ ! -f /install/.nginx.lock ]]; then
 fi
 
 bash /usr/local/bin/swizzin/nginx/tools.sh
-touch /install/.tools.lock
