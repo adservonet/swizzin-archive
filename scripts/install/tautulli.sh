@@ -23,12 +23,17 @@ MASTER=$(cut -d: -f1 < /root/.master.info)
 
 apt-get update -y -q >> "${SEEDIT_LOG}"  2>&1;
 apt-get -y -q install python python-setuptools tzdata >> "${SEEDIT_LOG}"  2>&1
+
+#apt-get -y -q install python-dev libffi-dev
+pip install --upgrade cryptography >> "${SEEDIT_LOG}"  2>&1
+
 python -m easy_install --upgrade pyOpenSSL >> "${SEEDIT_LOG}"  2>&1
 cd /opt
 LATEST=$(curl -s https://api.github.com/repos/tautulli/tautulli/releases/latest | grep "\"name\":" | cut -d : -f 2 | tr -d \", | cut -d " " -f 3)
 echo "Downloading latest Tautulli version ${LATEST}" >> "${SEEDIT_LOG}"  2>&1;
 mkdir -p /opt/tautulli
 curl -s https://api.github.com/repos/tautulli/tautulli/releases/latest | grep "tarball" | cut -d : -f 2,3 | tr -d \", | wget -q -i- -O- | tar xz -C /opt/tautulli --strip-components 1
+touch /install/.tautulli.lock
 
 echo "Adding user and setting up Tautulli" >> "${SEEDIT_LOG}"  2>&1;
 adduser --system --no-create-home tautulli >> "${SEEDIT_LOG}"  2>&1
@@ -68,7 +73,6 @@ if [[ -f /install/.nginx.lock ]]; then
   bash /usr/local/bin/swizzin/nginx/tautulli.sh
   service nginx reload
 fi
-touch /install/.tautulli.lock
 
 echo "Tautulli Install Complete!" >> "${SEEDIT_LOG}"  2>&1;
 #sleep 5
