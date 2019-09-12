@@ -16,6 +16,8 @@
 #  log="/dev/null"
 #fi
 
+echo "wtf where does this even point to?:${SEEDIT_LOG}" ${SEEDIT_LOG}
+
 
 # Get our main user credentials to use when bootstrapping filebrowser.
 username="$(cut -d: -f1 < /root/.master.info)"
