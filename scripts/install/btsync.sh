@@ -34,7 +34,7 @@ function _installBTSync1() {
   #sudo sh -c 'echo "deb http://linux-packages.getsync.com/btsync/deb btsync non-free" > /etc/apt/sources.list.d/btsync.list'
   #wget -qO - http://linux-packages.getsync.com/btsync/key.asc | sudo apt-key add - >/dev/null 2>&1
   sudo sh -c 'echo "deb http://linux-packages.resilio.com/resilio-sync/deb resilio-sync non-free" > /etc/apt/sources.list.d/btsync.list'
-  wget -qO - https://linux-packages.resilio.com/resilio-sync/key.asc | sudo apt-key add - >>"${SEEDIT_LOG}" 2>&1;
+  wget -qO - https://linux-packages.resilio.com/resilio-sync/key.asc | sudo apt-key add - >>${SEEDIT_LOG} 2>&1;
 }
 function _installBTSync2() {
   sudo apt-get update >/dev/null 2>&1
@@ -75,22 +75,22 @@ RSCONF
 }
 function _installBTSync6() {
   touch /install/.btsync.lock
-  systemctl enable resilio-sync >>"${SEEDIT_LOG}" 2>&1;
-  systemctl start resilio-sync >>"${SEEDIT_LOG}" 2>&1;
-  systemctl restart resilio-sync >>"${SEEDIT_LOG}" 2>&1;
+  systemctl enable resilio-sync >>${SEEDIT_LOG} 2>&1;
+  systemctl start resilio-sync >>${SEEDIT_LOG} 2>&1;
+  systemctl restart resilio-sync >>${SEEDIT_LOG} 2>&1;
 }
 function _installBTSync7() {
-  echo "BTSync Install Complete!" >>"${SEEDIT_LOG}" 2>&1;
+  echo "BTSync Install Complete!" >>${SEEDIT_LOG} 2>&1;
 }
 function _installBTSync8() {
   exit
 }
 
-echo "Installing btsync keys and sources ... " >>"${SEEDIT_LOG}" 2>&1;_installBTSync1
-echo "Updating system ... " >>"${SEEDIT_LOG}" 2>&1;_installBTSync2
-echo "Installing btsync ... " >>"${SEEDIT_LOG}" 2>&1;_installBTSync3
-echo "Setting up btsync permissions ... " >>"${SEEDIT_LOG}" 2>&1;_installBTSync4
-echo "Setting up btsync configurations ... " >>"${SEEDIT_LOG}" 2>&1;_installBTSync5
-echo "Starting btsync ... " >>"${SEEDIT_LOG}" 2>&1;_installBTSync6
+echo "Installing btsync keys and sources ... " >>${SEEDIT_LOG} 2>&1;_installBTSync1
+echo "Updating system ... " >>${SEEDIT_LOG} 2>&1;_installBTSync2
+echo "Installing btsync ... " >>${SEEDIT_LOG} 2>&1;_installBTSync3
+echo "Setting up btsync permissions ... " >>${SEEDIT_LOG} 2>&1;_installBTSync4
+echo "Setting up btsync configurations ... " >>${SEEDIT_LOG} 2>&1;_installBTSync5
+echo "Starting btsync ... " >>${SEEDIT_LOG} 2>&1;_installBTSync6
 _installBTSync7
 _installBTSync8

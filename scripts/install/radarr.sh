@@ -21,9 +21,9 @@ function _string() { perl -le 'print map {(a..z,A..Z,0..9)[rand 62] } 0..pop' 15
 #################################################################################
 
 function _installRadarrIntro() {
-  echo "Radarr will now be installed." >>"${SEEDIT_LOG}" 2>&1;
-  echo "This process may take up to 2 minutes." >>"${SEEDIT_LOG}" 2>&1;
-  echo "Please wait until install is completed." >>"${SEEDIT_LOG}" 2>&1;
+  echo "Radarr will now be installed." >>${SEEDIT_LOG} 2>&1;
+  echo "This process may take up to 2 minutes." >>${SEEDIT_LOG} 2>&1;
+  echo "Please wait until install is completed." >>${SEEDIT_LOG} 2>&1;
   # output to box
   echo "Radarr will now be installed."
   echo "This process may take up to 2 minutes."
@@ -90,7 +90,7 @@ EOF
 
 function _installRadarrFinish() {
   # output to dashboard
-  echo "Radarr Install Complete!" >>"${SEEDIT_LOG}" 2>&1;
+  echo "Radarr Install Complete!" >>${SEEDIT_LOG} 2>&1;
 }
 
 function _installRadarrExit() {
@@ -109,8 +109,8 @@ version=$(lsb_release -cs)
 ip=$(curl -s http://whatismyip.akamai.com)
 
 _installRadarrIntro
-echo "Installing dependencies ... " >>"${SEEDIT_LOG}" 2>&1;_installRadarrDependencies
-echo "Installing Radar ... " >>"${SEEDIT_LOG}" 2>&1;_installRadarrCode
-echo "Configuring Radar ... " >>"${SEEDIT_LOG}" 2>&1;_installRadarrConfigure
+echo "Installing dependencies ... " >>${SEEDIT_LOG} 2>&1;_installRadarrDependencies
+echo "Installing Radar ... " >>${SEEDIT_LOG} 2>&1;_installRadarrCode
+echo "Configuring Radar ... " >>${SEEDIT_LOG} 2>&1;_installRadarrConfigure
 _installRadarrFinish
 _installRadarrExit

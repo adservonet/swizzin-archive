@@ -55,17 +55,17 @@ function _nukeovh() {
   grsec=$(uname -a | grep -i grs)
   if [[ -n $grsec ]]; then
     if [[ $DISTRO == Ubuntu ]]; then
-      apt-get install -q -y linux-image-generic >>"${SEEDIT_LOG}" 2>&1
+      apt-get install -q -y linux-image-generic >>${SEEDIT_LOG} 2>&1
     elif [[ $DISTRO == Debian ]]; then
       arch=$(uname -m)
       if [[ $arch =~ ("i686"|"i386") ]]; then
-        apt-get install -q -y linux-image-686 >>"${SEEDIT_LOG}" 2>&1
+        apt-get install -q -y linux-image-686 >>${SEEDIT_LOG} 2>&1
       elif [[ $arch == x86_64 ]]; then
-        apt-get install -q -y linux-image-amd64 >>"${SEEDIT_LOG}" 2>&1
+        apt-get install -q -y linux-image-amd64 >>${SEEDIT_LOG} 2>&1
       fi
     fi
     mv /etc/grub.d/06_OVHkernel /etc/grub.d/25_OVHkernel
-    update-grub >>"${SEEDIT_LOG}" 2>&1
+    update-grub >>${SEEDIT_LOG} 2>&1
   fi
 }
 

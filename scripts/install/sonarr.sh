@@ -20,9 +20,9 @@
 #################################################################################
 
 function _installSonarrintro() {
-  echo "Sonarr will now be installed." >>"${SEEDIT_LOG}" 2>&1;
-  echo "This process may take up to 2 minutes." >>"${SEEDIT_LOG}" 2>&1;
-  echo "Please wait until install is completed." >>"${SEEDIT_LOG}" 2>&1;
+  echo "Sonarr will now be installed." >>${SEEDIT_LOG} 2>&1;
+  echo "This process may take up to 2 minutes." >>${SEEDIT_LOG} 2>&1;
+  echo "Please wait until install is completed." >>${SEEDIT_LOG} 2>&1;
   # output to box
   echo "Sonarr will now be installed."
   echo "This process may take up to 2 minutes."
@@ -99,7 +99,7 @@ SONARR
 
 
 function _installSonarr9() {
-  echo "Sonarr Install Complete!" >>"${SEEDIT_LOG}" 2>&1;
+  echo "Sonarr Install Complete!" >>${SEEDIT_LOG} 2>&1;
 }
 
 function _installSonarr10() {
@@ -119,10 +119,10 @@ version=$(lsb_release -cs)
 
 _installSonarrintro
 _installSonarr1
-echo "Adding source repositories for Sonarr-Nzbdrone ... " >>"${SEEDIT_LOG}" 2>&1;_installSonarr2
-echo "Updating your system with new sources ... " >>"${SEEDIT_LOG}" 2>&1;_installSonarr3
-echo "Installing Sonarr-Nzbdrone ... " >>"${SEEDIT_LOG}" 2>&1;_installSonarr4
-echo "Setting permissions to ${username} ... " >>"${SEEDIT_LOG}" 2>&1;_installSonarr5
-echo "Setting up Sonarr as a service and enabling ... " >>"${SEEDIT_LOG}" 2>&1;_installSonarr6
+echo "Adding source repositories for Sonarr-Nzbdrone ... " >>${SEEDIT_LOG} 2>&1;_installSonarr2
+echo "Updating your system with new sources ... " >>${SEEDIT_LOG} 2>&1;_installSonarr3
+echo "Installing Sonarr-Nzbdrone ... " >>${SEEDIT_LOG} 2>&1;_installSonarr4
+echo "Setting permissions to ${username} ... " >>${SEEDIT_LOG} 2>&1;_installSonarr5
+echo "Setting up Sonarr as a service and enabling ... " >>${SEEDIT_LOG} 2>&1;_installSonarr6
 _installSonarr9
 _installSonarr10

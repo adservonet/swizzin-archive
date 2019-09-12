@@ -21,7 +21,7 @@
 
 function _removeCSF() {
   cd /etc/csf
-  sh uninstall.sh >>"${SEEDIT_LOG}" 2>&1;
+  sh uninstall.sh >>${SEEDIT_LOG} 2>&1;
   rm /install/.csf.lock
 }
 

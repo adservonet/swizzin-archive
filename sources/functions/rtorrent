@@ -120,9 +120,9 @@ function build_libtorrent_rakshasa () {
 		tar -xvf libtorrent-${libtorrentver}.tar.gz -C /tmp/libtorrent --strip-components=1 >>${SEEDIT_LOG} 2>&1
 		cd libtorrent >>${SEEDIT_LOG} 2>&1
 		if [[ ${libtorrentver} =~ ("0.13.6"|"0.13.7") ]] && [[ ! ${codename} =~ ("xenial"|"jessie") ]]; then
-			patch -p1 < /etc/swizzin/sources/openssl.patch >>"${SEEDIT_LOG}" 2>&1
+			patch -p1 < /etc/swizzin/sources/openssl.patch >>${SEEDIT_LOG} 2>&1
 			if pkg-config --atleast-version=1.14 cppunit && [[ ${libtorrentver} == 0.13.6 ]]; then
-				patch -p1 < /etc/swizzin/sources/cppunit.patch >>"${SEEDIT_LOG}" 2>&1
+				patch -p1 < /etc/swizzin/sources/cppunit.patch >>${SEEDIT_LOG} 2>&1
 			fi
 		fi
 	fi
