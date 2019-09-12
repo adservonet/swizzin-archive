@@ -20,10 +20,25 @@ user=$(cut -d: -f1 < /root/.master.info )
 apt-get -y -q update >> "${SEEDIT_LOG}"  2>&1
 apt-get -y -q install python-pip > /dev/null 2>&1
 cd /home/${user}
+
+#wget https://www.python.org/ftp/python/2.7.13/Python-2.7.13.tgz
+#tar -xvzf Python-2.7.13.tgz
+#apt install libsqlite3-dev
+#./configure --enable-loadable-sqlite-extensions && make
+#/home/seedit4me/bazarr/Python-2.7.13/python python -E -m ensurepip
+#/home/seedit4me/bazarr/Python-2.7.13/python -m easy_install pip
+#/home/seedit4me/bazarr/Python-2.7.13/python  pip install gevent
+#/home/seedit4me/bazarr/Python-2.7.13/python /home/seedit4me/bazarr/bazarr.py
+
+
 echo "Cloning into '/home/${user}/bazarr'"
 git clone https://github.com/morpheus65535/bazarr.git > /dev/null 2>&1
 chown -R ${user}: bazarr
 cd bazarr
+
+#lol
+sed -i 's/os._exit(0)/#os._exit(0)/' /home/seedit4me/bazarr/bazarr.py
+
 echo "Checking python depends"
 sudo -u ${user} bash -c "pip install --user -r requirements.txt" > /dev/null 2>&1
 mkdir -p /home/${user}/bazarr/data/config/
