@@ -37,7 +37,7 @@ chown -R ${user}: bazarr
 cd bazarr
 
 #lol
-sed -i 's/os._exit(0)/#os._exit(0)/' /home/seedit4me/bazarr/bazarr.py
+sed -i 's/os._exit(0)/#os._exit(0)/' /home/${user}/bazarr/bazarr.py
 
 echo "Checking python depends"
 sudo -u ${user} bash -c "pip install --user -r requirements.txt" > /dev/null 2>&1
