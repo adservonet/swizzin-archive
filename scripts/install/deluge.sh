@@ -274,7 +274,7 @@ fi
 }
 
 if [[ -f /install/.tools.lock ]]; then
-  export log="/srv/tools/log/output.log"
+  export log="/srv/tools/logs/output.log"
 else
   export log="/dev/null"
 fi
