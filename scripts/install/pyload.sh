@@ -40,7 +40,7 @@ function _installpyLoad3() {
   pip install ply --upgrade >>"${OUTTO}" 2>&1
   pip install cryptography --upgrade >/dev/null 2>&1
   pip install distribute >/dev/null 2>&1
-  #pip install pyOpenSSL >/dev/null 2>&1
+  pip install pyOpenSSL >/dev/null 2>&1
   pip install cffi --upgrade >/dev/null 2>&1
   pip install pycurl >/dev/null 2>&1
   pip install django >/dev/null 2>&1
@@ -86,9 +86,9 @@ PYSV
 
 function _installpyLoad6() {
   echo "Adjusting permissions ... "
-  chown -R ${MASTER}.${MASTER} /home/${MASTER}/.pip >>"${OUTTO}" 2>&1
-  chown -R ${MASTER}.${MASTER} /home/${MASTER}/.pyload >>"${OUTTO}" 2>&1
-  chown -R ${MASTER}.${MASTER} /var/run/pyload >>"${OUTTO}" 2>&1
+  chown -R ${MASTER}.${MASTER} /home/${MASTER}/.pip
+  chown -R ${MASTER}.${MASTER} /home/${MASTER}/.pyload
+  chown -R ${MASTER}.${MASTER} /var/run/pyload
 }
 
 function _installpyLoad7() {
