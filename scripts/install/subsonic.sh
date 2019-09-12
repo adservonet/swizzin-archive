@@ -89,7 +89,7 @@ fi
   -Dsubsonic.defaultPlaylistFolder=\${SUBSONIC_DEFAULT_PLAYLIST_FOLDER} \
   -Djava.awt.headless=true \
   -verbose:gc \
-  -jar subsonic-booter-jar-with-dependencies.jar > \ "${SEEDIT_LOG}"  2>&1
+  -jar subsonic-booter-jar-with-dependencies.jar > \${LOG} 2>&1
 SUBS
 
 echo "Enabling Subsonic Systemd configuration" >> "${SEEDIT_LOG}"  2>&1;
