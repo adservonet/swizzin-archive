@@ -199,6 +199,7 @@ function build_libtorrent_rasterbar () {
 
 function build_deluge () {
   if [[ $deluge == repo ]]; then
+    python -m easy_install --upgrade pyOpenSSL >> "${SEEDIT_LOG}"  2>&1
     apt-get -q -y update >> "${SEEDIT_LOG}"  2>&1
     apt-get -q -y install deluged deluge-web deluge-console >> "${SEEDIT_LOG}"  2>&1
     chmod 644 /etc/swizzin/scripts/deluge.UpdateTracker.py

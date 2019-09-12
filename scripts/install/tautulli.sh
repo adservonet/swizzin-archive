@@ -23,6 +23,7 @@ MASTER=$(cut -d: -f1 < /root/.master.info)
 
 apt-get update -y -q >> "${SEEDIT_LOG}"  2>&1;
 apt-get -y -q install python python-setuptools tzdata >> "${SEEDIT_LOG}"  2>&1
+python -m easy_install --upgrade pyOpenSSL >> "${SEEDIT_LOG}"  2>&1
 cd /opt
 LATEST=$(curl -s https://api.github.com/repos/tautulli/tautulli/releases/latest | grep "\"name\":" | cut -d : -f 2 | tr -d \", | cut -d " " -f 3)
 echo "Downloading latest Tautulli version ${LATEST}" >> "${SEEDIT_LOG}"  2>&1;
