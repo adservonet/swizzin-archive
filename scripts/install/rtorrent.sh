@@ -77,11 +77,11 @@ service rtorrent@${user} start
 
 export DEBIAN_FRONTEND=noninteractive
 
-if [[ -f /tmp/.install.lock ]]; then
-  export log="/root/logs/install.log"
-else
-  export log="/dev/null"
-fi
+#if [[ -f /tmp/.install.lock ]]; then
+#  export log="/root/logs/install.log"
+#else
+#  export log="/dev/null"
+#fi
 . /etc/swizzin/sources/functions/rtorrent
 whiptail_rtorrent
 

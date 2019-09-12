@@ -6,11 +6,11 @@ if [[ ! -f /install/.deluge.lock ]]; then
   exit 1
 fi
 
-if [[ -f /tmp/.install.lock ]]; then
-  export log="/root/logs/install.log"
-else
-  export log="/dev/null"
-fi
+#if [[ -f /tmp/.install.lock ]]; then
+#  export log="/root/logs/install.log"
+#else
+#  export log="/dev/null"
+#fi
 
 . /etc/swizzin/sources/functions/deluge
 whiptail_deluge
