@@ -20,7 +20,9 @@ chown -R www-data: /srv/tools
 
 touch /install/.tools.lock
 
-grep -qxF 'SEEDIT_LOG=/srv/tools/logs/output.log' /etc/environment || echo "SEEDIT_LOG=/srv/tools/logs/output.log" >> /etc/environment
+#grep -qxF 'SEEDIT_LOG=/srv/tools/logs/output.log' /etc/environment || echo "SEEDIT_LOG=/srv/tools/logs/output.log" >> /etc/environment
+grep -qxF 'SEEDIT_LOG=/srv/tools/logs/output.log' ~/.bashrc || echo "SEEDIT_LOG=/srv/tools/logs/output.log" >> ~/.bashrc
+
 export SEEDIT_LOG=/srv/tools/logs/output.log
 
 if [[ -f /lib/systemd/system/php7.3-fpm.service ]]; then
