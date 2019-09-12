@@ -16,6 +16,7 @@
 #  log="/dev/null"
 #fi
 
+echo "whoami?:" ; whoami
 echo "wtf where does this even point to?:${SEEDIT_LOG}" ${SEEDIT_LOG}
 
 
