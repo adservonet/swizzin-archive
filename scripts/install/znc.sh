@@ -27,11 +27,11 @@ CODENAME=$(lsb_release -cs)
 #  log="/dev/null"
 #fi
 
-echo "Installing ZNC. Please wait ... " >> ${SEEDIT_LOG} 2>&1
-echo "" >> ${SEEDIT_LOG} 2>&1
-echo "" >> ${SEEDIT_LOG} 2>&1
+echo "Installing ZNC. Please wait ... " >>  "${SEEDIT_LOG}"  2>&1
+echo "" >>  "${SEEDIT_LOG}"  2>&1
+echo "" >>  "${SEEDIT_LOG}"  2>&1
 useradd znc -m -s /bin/bash
-passwd znc -l >> ${SEEDIT_LOG} 2>&1
+passwd znc -l >>  "${SEEDIT_LOG}"  2>&1
 
 if [[ $CODENAME == jessie ]]; then
   if [[ -z $(cat /etc/apt/sources.list | grep backports) ]]; then

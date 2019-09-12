@@ -37,8 +37,8 @@ if [[ -n $active ]]; then
   fi
 fi
 
-apt-get -y -q update >> ${SEEDIT_LOG} 2>&1
-apt-get -y -q install git-core openssl libssl-dev python2.7 >> ${SEEDIT_LOG} 2>&1
+apt-get -y -q update >>  "${SEEDIT_LOG}"  2>&1
+apt-get -y -q install git-core openssl libssl-dev python2.7 >>  "${SEEDIT_LOG}"  2>&1
 
 function _rar () {
   cd /tmp
@@ -50,7 +50,7 @@ function _rar () {
 }
 
 if [[ -z $(which rar) ]]; then
-  apt-get -y install rar unrar >>${SEEDIT_LOG} 2>&1 || { echo "INFO: Could not find rar/unrar in the repositories. It is likely you do not have the multiverse repo enabled. Installing directly."; _rar; }
+  apt-get -y install rar unrar >> "${SEEDIT_LOG}"  2>&1 || { echo "INFO: Could not find rar/unrar in the repositories. It is likely you do not have the multiverse repo enabled. Installing directly."; _rar; }
 fi
 sudo git clone https://github.com/SickChill/SickChill.git  /home/$user/.sickchill >/dev/null 2>&1
 

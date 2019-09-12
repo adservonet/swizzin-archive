@@ -146,14 +146,14 @@ function build_libtorrent_rasterbar () {
     LTRC=$libtorrent
     LIST='build-essential autoconf automake libtool libboost-system-dev libboost-python-dev libssl-dev libgeoip-dev libboost-chrono-dev libboost-random-dev geoip-database python3-dev python-setuptools'
     for depend in $LIST; do
-      apt-get -qq -y install $depend >>${SEEDIT_LOG} 2>&1 || { echo "ERROR: APT-GET could not install a required package: ${depend}. That's probably not good..."; }
+      apt-get -qq -y install $depend >> "${SEEDIT_LOG}"  2>&1 || { echo "ERROR: APT-GET could not install a required package: ${depend}. That's probably not good..."; }
     done
     install_fpm
     #OpenSSL 1.1.0 might fk a lot of things up -- Requires at least libboost-1.62 to build
     #if [[ ! ${codename} =~ ("xenial")|("yakkety") ]]; then
     #  LIST='libboost-system-dev libboost-python-dev libssl-dev libgeoip-dev libboost-chrono-dev libboost-random-dev'
     #  for depend in $LIST; do
-    #    apt-get -qq -y install $depend >>${SEEDIT_LOG} 2>&1
+    #    apt-get -qq -y install $depend >> "${SEEDIT_LOG}"  2>&1
     #  done
     #else
     #  cd /tmp
@@ -165,10 +165,10 @@ function build_libtorrent_rasterbar () {
     #fi
 
     cd /tmp
-    git clone -b ${LTRC} https://github.com/arvidn/libtorrent.git >>${SEEDIT_LOG} 2>&1
+    git clone -b ${LTRC} https://github.com/arvidn/libtorrent.git >> "${SEEDIT_LOG}"  2>&1
     cd libtorrent
-    ./autotool.sh >>${SEEDIT_LOG} 2>&1
-    ./configure --with-lib-geoip --with-libiconv >>${SEEDIT_LOG} 2>&1
+    ./autotool.sh >> "${SEEDIT_LOG}"  2>&1
+    ./configure --with-lib-geoip --with-libiconv >> "${SEEDIT_LOG}"  2>&1
     VERSION=$(grep "VERSION =" Jamfile | grep -oP '\d+.\d+.\d+')
     case $LTRC in
       RC_1_1)
@@ -178,15 +178,15 @@ function build_libtorrent_rasterbar () {
         sed -i 's|static constexpr reannounce_flags_t ignore_min_interval = 0_bit|static constexpr reannounce_flags_t ignore_min_interval = 1_bit|g' include/libtorrent/torrent_handle.hpp
       ;;
     esac
-    make -j$(nproc) >>${SEEDIT_LOG} 2>&1
+    make -j$(nproc) >> "${SEEDIT_LOG}"  2>&1
     make DESTDIR=/tmp/dist/libtorrent install > /dev/null 2>&1
     mkdir -p /root/dist
     fpm -f -C /tmp/dist/libtorrent -p /root/dist/libtorrent-rasterbar_VERSION.deb -s dir -t deb -n libtorrent-rasterbar --version ${VERSION} --description "Libtorrent rasterbar compiled by swizzin" > /dev/null 2>&1
     dpkg -i /root/dist/libtorrent-rasterbar_${VERSION}.deb
     if [[ -n $deluge ]]; then
       echo "Building python binding ..."
-      PYTHON=${python} ./configure --enable-python-binding --with-libiconv ${configure_args} >>${SEEDIT_LOG} 2>&1
-      fpm --verbose --python-bin=${python} --python-package-name-prefix=${python} -n ${python}-libtorrent -f -p /root/dist/${python}-libtorrent_VERSION.deb --version ${VERSION} --description "Libtorrent rasterbar python bindings compiled by swizzin" -s python -t deb /tmp/libtorrent/bindings/python/setup.py >> ${SEEDIT_LOG} 2>&1
+      PYTHON=${python} ./configure --enable-python-binding --with-libiconv ${configure_args} >> "${SEEDIT_LOG}"  2>&1
+      fpm --verbose --python-bin=${python} --python-package-name-prefix=${python} -n ${python}-libtorrent -f -p /root/dist/${python}-libtorrent_VERSION.deb --version ${VERSION} --description "Libtorrent rasterbar python bindings compiled by swizzin" -s python -t deb /tmp/libtorrent/bindings/python/setup.py >>  "${SEEDIT_LOG}"  2>&1
       dpkg -i /root/dist/${python}-libtorrent_${VERSION}.deb
     fi
     ldconfig
@@ -199,8 +199,8 @@ function build_libtorrent_rasterbar () {
 
 function build_deluge () {
   if [[ $deluge == repo ]]; then
-    apt-get -q -y update >>${SEEDIT_LOG} 2>&1
-    apt-get -q -y install deluged deluge-web deluge-console >>${SEEDIT_LOG} 2>&1
+    apt-get -q -y update >> "${SEEDIT_LOG}"  2>&1
+    apt-get -q -y install deluged deluge-web deluge-console >> "${SEEDIT_LOG}"  2>&1
     chmod 644 /etc/swizzin/scripts/deluge.UpdateTracker.py
     cp /etc/swizzin/scripts/deluge.UpdateTracker.py /usr/lib/python2.7/dist-packages/deluge/ui/console/commands/update-tracker.py
     systemctl stop deluged
@@ -222,7 +222,7 @@ function build_deluge () {
       ;;
     esac
     for depend in $LIST; do
-      apt-get -qq -y install $depend >>${SEEDIT_LOG} 2>&1 || { echo "ERROR: APT-GET could not install a required package: ${depend}. That's probably not good..."; }
+      apt-get -qq -y install $depend >> "${SEEDIT_LOG}"  2>&1 || { echo "ERROR: APT-GET could not install a required package: ${depend}. That's probably not good..."; }
     done
     . /etc/swizzin/sources/functions/fpm
     install_fpm
@@ -236,11 +236,11 @@ function build_deluge () {
             packages=(setuptools pycparser asn1crypto cffi constantly incremental attrs automat idna hyperlink pyhamcrest cryptography pyopenssl service_identity zope.interface twisted)
             mkdir -p /root/dist/python3
             for depend in $LIST; do
-              apt-get -qq -y install $depend >>${SEEDIT_LOG} 2>&1 || { echo "ERROR: APT-GET could not install a required package: ${depend}. That's probably not good..."; }
+              apt-get -qq -y install $depend >> "${SEEDIT_LOG}"  2>&1 || { echo "ERROR: APT-GET could not install a required package: ${depend}. That's probably not good..."; }
             done
             for d in ${packages[@]}; do
-              fpm -s python -t deb --python-pip=pip3 --python-bin=${pythonver} --python-package-name-prefix=${pythonver} -f -p /root/dist/python3/python3-$d.deb $d >> ${SEEDIT_LOG} 2>&1
-              dpkg -i /root/dist/python3/python3-$d.deb >> ${SEEDIT_LOG} 2>&1
+              fpm -s python -t deb --python-pip=pip3 --python-bin=${pythonver} --python-package-name-prefix=${pythonver} -f -p /root/dist/python3/python3-$d.deb $d >>  "${SEEDIT_LOG}"  2>&1
+              dpkg -i /root/dist/python3/python3-$d.deb >>  "${SEEDIT_LOG}"  2>&1
             done
           ;;
           "stretch")
@@ -248,14 +248,14 @@ function build_deluge () {
             check_debian_backports
             LIST='python3-twisted'
             for depend in $LIST; do
-              apt-get -qq -y install -t stretch-backports $depend >>${SEEDIT_LOG} 2>&1 || { echo "ERROR: APT-GET could not install a required package: ${depend}. That's probably not good..."; }
+              apt-get -qq -y install -t stretch-backports $depend >> "${SEEDIT_LOG}"  2>&1 || { echo "ERROR: APT-GET could not install a required package: ${depend}. That's probably not good..."; }
             done
           ;;
         esac
       fi
     fi
     cd /tmp
-    git clone -b ${deluge} git://deluge-torrent.org/deluge.git >>${SEEDIT_LOG} 2>&1
+    git clone -b ${deluge} git://deluge-torrent.org/deluge.git >> "${SEEDIT_LOG}"  2>&1
     cd deluge
     VERSION=$(git describe | cut -d- -f2)
     mkdir -p /root/dist

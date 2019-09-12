@@ -17,8 +17,8 @@
 #  log="/dev/null"
 #fi
 
-apt-get -y update >> ${SEEDIT_LOG} 2>&1
-apt-get -y install vsftpd ssl-cert>> ${SEEDIT_LOG} 2>&1
+apt-get -y update >>  "${SEEDIT_LOG}"  2>&1
+apt-get -y install vsftpd ssl-cert>>  "${SEEDIT_LOG}"  2>&1
 
 cat > /etc/vsftpd.conf <<VSC
 listen=NO

@@ -30,7 +30,7 @@ for depends in $APT; do
     if [ $((now - last_update)) -gt 3600 ]; then
       apt-get -y -qq update
     fi
-    apt-get -y install "$depends" >> ${SEEDIT_LOG} 2>&1
+    apt-get -y install "$depends" >>  "${SEEDIT_LOG}"  2>&1
   fi
 done
 

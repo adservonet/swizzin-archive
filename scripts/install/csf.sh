@@ -35,13 +35,13 @@ function _installCSF() {
   #wget http://www.configserver.com/free/csf.tgz >/dev/null 2>&1;
   wget https://download.configserver.com/csf.tgz >/dev/null 2>&1;
   tar -xzf csf.tgz >/dev/null 2>&1;
-  ufw disable >>${SEEDIT_LOG} 2>&1;
-  service fail2ban stop >>${SEEDIT_LOG} 2>&1;
-  apt-get -y remove fail2ban >>${SEEDIT_LOG} 2>&1;
-  apt-get -y autoremove >>${SEEDIT_LOG} 2>&1;
+  ufw disable >> "${SEEDIT_LOG}"  2>&1;
+  service fail2ban stop >> "${SEEDIT_LOG}"  2>&1;
+  apt-get -y remove fail2ban >> "${SEEDIT_LOG}"  2>&1;
+  apt-get -y autoremove >> "${SEEDIT_LOG}"  2>&1;
   cd csf
-  sh install.sh >>${SEEDIT_LOG} 2>&1;
-  perl /usr/local/csf/bin/csftest.pl >>${SEEDIT_LOG} 2>&1;
+  sh install.sh >> "${SEEDIT_LOG}"  2>&1;
+  perl /usr/local/csf/bin/csftest.pl >> "${SEEDIT_LOG}"  2>&1;
   # modify csf blocklists - essentially like CloudFlare, but on your machine
   sed -i.bak -e "s/#SPAMDROP|86400|0|/SPAMDROP|86400|100|/" \
              -e "s/#SPAMEDROP|86400|0|/SPAMEDROP|86400|100|/" \
@@ -2287,8 +2287,8 @@ CSFC
   sed -i "s/QBFIREWALLPASSWD/${passwd}/" /etc/csf/csf.conf
   # install sendmail as it's binary is required by CSF
   echo "${green}Installing Sendmail${normal} (this may take bit) ... "
-  apt-get -y install sendmail >>${SEEDIT_LOG} 2>&1;
-  export DEBIAN_FRONTEND=noninteractive | /usr/sbin/sendmailconfig >>${SEEDIT_LOG} 2>&1;
+  apt-get -y install sendmail >> "${SEEDIT_LOG}"  2>&1;
+  export DEBIAN_FRONTEND=noninteractive | /usr/sbin/sendmailconfig >> "${SEEDIT_LOG}"  2>&1;
   # add administrator email
   echo "${magenta}${bold}Add an Administrator Email Below for Aliases Inclusion${normal}"
   read -p "${bold}Email: ${normal}" admin_email
@@ -2307,9 +2307,9 @@ www: root
 ftp: root
 abuse: root
 root: $admin_email" > /etc/aliases
-  newaliases >>${SEEDIT_LOG} 2>&1;
+  newaliases >> "${SEEDIT_LOG}"  2>&1;
 
-  echo "Installing and enabling service ... " >>${SEEDIT_LOG} 2>&1;
+  echo "Installing and enabling service ... " >> "${SEEDIT_LOG}"  2>&1;
   cat > /etc/systemd/system/csf.service <<CSFSERV
 [Unit]
 Description=ConfigServer Firewall & Security - csf

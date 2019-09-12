@@ -18,7 +18,7 @@ user=$(cut -d: -f1 < /root/.master.info)
 #fi
 
 cd /srv/
-git clone https://github.com/illnesse/quickbox_dashboard.git panel >>${SEEDIT_LOG} 2>&1
+git clone https://github.com/illnesse/quickbox_dashboard.git panel >> "${SEEDIT_LOG}"  2>&1
 
 chown -R www-data: /srv/panel
 

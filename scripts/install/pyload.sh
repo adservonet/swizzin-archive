@@ -22,22 +22,22 @@
 
 function _installpyLoad1() {
   echo "Installing any additional dependencies needed for pyLoad ... "
-  apt-get install -y sqlite3 tesseract-ocr gocr rhino pyqt4-dev-tools python-imaging python-dev libcurl4-openssl-dev >>${SEEDIT_LOG} 2>&1
-  apt-get -y autoremove >>${SEEDIT_LOG} 2>&1
+  apt-get install -y sqlite3 tesseract-ocr gocr rhino pyqt4-dev-tools python-imaging python-dev libcurl4-openssl-dev >> "${SEEDIT_LOG}"  2>&1
+  apt-get -y autoremove >> "${SEEDIT_LOG}"  2>&1
 }
 
 function _installpyLoad2() {
   echo "Setting up python package management system in /home/${MASTER}/.pip ... "
   mkdir /home/${MASTER}/.pip && cd /home/${MASTER}/.pip
-  wget https://bootstrap.pypa.io/get-pip.py >>${SEEDIT_LOG} 2>&1
-  python get-pip.py >>${SEEDIT_LOG} 2>&1
+  wget https://bootstrap.pypa.io/get-pip.py >> "${SEEDIT_LOG}"  2>&1
+  python get-pip.py >> "${SEEDIT_LOG}"  2>&1
 }
 
 function _installpyLoad3() {
   echo "Installing pyLoad packages ... "
-  pip install wheel --upgrade >>${SEEDIT_LOG} 2>&1
-  pip install setuptools --upgrade >>${SEEDIT_LOG} 2>&1
-  pip install ply --upgrade >>${SEEDIT_LOG} 2>&1
+  pip install wheel --upgrade >> "${SEEDIT_LOG}"  2>&1
+  pip install setuptools --upgrade >> "${SEEDIT_LOG}"  2>&1
+  pip install ply --upgrade >> "${SEEDIT_LOG}"  2>&1
   pip install cryptography --upgrade >/dev/null 2>&1
   pip install distribute >/dev/null 2>&1
   pip install pyOpenSSL >/dev/null 2>&1
@@ -195,7 +195,7 @@ sleep 3
 }
 
 function _installpyLoad8() {
-  echo "pyLoad Install Complete!" >>${SEEDIT_LOG} 2>&1
+  echo "pyLoad Install Complete!" >> "${SEEDIT_LOG}"  2>&1
 }
 
 function _installpyLoad9() {
@@ -212,13 +212,13 @@ MASTER=$(cut -d: -f1 < /root/.master.info)
 #fi
 
 
-echo "Installing any additional dependencies needed for pyLoad ... " >>${SEEDIT_LOG} 2>&1;_installpyLoad1
-echo "Setting up python package management system in /home/${MASTER}/.pip ... " >>${SEEDIT_LOG} 2>&1;_installpyLoad2
-echo "Installing pyLoad packages ... " >>${SEEDIT_LOG} 2>&1;_installpyLoad3
-echo "Grabbing latest stable pyLoad repository ... " >>${SEEDIT_LOG} 2>&1;_installpyLoad4
-echo "Building pyLoad systemd template ... " >>${SEEDIT_LOG} 2>&1;_installpyLoad5
-echo "Adjusting permissions ... " >>${SEEDIT_LOG} 2>&1;_installpyLoad6
-echo "Enabling and starting pyLoad services ... " >>${SEEDIT_LOG} 2>&1;_installpyLoad7
+echo "Installing any additional dependencies needed for pyLoad ... " >> "${SEEDIT_LOG}"  2>&1;_installpyLoad1
+echo "Setting up python package management system in /home/${MASTER}/.pip ... " >> "${SEEDIT_LOG}"  2>&1;_installpyLoad2
+echo "Installing pyLoad packages ... " >> "${SEEDIT_LOG}"  2>&1;_installpyLoad3
+echo "Grabbing latest stable pyLoad repository ... " >> "${SEEDIT_LOG}"  2>&1;_installpyLoad4
+echo "Building pyLoad systemd template ... " >> "${SEEDIT_LOG}"  2>&1;_installpyLoad5
+echo "Adjusting permissions ... " >> "${SEEDIT_LOG}"  2>&1;_installpyLoad6
+echo "Enabling and starting pyLoad services ... " >> "${SEEDIT_LOG}"  2>&1;_installpyLoad7
 
 sleep 3
 cd /home/${MASTER}/.pyload

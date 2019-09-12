@@ -4,13 +4,13 @@
 
 function npm_install() {
   if [[ ! -f /etc/apt/sources.list.d/nodesource.list ]]; then
-    bash <(curl -sL https://deb.nodesource.com/setup_10.x) >> ${SEEDIT_LOG} 2>&1
+    bash <(curl -sL https://deb.nodesource.com/setup_10.x) >>  "${SEEDIT_LOG}"  2>&1
   elif [[ -f /etc/apt/sources.list.d/nodesource.list ]]; then
     npm_update
   fi
 
   if [[ ! $(command -v npm) ]]; then
-    apt-get -y -q install nodejs build-essential >> ${SEEDIT_LOG} 2>&1
+    apt-get -y -q install nodejs build-essential >>  "${SEEDIT_LOG}"  2>&1
   fi
 }
 
@@ -18,9 +18,9 @@ function npm_update() {
   if [[ -f /etc/apt/sources.list.d/nodesource.list ]]; then
     if ! grep -q 10 /etc/apt/sources.list.d/nodesource.list; then
       echo "Upgrading nodejs to version 10 LTS"
-      bash <(curl -sL https://deb.nodesource.com/setup_10.x) >> ${SEEDIT_LOG} 2>&1
-      apt -y -q  update  >> ${SEEDIT_LOG} 2>&1
-      apt -y -q upgrade  >> ${SEEDIT_LOG} 2>&1
+      bash <(curl -sL https://deb.nodesource.com/setup_10.x) >>  "${SEEDIT_LOG}"  2>&1
+      apt -y -q  update  >>  "${SEEDIT_LOG}"  2>&1
+      apt -y -q upgrade  >>  "${SEEDIT_LOG}"  2>&1
     fi
   fi
 }

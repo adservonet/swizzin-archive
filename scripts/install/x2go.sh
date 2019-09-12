@@ -25,16 +25,16 @@
 distribution=$(lsb_release -is)
 release=$(lsb_release -cs)
 echo -n "Installing Xfce4 (this may take a bit) ... "
-apt-get install -y xfce4 >> ${SEEDIT_LOG} 2>&1
+apt-get install -y xfce4 >>  "${SEEDIT_LOG}"  2>&1
 #disable lightdm because it causes suspend issues on Ubuntu
-systemctl disable --now lightdm >> ${SEEDIT_LOG} 2>&1
+systemctl disable --now lightdm >>  "${SEEDIT_LOG}"  2>&1
 
 echo -n "Installing x2go repositories ... "
 
 if [[ $distribution == Ubuntu ]]; then
-	apt-get install -q -y software-properties-common >> ${SEEDIT_LOG} 2>&1
-	apt-add-repository ppa:x2go/stable -y >> ${SEEDIT_LOG} 2>&1
-	apt-get -y update >> ${SEEDIT_LOG} 2>&1
+	apt-get install -q -y software-properties-common >>  "${SEEDIT_LOG}"  2>&1
+	apt-add-repository ppa:x2go/stable -y >>  "${SEEDIT_LOG}"  2>&1
+	apt-get -y update >>  "${SEEDIT_LOG}"  2>&1
 else
 
 cat >/etc/apt/sources.list.d/x2go.list<<EOF
@@ -49,21 +49,21 @@ deb-src http://packages.x2go.org/debian ${release} main
 #deb-src http://packages.x2go.org/debian ${release} heuler
 EOF
 
-apt-get -y update>> ${SEEDIT_LOG} 2>&1
+apt-get -y update>>  "${SEEDIT_LOG}"  2>&1
 if [[ $release == "jessie" ]]; then
-	gpg --keyserver keys.gnupg.net --recv E1F958385BFE2B6E >> ${SEEDIT_LOG} 2>&1
+	gpg --keyserver keys.gnupg.net --recv E1F958385BFE2B6E >>  "${SEEDIT_LOG}"  2>&1
 	gpg --export E1F958385BFE2B6E > /etc/apt/trusted.gpg.d/x2go.gpg
 else
-  apt-key --keyring /etc/apt/trusted.gpg.d/x2go.gpg adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys E1F958385BFE2B6E >> ${SEEDIT_LOG} 2>&1
+  apt-key --keyring /etc/apt/trusted.gpg.d/x2go.gpg adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys E1F958385BFE2B6E >>  "${SEEDIT_LOG}"  2>&1
 fi
 
-apt-get -y update >> ${SEEDIT_LOG} 2>&1
-apt-get -y install x2go-keyring >> ${SEEDIT_LOG} 2>&1 && apt-get update >> ${SEEDIT_LOG} 2>&1
+apt-get -y update >>  "${SEEDIT_LOG}"  2>&1
+apt-get -y install x2go-keyring >>  "${SEEDIT_LOG}"  2>&1 && apt-get update >>  "${SEEDIT_LOG}"  2>&1
 fi
 
 
 echo -n "Installing X2go (this may take a bit) ... "
-apt-get -y install x2goserver x2goserver-xsession >> ${SEEDIT_LOG} 2>&1
-apt-get -y install pulseaudio >> ${SEEDIT_LOG} 2>&1
+apt-get -y install x2goserver x2goserver-xsession >>  "${SEEDIT_LOG}"  2>&1
+apt-get -y install pulseaudio >>  "${SEEDIT_LOG}"  2>&1
 
 touch /install/.x2go.lock

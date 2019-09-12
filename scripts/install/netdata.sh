@@ -10,7 +10,7 @@
 #  log="/dev/null"
 #fi
 
-bash <(curl -Ss https://my-netdata.io/kickstart.sh) --non-interactive >> ${SEEDIT_LOG} 2>&1
+bash <(curl -Ss https://my-netdata.io/kickstart.sh) --non-interactive >>  "${SEEDIT_LOG}"  2>&1
 
 if [[ -f /install/.nginx.lock ]]; then
   bash /usr/local/bin/swizzin/nginx/netdata.sh

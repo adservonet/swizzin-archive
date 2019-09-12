@@ -25,8 +25,8 @@ _os() {
   if [ ! -d /install ]; then mkdir /install ; fi
   if [ ! -d /root/logs ]; then mkdir /root/logs ; fi
   export SEEDIT_LOG=/root/logs/install.log
-  apt-get -y -qq update >> ${SEEDIT_LOG} 2>&1
-  apt-get -y -qq install lsb-release >> ${SEEDIT_LOG} 2>&1
+  apt-get -y -qq update >>  "${SEEDIT_LOG}"  2>&1
+  apt-get -y -qq install lsb-release >>  "${SEEDIT_LOG}"  2>&1
   distribution=$(lsb_release -is)
   release=$(lsb_release -rs)
   codename=$(lsb_release -cs)
@@ -35,18 +35,18 @@ _os() {
 function _preparation() {
   if [[ $distribution = "Ubuntu" ]]; then
     if [[ -z $(which add-apt-repository) ]]; then
-      apt-get install -y -q software-properties-common >> ${SEEDIT_LOG} 2>&1
+      apt-get install -y -q software-properties-common >>  "${SEEDIT_LOG}"  2>&1
     fi
-    add-apt-repository universe >> ${SEEDIT_LOG} 2>&1
-    add-apt-repository multiverse >> ${SEEDIT_LOG} 2>&1
-    add-apt-repository restricted -u >> ${SEEDIT_LOG} 2>&1
+    add-apt-repository universe >>  "${SEEDIT_LOG}"  2>&1
+    add-apt-repository multiverse >>  "${SEEDIT_LOG}"  2>&1
+    add-apt-repository restricted -u >>  "${SEEDIT_LOG}"  2>&1
   fi
-  apt-get -q -y update >> ${SEEDIT_LOG} 2>&1
-  apt-get -q -y upgrade >> ${SEEDIT_LOG} 2>&1
-apt-get -q -y install git sudo curl wget lsof fail2ban apache2-utils vnstat tcl tcl-dev build-essential dirmngr apt-transport-https python-pip >> ${SEEDIT_LOG} 2>&1
+  apt-get -q -y update >>  "${SEEDIT_LOG}"  2>&1
+  apt-get -q -y upgrade >>  "${SEEDIT_LOG}"  2>&1
+apt-get -q -y install git sudo curl wget lsof fail2ban apache2-utils vnstat tcl tcl-dev build-essential dirmngr apt-transport-https python-pip >>  "${SEEDIT_LOG}"  2>&1
   nofile=$(grep "DefaultLimitNOFILE=500000" /etc/systemd/system.conf)
   if [[ ! "$nofile" ]]; then echo "DefaultLimitNOFILE=500000" >> /etc/systemd/system.conf; fi
-  git clone https://github.com/illnesse/swizzin.git /etc/swizzin >> ${SEEDIT_LOG} 2>&1
+  git clone https://github.com/illnesse/swizzin.git /etc/swizzin >>  "${SEEDIT_LOG}"  2>&1
   ln -s /etc/swizzin/scripts/ /usr/local/bin/swizzin
   chmod -R 700 /etc/swizzin/scripts
 }
@@ -55,17 +55,17 @@ function _nukeovh() {
   grsec=$(uname -a | grep -i grs)
   if [[ -n $grsec ]]; then
     if [[ $DISTRO == Ubuntu ]]; then
-      apt-get install -q -y linux-image-generic >>${SEEDIT_LOG} 2>&1
+      apt-get install -q -y linux-image-generic >> "${SEEDIT_LOG}"  2>&1
     elif [[ $DISTRO == Debian ]]; then
       arch=$(uname -m)
       if [[ $arch =~ ("i686"|"i386") ]]; then
-        apt-get install -q -y linux-image-686 >>${SEEDIT_LOG} 2>&1
+        apt-get install -q -y linux-image-686 >> "${SEEDIT_LOG}"  2>&1
       elif [[ $arch == x86_64 ]]; then
-        apt-get install -q -y linux-image-amd64 >>${SEEDIT_LOG} 2>&1
+        apt-get install -q -y linux-image-amd64 >> "${SEEDIT_LOG}"  2>&1
       fi
     fi
     mv /etc/grub.d/06_OVHkernel /etc/grub.d/25_OVHkernel
-    update-grub >>${SEEDIT_LOG} 2>&1
+    update-grub >> "${SEEDIT_LOG}"  2>&1
   fi
 }
 

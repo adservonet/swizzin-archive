@@ -26,10 +26,10 @@
 MASTER=$(cut -d: -f1 < /root/.master.info)
 
 
-echo "Creating subsonic-tmp install directory ... " >>${SEEDIT_LOG} 2>&1;
+echo "Creating subsonic-tmp install directory ... " >> "${SEEDIT_LOG}"  2>&1;
 mkdir /root/subsonic-tmp
 
-echo "Downloading Subsonic dependencies and installing ... " >>${SEEDIT_LOG} 2>&1;
+echo "Downloading Subsonic dependencies and installing ... " >> "${SEEDIT_LOG}"  2>&1;
 apt-get -y install openjdk-8-jre
 current=$(wget -qO- http://www.subsonic.org/pages/download.jsp | grep -m1 .deb | cut -d'"' -f2)
 latest=$(wget -qO- http://www.subsonic.org/pages/$current | grep -m1 .deb | cut -d'"' -f2)
@@ -39,11 +39,11 @@ dpkg -i subsonic.deb
 
 touch /install/.subsonic.lock
 
-echo "Removing subsonic-tmp install directory ... " >>${SEEDIT_LOG} 2>&1;
+echo "Removing subsonic-tmp install directory ... " >> "${SEEDIT_LOG}"  2>&1;
 cd
 rm -rf /root/subsonic-tmp
 
-echo "Modifying Subsonic startup script ... " >>${SEEDIT_LOG} 2>&1;
+echo "Modifying Subsonic startup script ... " >> "${SEEDIT_LOG}"  2>&1;
 cat > /usr/share/subsonic/subsonic.sh <<SUBS
 #!/bin/sh
 MASTER=$(cut -d: -f1 < /root/.master.info )
@@ -71,7 +71,7 @@ fi
 # Create Subsonic home directory.
 mkdir -p \${SUBSONIC_HOME}
 LOG=\${SUBSONIC_HOME}/subsonic_sh.log
-rm -f \${SEEDIT_LOG}
+rm -f \ "${SEEDIT_LOG}"
 
 cd \$(dirname \$0)
 if [ -L \$0 ] && ([ -e /bin/readlink ] || [ -e /usr/bin/readlink ]); then
@@ -89,10 +89,10 @@ fi
   -Dsubsonic.defaultPlaylistFolder=\${SUBSONIC_DEFAULT_PLAYLIST_FOLDER} \
   -Djava.awt.headless=true \
   -verbose:gc \
-  -jar subsonic-booter-jar-with-dependencies.jar > \${SEEDIT_LOG} 2>&1
+  -jar subsonic-booter-jar-with-dependencies.jar > \ "${SEEDIT_LOG}"  2>&1
 SUBS
 
-echo "Enabling Subsonic Systemd configuration" >>${SEEDIT_LOG} 2>&1;
+echo "Enabling Subsonic Systemd configuration" >> "${SEEDIT_LOG}"  2>&1;
 service stop subsonic >/dev/null 2>&1
 cat > /etc/systemd/system/subsonic.service <<SUBSD
 [Unit]
@@ -121,4 +121,4 @@ if [[ -f /install/.nginx.lock ]]; then
   service nginx reload
 fi
 
-echo "Subsonic Install Complete!" >>${SEEDIT_LOG} 2>&1;
+echo "Subsonic Install Complete!" >> "${SEEDIT_LOG}"  2>&1;
