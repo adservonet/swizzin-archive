@@ -19,7 +19,7 @@ fi
 npm_install
 
 if [[ ! $(which node-gyp) ]]; then
-  npm install -g node-gyp >> $log 2>&1
+  npm install -g node-gyp >> ${SEEDIT_LOG} 2>&1
 fi
 
 cat > /etc/systemd/system/flood@.service <<SYSDF
@@ -44,7 +44,7 @@ for u in "${users[@]}"; do
     salt=$(tr -dc 'a-zA-Z0-9' < /dev/urandom | fold -w 32 | head -n 1)
     port=$(shuf -i 3501-4500 -n 1)
     cd /home/$u
-    git clone https://github.com/jfurrow/flood.git .flood >> $log 2>&1
+    git clone https://github.com/jfurrow/flood.git .flood >> ${SEEDIT_LOG} 2>&1
     chown -R $u: .flood
     cd .flood
     cp -a config.template.js config.js
@@ -57,9 +57,9 @@ for u in "${users[@]}"; do
     fi
     echo "Building Flood for $u. This might take some time..."
     echo ""
-    su - $u -c "cd /home/$u/.flood; npm install" >> $log 2>&1
+    su - $u -c "cd /home/$u/.flood; npm install" >> ${SEEDIT_LOG} 2>&1
     if [[ ! -f /install/.nginx.lock ]]; then
-      su - $u -c "cd /home/$u/.flood; npm run build" >> $log 2>&1
+      su - $u -c "cd /home/$u/.flood; npm run build" >> ${SEEDIT_LOG} 2>&1
       systemctl start flood@$u
       echo "Flood port for $u is $port"
     elif [[ -f /install/.nginx.lock ]]; then    

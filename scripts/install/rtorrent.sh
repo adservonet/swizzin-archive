@@ -45,12 +45,12 @@ chown ${user}.${user} -R /home/${user}/.rtorrent.rc
 
 
 function _makedirs() {
-	mkdir -p /home/${user}/torrents/rtorrent 2>> $log
+	mkdir -p /home/${user}/torrents/rtorrent 2>> ${SEEDIT_LOG}
 	mkdir -p /home/${user}/.sessions
 	mkdir -p /home/${user}/rwatch
-	chown -R ${user}.${user} /home/${user}/{torrents,.sessions,rwatch} 2>> $log
-	usermod -a -G www-data ${user} 2>> $log
-	usermod -a -G ${user} www-data 2>> $log
+	chown -R ${user}.${user} /home/${user}/{torrents,.sessions,rwatch} 2>> ${SEEDIT_LOG}
+	usermod -a -G www-data ${user} 2>> ${SEEDIT_LOG}
+	usermod -a -G ${user} www-data 2>> ${SEEDIT_LOG}
 }
 
 _systemd() {
@@ -71,7 +71,7 @@ WorkingDirectory=/home/%I/
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable rtorrent@${user} 2>> $log
+systemctl enable rtorrent@${user} 2>> ${SEEDIT_LOG}
 service rtorrent@${user} start
 }
 

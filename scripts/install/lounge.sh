@@ -8,8 +8,8 @@ useradd lounge -m -s /bin/bash
 passwd lounge -l >> ${SEEDIT_LOG} 2>&1
 
 npm -g config set user root
-npm install -g thelounge >> $log 2>&1
-sudo -u lounge bash -c "thelounge install thelounge-theme-zenburn" >> $log 2>&1
+npm install -g thelounge >> ${SEEDIT_LOG} 2>&1
+sudo -u lounge bash -c "thelounge install thelounge-theme-zenburn" >> ${SEEDIT_LOG} 2>&1
 
 mkdir -p /home/lounge/.thelounge/
 
@@ -453,7 +453,7 @@ StartLimitBurst=3
 WantedBy=multi-user.target
 EOSD
 
-systemctl enable --now lounge >> $log 2>&1
+systemctl enable --now lounge >> ${SEEDIT_LOG} 2>&1
 
 sleep 3
 }

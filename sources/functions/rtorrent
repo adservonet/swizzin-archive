@@ -58,7 +58,7 @@ function depends_rtorrent () {
     libsigc++-2.0-dev unzip curl libncurses5-dev yasm fontconfig libfontconfig1
     libfontconfig1-dev mediainfo'
     for depends in $APT; do
-      apt-get -q -y install "$depends"  >> $log 2>&1 || { echo "ERROR: APT-GET could not install required package: ${depends}. That's probably not good..."; }
+      apt-get -q -y install "$depends"  >> ${SEEDIT_LOG} 2>&1 || { echo "ERROR: APT-GET could not install required package: ${depends}. That's probably not good..."; }
     done
 
     . /etc/swizzin/sources/functions/fpm
@@ -66,7 +66,7 @@ function depends_rtorrent () {
   else
     APT='screen zip unzip bc mediainfo curl'
     for depends in $APT; do
-      apt-get -q -y install "$depends"  >> $log 2>&1 || { echo "ERROR: APT-GET could not install required package: ${depends}. That's probably not good..."; }
+      apt-get -q -y install "$depends"  >> ${SEEDIT_LOG} 2>&1 || { echo "ERROR: APT-GET could not install required package: ${depends}. That's probably not good..."; }
     done
   fi
 
@@ -74,16 +74,16 @@ function depends_rtorrent () {
   if [[ $distribution == "Debian" ]]; then
 	_rar
   else
-    apt-get -y install rar unrar >>$log 2>&1 || { echo "INFO: Could not find rar/unrar in the repositories. It is likely you do not have the multiverse repo enabled. Installing directly."; _rar; }
+    apt-get -y install rar unrar >>${SEEDIT_LOG} 2>&1 || { echo "INFO: Could not find rar/unrar in the repositories. It is likely you do not have the multiverse repo enabled. Installing directly."; _rar; }
   fi
 
 	# mktorrent from source
 	cd /tmp
-	wget -q -O mktorrent.zip https://github.com/Rudde/mktorrent/archive/v1.1.zip >>$log 2>&1
-	unzip -d mktorrent -j mktorrent.zip >>$log 2>&1
+	wget -q -O mktorrent.zip https://github.com/Rudde/mktorrent/archive/v1.1.zip >>${SEEDIT_LOG} 2>&1
+	unzip -d mktorrent -j mktorrent.zip >>${SEEDIT_LOG} 2>&1
 	cd mktorrent
-	make >>$log 2>&1
-	make install PREFIX=/usr >>$log 2>&1
+	make >>${SEEDIT_LOG} 2>&1
+	make install PREFIX=/usr >>${SEEDIT_LOG} 2>&1
 	cd /tmp
 	rm -rf mktorrent*
 }
@@ -91,13 +91,13 @@ function depends_rtorrent () {
 function build_xmlrpc-c () {
   xmlrpc="https://svn.code.sf.net/p/xmlrpc-c/code/advanced"
 	cd "/tmp"
-	svn co https://svn.code.sf.net/p/xmlrpc-c/code/advanced xmlrpc-c >>$log 2>&1 || { svn co https://github.com/mirror/xmlrpc-c/trunk/advanced xmlrpc-c >>$log 2>&1; }
+	svn co https://svn.code.sf.net/p/xmlrpc-c/code/advanced xmlrpc-c >>${SEEDIT_LOG} 2>&1 || { svn co https://github.com/mirror/xmlrpc-c/trunk/advanced xmlrpc-c >>${SEEDIT_LOG} 2>&1; }
 	cd xmlrpc-c
-	./configure --prefix=/usr --disable-cplusplus >>$log 2>&1
+	./configure --prefix=/usr --disable-cplusplus >>${SEEDIT_LOG} 2>&1
   source <(sed 's/ //g' version.mk)
   VERSION=$XMLRPC_MAJOR_RELEASE.$XMLRPC_MINOR_RELEASE.$XMLRPC_POINT_RELEASE
-	make -j$(nproc) >>$log 2>&1
-	make DESTDIR=/tmp/dist/xmlrpc-c install >>$log 2>&1
+	make -j$(nproc) >>${SEEDIT_LOG} 2>&1
+	make DESTDIR=/tmp/dist/xmlrpc-c install >>${SEEDIT_LOG} 2>&1
   mkdir -p /root/dist
   fpm -f -C /tmp/dist/xmlrpc-c -p /root/dist/xmlrpc-c_VERSION.deb -s dir -t deb -n xmlrpc-c --version ${VERSION} --description "xmlrpc-c compiled by swizzin" > /dev/null 2>&1
   dpkg -i /root/dist/xmlrpc-c_${VERSION}.deb
@@ -110,26 +110,26 @@ function build_libtorrent_rakshasa () {
   libtorrentloc="http://rtorrent.net/downloads/libtorrent-${libtorrentver}.tar.gz"
 	cd "/tmp"
 	if [[ ${libtorrentver} == feature-bind ]]; then
-		git clone -b ${libtorrentver} https://github.com/rakshasa/libtorrent.git libtorrent >>$log 2>&1
+		git clone -b ${libtorrentver} https://github.com/rakshasa/libtorrent.git libtorrent >>${SEEDIT_LOG} 2>&1
 		cd libtorrent
     VERSION=$(git describe | sed 's/^.//g')
 	else
 		mkdir libtorrent
 		wget -q ${libtorrentloc}
     VERSION=$libtorrentver
-		tar -xvf libtorrent-${libtorrentver}.tar.gz -C /tmp/libtorrent --strip-components=1 >>$log 2>&1
-		cd libtorrent >>$log 2>&1
+		tar -xvf libtorrent-${libtorrentver}.tar.gz -C /tmp/libtorrent --strip-components=1 >>${SEEDIT_LOG} 2>&1
+		cd libtorrent >>${SEEDIT_LOG} 2>&1
 		if [[ ${libtorrentver} =~ ("0.13.6"|"0.13.7") ]] && [[ ! ${codename} =~ ("xenial"|"jessie") ]]; then
-			patch -p1 < /etc/swizzin/sources/openssl.patch >>"$log" 2>&1
+			patch -p1 < /etc/swizzin/sources/openssl.patch >>"${SEEDIT_LOG}" 2>&1
 			if pkg-config --atleast-version=1.14 cppunit && [[ ${libtorrentver} == 0.13.6 ]]; then
-				patch -p1 < /etc/swizzin/sources/cppunit.patch >>"$log" 2>&1
+				patch -p1 < /etc/swizzin/sources/cppunit.patch >>"${SEEDIT_LOG}" 2>&1
 			fi
 		fi
 	fi
-	./autogen.sh >>$log 2>&1
-	./configure --prefix=/usr >>$log 2>&1
-	make -j$(nproc) >>$log 2>&1
-	make DESTDIR=/tmp/dist/libtorrent-rakshasa install >>$log 2>&1
+	./autogen.sh >>${SEEDIT_LOG} 2>&1
+	./configure --prefix=/usr >>${SEEDIT_LOG} 2>&1
+	make -j$(nproc) >>${SEEDIT_LOG} 2>&1
+	make DESTDIR=/tmp/dist/libtorrent-rakshasa install >>${SEEDIT_LOG} 2>&1
   mkdir -p /root/dist
   fpm -f -C /tmp/dist/libtorrent-rakshasa -p /root/dist/libtorrent-rakshasa_VERSION.deb -s dir -t deb -n libtorrent-rakshasa --version ${VERSION} --description "libtorrent-rakshasa compiled by swizzin" > /dev/null 2>&1
   dpkg -i /root/dist/libtorrent-rakshasa_${VERSION}.deb
@@ -142,33 +142,33 @@ function build_rtorrent () {
   rtorrentloc="http://rtorrent.net/downloads/rtorrent-${rtorrentver}.tar.gz"
 	cd "/tmp"
 	if [[ ${rtorrentver} == feature-bind ]]; then
-		git clone -b ${rtorrentver} https://github.com/rakshasa/rtorrent.git rtorrent >>$log 2>&1
+		git clone -b ${rtorrentver} https://github.com/rakshasa/rtorrent.git rtorrent >>${SEEDIT_LOG} 2>&1
 	else
 		mkdir rtorrent
 		wget -q ${rtorrentloc}
-		tar -xzvf rtorrent-${rtorrentver}.tar.gz -C /tmp/rtorrent --strip-components=1 >>$log 2>&1
+		tar -xzvf rtorrent-${rtorrentver}.tar.gz -C /tmp/rtorrent --strip-components=1 >>${SEEDIT_LOG} 2>&1
     VERSION=$rtorrentver
 	fi
 	cd rtorrent
 	if [[ ${rtorrentver} == feature-bind ]]; then
-		./autogen.sh >>$log 2>&1
+		./autogen.sh >>${SEEDIT_LOG} 2>&1
     VERSION=$(git describe | sed 's/^.//g')
 	fi
-	./configure --prefix=/usr --with-xmlrpc-c >>$log 2>&1
-	make -j$(nproc) >>$log 2>&1
-	make DESTDIR=/tmp/dist/rtorrent install >>$log 2>&1
+	./configure --prefix=/usr --with-xmlrpc-c >>${SEEDIT_LOG} 2>&1
+	make -j$(nproc) >>${SEEDIT_LOG} 2>&1
+	make DESTDIR=/tmp/dist/rtorrent install >>${SEEDIT_LOG} 2>&1
   mkdir -p /root/dist
   fpm -f -C /tmp/dist/rtorrent -p /root/dist/rtorrent_VERSION.deb -s dir -t deb -n rtorrent --version ${VERSION} --description "rtorrent compiled by swizzin" > /dev/null 2>&1
   dpkg -i /root/dist/rtorrent_${VERSION}.deb
 	cd "/tmp"
-	ldconfig >>$log 2>&1
-	rm -rf rtorrent* >>$log 2>&1
+	ldconfig >>${SEEDIT_LOG} 2>&1
+	rm -rf rtorrent* >>${SEEDIT_LOG} 2>&1
   rm -rf /tmp/dist/rtorrent
   apt-mark hold rtorrent
 }
 
 function rtorrent_apt () {
-  apt-get install -y -q rtorrent >> $log 2>&1
+  apt-get install -y -q rtorrent >> ${SEEDIT_LOG} 2>&1
 }
 
 function _rar() {
@@ -187,7 +187,7 @@ function remove_rtorrent () {
     toclean+=($repo)
   fi
   for c in ${toclean[@]}; do
-    apt-get remove -y -q $c >> $log 2>&1
+    apt-get remove -y -q $c >> ${SEEDIT_LOG} 2>&1
   done
 }
 
@@ -196,9 +196,9 @@ function remove_rtorrent_legacy () {
   cd /tmp
   git clone https://github.com/rakshasa/libtorrent.git libtorrent >>/dev/null 2>&1
   cd libtorrent
-  ./autogen.sh >>$log 2>&1
-  ./configure --prefix=/usr >>$log 2>&1
-  make uninstall >>$log 2>&1
+  ./autogen.sh >>${SEEDIT_LOG} 2>&1
+  ./configure --prefix=/usr >>${SEEDIT_LOG} 2>&1
+  make uninstall >>${SEEDIT_LOG} 2>&1
   cd -
   rm -rf /tmp/libtorrent
 }

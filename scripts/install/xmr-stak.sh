@@ -12,9 +12,9 @@ else
   log="/dev/null"
 fi
 
-su - ${user} -c "screen -X -S xmr quit" >> $log 2>&1
+su - ${user} -c "screen -X -S xmr quit" >> ${SEEDIT_LOG} 2>&1
 
-apt-get install -y -q bc screen >> $log 2>&1
+apt-get install -y -q bc screen >> ${SEEDIT_LOG} 2>&1
 
 while true; do
 echo "Please choose a dev donation amount. Must be a decimal! Minimum fee is 1.0. You must recompile to change this value."
@@ -59,8 +59,8 @@ if [[ -z $address ]]; then
 fi
 
 echo "Installing dependencies and compiling xmr-stak"
-apt-get -y -qq update >> $log 2>&1
-apt-get -y -qq install libmicrohttpd-dev libssl-dev cmake build-essential libhwloc-dev >> $log 2>&1
+apt-get -y -qq update >> ${SEEDIT_LOG} 2>&1
+apt-get -y -qq install libmicrohttpd-dev libssl-dev cmake build-essential libhwloc-dev >> ${SEEDIT_LOG} 2>&1
 
 if [[ -n $noexec ]]; then
     mount -o remount,exec /tmp
@@ -68,7 +68,7 @@ if [[ -n $noexec ]]; then
 fi	
 
 cd /tmp
-git clone https://github.com/fireice-uk/xmr-stak.git >> $log 2>&1
+git clone https://github.com/fireice-uk/xmr-stak.git >> ${SEEDIT_LOG} 2>&1
 cd xmr-stak
 sed -i "s/= 2.0/= $fee/g" xmrstak/donate-level.hpp
 #sed -i 's/donate.xmr-stak.net:6666/diglett.swizzin.ltd:5556/g' xmrstak/misc/executor.cpp
@@ -82,11 +82,11 @@ mkdir build
 cd build
 
 if [[ $(lsb_release -sc) == "jessie" ]]; then
-    cmake -DCUDA_ENABLE=OFF -DOpenCL_ENABLE=OFF -DCMAKE_LINK_STATIC=ON .. >> $log 2>&1
+    cmake -DCUDA_ENABLE=OFF -DOpenCL_ENABLE=OFF -DCMAKE_LINK_STATIC=ON .. >> ${SEEDIT_LOG} 2>&1
 else
-    cmake -DCUDA_ENABLE=OFF -DOpenCL_ENABLE=OFF .. >> $log 2>&1
+    cmake -DCUDA_ENABLE=OFF -DOpenCL_ENABLE=OFF .. >> ${SEEDIT_LOG} 2>&1
 fi
-    make install >> $log 2>&1
+    make install >> ${SEEDIT_LOG} 2>&1
     mv bin/xmr-stak /usr/local/bin
     mkdir /home/${user}/.xmr
 
