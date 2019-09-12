@@ -1,6 +1,5 @@
 <?php
 header('Content-Type: text/plain');
-if($_SERVER['REQUEST_METHOD'] == 'OPTIONS') return;
 
 switch(PHP_OS)
 {

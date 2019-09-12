@@ -1,6 +1,5 @@
 <?php
 header('Content-Type: text/plain');
-if($_SERVER['REQUEST_METHOD'] == 'OPTIONS') return;
 
 if (false === ($str = @file("/proc/cpuinfo"))) return false;
 $str = implode("", $str);

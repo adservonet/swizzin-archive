@@ -1,6 +1,5 @@
 <?php
 //header('Content-Type: application/json');
-if($_SERVER['REQUEST_METHOD'] == 'OPTIONS') return;
 
 require 'vendor/autoload.php';
 
