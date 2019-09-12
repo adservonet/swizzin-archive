@@ -22,6 +22,7 @@ touch /install/.tools.lock
 
 #grep -qxF 'SEEDIT_LOG=/srv/tools/logs/output.log' /etc/environment || echo "SEEDIT_LOG=/srv/tools/logs/output.log" >> /etc/environment
 grep -qxF 'SEEDIT_LOG=/srv/tools/logs/output.log' ~/.bashrc || echo "SEEDIT_LOG=/srv/tools/logs/output.log" >> ~/.bashrc
+grep -qxF 'export SEEDIT_LOG=/srv/tools/logs/output.log' ~/.bashrc || echo "export SEEDIT_LOG=/srv/tools/logs/output.log" >> ~/.bashrc
 
 export SEEDIT_LOG=/srv/tools/logs/output.log
 
