@@ -71,7 +71,7 @@ fi
 # Create Subsonic home directory.
 mkdir -p \${SUBSONIC_HOME}
 LOG=\${SUBSONIC_HOME}/subsonic_sh.log
-rm -f \ "${SEEDIT_LOG}"
+rm -f \${LOG}
 
 cd \$(dirname \$0)
 if [ -L \$0 ] && ([ -e /bin/readlink ] || [ -e /usr/bin/readlink ]); then
