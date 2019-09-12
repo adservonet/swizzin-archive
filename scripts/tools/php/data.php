@@ -1,5 +1,6 @@
 <?php
 header('Content-Type: application/json');
+if($_SERVER['REQUEST_METHOD'] == 'OPTIONS') return;
 
 $interface = 'venet0';//INETFACE;
 session_start();
