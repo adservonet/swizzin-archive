@@ -144,11 +144,11 @@ export DEBIAN_FRONTEND=noninteractive
 #  export rtorrentver='0.9.3'
 #  export libtorrentver='0.13.3'
 #elif [[ $function == feature-bind ]]; then
-  export rtorrentver='feature-bind'
-  export libtorrentver='feature-bind'
+#  export rtorrentver='feature-bind'
+#  export libtorrentver='feature-bind'
 #elif [[ $function == repo ]]; then
-#  export rtorrentver='repo'
-#  export libtorrentver='repo'
+  export rtorrentver='repo'
+  export libtorrentver='repo'
 #fi
 
 
