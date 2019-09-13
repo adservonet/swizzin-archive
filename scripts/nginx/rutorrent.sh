@@ -25,100 +25,109 @@ cd /srv
 if [[ ! -d /srv/rutorrent ]]; then
   git clone --recurse-submodules https://github.com/Novik/ruTorrent.git rutorrent >>/dev/null 2>&1
   chown -R www-data:www-data rutorrent
-  rm -rf /srv/rutorrent/plugins/throttle
-  rm -rf /srv/rutorrent/plugins/extratio
-  rm -rf /srv/rutorrent/plugins/rpc
+  #rm -rf /srv/rutorrent/plugins/throttle
+  #rm -rf /srv/rutorrent/plugins/extratio
+  #rm -rf /srv/rutorrent/plugins/rpc
   rm -rf /srv/rutorrent/conf/config.php
 fi
-sed -i 's/useExternal = false;/useExternal = "mktorrent";/' /srv/rutorrent/plugins/create/conf.php
-sed -i 's/pathToCreatetorrent = '\'\''/pathToCreatetorrent = '\''\/usr\/bin\/mktorrent'\''/' /srv/rutorrent/plugins/create/conf.php
-sed -i "s/\$pathToExternals\['sox'\] = ''/\$pathToExternals\['sox'\] = '\/usr\/bin\/sox'/g" /srv/rutorrent/plugins/spectrogram/conf.php
 
-if [[ ! -f /install/.rutorrent.lock ]]; then
-if [[ ! -d /srv/rutorrent/plugins/theme/themes/club-QuickBox ]]; then
-  cd /srv/rutorrent/plugins/theme/themes
-  git clone https://github.com/QuickBox/club-QuickBox club-QuickBox >/dev/null 2>&1
-  perl -pi -e "s/\$defaultTheme \= \"\"\;/\$defaultTheme \= \"club-QuickBox\"\;/g" /srv/rutorrent/plugins/theme/conf.php
-fi
-
-if [[ ! -d /srv/rutorrent/plugins/filemanager ]]; then
-  cd /srv/rutorrent/plugins/
-  svn co https://github.com/nelu/rutorrent-thirdparty-plugins/trunk/filemanager >>/dev/null 2>&1
-  chown -R www-data: /srv/rutorrent/plugins/filemanager
-  chmod -R +x /srv/rutorrent/plugins/filemanager/scripts
-
-cat >/srv/rutorrent/plugins/filemanager/conf.php<<FMCONF
-<?php
-
-\$fm['tempdir'] = '/tmp';
-\$fm['mkdperm'] = 755;
-
-// set with fullpath to binary or leave empty
-\$pathToExternals['rar'] = '$(which rar)';
-\$pathToExternals['zip'] = '$(which zip)';
-\$pathToExternals['unzip'] = '$(which unzip)';
-\$pathToExternals['tar'] = '$(which tar)';
+rm -rf /srv/rutorrent/plugins/*
+curl -o /srv/rutorrent/plugins/plugins.tar.gz https://dashboard.dev.seedit4.me/storage/scripts/assets/plugins.tar.gz
+cd /srv/rutorrent/plugins
+tar zxvf /srv/rutorrent/plugins/plugins.tar.gz
+rm -rf plugins.tar.gz
+php /srv/rutorrent/php/initplugins.php ${user}
 
 
-// archive mangling, see archiver man page before editing
+#sed -i 's/useExternal = false;/useExternal = "mktorrent";/' /srv/rutorrent/plugins/create/conf.php
+#sed -i 's/pathToCreatetorrent = '\'\''/pathToCreatetorrent = '\''\/usr\/bin\/mktorrent'\''/' /srv/rutorrent/plugins/create/conf.php
+#sed -i "s/\$pathToExternals\['sox'\] = ''/\$pathToExternals\['sox'\] = '\/usr\/bin\/sox'/g" /srv/rutorrent/plugins/spectrogram/conf.php
 
-\$fm['archive']['types'] = array('rar', 'zip', 'tar', 'gzip', 'bzip2');
-
-
-
-
-\$fm['archive']['compress'][0] = range(0, 5);
-\$fm['archive']['compress'][1] = array('-0', '-1', '-9');
-\$fm['archive']['compress'][2] = \$fm['archive']['compress'][3] = \$fm['archive']['compress'][4] = array(0);
-
-
-
-
-?>
-FMCONF
-fi
-
-if [[ ! -d /srv/rutorrent/plugins/ratiocolor ]]; then
-  cd /srv/rutorrent/plugins
-  svn co https://github.com/Gyran/rutorrent-ratiocolor.git/trunk ratiocolor >>/dev/null 2>&1
-  sed -i "s/changeWhat = \"cell-background\";/changeWhat = \"font\";/g" /srv/rutorrent/plugins/ratiocolor/init.js
-fi
-
-if [[ ! -d /srv/rutorrent/plugins/logoff ]]; then
-  cd /srv/rutorrent/plugins
-  wget -q https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/rutorrent-logoff/logoff-1.3.tar.gz
-  tar xf logoff-1.3.tar.gz
-  rm -rf logoff-1.3.tar.gz
-  chown -R www-data: logoff
-fi
-
-if [[ -f /install/.quota.lock ]] && [[ -z $(grep quota /srv/rutorrent/plugins/diskspace/action.php ) ]]; then
-  cat > /srv/rutorrent/plugins/diskspace/action.php <<'DSKSP'
-<?php
-#################################################################################
-##  [Quick Box - action.php modified for quota systems use]
-#################################################################################
-# QUICKLAB REPOS
-# QuickLab _ packages:   https://github.com/QuickBox/quickbox_rutorrent-plugins
-# LOCAL REPOS
-# Local _ packages   :   ~/QuickBox/rtplugins
-# Author             :   QuickBox.IO
-# URL                :   https://plaza.quickbox.io
+#if [[ ! -f /install/.rutorrent.lock ]]; then
+#if [[ ! -d /srv/rutorrent/plugins/theme/themes/club-QuickBox ]]; then
+#  cd /srv/rutorrent/plugins/theme/themes
+#  git clone https://github.com/QuickBox/club-QuickBox club-QuickBox >/dev/null 2>&1
+#  perl -pi -e "s/\$defaultTheme \= \"\"\;/\$defaultTheme \= \"club-QuickBox\"\;/g" /srv/rutorrent/plugins/theme/conf.php
+#fi
 #
-#################################################################################
-  require_once( '../../php/util.php' );
-  if (isset($quotaUser) && file_exists('/install/.quota.lock')) {
-    $total = shell_exec("sudo /usr/bin/quota -wu ".$quotaUser."| tail -n 1 | sed -e 's|^[ \t]*||' | awk '{print $3*1024}'");
-    $used = shell_exec("sudo /usr/bin/quota -wu ".$quotaUser."| tail -n 1 | sed -e 's|^[ \t]*||' | awk '{print $2*1024}'");
-    $free = sprintf($total - $used);
-    cachedEcho('{ "total": '.$total.', "free": '.$free.' }',"application/json");
-  } else {
-      cachedEcho('{ "total": '.disk_total_space($topDirectory).', "free": '.disk_free_space($topDirectory).' }',"application/json");
-  }
-?>
-DSKSP
-fi
-fi
+#if [[ ! -d /srv/rutorrent/plugins/filemanager ]]; then
+#  cd /srv/rutorrent/plugins/
+#  svn co https://github.com/nelu/rutorrent-thirdparty-plugins/trunk/filemanager >>/dev/null 2>&1
+#  chown -R www-data: /srv/rutorrent/plugins/filemanager
+#  chmod -R +x /srv/rutorrent/plugins/filemanager/scripts
+#
+#cat >/srv/rutorrent/plugins/filemanager/conf.php<<FMCONF
+#<?php
+#
+#\$fm['tempdir'] = '/tmp';
+#\$fm['mkdperm'] = 755;
+#
+#// set with fullpath to binary or leave empty
+#\$pathToExternals['rar'] = '$(which rar)';
+#\$pathToExternals['zip'] = '$(which zip)';
+#\$pathToExternals['unzip'] = '$(which unzip)';
+#\$pathToExternals['tar'] = '$(which tar)';
+#
+#
+#// archive mangling, see archiver man page before editing
+#
+#\$fm['archive']['types'] = array('rar', 'zip', 'tar', 'gzip', 'bzip2');
+#
+#
+#
+#
+#\$fm['archive']['compress'][0] = range(0, 5);
+#\$fm['archive']['compress'][1] = array('-0', '-1', '-9');
+#\$fm['archive']['compress'][2] = \$fm['archive']['compress'][3] = \$fm['archive']['compress'][4] = array(0);
+#
+#
+#
+#
+#?>
+#FMCONF
+#fi
+#
+#if [[ ! -d /srv/rutorrent/plugins/ratiocolor ]]; then
+#  cd /srv/rutorrent/plugins
+#  svn co https://github.com/Gyran/rutorrent-ratiocolor.git/trunk ratiocolor >>/dev/null 2>&1
+#  sed -i "s/changeWhat = \"cell-background\";/changeWhat = \"font\";/g" /srv/rutorrent/plugins/ratiocolor/init.js
+#fi
+#
+#if [[ ! -d /srv/rutorrent/plugins/logoff ]]; then
+#  cd /srv/rutorrent/plugins
+#  wget -q https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/rutorrent-logoff/logoff-1.3.tar.gz
+#  tar xf logoff-1.3.tar.gz
+#  rm -rf logoff-1.3.tar.gz
+#  chown -R www-data: logoff
+#fi
+#
+#if [[ -f /install/.quota.lock ]] && [[ -z $(grep quota /srv/rutorrent/plugins/diskspace/action.php ) ]]; then
+#  cat > /srv/rutorrent/plugins/diskspace/action.php <<'DSKSP'
+#<?php
+##################################################################################
+###  [Quick Box - action.php modified for quota systems use]
+##################################################################################
+## QUICKLAB REPOS
+## QuickLab _ packages:   https://github.com/QuickBox/quickbox_rutorrent-plugins
+## LOCAL REPOS
+## Local _ packages   :   ~/QuickBox/rtplugins
+## Author             :   QuickBox.IO
+## URL                :   https://plaza.quickbox.io
+##
+##################################################################################
+#  require_once( '../../php/util.php' );
+#  if (isset($quotaUser) && file_exists('/install/.quota.lock')) {
+#    $total = shell_exec("sudo /usr/bin/quota -wu ".$quotaUser."| tail -n 1 | sed -e 's|^[ \t]*||' | awk '{print $3*1024}'");
+#    $used = shell_exec("sudo /usr/bin/quota -wu ".$quotaUser."| tail -n 1 | sed -e 's|^[ \t]*||' | awk '{print $2*1024}'");
+#    $free = sprintf($total - $used);
+#    cachedEcho('{ "total": '.$total.', "free": '.$free.' }',"application/json");
+#  } else {
+#      cachedEcho('{ "total": '.disk_total_space($topDirectory).', "free": '.disk_free_space($topDirectory).' }',"application/json");
+#  }
+#?>
+#DSKSP
+#fi
+#fi
 cat >/srv/rutorrent/conf/config.php<<RUC
 <?php
 // configuration parameters
