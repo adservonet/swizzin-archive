@@ -1,5 +1,5 @@
 <?php
-if($_SERVER['REQUEST_METHOD'] == 'OPTIONS') return;
+if($_SERVER['REQUEST_METHOD'] == 'OPTIONS') die();
 //header('Access-Control-Allow-Origin: *');
 //header('Access-Control-Allow-Credentials: true');
 //header('Access-Control-Allow-Methods: *');
