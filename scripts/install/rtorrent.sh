@@ -88,12 +88,12 @@ chown ${user}.${user} -R /home/${user}/.rtorrent.rc
 
 
 function _makedirs() {
-	mkdir -p /home/${user}/torrents/rtorrent 2>>  "${SEEDIT_LOG}"
+	mkdir -p /home/${user}/torrents/rtorrent >> "${SEEDIT_LOG}" 2>&1
 	mkdir -p /home/${user}/.sessions
 	mkdir -p /home/${user}/rwatch
-	chown -R ${user}.${user} /home/${user}/{torrents,.sessions,rwatch} 2>>  "${SEEDIT_LOG}"
-	usermod -a -G www-data ${user} 2>>  "${SEEDIT_LOG}"
-	usermod -a -G ${user} www-data 2>>  "${SEEDIT_LOG}"
+	chown -R ${user}.${user} /home/${user}/{torrents,.sessions,rwatch} >> "${SEEDIT_LOG}" 2>&1
+	usermod -a -G www-data ${user} >> "${SEEDIT_LOG}" 2>&1
+	usermod -a -G ${user} www-data >> "${SEEDIT_LOG}" 2>&1
 }
 
 _systemd() {
@@ -114,7 +114,7 @@ WorkingDirectory=/home/%I/
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable rtorrent@${user} 2>>  "${SEEDIT_LOG}"
+systemctl enable rtorrent@${user} >> "${SEEDIT_LOG}" 2>&1
 service rtorrent@${user} start
 }
 
@@ -145,16 +145,16 @@ if [[ -n $noexec ]]; then
 	mount -o remount,exec /tmp
 	noexec=1
 fi
-	  echo "Installing rTorrent Dependencies ... ";depends_rtorrent
+	  echo "Installing rTorrent Dependencies ... " >> "${SEEDIT_LOG}" 2>&1;depends_rtorrent
 		if [[ ! $rtorrentver == repo ]]; then
-			echo "Building xmlrpc-c from source ... ";build_xmlrpc-c
-			echo "Building libtorrent from source ... ";build_libtorrent_rakshasa
-			echo "Building rtorrent from source ... ";build_rtorrent
+			echo "Building xmlrpc-c from source ... " >> "${SEEDIT_LOG}" 2>&1;build_xmlrpc-c
+			echo "Building libtorrent from source ... " >> "${SEEDIT_LOG}" 2>&1;build_libtorrent_rakshasa
+			echo "Building rtorrent from source ... " >> "${SEEDIT_LOG}" 2>&1;build_rtorrent
 		else
-			echo "Installing rtorrent with apt-get ... ";rtorrent_apt
+			echo "Installing rtorrent with apt-get ... " >> "${SEEDIT_LOG}" 2>&1;rtorrent_apt
 		fi
-		echo "Making ${user} directory structure ... ";_makedirs
-		echo "setting up rtorrent.rc ... ";_rconf;_systemd
+		echo "Making ${user} directory structure ... " >> "${SEEDIT_LOG}" 2>&1;_makedirs
+		echo "setting up rtorrent.rc ... " >> "${SEEDIT_LOG}" 2>&1;_rconf;_systemd
 
 if [[ -n $noexec ]]; then
 	mount -o remount,noexec /tmp
