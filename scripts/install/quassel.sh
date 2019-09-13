@@ -28,28 +28,28 @@ IP=$(ip route get 1 | sed -n 's/^.*src \([0-9.]*\) .*$/\1/p')
 user=$(cut -d: -f1 < /root/.master.info)
 . /etc/swizzin/sources/functions/backports
 
-echo "Installing Quassel PPA (Ubuntu) or grabbing latest backport (Debian) ... "
+echo "Installing Quassel PPA (Ubuntu) or grabbing latest backport (Debian) ... " >>  "${SEEDIT_LOG}"  2>&1
 
 if [[ $distribution == Ubuntu ]]; then
   echo "Installing Quassel PPA"
-  apt-get install -q -y software-properties-common > /dev/null 2>&1
-	apt-add-repository ppa:mamarley/quassel -y >/dev/null 2>&1
-	apt-get -qq -y --force-yes update >/dev/null 2>&1
-  apt-get -q -y install quassel-core >/dev/null 2>&1
+  apt-get install -q -y software-properties-common  >>  "${SEEDIT_LOG}"  2>&1
+	apt-add-repository ppa:mamarley/quassel -y  >>  "${SEEDIT_LOG}"  2>&1
+	apt-get -qq -y --force-yes update  >>  "${SEEDIT_LOG}"  2>&1
+  apt-get -q -y install quassel-core  >>  "${SEEDIT_LOG}"  2>&1
 else
   if [[ $codename == "buster" ]]; then
     echo "Grabbing latest release"
-    apt-get -y -q quassel-core > /dev/null 2>&1
+    apt-get -y -q quassel-core  >>  "${SEEDIT_LOG}"  2>&1
   elif [[ $codename == "stretch" ]]; then
     check_debian_backports
     echo "Grabbing latest backport"
-    apt-get -y -q install quassel-core > /dev/null 2>&1
+    apt-get -y -q install quassel-core  >>  "${SEEDIT_LOG}"  2>&1
   else
     echo "Grabbing latest backport"
-  wget -r -l1 --no-parent --no-directories -A "quassel-core*.deb" https://iskrembilen.com/quassel-packages-debian/ >/dev/null 2>&1
-  dpkg -i quassel-core* >/dev/null 2>&1
+  wget -r -l1 --no-parent --no-directories -A "quassel-core*.deb" https://iskrembilen.com/quassel-packages-debian/  >>  "${SEEDIT_LOG}"  2>&1
+  dpkg -i quassel-core*  >>  "${SEEDIT_LOG}"  2>&1
   rm quassel-core*
-  apt-get install -f -y -q >/dev/null 2>&1
+  apt-get install -f -y -q  >>  "${SEEDIT_LOG}"  2>&1
 fi
 fi
 
@@ -66,7 +66,7 @@ systemctl enable --now quasselcore
 systemctl restart quasselcore.service
 
 
-echo "Quassel has now been installed! "
+echo "Quassel has now been installed! " >>  "${SEEDIT_LOG}"  2>&1
 echo "Please install quassel-client on your personal computer "
 echo "and connect to the newly created core at "
 echo "${IP}:${port} to set up your account"

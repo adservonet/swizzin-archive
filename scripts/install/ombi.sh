@@ -20,7 +20,7 @@ function _depends() {
     wget -qO - https://repo.ombi.turd.me/pubkey.txt | sudo apt-key add -
   fi
 
-  apt-get update -q >/dev/null 2>&1
+  apt-get update -q >>  "${SEEDIT_LOG}"  2>&1
 }
 
 function _install() {
@@ -33,7 +33,7 @@ function _install() {
   #rm Ombi.zip
   #cd /opt
   #chown -R ${user}: ombi
-  apt-get install -y -q ombi > /dev/null 2>&1
+  apt-get install -y -q ombi  >>  "${SEEDIT_LOG}"  2>&1
 }
 
 
@@ -62,7 +62,7 @@ OMB
     bash /usr/local/bin/swizzin/nginx/ombi.sh
     service nginx reload
   fi
-  systemctl enable ombi >/dev/null 2>&1
+  systemctl enable ombi >>  "${SEEDIT_LOG}"  2>&1
   systemctl restart ombi
 }
 
@@ -75,9 +75,9 @@ OMB
 distribution=$(lsb_release -is)
 user=$(cut -d: -f1 < /root/.master.info)
 
-echo -ne "Initializing plex ... $i\033[0K\r"
+echo -ne "Initializing plex ... $i\033[0K\r" >>  "${SEEDIT_LOG}"  2>&1
 
-echo -en "\rUpdating dependencies ... \033[0K\r";_depends
-echo -en "\rInstalling Ombi ... \033[0K\r";_install
-echo -en "\rInitializing Ombi service ... \033[0K\r";_services
-echo -e "\rOmbi Installation Complete!\033[0K\r"
+echo -en "\rUpdating dependencies ... \033[0K\r" >>  "${SEEDIT_LOG}"  2>&1;_depends
+echo -en "\rInstalling Ombi ... \033[0K\r" >>  "${SEEDIT_LOG}"  2>&1;_install
+echo -en "\rInitializing Ombi service ... \033[0K\r" >>  "${SEEDIT_LOG}"  2>&1;_services
+echo -e "\rOmbi Installation Complete!\033[0K\r" >>  "${SEEDIT_LOG}"  2>&1
