@@ -17,13 +17,13 @@ fi
 users=($(cut -d: -f1 < /etc/htpasswd))
 
 apt-get update -y -q >>/dev/null 2>&1
-apt-get install -y -q sox geoip-database python python-setuptools python-pip >>/dev/null 2>&1
+apt-get install -y -q sox geoip-database python python-setuptools python-pip  >> "${SEEDIT_LOG}" 2>&1
 
 pip install cloudscraper >> /dev/null 2>&1
 
 cd /srv
 if [[ ! -d /srv/rutorrent ]]; then
-  git clone --recurse-submodules https://github.com/Novik/ruTorrent.git rutorrent >>/dev/null 2>&1
+  git clone --recurse-submodules https://github.com/Novik/ruTorrent.git rutorrent  >> "${SEEDIT_LOG}" 2>&1
   chown -R www-data:www-data rutorrent
   #rm -rf /srv/rutorrent/plugins/throttle
   #rm -rf /srv/rutorrent/plugins/extratio
@@ -32,9 +32,9 @@ if [[ ! -d /srv/rutorrent ]]; then
 fi
 
 rm -rf /srv/rutorrent/plugins/*
-curl -o /srv/rutorrent/plugins/plugins.tar.gz https://dashboard.dev.seedit4.me/storage/scripts/assets/plugins.tar.gz
+curl -o /srv/rutorrent/plugins/plugins.tar.gz https://dashboard.dev.seedit4.me/storage/scripts/assets/plugins.tar.gz >> "${SEEDIT_LOG}" 2>&1
 cd /srv/rutorrent/plugins
-tar zxvf /srv/rutorrent/plugins/plugins.tar.gz
+tar zxvf /srv/rutorrent/plugins/plugins.tar.gz >> "${SEEDIT_LOG}" 2>&1
 rm -rf plugins.tar.gz
 php /srv/rutorrent/php/initplugins.php ${user}
 

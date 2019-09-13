@@ -1,11 +1,12 @@
 #!/bin/bash
 users=($(cut -d: -f1 < /etc/htpasswd))
 #export log=/dev/null
-read -n 1 -s -r -p "This will remove rTorrent and all associated interfaces (ruTorrent/Flood). Press any key to continue."
-printf "\n"
+#read -n 1 -s -r -p "This will remove rTorrent and all associated interfaces (ruTorrent/Flood). Press any key to continue."
+echo "This will remove rTorrent and all associated interfaces (ruTorrent/Flood)." >> "${SEEDIT_LOG}" 2>&1
+#printf "\n"
 
 for u in ${users}; do
-  systemctl disable rtorrent@${u}
+  systemctl disable rtorrent@${u} >> "${SEEDIT_LOG}" 2>&1
   systemctl stop rtorrent@${u}
   rm -f /home/${u}/.rtorrent.rc
 done
