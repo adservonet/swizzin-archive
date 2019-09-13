@@ -187,7 +187,7 @@ function remove_rtorrent () {
     toclean+=($repo)
   fi
   for c in ${toclean[@]}; do
-    apt-get remove -y -q $c >>  "${SEEDIT_LOG}"  2>&1
+    apt-get remove -y -q --allow-change-held-packages $c >>  "${SEEDIT_LOG}"  2>&1
   done
 }
 
