@@ -29,6 +29,12 @@ touch /install/.tools.lock
 if [[ -f /lib/systemd/system/php7.3-fpm.service ]]; then
   echo "php setup seems ok"
 else
+
+  rm /var/lib/dpkg/lock-frontend
+  rm /var/lib/dpkg/lock
+  rm /var/cache/apt/archives/lock
+  sudo rm /var/cache/debconf/*.dat
+
   apt -y -q  remove php7.0 php7.0-fpm php7.0-cli php7.0-common
   LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php
   apt -y -q  update
