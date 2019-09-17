@@ -16,7 +16,13 @@ fi
 
 users=($(cut -d: -f1 < /etc/htpasswd))
 
+. /etc/swizzin/sources/functions/waitforapt.sh
+waitforapt
+
 apt-get update -y -q >>/dev/null 2>&1
+
+waitforapt
+
 apt-get install -y -q sox geoip-database python python-setuptools python-pip  >> "${SEEDIT_LOG}" 2>&1
 
 pip install cloudscraper >> /dev/null 2>&1
