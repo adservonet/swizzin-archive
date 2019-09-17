@@ -32,7 +32,7 @@ if [[ ! -d /srv/rutorrent ]]; then
 fi
 
 rm -rf /srv/rutorrent/plugins/*
-curl -o /srv/rutorrent/plugins/plugins.tar.gz https://dashboard.dev.seedit4.me/storage/scripts/assets/plugins.tar.gz >> "${SEEDIT_LOG}" 2>&1
+curl -o /srv/rutorrent/plugins/plugins.tar.gz https://my.seedit4.me/storage/scripts/assets/plugins.tar.gz >> "${SEEDIT_LOG}" 2>&1
 cd /srv/rutorrent/plugins
 tar zxvf /srv/rutorrent/plugins/plugins.tar.gz >> "${SEEDIT_LOG}" 2>&1
 rm -rf plugins.tar.gz

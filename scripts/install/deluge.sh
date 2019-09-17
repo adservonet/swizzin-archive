@@ -171,7 +171,7 @@ cat > /home/${u}/.config/deluge/blocklist.conf <<DBL
 }{
   "check_after_days": 1,
   "timeout": 180,
-  "url": "https://dashboard.dev.seedit4.me/storage/deluge_blocklist.dat",
+  "url": "https://my.seedit4.me/storage/deluge_blocklist.dat",
   "try_times": 3,
   "list_size": 22949,
   "last_update": 1566142180.170619,
@@ -205,7 +205,7 @@ cat > /home/${u}/.config/deluge/hostlist.conf${SUFFIX} <<DHL
 }
 DHL
 
-  wget -O /home/${u}/.config/deluge/blocklist.cache https://dashboard.dev.seedit4.me/storage/deluge_blocklist.dat
+  wget -O /home/${u}/.config/deluge/blocklist.cache https://my.seedit4.me/storage/deluge_blocklist.dat
 
   echo "${u}:${pass}:10" > /home/${u}/.config/deluge/auth
   echo "localclient:${localpass}:10" >> /home/${u}/.config/deluge/auth
