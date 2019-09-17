@@ -8,10 +8,17 @@
 
 log="/install/.proftpd.log"
 
+. /etc/swizzin/sources/functions/waitforapt.sh
+waitforapt
+
 apt remove vsftpd -y
+
+waitforapt
 
 apt install debconf-utils -y  >>  "${SEEDIT_LOG}"  2>&1
 echo "proftpd-basic shared/proftpd/inetd_or_standalone select standalone" | debconf-set-selections  >>  "${SEEDIT_LOG}"  2>&1
+
+waitforapt
 apt install proftpd-basic -y  >>  "${SEEDIT_LOG}"  2>&1
 
 
@@ -77,6 +84,7 @@ Include /etc/proftpd/conf.d/
 
 PFC
 
+waitforapt
 apt install -y openssl
 
 echo 'DefaultRoot ~' >> /etc/proftpd/proftpd.conf
