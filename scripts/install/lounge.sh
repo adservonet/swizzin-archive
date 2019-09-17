@@ -454,24 +454,24 @@ WantedBy=multi-user.target
 EOSD
 
 
-sudo -u lounge /usr/bin/thelounge install thelounge-theme-zenburn
-sudo -u lounge /usr/bin/thelounge install thelounge-theme-mininapse
-sudo -u lounge /usr/bin/thelounge install thelounge-theme-crypto
-sudo -u lounge /usr/bin/thelounge install thelounge-theme-ion
-sudo -u lounge /usr/bin/thelounge install thelounge-theme-classic
-sudo -u lounge /usr/bin/thelounge install thelounge-theme-solarized-fork-monospace
-sudo -u lounge /usr/bin/thelounge install thelounge-theme-zenburn-monospace
-sudo -u lounge /usr/bin/thelounge install thelounge-theme-abyss
-sudo -u lounge /usr/bin/thelounge install thelounge-theme-amoled
-sudo -u lounge /usr/bin/thelounge install thelounge-theme-material
-sudo -u lounge /usr/bin/thelounge install thelounge-theme-scoutlink
-sudo -u lounge /usr/bin/thelounge install thelounge-theme-mortified
-sudo -u lounge /usr/bin/thelounge install thelounge-theme-solarized
-sudo -u lounge /usr/bin/thelounge install thelounge-theme-hexified
-sudo -u lounge /usr/bin/thelounge install thelounge-theme-light
-sudo -u lounge /usr/bin/thelounge install thelounge-theme-onedark
-sudo -u lounge /usr/bin/thelounge install thelounge-theme-common
-sudo -u lounge /usr/bin/thelounge install thelounge-theme-purplenight
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-zenburn >>  "${SEEDIT_LOG}"  2>&1
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-mininapse >>  "${SEEDIT_LOG}"  2>&1
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-crypto >>  "${SEEDIT_LOG}"  2>&1
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-ion >>  "${SEEDIT_LOG}"  2>&1
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-classic >>  "${SEEDIT_LOG}"  2>&1
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-solarized-fork-monospace >>  "${SEEDIT_LOG}"  2>&1
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-zenburn-monospace >>  "${SEEDIT_LOG}"  2>&1
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-abyss >>  "${SEEDIT_LOG}"  2>&1
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-amoled >>  "${SEEDIT_LOG}"  2>&1
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-material >>  "${SEEDIT_LOG}"  2>&1
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-scoutlink >>  "${SEEDIT_LOG}"  2>&1
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-mortified >>  "${SEEDIT_LOG}"  2>&1
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-solarized >>  "${SEEDIT_LOG}"  2>&1
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-hexified >>  "${SEEDIT_LOG}"  2>&1
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-light >>  "${SEEDIT_LOG}"  2>&1
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-onedark >>  "${SEEDIT_LOG}"  2>&1
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-common >>  "${SEEDIT_LOG}"  2>&1
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-purplenight >>  "${SEEDIT_LOG}"  2>&1
 
 
 systemctl enable --now lounge >>  "${SEEDIT_LOG}"  2>&1
