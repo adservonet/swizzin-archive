@@ -453,6 +453,27 @@ StartLimitBurst=3
 WantedBy=multi-user.target
 EOSD
 
+
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-zenburn
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-mininapse
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-crypto
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-ion
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-classic
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-solarized-fork-monospace
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-zenburn-monospace
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-abyss
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-amoled
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-material
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-scoutlink
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-mortified
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-solarized
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-hexified
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-light
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-onedark
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-common
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-purplenight
+
+
 systemctl enable --now lounge >>  "${SEEDIT_LOG}"  2>&1
 
 sleep 3
@@ -499,25 +520,6 @@ fi
 npm_install
 _install
 _adduser
-
-sudo -u lounge /usr/bin/thelounge install thelounge-theme-zenburn
-sudo -u lounge /usr/bin/thelounge install thelounge-theme-mininapse
-sudo -u lounge /usr/bin/thelounge install thelounge-theme-crypto
-sudo -u lounge /usr/bin/thelounge install thelounge-theme-ion
-sudo -u lounge /usr/bin/thelounge install thelounge-theme-classic
-sudo -u lounge /usr/bin/thelounge install thelounge-theme-solarized-fork-monospace
-sudo -u lounge /usr/bin/thelounge install thelounge-theme-zenburn-monospace
-sudo -u lounge /usr/bin/thelounge install thelounge-theme-abyss
-sudo -u lounge /usr/bin/thelounge install thelounge-theme-amoled
-sudo -u lounge /usr/bin/thelounge install thelounge-theme-material
-sudo -u lounge /usr/bin/thelounge install thelounge-theme-scoutlink
-sudo -u lounge /usr/bin/thelounge install thelounge-theme-mortified
-sudo -u lounge /usr/bin/thelounge install thelounge-theme-solarized
-sudo -u lounge /usr/bin/thelounge install thelounge-theme-hexified
-sudo -u lounge /usr/bin/thelounge install thelounge-theme-light
-sudo -u lounge /usr/bin/thelounge install thelounge-theme-onedark
-sudo -u lounge /usr/bin/thelounge install thelounge-theme-common
-sudo -u lounge /usr/bin/thelounge install thelounge-theme-purplenight
 
 
 touch /install/.lounge.lock
