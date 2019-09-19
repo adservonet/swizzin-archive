@@ -3,7 +3,7 @@
 function waitforapt {
   i=0
   echo i$i
-  echo "waiting 30 seconds for apt locks, before i kill apt-get"  >> "${SEEDIT_LOG}" 2>&1;
+  echo "waiting for apt locks"  >> "${SEEDIT_LOG}" 2>&1;
   while sudo fuser /var/{lib/{dpkg,apt/lists},cache/apt/archives}/lock >/dev/null 2>&1; do
     ((i++))
     echo $i >> "${SEEDIT_LOG}" 2>&1;
