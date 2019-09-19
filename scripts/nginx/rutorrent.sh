@@ -42,8 +42,6 @@ curl -o /srv/rutorrent/plugins/plugins.tar.gz https://my.seedit4.me/storage/scri
 cd /srv/rutorrent/plugins
 tar zxvf /srv/rutorrent/plugins/plugins.tar.gz >> "${SEEDIT_LOG}" 2>&1
 rm -rf plugins.tar.gz
-php /srv/rutorrent/php/initplugins.php ${user}
-
 
 #sed -i 's/useExternal = false;/useExternal = "mktorrent";/' /srv/rutorrent/plugins/create/conf.php
 #sed -i 's/pathToCreatetorrent = '\'\''/pathToCreatetorrent = '\''\/usr\/bin\/mktorrent'\''/' /srv/rutorrent/plugins/create/conf.php
@@ -197,6 +195,11 @@ cat >/srv/rutorrent/conf/config.php<<RUC
 
 ?>
 RUC
+
+sleep 3s
+
+php /srv/rutorrent/php/initplugins.php ${user}
+
 
 if [[ -f /lib/systemd/system/php7.3-fpm.service ]]; then
   sock=php7.3-fpm
