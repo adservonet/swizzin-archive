@@ -9,7 +9,7 @@ fi
 . /etc/swizzin/sources/functions/waitforapt.sh
 waitforapt
 
-apt remove proftpd proftpd-basic vsftpd >> "${SEEDIT_LOG}" 2>&1
+apt-get -y remove proftpd proftpd-basic vsftpd >> "${SEEDIT_LOG}" 2>&1
 
 rm /install/.proftpd.lock
 rm /install/.vsftpd.lock
