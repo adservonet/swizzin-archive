@@ -57,6 +57,8 @@ User				proftpd
 Group				nogroup
 Umask				022  022
 AllowOverwrite			on
+AllowStoreRestart on
+AllowRetrieveRestart on
 AuthOrder			mod_auth_pam.c* mod_auth_unix.c
 TransferLog /var/log/proftpd/xferlog
 SystemLog   /var/log/proftpd/proftpd.log
