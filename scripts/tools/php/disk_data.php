@@ -43,7 +43,7 @@ class DiskStatus {
 }
 
 try {
-    $diskStatus = new DiskStatus('/home');
+    $diskStatus = new DiskStatus('/');
     $freeSpace = $diskStatus->freeSpace();
     $totalSpace = $diskStatus->totalSpace();
     $barWidth = ($diskStatus->usedSpace()/500) * 500;
