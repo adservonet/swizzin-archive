@@ -32,7 +32,7 @@ R2FS
 
 sudo chmod +x /usr/local/bin/mountrar2fs.sh
 
-cat > /usr/local/bin/mountrar2fs.sh <<R2FSSVC
+cat > /etc/systemd/system/mountrar2fs.service <<R2FSSVC
 [Unit]
 Description=mountrar2fs
 After=network.target
