@@ -16,8 +16,6 @@ autoreconf -f -i
 ./configure && make
 sudo make install
 
-sudo nano /usr/local/bin/mountrar2fs.sh
-
 cd /home/seedit4me
 sudo mkdir rar2fsmount
 cd rar2fsmount
