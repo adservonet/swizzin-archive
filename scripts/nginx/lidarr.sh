@@ -44,5 +44,5 @@ LID
 chown -R ${user}: /home/${user}/.config
 
 if [[ $isactive == "active" ]]; then
-  systemctl start lidarr
+  systemctl start lidarr >>  "${SEEDIT_LOG}"  2>&1
 fi

@@ -17,12 +17,12 @@ version=$(lsb_release -cs)
 
 mono_repo_setup
 
-apt-get install -y libmono-cil-dev >/dev/null 2>&1
+apt-get install -y libmono-cil-dev >>  "${SEEDIT_LOG}"  2>&1
 
 
 cd /home/${user}/
 wget -O lidarr.tar.gz -q $( curl -s https://api.github.com/repos/Lidarr/Lidarr/releases | grep linux.tar.gz | grep browser_download_url | head -1 | cut -d \" -f 4 )
-tar xf lidarr.tar.gz
+tar xf lidarr.tar.gz >>  "${SEEDIT_LOG}"  2>&1
 rm -rf lidarr.tar.gz
 chown -R ${user}: /home/${user}/Lidarr
 if [[ ! -d /home/${user}/.config/Lidarr/ ]]; then mkdir -p /home/${user}/.config/Lidarr/; fi
@@ -63,6 +63,6 @@ LID
   fi
 
 
-systemctl enable --now lidarr
+systemctl enable --now lidarr >>  "${SEEDIT_LOG}"  2>&1
 
 touch /install/.lidarr.lock
