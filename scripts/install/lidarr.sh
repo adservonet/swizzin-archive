@@ -14,8 +14,12 @@ distribution=$(lsb_release -is)
 version=$(lsb_release -cs)
 . /etc/swizzin/sources/functions/mono
 
+. /etc/swizzin/sources/functions/waitforapt.sh
+waitforapt
 
 mono_repo_setup
+
+waitforapt
 
 apt-get install -y libmono-cil-dev >>  "${SEEDIT_LOG}"  2>&1
 
