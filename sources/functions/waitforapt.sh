@@ -8,8 +8,8 @@ function waitforapt {
     ((i++))
 
     if [ $i -lt 30 ]; then
-      echo expr 30 - $i
-      echo $i >> "${SEEDIT_LOG}" 2>&1;
+      expr 30 - $i
+      expr 30 - $i >> "${SEEDIT_LOG}" 2>&1;
     fi
 
     if [ $i == 30 ]; then
@@ -21,8 +21,8 @@ function waitforapt {
     fi
 
     if [ $i -gt 30 ]; then
-      echo expr 60 - $i
-      echo $i >> "${SEEDIT_LOG}" 2>&1;
+      expr 60 - $i
+      expr 60 - $i >> "${SEEDIT_LOG}" 2>&1;
     fi
 
     if [ $i == 60 ]; then
@@ -40,5 +40,6 @@ function waitforapt {
     fi
 
     sleep 1
+
   done
 }
