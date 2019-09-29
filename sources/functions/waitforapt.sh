@@ -27,6 +27,11 @@ function waitforapt {
       sudo rm /var/lib/dpkg/lock-frontend
       sudo rm /var/cache/apt/archives/lock
       sudo rm /var/cache/debconf/*.dat
+
+      sudo rm /var/lib/apt/lists/lock
+      sudo rm /var/cache/apt/archives/lock
+      sudo rm /var/lib/dpkg/updates/*
+      sudo apt-get update
     fi
 
     sleep 1
