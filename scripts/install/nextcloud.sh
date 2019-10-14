@@ -17,7 +17,7 @@ user=$(cut -d: -f1 < /root/.master.info)
 nextpass=$(cut -d: -f2 < /root/.master.info)
 password=$(cut -d: -f2 < /root/.master.info)
 
-echo 'Dpkg::Options {\n"--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf;
+echo -e 'Dpkg::Options {'\\n'"--force-confnew";'\\n'};' > /etc/apt/apt.conf.d/71debconf;
 export DEBIAN_FRONTEND=noninteractive
 . /etc/swizzin/sources/functions/waitforapt.sh
 
