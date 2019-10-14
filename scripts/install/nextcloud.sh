@@ -17,6 +17,8 @@ user=$(cut -d: -f1 < /root/.master.info)
 nextpass=$(cut -d: -f2 < /root/.master.info)
 password=$(cut -d: -f2 < /root/.master.info)
 
+. /etc/swizzin/sources/functions/waitforapt.sh
+
 inst=$(which mysql)
 ip=$(ip route get 1 | sed -n 's/^.*src \([0-9.]*\) .*$/\1/p')
 if [[ ! -f /install/.nginx.lock ]]; then
@@ -47,6 +49,8 @@ else
 #    fi
 #  done
 #  echo -e "Please wait while nextcloud is installed ... "
+
+  waitforapt
   DEBIAN_FRONTEND=non‌​interactive apt-get -y install mariadb-server > /dev/null 2>&1
   if [[ $(systemctl is-active mysql) != "active" ]]; then
     systemctl start mysql
@@ -54,6 +58,7 @@ else
   mysqladmin -u root password ${password}
 fi
 #Depends
+waitforapt
 apt-get install -y -q unzip php7.3-mysql libxml2-dev php7.3-common php7.3-gd php7.3-json php7.3-curl  php7.3-zip php7.3-xml php7.3-mbstring > /dev/null 2>&1
 #a2enmod rewrite > /dev/null 2>&1
 cd /tmp
