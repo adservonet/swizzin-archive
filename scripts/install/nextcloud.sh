@@ -51,7 +51,7 @@ else
 #  echo -e "Please wait while nextcloud is installed ... "
 
   waitforapt
-  DEBIAN_FRONTEND=non‌​interactive apt-get -y install mariadb-server > /dev/null 2>&1
+  DEBIAN_FRONTEND=non‌​interactive apt-get -y install mariadb-server  >> "${SEEDIT_LOG}"  2>&1;
   if [[ $(systemctl is-active mysql) != "active" ]]; then
     systemctl start mysql
   fi
@@ -59,7 +59,7 @@ else
 fi
 #Depends
 waitforapt
-apt-get install -y -q unzip php7.3-mysql libxml2-dev php7.3-common php7.3-gd php7.3-json php7.3-curl  php7.3-zip php7.3-xml php7.3-mbstring > /dev/null 2>&1
+apt-get install -y -q unzip php7.3-mysql libxml2-dev php7.3-common php7.3-gd php7.3-json php7.3-curl  php7.3-zip php7.3-xml php7.3-mbstring  >> "${SEEDIT_LOG}"  2>&1;
 #a2enmod rewrite > /dev/null 2>&1
 cd /tmp
 
@@ -70,8 +70,8 @@ if [[ $codename =~ ("stretch"|"jessie"|"xenial") ]]; then
 else
   version=latest
 fi
-wget -q https://download.nextcloud.com/server/releases/${version}.zip > /dev/null 2>&1
-unzip ${version}.zip > /dev/null 2>&1
+wget -q https://download.nextcloud.com/server/releases/${version}.zip  >> "${SEEDIT_LOG}"  2>&1;
+unzip ${version}.zip  >> "${SEEDIT_LOG}"  2>&1;
 mv nextcloud /srv
 rm -rf /tmp/${version}.zip
 
