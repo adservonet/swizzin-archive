@@ -11,7 +11,7 @@ if (isset($_GET['token']))
 
 if ($token != null)
 {
-    shell_exec("/srv/tools/plexclaim.sh " . $token);
+    shell_exec("sudo -u plex /srv/tools/plexclaim.sh " . $token);
     echo "claimed";
 }
 ?>

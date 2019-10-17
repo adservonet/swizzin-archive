@@ -16,6 +16,8 @@ mkdir tools/logs
 touch /srv/tools/logs/output.log
 chmod -R 777 /srv/tools/logs
 cp -r /usr/local/bin/swizzin/tools/php/* /srv/tools/
+chmod 755 /srv/tools/*.sh
+chmod +x /srv/tools/*.sh
 chown -R www-data: /srv/tools
 
 touch /install/.tools.lock
