@@ -16,6 +16,7 @@ if ($token != null)
     $out = shell_exec("sudo -u plex /srv/tools/plexclaim.sh " . $token ." 2>&1");
 //    echo "out '" . $out."'\n";
     if (strpos($out, 'success') !== false) {
+        shell_exec("sudo systemctl restart plexmediaserver");
         echo "Plex server claimed successfully using token '".$token."'\n";
     }
     else
