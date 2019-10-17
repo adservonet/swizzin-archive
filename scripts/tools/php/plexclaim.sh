@@ -56,7 +56,7 @@ fi
 # Get server token and only turn claim token into server token if we have former but not latter.
 token="$(getPref "PlexOnlineToken")"
 if [ ! -z "${PLEX_CLAIM}" ] && [ -z "${token}" ]; then
-  echo "obtaining server token"
+#  echo "obtaining server token"
   loginInfo="$(curl -X POST \
         -H 'X-Plex-Client-Identifier: '${clientId} \
         -H 'X-Plex-Product: Plex Media Server'\

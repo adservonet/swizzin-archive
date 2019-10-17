@@ -15,6 +15,10 @@ if ($token != null)
     if (strpos($out, 'success') !== false) {
         echo "Plex server claimed successfully using token ".$token;
     }
+    else
+    {
+        echo "invalid token: ".$token;
+    }
 }
 else
 {
