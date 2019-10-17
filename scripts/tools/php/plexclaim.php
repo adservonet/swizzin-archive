@@ -5,13 +5,13 @@ include('cors.php');
 if (isset($_POST['token']))
 {
     $token = $_POST['token'];
-    echo "token '" . $token."'\n";
+//    echo "token '" . $token."'\n";
 }
 
 if ($token != null)
 {
-    $out = shell_exec("sudo /srv/tools/plexclaim.sh " . $token ." 2>&1");
-    echo "out '" . $out."'\n";
+    $out = shell_exec("sudo -u plex /srv/tools/plexclaim.sh " . $token ." 2>&1");
+//    echo "out '" . $out."'\n";
     if (strpos($out, 'success') !== false) {
         echo "Plex server claimed successfully using token '".$token."'\n";
     }
