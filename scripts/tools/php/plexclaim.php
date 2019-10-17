@@ -7,22 +7,22 @@ $token = "test";
 if (isset($_POST['token']))
 {
     $token = $_POST['token'];
-    echo "token: " . $token."\n";
+    echo "token: '" . $token."'\n";
 }
 
 if ($token != null)
 {
     $out = shell_exec("sudo -u plex /srv/tools/plexclaim.sh " . $token);
-    echo "out: " . $out."\n";
+    echo "out: '" . $out."'\n";
     if (strpos($out, 'success') !== false) {
-        echo "Plex server claimed successfully using token ".$token."\n";
+        echo "Plex server claimed successfully using token '".$token."'\n";
     }
     else
     {
-        echo "no response for token: ".$token."\n";
+        echo "no response for token: '".$token."'\n";
     }
 }
 else
 {
-    echo "invalid token: ".$token."\n";
+    echo "invalid token: '".$token."'\n";
 }
