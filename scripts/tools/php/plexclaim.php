@@ -2,7 +2,7 @@
 include('cors.php');
 //header('Content-Type: application/json');
 
-$token = null;
+$token = "test";
 
 if (isset($_POST['token']))
 {
@@ -12,6 +12,10 @@ if (isset($_POST['token']))
 if ($token != null)
 {
     $out = trim(shell_exec("sudo -u plex /srv/tools/plexclaim.sh " . $token));
-    var_dump($out);
+    echo $out;
+}
+else
+{
+    echo "invalid token";
 }
 ?>
