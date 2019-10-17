@@ -12,9 +12,9 @@ if (isset($_POST['token']))
 
 if ($token != null)
 {
-    $out = shell_exec("sudo /srv/tools/plexclaim.sh " . $token);
+    $out = exec("sudo /srv/tools/plexclaim.sh " . $token);
     echo "out '" . $out."'\n";
-    $out = shell_exec("ls");
+    $out = exec("ls");
     echo "out '" . $out."'\n";
     if (strpos($out, 'success') !== false) {
         echo "Plex server claimed successfully using token '".$token."'\n";
