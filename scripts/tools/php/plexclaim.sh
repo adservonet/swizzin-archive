@@ -2,7 +2,7 @@
 
 # If we are debugging, enable trace
 #if [ "${DEBUG,,}" = "true" ]; then
-  set -x
+#  set -x
 #fi
 
 function getPref {
