@@ -11,7 +11,7 @@ if (isset($_POST['token']))
 
 if ($token != null)
 {
-    exec("sudo -u plex /srv/tools/plexclaim.sh " . $token,$out);
+    $out = trim(shell_exec("sudo -u plex /srv/tools/plexclaim.sh " . $token));
     var_dump($out);
 }
 ?>
