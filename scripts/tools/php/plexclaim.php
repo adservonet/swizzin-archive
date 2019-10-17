@@ -7,6 +7,7 @@ $token = "test";
 if (isset($_POST['token']))
 {
     $token = $_POST['token'];
+    echo "token: " . $token;
 }
 
 if ($token != null)
@@ -25,4 +26,3 @@ else
 {
     echo "invalid token: ".$token;
 }
-?>
