@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # If we are debugging, enable trace
-if [ "${DEBUG,,}" = "true" ]; then
+#if [ "${DEBUG,,}" = "true" ]; then
   set -x
-fi
+#fi
 
 function getPref {
   local key="$1"
