@@ -4,14 +4,14 @@ include('cors.php');
 
 $token = null;
 
-if (isset($_GET['token']))
+if (isset($_POST['token']))
 {
-    $token = $_GET['token'];
+    $token = $_POST['token'];
 }
 
 if ($token != null)
 {
-    shell_exec("sudo -u plex /srv/tools/plexclaim.sh " . $token);
-    echo "claimed";
+    exec("sudo -u plex /srv/tools/plexclaim.sh " . $token,$out);
+    echo "claimed: ".$out;
 }
 ?>
