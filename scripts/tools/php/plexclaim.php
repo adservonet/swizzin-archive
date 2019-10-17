@@ -18,7 +18,7 @@ if ($token != null)
     }
     else
     {
-        echo "invalid token: ".$token;
+        echo "no response for token: ".$token;
     }
 }
 else
