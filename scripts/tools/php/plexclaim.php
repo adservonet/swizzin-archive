@@ -2,6 +2,9 @@
 include('cors.php');
 //header('Content-Type: application/json');
 
+$token = "test";
+
+
 if (isset($_POST['token']))
 {
     $token = $_POST['token'];
