@@ -15,10 +15,10 @@ location /rclone/ {
 #  include /etc/nginx/snippets/proxy.conf;
   proxy_pass http://127.0.0.1:5572;
 
-  proxy_set_header Accept-Encoding "";
-  sub_filter_types text/css text/xml text/javascript;
-  sub_filter 'static/' 'rclone/static/';
-  sub_filter_once off;
+#  proxy_set_header Accept-Encoding "";
+#  sub_filter_types text/css text/xml text/javascript;
+#  sub_filter 'static/' 'rclone/static/';
+#  sub_filter_once off;
 
 #  auth_basic "What's the password?";
 #  auth_basic_user_file /etc/htpasswd.d/htpasswd.seedit4me;
