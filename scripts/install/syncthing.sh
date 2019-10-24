@@ -24,13 +24,17 @@
 #fi
 MASTER=$(cut -d: -f1 < /root/.master.info)
 
+. /etc/swizzin/sources/functions/waitforapt.sh
+
 echo "Adding Syncthing Repository ... " >> "${SEEDIT_LOG}"  2>&1;
 curl -s https://syncthing.net/release-key.txt | sudo apt-key add - > /dev/null 2>&1
 echo "deb http://apt.syncthing.net/ syncthing release" > /etc/apt/sources.list.d/syncthing.list
 
 echo "Installing Syncthing ... " >> "${SEEDIT_LOG}"  2>&1;
-sudo apt-get -q update > /dev/null 2>&1
-sudo apt-get -qy install syncthing > /dev/null 2>&1
+waitforapt
+sudo apt-get -q update >> "${SEEDIT_LOG}"  2>&1;
+waitforapt
+sudo apt-get -qy install syncthing >> "${SEEDIT_LOG}"  2>&1;
 
 echo "Configuring Syncthing & Starting ... " >> "${SEEDIT_LOG}"  2>&1;
 cat > /etc/systemd/system/syncthing@.service <<SYNC
