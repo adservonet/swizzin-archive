@@ -9,7 +9,7 @@ waitforapt
 apt-get -q -y purge syncthing
 rm /etc/systemd/system/syncthing@.service
 rm -f  /etc/nginx/apps/syncthing.conf
-rm -f /home/${MASTER}/.config/syncthing
+rm -rf /home/${MASTER}/.config/syncthing
 
 service nginx reload
 rm /install/.syncthing.lock
