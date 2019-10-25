@@ -24,6 +24,15 @@
 #fi
 MASTER=$(cut -d: -f1 < /root/.master.info)
 
+. /etc/swizzin/sources/functions/waitforapt.sh
+waitforapt
+
+apt-get update -y -q
+
+waitforapt
+
+apt-get install -y fuse >>  "${SEEDIT_LOG}"  2>&1
+
 echo "Downloading and installing rclone ..." >> "${SEEDIT_LOG}"  2>&1;
 
 # One-liner to check arch/os type, as well as download latest rclone for relevant system.
