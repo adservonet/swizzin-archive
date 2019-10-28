@@ -29,8 +29,8 @@ for u in "${users[@]}"; do
   sed -i "s/ControlIP=0.0.0.0/ControlIP=127.0.0.1/g" /home/$u/nzbget/nzbget.conf
   sed -i "s/ControlUsername=nzbget/ControlUsername="$master"/g" /home/$u/nzbget/nzbget.conf
   sed -i "s/ControlPassword=tegbzn6789/ControlPassword="$pass"/g" /home/$u/nzbget/nzbget.conf
-  sed -i "s/RestrictedUsername=/ControlUsername="$master"/g" /home/$u/nzbget/nzbget.conf
-  sed -i "s/RestrictedPassword=/ControlPassword="$pass"/g" /home/$u/nzbget/nzbget.conf
+  sed -i "s/RestrictedUsername=/RestrictedUsername="$master"/g" /home/$u/nzbget/nzbget.conf
+  sed -i "s/RestrictedPassword=/RestrictedPassword="$pass"/g" /home/$u/nzbget/nzbget.conf
   sed -i "s/FormAuth=no/FormAuth=yes/g" /home/$u/nzbget/nzbget.conf
 
   if [[ ! -f /etc/nginx/conf.d/${u}.nzbget.conf ]]; then
