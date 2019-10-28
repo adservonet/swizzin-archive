@@ -49,6 +49,13 @@ function _install {
         secureport=$(shuf -i 6000-7000 -n 1)
         sed -i "s/ControlPort=6789/ControlPort=${port}/g" /home/$u/nzbget/nzbget.conf
         sed -i "s/SecurePort=6791/SecurePort=${secureport}/g" /home/$u/nzbget/nzbget.conf
+
+        #ControlUsername=seedit4me
+        #ControlPassword=jpop99
+        #RestrictedUsername=seedit4me
+        #RestrictedPassword=jpop99
+        #FormAuth=yes
+
       fi
     done
 

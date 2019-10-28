@@ -12,20 +12,26 @@ location /nzbget {
 
 location /nzbget/ {
   include /etc/nginx/snippets/proxy.conf;
-  auth_basic "What's the password?";
-  auth_basic_user_file /etc/htpasswd;
+  #auth_basic "What's the password?";
+  #auth_basic_user_file /etc/htpasswd;
   rewrite ^/nzbget/(.*) /$1 break;
   proxy_pass http://$remote_user.nzbget;
 }
 NRP
 fi
 
+master=$(cut -d: -f1 < /root/.master.info)
+pass=$(cut -d: -f2 < /root/.master.info)
+
 for u in "${users[@]}"; do
   isactive=$(systemctl is-active nzbget@$u)
   sed -i "s/SecureControl=yes/SecureControl=no/g" /home/$u/nzbget/nzbget.conf
   sed -i "s/ControlIP=0.0.0.0/ControlIP=127.0.0.1/g" /home/$u/nzbget/nzbget.conf
-  sed -i "s/ControlUsername=nzbget/ControlUsername=/g" /home/$u/nzbget/nzbget.conf
-  sed -i "s/ControlPassword=tegbzn6789/ControlPassword=/g" /home/$u/nzbget/nzbget.conf
+  sed -i "s/ControlUsername=nzbget/ControlUsername="$master"/g" /home/$u/nzbget/nzbget.conf
+  sed -i "s/ControlPassword=tegbzn6789/ControlPassword="$pass"/g" /home/$u/nzbget/nzbget.conf
+  sed -i "s/RestrictedUsername=/ControlUsername="$master"/g" /home/$u/nzbget/nzbget.conf
+  sed -i "s/RestrictedPassword=/ControlPassword="$pass"/g" /home/$u/nzbget/nzbget.conf
+  sed -i "s/FormAuth=no/FormAuth=yes/g" /home/$u/nzbget/nzbget.conf
 
   if [[ ! -f /etc/nginx/conf.d/${u}.nzbget.conf ]]; then
     NZBPORT=$(grep ControlPort /home/$u/nzbget/nzbget.conf | cut -d= -f2)
