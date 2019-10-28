@@ -31,7 +31,7 @@ for u in "${users[@]}"; do
   sed -i "s/ControlPassword=tegbzn6789/ControlPassword="$pass"/g" /home/$u/nzbget/nzbget.conf
   sed -i "s/RestrictedUsername=/RestrictedUsername="$master"/g" /home/$u/nzbget/nzbget.conf
   sed -i "s/RestrictedPassword=/RestrictedPassword="$pass"/g" /home/$u/nzbget/nzbget.conf
-  sed -i "s/FormAuth=no/FormAuth=yes/g" /home/$u/nzbget/nzbget.conf
+#  sed -i "s/FormAuth=no/FormAuth=yes/g" /home/$u/nzbget/nzbget.conf
 
   if [[ ! -f /etc/nginx/conf.d/${u}.nzbget.conf ]]; then
     NZBPORT=$(grep ControlPort /home/$u/nzbget/nzbget.conf | cut -d= -f2)
