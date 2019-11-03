@@ -9,5 +9,8 @@ wget -q -O emby.dpkg https://github.com/MediaBrowser/Emby.Releases/releases/down
 
 waitforapt
 
+echo 'Dpkg::Options {\n"--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf;
+export DEBIAN_FRONTEND=noninteractive
+
 dpkg -i emby.dpkg  >> "${SEEDIT_LOG}"  2>&1;
 rm emby.dpkg
