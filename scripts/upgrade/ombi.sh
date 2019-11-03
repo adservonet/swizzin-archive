@@ -25,19 +25,19 @@ else
 fi
 
 if [[ -f /etc/apt/sources.list.d/ombi.list ]]; then
-  echo "Nothing to do! Please update ombi with apt-get"
+  echo "Nothing to do! Please update ombi with apt-get"  >> "${SEEDIT_LOG}"  2>&1;
   exit 1
 else
-  echo "Upgrading Ombi to v3! Please note, v2 database and settings will be deleted. Hit control-c to quit now if you do not agree."
-  read -p "Press enter to continue"
-  echo "Upgrading Ombi. Please wait ... "
+  echo "Upgrading Ombi to v3! Please note, v2 database and settings will be deleted. Hit control-c to quit now if you do not agree."  >> "${SEEDIT_LOG}"  2>&1;
+#  read -p "Press enter to continue"
+  echo "Upgrading Ombi. Please wait ... "  >> "${SEEDIT_LOG}"  2>&1;
   systemctl stop ombi
   rm -rf /opt/ombi
 
   echo "deb http://repo.ombi.turd.me/stable/ jessie main" > /etc/apt/sources.list.d/ombi.list
   wget -qO - https://repo.ombi.turd.me/pubkey.txt | sudo apt-key add -
-  apt-get update -q >/dev/null 2>&1
-  apt-get install -y -q ombi > /dev/null 2>&1
+  apt-get update -q  >> "${SEEDIT_LOG}"  2>&1;
+  apt-get install -y -q ombi  >> "${SEEDIT_LOG}"  2>&1;
   cat > /etc/systemd/system/ombi.service <<OMB
 [Unit]
 Description=Ombi - PMS Requests System
