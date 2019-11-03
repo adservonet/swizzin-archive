@@ -22,6 +22,8 @@ CODENAME=$(lsb_release -cs)
 #fi
 username=$(cut -d: -f1 < /root/.master.info)
 
+. /etc/swizzin/sources/functions/waitforapt.sh
+
 if [[ -f /install/.nginx.lock ]]; then
 echo "Setting up emby nginx configuration ... " >> "${SEEDIT_LOG}"  2>&1;
   bash /usr/local/bin/swizzin/nginx/emby.sh
@@ -38,7 +40,10 @@ echo "Installing emby keys and sources ... " >> "${SEEDIT_LOG}"  2>&1;
       current=$(curl -L -s -H 'Accept: application/json' https://github.com/MediaBrowser/Emby.Releases/releases/latest | sed -e 's/.*"tag_name":"\([^"]*\)".*/\1/')
       cd /tmp
       wget -q -O emby.dpkg https://github.com/MediaBrowser/Emby.Releases/releases/download/${current}/emby-server-deb_${current}_amd64.deb  >> "${SEEDIT_LOG}"  2>&1;
-      dpkg -i emby.dpkg >>  "${SEEDIT_LOG}"  2>&1
+
+      waitforapt
+
+      dpkg --force-confnew -i emby.dpkg >>  "${SEEDIT_LOG}"  2>&1
       rm emby.dpkg
     else
       version=$(grep VERSION= /etc/os-release | cut -d "\"" -f 2 | cut -d " " -f1 | cut -d. -f1-2)
@@ -48,7 +53,9 @@ echo "Installing emby keys and sources ... " >> "${SEEDIT_LOG}"  2>&1;
   fi
 
 echo "Updating system & installing emby server ... " >> "${SEEDIT_LOG}"  2>&1;
+    waitforapt
     apt-get -y update  >> "${SEEDIT_LOG}"  2>&1;
+    waitforapt
     apt-get install -y --allow-unauthenticated -f emby-server >> "${SEEDIT_LOG}"  2>&1;
     echo
     sleep 5
