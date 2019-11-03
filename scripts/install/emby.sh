@@ -47,6 +47,14 @@ echo "Installing emby keys and sources ... " >> "${SEEDIT_LOG}"  2>&1;
 
       waitforapt
 
+      apt-key update
+
+      waitforapt
+
+      apt-get update
+
+      waitforapt
+
       dpkg --force-confnew -i emby.dpkg >>  "${SEEDIT_LOG}"  2>&1
       rm emby.dpkg
     else
