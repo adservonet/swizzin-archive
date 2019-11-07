@@ -16,7 +16,6 @@ fi
 
 users=($(cut -d: -f1 < /etc/htpasswd))
 
-. /etc/swizzin/sources/functions/waitforapt.sh
 waitforapt
 
 apt-get update -y -q >>/dev/null 2>&1

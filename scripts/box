@@ -411,6 +411,9 @@ else
   export SEEDIT_LOG=/root/logs/install.log
 fi
 
+export DEBIAN_FRONTEND=noninteractive
+. /etc/swizzin/sources/functions/waitforapt.sh
+
 case "$1" in
   "")
     _intro
