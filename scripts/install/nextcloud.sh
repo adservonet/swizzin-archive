@@ -53,7 +53,7 @@ else
 #  echo -e "Please wait while nextcloud is installed ... "
 
   waitforapt
-  DEBIAN_FRONTEND=non‌​interactive apt-get -y install mariadb-server  >> "${SEEDIT_LOG}"  2>&1;
+  DEBIAN_FRONTEND=noninteractive apt-get -y install mariadb-server  >> "${SEEDIT_LOG}"  2>&1;
   if [[ $(systemctl is-active mysql) != "active" ]]; then
     systemctl start mysql
   fi

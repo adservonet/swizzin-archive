@@ -17,7 +17,10 @@ user=$(cut -d: -f1 < /root/.master.info )
 #  log="/dev/null"
 #fi
 
+. /etc/swizzin/sources/functions/waitforapt.sh
+waitforapt
 apt-get -y -q update >> "${SEEDIT_LOG}"  2>&1
+waitforapt
 apt-get -y -q install python-pip > /dev/null 2>&1
 cd /home/${user}
 

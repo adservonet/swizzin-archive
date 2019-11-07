@@ -75,10 +75,3 @@ usermod -a -G ${username} emby
 
 systemctl restart emby-server  >> "${SEEDIT_LOG}"  2>&1
 touch /install/.emby.lock
-  
-
-
-usermod -a -G ${username} emby
-
-systemctl restart emby-server  >> "${SEEDIT_LOG}"  2>&1
-touch /install/.emby.lock

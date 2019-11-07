@@ -53,13 +53,18 @@ function _installSonarr2() {
 }
 
 function _installSonarr3() {
+. /etc/swizzin/sources/functions/waitforapt.sh
+  waitforapt
   apt-get -y update >>  "${SEEDIT_LOG}"  2>&1
   if [[ $distribution == Debian ]]; then
+    waitforapt
     apt-get install -y mono-devel >>  "${SEEDIT_LOG}"  2>&1
   fi
 }
 
 function _installSonarr4() {
+. /etc/swizzin/sources/functions/waitforapt.sh
+  waitforapt
   apt-get install -y nzbdrone >>  "${SEEDIT_LOG}"  2>&1
   touch /install/.sonarr.lock
 }

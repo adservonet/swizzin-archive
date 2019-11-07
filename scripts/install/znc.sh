@@ -21,6 +21,9 @@ port=$(cat /home/seedit4me/.znc_port)
 
 DISTRO=$(lsb_release -is)
 CODENAME=$(lsb_release -cs)
+
+. /etc/swizzin/sources/functions/waitforapt.sh
+
 #if [[ -f /install/.tools.lock ]]; then
 #  log="/srv/tools/logs/output.log"
 #else
@@ -42,10 +45,12 @@ Pin: release a=${CODENAME}-backports
 Pin-Priority: 500
 ZNCP
 elif [[ $DISTRO == Ubuntu ]]; then
-  add-apt-repository --yes ppa:teward/znc >> ${OUTTO} 2>&1
+  add-apt-repository --yes ppa:teward/znc >>  "${SEEDIT_LOG}"  2>&1
 fi
-  apt-get update -q -y >> ${OUTTO} 2>&1
-  apt-get install znc -q -y >> ${OUTTO} 2>&1
+  waitforapt
+  apt-get update -q -y >>  "${SEEDIT_LOG}"  2>&1
+  waitforapt
+  apt-get install znc -q -y >>  "${SEEDIT_LOG}"  2>&1
   #sudo -u znc crontab -l | echo -e "*/10 * * * * /usr/bin/znc >/dev/null 2>&1\n@reboot /usr/bin/znc >/dev/null 2>&1" | crontab -u znc - > /dev/null 2>&1
   cat > /etc/systemd/system/znc.service <<ZNC
 [Unit]

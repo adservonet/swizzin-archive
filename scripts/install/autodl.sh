@@ -28,10 +28,9 @@ function _installautodl() {
 
 	. /etc/swizzin/sources/functions/waitforapt.sh
   for depends in $APT; do
-
-  waitforapt
+    waitforapt
     apt-get -y -q install "$depends" >> "${SEEDIT_LOG}"  2>&1 || { echo "ERROR: APT-GET could not find the required dependency: ${depends}. Script Ending." >> "${SEEDIT_LOG}"  2>&1; exit 1; }
->>done
+  done
 }
 
 function _autoconf {

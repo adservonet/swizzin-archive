@@ -145,7 +145,11 @@ function build_libtorrent_rasterbar () {
     done
     LTRC=$libtorrent
     LIST='build-essential autoconf automake libtool libboost-system-dev libboost-python-dev libssl-dev libgeoip-dev libboost-chrono-dev libboost-random-dev geoip-database python3-dev python-setuptools'
+
+    . /etc/swizzin/sources/functions/waitforapt.sh
+
     for depend in $LIST; do
+      waitforapt
       apt-get -qq -y install $depend >> "${SEEDIT_LOG}"  2>&1 || { echo "ERROR: APT-GET could not install a required package: ${depend}. That's probably not good..."; }
     done
     install_fpm
@@ -198,6 +202,7 @@ function build_libtorrent_rasterbar () {
 }
 
 function build_deluge () {
+  . /etc/swizzin/sources/functions/waitforapt.sh
   if [[ $deluge == repo ]]; then
     pip install --upgrade cryptography >> "${SEEDIT_LOG}"  2>&1
     python -m easy_install --upgrade pyOpenSSL >> "${SEEDIT_LOG}"  2>&1
@@ -224,7 +229,8 @@ function build_deluge () {
       ;;
     esac
     for depend in $LIST; do
-      apt-get -qq -y install $depend >> "${SEEDIT_LOG}"  2>&1 || { echo "ERROR: APT-GET could not install a required package: ${depend}. That's probably not good..."; }
+      waitforapt
+      apt-get -qq -y install $depend >> "${SEEDIT_LOG}"  2>&1 || { echo "ERROR: APT-GET could not install a required package: ${depend}. That's probably not good..." >>  "${SEEDIT_LOG}"  2>&1; }
     done
     . /etc/swizzin/sources/functions/fpm
     install_fpm
@@ -238,10 +244,13 @@ function build_deluge () {
             packages=(setuptools pycparser asn1crypto cffi constantly incremental attrs automat idna hyperlink pyhamcrest cryptography pyopenssl service_identity zope.interface twisted)
             mkdir -p /root/dist/python3
             for depend in $LIST; do
-              apt-get -qq -y install $depend >> "${SEEDIT_LOG}"  2>&1 || { echo "ERROR: APT-GET could not install a required package: ${depend}. That's probably not good..."; }
+              waitforapt
+              apt-get -qq -y install $depend >> "${SEEDIT_LOG}"  2>&1 || { echo "ERROR: APT-GET could not install a required package: ${depend}. That's probably not good..." >>  "${SEEDIT_LOG}"  2>&1; }
             done
             for d in ${packages[@]}; do
+              waitforapt
               fpm -s python -t deb --python-pip=pip3 --python-bin=${pythonver} --python-package-name-prefix=${pythonver} -f -p /root/dist/python3/python3-$d.deb $d >>  "${SEEDIT_LOG}"  2>&1
+              waitforapt
               dpkg -i /root/dist/python3/python3-$d.deb >>  "${SEEDIT_LOG}"  2>&1
             done
           ;;
@@ -250,7 +259,8 @@ function build_deluge () {
             check_debian_backports
             LIST='python3-twisted'
             for depend in $LIST; do
-              apt-get -qq -y install -t stretch-backports $depend >> "${SEEDIT_LOG}"  2>&1 || { echo "ERROR: APT-GET could not install a required package: ${depend}. That's probably not good..."; }
+              waitforapt
+              apt-get -qq -y install -t stretch-backports $depend >> "${SEEDIT_LOG}"  2>&1 || { echo "ERROR: APT-GET could not install a required package: ${depend}. That's probably not good..." >>  "${SEEDIT_LOG}"  2>&1; }
             done
           ;;
         esac
