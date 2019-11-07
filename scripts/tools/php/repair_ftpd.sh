@@ -6,9 +6,6 @@ else
   export SEEDIT_LOG=/root/logs/install.log
 fi
 
-#. /etc/swizzin/sources/functions/waitforapt.sh
-waitforapt
-
 apt-get -y remove proftpd proftpd-basic vsftpd >> "${SEEDIT_LOG}" 2>&1
 
 rm /install/.proftpd.lock

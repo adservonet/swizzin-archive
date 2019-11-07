@@ -5,10 +5,6 @@ current=$(curl -L -s -H 'Accept: application/json' https://github.com/MediaBrows
 cd /tmp
 wget -q -O emby.dpkg https://github.com/MediaBrowser/Emby.Releases/releases/download/${current}/emby-server-deb_${current}_amd64.deb  >> "${SEEDIT_LOG}"  2>&1;
 
-echo 'Dpkg::Options {\n"--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf;
-export DEBIAN_FRONTEND=noninteractive
-
-#. /etc/swizzin/sources/functions/waitforapt.sh
 waitforapt
 
 chmod 777 /var/lib/emby/logs

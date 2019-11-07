@@ -22,12 +22,6 @@
 
 username=$(cut -d: -f1 < /root/.master.info)
 
-#. /etc/swizzin/sources/functions/waitforapt.sh
-
-echo 'Dpkg::Options {\n"--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf;
-export DEBIAN_FRONTEND=noninteractive
-
-
 #if [[ -f /install/.nginx.lock ]]; then
 #echo "Setting up emby nginx configuration ... " >> "${SEEDIT_LOG}"  2>&1;
 #  bash /usr/local/bin/swizzin/nginx/emby.sh
