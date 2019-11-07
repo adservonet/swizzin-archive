@@ -28,9 +28,10 @@ function _installautodl() {
 
 	. /etc/swizzin/sources/functions/waitforapt.sh
   for depends in $APT; do
+
   waitforapt
-  apt-get -qq -y --yes --force-yes install "$depends" >/dev/null 2>&1 || { echo "APT-GET could not find all the required sources. Script Ending."; echo "${warning}"; exit 1; }
-  done
+    apt-get -y -q install "$depends" >> "${SEEDIT_LOG}"  2>&1 || { echo "ERROR: APT-GET could not find the required dependency: ${depends}. Script Ending." >> "${SEEDIT_LOG}"  2>&1; exit 1; }
+>>done
 }
 
 function _autoconf {
@@ -75,11 +76,9 @@ WorkingDirectory=/home/%I/
 [Install]
 WantedBy=multi-user.target
 ADC
+
 for u in "${users[@]}"; do
-systemctl enable irssi@${u} >> "${SEEDIT_LOG}"  2>&1
-sleep 1
-service irssi@${u} start
-touch /install/.autodl.lock
+  systemctl enable --now irssi@${u} >> "${SEEDIT_LOG}"  2>&1
 done
 }
 
@@ -100,3 +99,4 @@ fi
 _installautodl
 _autoconf
 _autoservice
+touch /install/.autodl.lock
