@@ -401,6 +401,58 @@ function _nukeovh() {
   fi
 }
 
+function waitforapt {
+
+  if [[ -f /install/.tools.lock ]]; then
+    export SEEDIT_LOG=/srv/tools/logs/output.log
+  else
+    export SEEDIT_LOG=/root/logs/install.log
+  fi
+
+
+  i=0
+  echo "waiting for apt locks"
+  echo "waiting for apt locks"  >> "${SEEDIT_LOG}" 2>&1;
+  while sudo fuser /var/{lib/{dpkg,apt/lists},cache/apt/archives}/lock >/dev/null 2>&1; do
+    ((i++))
+
+    if [ $i -lt 30 ]; then
+      expr 30 - $i
+      expr 30 - $i >> "${SEEDIT_LOG}" 2>&1;
+    fi
+
+    if [ $i == 30 ]; then
+      echo "killall apt-get"
+      echo "killall apt-get" >> "${SEEDIT_LOG}" 2>&1;
+      echo "waiting another 30 seconds till i delete locks"
+      echo "waiting another 30 seconds till i delete locks" >> "${SEEDIT_LOG}" 2>&1;
+      sudo killall apt-get >> "${SEEDIT_LOG}" 2>&1;
+    fi
+
+    if [ $i -gt 30 ]; then
+      expr 60 - $i
+      expr 60 - $i >> "${SEEDIT_LOG}" 2>&1;
+    fi
+
+    if [ $i == 60 ]; then
+      echo "deleting locks"
+      echo "deleting locks" >> "${SEEDIT_LOG}" 2>&1;
+      sudo rm /var/lib/dpkg/lock
+      sudo rm /var/lib/dpkg/lock-frontend
+      sudo rm /var/cache/apt/archives/lock
+      sudo rm /var/cache/debconf/*.dat
+
+      sudo rm /var/lib/apt/lists/lock
+      sudo rm /var/cache/apt/archives/lock
+      sudo rm /var/lib/dpkg/updates/*
+      sudo apt-get update
+    fi
+
+    sleep 1
+
+  done
+}
+
 normal=$(tput sgr0)
 yellow=$(tput setaf 3)
 bold=$(tput bold)
@@ -412,7 +464,6 @@ else
 fi
 
 export DEBIAN_FRONTEND=noninteractive
-. /etc/swizzin/sources/functions/waitforapt.sh
 
 case "$1" in
   "")
