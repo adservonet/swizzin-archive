@@ -2,43 +2,81 @@
 # Jackett updater script
 
 if [[ -f /install/.jackett.lock ]]; then
-  if grep -q "WorkingDirectory=/home/%I/Jackett" /etc/systemd/system/jackett@.service; then
-    :
-  else
-    sed -i 's/WorkingDirectory.*/WorkingDirectory=\/home\/%I\/Jackett/g' /etc/systemd/system/jackett@.service
-    sleep 1; systemctl daemon-reload
-  fi
-
-  if grep -q 'ExecStart=/bin/sh -c "/home/%I/Jackett/jackett --NoRestart"' /etc/systemd/system/jackett@.service; then
-    :
-  else
-    sed -i 's|ExecStart.*|ExecStart=/bin/sh -c "/home/%I/Jackett/jackett --NoRestart"|g' /etc/systemd/system/jackett@.service
-    systemctl daemon-reload
-  fi
-
+  username=$(cut -d: -f1 < /root/.master.info)
+  active=$(systemctl is-active jackett@$username)
   if grep -q "ExecStart=/usr/bin/mono" /etc/systemd/system/jackett@.service; then
-    user=$(cut -d: -f1 < /root/.master.info)
-    active=$(systemctl is-active jackett@$user)
     jackettver=$(wget -q https://github.com/Jackett/Jackett/releases/latest -O - | grep -E \/tag\/ | grep -v repository | awk -F "[><]" '{print $3}')
-    sed -i 's|ExecStart.*|ExecStart=/bin/sh -c "/home/%I/Jackett/jackett --NoRestart"|g' /etc/systemd/system/jackett@.service
+    sed -i 's|ExecStart.*|ExecStart=/bin/sh -c "/home/%I/Jackett/jackett_launcher.sh"|g' /etc/systemd/system/jackett@.service
     systemctl daemon-reload
     if [[ $active == "active" ]]; then
-      systemctl stop jackett@$user
+      systemctl stop jackett@$username
     fi
-    rm -rf /home/$user/Jackett
-    cd /home/$user
+    rm -rf /home/$username/Jackett
+    cd /home/$username
     wget -q https://github.com/Jackett/Jackett/releases/download/$jackettver/Jackett.Binaries.LinuxAMDx64.tar.gz
     tar -xvzf Jackett.Binaries.LinuxAMDx64.tar.gz > /dev/null 2>&1
     rm -f Jackett.Binaries.LinuxAMDx64.tar.gz
     chown ${username}.${username} -R Jackett
     if [[ $active == "active" ]]; then
-      systemctl start jackett@$user
+      restartjackett=1
     fi
   else
     :
   fi
+
+  if ! grep -q "jacket_launcher" /etc/systemd/system/jackett@.service; then
+    cat > /etc/systemd/system/jackett@.service <<JAK
+[Unit]
+Description=jackett for %I
+After=network.target
+
+[Service]
+SyslogIdentifier=jackett.%I
+Type=simple
+User=%I
+WorkingDirectory=/home/%I/Jackett
+ExecStart=/bin/sh -c "/home/%I/Jackett/jackett_launcher.sh"
+Restart=always
+RestartSec=5
+TimeoutStopSec=20
+[Install]
+WantedBy=multi-user.target
+JAK
+
+    sleep 1
+    systemctl daemon-reload
+
+    if [[ $active == "active" ]]; then
+      restartjackett=1
+    fi
+  fi
+
+  if [[ ! -f /home/${username}/Jackett/jackett_launcher.sh ]]; then
+    cat > /home/${username}/Jackett/jackett_launcher.sh <<'JL'
+#!/bin/bash
+user=$(whoami)
+
+/home/${user}/Jackett/jackett
+
+while pgrep -u ${user} JackettUpdater > /dev/null ; do
+     sleep 1
+done
+
+echo "Jackett update complete"
+JL
+
+    chmod +x /home/${username}/Jackett/jackett_launcher.sh
+
+    if [[ $active == "active" ]]; then
+      restartjackett=1
+    fi
+  fi
+
   if grep -q "proxy_set_header" /etc/nginx/apps/jackett.conf; then
     sed -i "/proxy_set_header/d" /etc/nginx/apps/jackett.conf
     systemctl reload nginx
+  fi
+  if [[ $restartjackett == 1 ]]; then
+    systemctl restart jackett@${username}
   fi
 fi

@@ -40,20 +40,37 @@ chown ${username}.${username} -R Jackett
 
 cat > /etc/systemd/system/jackett@.service <<JAK
 [Unit]
-Description=jackett
+Description=jackett for %I
 After=network.target
 
 [Service]
+SyslogIdentifier=jackett.%I
 Type=simple
 User=%I
 WorkingDirectory=/home/%I/Jackett
-ExecStart=/bin/sh -c "/home/%I/Jackett/jackett --NoRestart"
+ExecStart=/bin/sh -c "/home/%I/Jackett/jackett_launcher.sh"
 Restart=always
-RestartSec=2
+RestartSec=5
+TimeoutStopSec=20
 [Install]
 WantedBy=multi-user.target
 JAK
 
+if [[ ! -f /home/${username}/Jackett/jackett_launcher.sh ]]; then
+cat > /home/${username}/Jackett/jackett_launcher.sh <<'JL'
+#!/bin/bash
+user=$(whoami)
+
+/home/${user}/Jackett/jackett
+
+while pgrep -u ${user} JackettUpdater > /dev/null ; do
+     sleep 1
+done
+
+echo "Jackett update complete"
+JL
+chmod +x /home/${username}/Jackett/jackett_launcher.sh
+fi
 
 mkdir -p /home/${username}/.config/Jackett
 chown ${username}.${username} -R /home/${username}/.config
@@ -65,7 +82,7 @@ cat > /home/${username}/.config/Jackett/ServerConfig.json <<JSC
   "AdminPassword": "",
   "InstanceId": "",
   "BlackholeDir": "",
-  "UpdateDisabled": true,
+  "UpdateDisabled": false,
   "UpdatePrerelease": false,
   "BasePathOverride": "",
   "OmdbApiKey": "",
