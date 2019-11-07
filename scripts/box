@@ -463,6 +463,7 @@ else
   export SEEDIT_LOG=/root/logs/install.log
 fi
 
+export -f waitforapt
 export DEBIAN_FRONTEND=noninteractive
 
 case "$1" in
