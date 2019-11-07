@@ -41,18 +41,7 @@ echo "Installing emby from GitHub releases ... " >> "${SEEDIT_LOG}"  2>&1
   current=$(curl -L -s -H 'Accept: application/json' https://github.com/MediaBrowser/Emby.Releases/releases/latest | sed -e 's/.*"tag_name":"\([^"]*\)".*/\1/')
   cd /tmp
   wget -q -O emby.dpkg https://github.com/MediaBrowser/Emby.Releases/releases/download/${current}/emby-server-deb_${current}_amd64.deb
-  
-  waitforapt
-
-  apt-key update
-
-  waitforapt
-
-  apt-get update
-
-  waitforapt
-  
-  dpkg  --force-confnew -i emby.dpkg  >> "${SEEDIT_LOG}"  2>&1
+  dpkg -i emby.dpkg  >> "${SEEDIT_LOG}"  2>&1
   rm emby.dpkg
 
   if [[ -f /etc/emby-server.conf ]]; then
