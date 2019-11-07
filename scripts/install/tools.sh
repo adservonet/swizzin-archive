@@ -31,7 +31,7 @@ touch /install/.tools.lock
 if [[ -f /lib/systemd/system/php7.3-fpm.service ]]; then
   echo "php setup seems ok"
 else
-  . /etc/swizzin/sources/functions/waitforapt.sh
+  #. /etc/swizzin/sources/functions/waitforapt.sh
   waitforapt
   apt -y -q  remove php7.0 php7.0-fpm php7.0-cli php7.0-common
   LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php

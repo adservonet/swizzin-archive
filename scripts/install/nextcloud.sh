@@ -19,7 +19,7 @@ password=$(cut -d: -f2 < /root/.master.info)
 
 echo -e 'Dpkg::Options {'\\n'"--force-confnew";'\\n'};' > /etc/apt/apt.conf.d/71debconf;
 export DEBIAN_FRONTEND=noninteractive
-. /etc/swizzin/sources/functions/waitforapt.sh
+#. /etc/swizzin/sources/functions/waitforapt.sh
 
 inst=$(which mysql)
 ip=$(ip route get 1 | sed -n 's/^.*src \([0-9.]*\) .*$/\1/p')

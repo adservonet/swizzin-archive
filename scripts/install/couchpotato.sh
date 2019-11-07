@@ -15,7 +15,7 @@
 function _install() {
 echo "Installing CouchPotato ... " >> "${SEEDIT_LOG}"  2>&1;
 warning=$(echo -e "[ \e[1;91mWARNING\e[0m ]")
-. /etc/swizzin/sources/functions/waitforapt.sh
+#. /etc/swizzin/sources/functions/waitforapt.sh
 waitforapt
 apt-get -y --force-yes update >/dev/null 2>&1
 waitforapt

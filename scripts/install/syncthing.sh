@@ -24,7 +24,7 @@
 #fi
 MASTER=$(cut -d: -f1 < /root/.master.info)
 
-. /etc/swizzin/sources/functions/waitforapt.sh
+#. /etc/swizzin/sources/functions/waitforapt.sh
 
 echo "Adding Syncthing Repository ... " >> "${SEEDIT_LOG}"  2>&1;
 curl -s https://syncthing.net/release-key.txt | sudo apt-key add - > /dev/null 2>&1

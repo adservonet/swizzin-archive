@@ -22,7 +22,7 @@
 
 username=$(cut -d: -f1 < /root/.master.info)
 
-. /etc/swizzin/sources/functions/waitforapt.sh
+#. /etc/swizzin/sources/functions/waitforapt.sh
 
 echo 'Dpkg::Options {\n"--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf;
 export DEBIAN_FRONTEND=noninteractive

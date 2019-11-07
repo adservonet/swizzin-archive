@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. /etc/swizzin/sources/functions/waitforapt.sh
+#. /etc/swizzin/sources/functions/waitforapt.sh
 waitforapt
 
 sudo apt-get install make g++ autoconf libfuse-dev --yes

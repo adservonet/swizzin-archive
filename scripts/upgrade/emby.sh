@@ -8,7 +8,7 @@ wget -q -O emby.dpkg https://github.com/MediaBrowser/Emby.Releases/releases/down
 echo 'Dpkg::Options {\n"--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf;
 export DEBIAN_FRONTEND=noninteractive
 
-. /etc/swizzin/sources/functions/waitforapt.sh
+#. /etc/swizzin/sources/functions/waitforapt.sh
 waitforapt
 
 chmod 777 /var/lib/emby/logs
