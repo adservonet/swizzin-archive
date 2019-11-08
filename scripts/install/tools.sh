@@ -43,6 +43,10 @@ else
   sed -i "s/php7.0-fpm/php7.3-fpm/g" /etc/nginx/apps/*.conf
 fi
 
+croncmd="box update && apt-get -y -q update && apt-get -y -q upgrade > /srv/tools/logs/apt_upgrade.log 2>&1"
+cronjob="0 0 * * * $croncmd"
+( crontab -l | grep -v -F "$croncmd" ; echo "$cronjob" ) | crontab -
+
 if [[ ! -f /install/.nginx.lock ]]; then
   echo "ERROR: Web server not detected. Please install nginx and restart seedit4me install."
   exit 1
