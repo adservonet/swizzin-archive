@@ -78,6 +78,8 @@ ADC
 
 for u in "${users[@]}"; do
   systemctl enable --now irssi@${u} >> "${SEEDIT_LOG}"  2>&1
+  sleep 1
+  service irssi@${u} start
 done
 }
 

@@ -42,7 +42,7 @@ cd bazarr
 #lol
 sed -i 's/os._exit(0)/#os._exit(0)/' /home/${user}/bazarr/bazarr.py
 
-echo "Checking python depends"
+echo "Checking python depends" >> "${SEEDIT_LOG}"  2>&1
 sudo -u ${user} bash -c "pip install --user -r requirements.txt"  >> "${SEEDIT_LOG}"  2>&1
 mkdir -p /home/${user}/bazarr/data/config/
 
