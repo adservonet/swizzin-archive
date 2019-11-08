@@ -21,7 +21,7 @@ user=$(cut -d: -f1 < /root/.master.info )
 waitforapt
 apt-get -y -q update >> "${SEEDIT_LOG}"  2>&1
 waitforapt
-apt-get -y -q install python-pip > /dev/null 2>&1
+apt-get -y -q install python-pip >> "${SEEDIT_LOG}"  2>&1
 cd /home/${user}
 
 #wget https://www.python.org/ftp/python/2.7.13/Python-2.7.13.tgz
@@ -43,7 +43,7 @@ cd bazarr
 sed -i 's/os._exit(0)/#os._exit(0)/' /home/${user}/bazarr/bazarr.py
 
 echo "Checking python depends"
-sudo -u ${user} bash -c "pip install --user -r requirements.txt" > /dev/null 2>&1
+sudo -u ${user} bash -c "pip install --user -r requirements.txt"  >> "${SEEDIT_LOG}"  2>&1
 mkdir -p /home/${user}/bazarr/data/config/
 
 
