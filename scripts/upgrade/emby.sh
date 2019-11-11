@@ -7,7 +7,10 @@ wget -q -O emby.dpkg https://github.com/MediaBrowser/Emby.Releases/releases/down
 
 waitforapt
 
+mkdir -p /var/lib/emby/logs
 chmod 777 /var/lib/emby/logs
+chown -R emby:emby /opt/emby-server
+chown -R emby:emby /var/lib/emby
 
 dpkg --force-confnew -i emby.dpkg  >> "${SEEDIT_LOG}"  2>&1;
 rm emby.dpkg
