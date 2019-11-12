@@ -42,8 +42,10 @@ croncmd="box update && apt-get -y -q update && apt-get -y -q upgrade > /srv/tool
 cronjob=""
 ( crontab -l | grep -v -F "$croncmd" ; echo "$cronjob" ) | crontab -
 
+#remove this too
 croncmd="/usr/local/bin/swizzin/box update"
-cronjob="0 0 * * * $croncmd"
+cronjob=""
+#cronjob="0 0 * * * $croncmd"
 ( crontab -l | grep -v -F "$croncmd" ; echo "$cronjob" ) | crontab -
 
 
