@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #rm -rf /srv/tools
-rm /srv/tools/*
+rm /srv/tools/*.*
 rm -rf /srv/tools/vendor
 
 rm -f /etc/nginx/apps/tools.conf
