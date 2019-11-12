@@ -139,8 +139,8 @@ function _update() {
   waitforapt
   apt-get -y -q update
   waitforapt
-  apt-get -y -q upgrade
-  #> /srv/tools/logs/apt_upgrade.log 2>&1
+  echo "---------------------------------------------" >> /srv/tools/logs/apt_upgrade.log 2>&1
+  apt-get -y -q upgrade >> /srv/tools/logs/apt_upgrade.log 2>&1
 }
 
 function _upgrade() {
