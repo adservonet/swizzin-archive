@@ -11,8 +11,9 @@
 #
 
 cd /srv/
-mkdir tools
-mkdir tools/logs
+if [[ ! -f /srv/tools/logs ]]; then
+  mkdir -p /srv/tools/logs
+fi
 touch /srv/tools/logs/output.log
 chmod -R 777 /srv/tools/logs
 cp -r /usr/local/bin/swizzin/tools/php/* /srv/tools/
@@ -29,7 +30,7 @@ touch /install/.tools.lock
 #export SEEDIT_LOG=/srv/tools/logs/output.log
 
 if [[ -f /lib/systemd/system/php7.3-fpm.service ]]; then
-  echo "php setup seems ok"
+  echo "php setup ok"
 else
   #. /etc/swizzin/sources/functions/waitforapt.sh
   waitforapt
