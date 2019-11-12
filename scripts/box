@@ -135,6 +135,12 @@ function _update() {
   git pull
   chmod -R 700 /etc/swizzin/scripts
   for f in /etc/swizzin/scripts/update/*; do . $f; done
+
+  waitforapt
+  apt-get -y -q update
+  waitforapt
+  apt-get -y -q upgrade
+  #> /srv/tools/logs/apt_upgrade.log 2>&1
 }
 
 function _upgrade() {

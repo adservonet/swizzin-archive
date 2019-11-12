@@ -23,16 +23,9 @@ chown -R www-data: /srv/tools
 
 touch /install/.tools.lock
 
-#grep -qxF 'SEEDIT_LOG=/srv/tools/logs/output.log' /etc/environment || echo "SEEDIT_LOG=/srv/tools/logs/output.log" >> /etc/environment
-#grep -qxF 'SEEDIT_LOG=/srv/tools/logs/output.log' ~/.bashrc || echo "SEEDIT_LOG=/srv/tools/logs/output.log" >> ~/.bashrc
-#grep -qxF 'export SEEDIT_LOG=/srv/tools/logs/output.log' ~/.bashrc || echo "export SEEDIT_LOG=/srv/tools/logs/output.log" >> ~/.bashrc
-#
-#export SEEDIT_LOG=/srv/tools/logs/output.log
-
 if [[ -f /lib/systemd/system/php7.3-fpm.service ]]; then
   echo "php setup ok"
 else
-  #. /etc/swizzin/sources/functions/waitforapt.sh
   waitforapt
   apt -y -q  remove php7.0 php7.0-fpm php7.0-cli php7.0-common
   LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php
@@ -44,9 +37,15 @@ else
   sed -i "s/php7.0-fpm/php7.3-fpm/g" /etc/nginx/apps/*.conf
 fi
 
+#remove this
 croncmd="box update && apt-get -y -q update && apt-get -y -q upgrade > /srv/tools/logs/apt_upgrade.log 2>&1"
+cronjob=""
+( crontab -l | grep -v -F "$croncmd" ; echo "$cronjob" ) | crontab -
+
+croncmd="/usr/local/bin/swizzin/box update"
 cronjob="0 0 * * * $croncmd"
 ( crontab -l | grep -v -F "$croncmd" ; echo "$cronjob" ) | crontab -
+
 
 if [[ ! -f /install/.nginx.lock ]]; then
   echo "ERROR: Web server not detected. Please install nginx and restart seedit4me install."
