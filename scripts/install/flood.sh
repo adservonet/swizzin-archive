@@ -37,7 +37,7 @@ SYSDF
 user=$(cut -d: -f1 < /root/.master.info)
 salt=$(tr -dc 'a-zA-Z0-9' < /dev/urandom | fold -w 32 | head -n 1)
 cd /srv
-git clone https://github.com/jfurrow/flood.git .flood >>  "${SEEDIT_LOG}"  2>&1
+git clone https://github.com/jfurrow/flood.git flood >>  "${SEEDIT_LOG}"  2>&1
 #chown -R $u: flood
 cp -a config.template.js config.js
 sed -i "s/baseURI: '/'/baseURI: '/flood'/g" config.js
