@@ -40,7 +40,7 @@ cd /srv
 git clone https://github.com/jfurrow/flood.git flood >>  "${SEEDIT_LOG}"  2>&1
 cd flood
 cp -a config.template.js config.js
-sed -i "s/baseURI: '\/',/baseURI: '\/flood',\nsocket: true\nsocketPath: '\/var\/run\/${user}\/.rtorrent.sock'/g" config.js
+sed -i "s/baseURI: '\/',/baseURI: '\/flood',\n  socket: true,\n  socketPath: '\/var\/run\/${user}\/.rtorrent.sock',/g" config.js
 sed -i "s/floodServerPort: 3000/floodServerPort: 3001/g" config.js
 #sed -i "s/socket: false/socket: true/g" config.js
 #sed -i "s/socketPath.*/socketPath: '\/var\/run\/${user}\/.rtorrent.sock'/g" config.js
