@@ -38,7 +38,7 @@ user=$(cut -d: -f1 < /root/.master.info)
 salt=$(tr -dc 'a-zA-Z0-9' < /dev/urandom | fold -w 32 | head -n 1)
 cd /srv
 git clone https://github.com/jfurrow/flood.git flood >>  "${SEEDIT_LOG}"  2>&1
-#chown -R $u: flood
+cd flood
 cp -a config.template.js config.js
 sed -i "s/baseURI: '/'/baseURI: '/flood'/g" config.js
 sed -i "s/floodServerPort: 3000/floodServerPort: 3001/g" config.js
