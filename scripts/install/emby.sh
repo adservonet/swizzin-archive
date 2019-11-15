@@ -59,5 +59,7 @@ usermod -a -G ${username} emby
 chown -R emby:emby /opt/emby-server
 chown -R emby:emby /var/lib/emby
 
+systemctl unmask emby-server
+systemctl enable emby-server
 systemctl restart emby-server  >> "${SEEDIT_LOG}"  2>&1
 touch /install/.emby.lock
