@@ -18,7 +18,7 @@ fi
 . /etc/swizzin/sources/functions/npm
 npm_install
 
-cat > /etc/systemd/system/flood@.service <<SYSDF
+cat > /etc/systemd/system/flood.service <<SYSDF
 [Unit]
 Description=Flood rTorrent Web UI
 After=network.target
@@ -40,10 +40,10 @@ cd /srv
 git clone https://github.com/jfurrow/flood.git flood >>  "${SEEDIT_LOG}"  2>&1
 cd flood
 cp -a config.template.js config.js
-sed -i "s/baseURI: '/'/baseURI: '/flood'/g" config.js
+sed -i "s/baseURI: '\/',/baseURI: '\/flood',\nsocket: true\nsocketPath: '\/var\/run\/${user}\/.rtorrent.sock'/g" config.js
 sed -i "s/floodServerPort: 3000/floodServerPort: 3001/g" config.js
-sed -i "s/socket: false/socket: true/g" config.js
-sed -i "s/socketPath.*/socketPath: '\/var\/run\/${user}\/.rtorrent.sock'/g" config.js
+#sed -i "s/socket: false/socket: true/g" config.js
+#sed -i "s/socketPath.*/socketPath: '\/var\/run\/${user}\/.rtorrent.sock'/g" config.js
 sed -i "s/secret: 'flood'/secret: '$salt'/g" config.js
 echo "Building Flood for $u. This might take some time..." >>  "${SEEDIT_LOG}"  2>&1
 cd /srv/flood

@@ -10,10 +10,10 @@
 #  log="/dev/null"
 #fi
 
-users=($(cut -d: -f1 < /etc/htpasswd))
-if [[ -n $1 ]]; then
-	users=($1)
-fi
+#users=($(cut -d: -f1 < /etc/htpasswd))
+#if [[ -n $1 ]]; then
+#	users=($1)
+#fi
 
 if [[ ! -f /etc/nginx/apps/flood.conf ]]; then
   cat > /etc/nginx/apps/flood.conf <<'FLO'
