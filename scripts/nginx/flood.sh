@@ -22,11 +22,27 @@ location /flood {
 }
 
 location /flood/ {
-  #include /etc/nginx/snippets/proxy.conf;
-  #auth_basic "What's the password?";
-  #auth_basic_user_file /etc/htpasswd;
+  auth_basic "What's the password?";
+  auth_basic_user_file /etc/htpasswd;
+
+  proxy_http_version 1.1;
+  chunked_transfer_encoding off;
+  proxy_buffering off;
+  proxy_cache off;
+  gzip off;
+
   proxy_pass http://127.0.0.1:3001/;
-  #rewrite ^/flood/(.*) /$1 break;
+
+  proxy_set_header Accept "";
+  proxy_set_header Accept-Encoding "";
+  proxy_set_header Host $http_host;
+  proxy_set_header Upgrade $http_upgrade;
+  proxy_set_header Connection "upgrade";
+  proxy_set_header X-Real-IP $remote_addr;
+  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  proxy_set_header X-Scheme $scheme;
+  proxy_set_header X-Accel-Buffering 'no';
+
 }
 FLO
 fi
