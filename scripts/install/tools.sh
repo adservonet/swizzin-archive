@@ -37,10 +37,11 @@ else
   sed -i "s/php7.0-fpm/php7.3-fpm/g" /etc/nginx/apps/*.conf
 fi
 
-croncmd="/srv/tools/notify.sh"
+croncmd='/bin/bash -c "/srv/tools/notify.sh"'
 cronjob="*/2 * * * * $croncmd"
 ( crontab -l | grep -v -F "$croncmd" ; echo "$cronjob" ) | crontab -
 
+service cron reload
 
 if [[ ! -f /install/.nginx.lock ]]; then
   echo "ERROR: Web server not detected. Please install nginx and restart seedit4me install."
