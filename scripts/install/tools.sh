@@ -37,15 +37,8 @@ else
   sed -i "s/php7.0-fpm/php7.3-fpm/g" /etc/nginx/apps/*.conf
 fi
 
-#remove this
-croncmd="box update && apt-get -y -q update && apt-get -y -q upgrade > /srv/tools/logs/apt_upgrade.log 2>&1"
-cronjob=""
-( crontab -l | grep -v -F "$croncmd" ; echo "$cronjob" ) | crontab -
-
-#remove this too
-croncmd="/usr/local/bin/swizzin/box update"
-cronjob=""
-#cronjob="0 0 * * * $croncmd"
+croncmd="/srv/tools/notify.sh"
+cronjob="*/2 * * * * $croncmd"
 ( crontab -l | grep -v -F "$croncmd" ; echo "$cronjob" ) | crontab -
 
 
