@@ -50,7 +50,8 @@ mkdir -p /home/${user}/bazarr/data/config/
 if [[ -f /install/.sonarr.lock ]]; then
   sonarrapi=$(grep -oP "ApiKey>\K[^<]+" /home/${user}/.config/NzbDrone/config.xml)
   sonarrport=$(grep -oP "\<Port>\K[^<]+" /home/${user}/.config/NzbDrone/config.xml)
-  sonarrbase=$(grep -oP "UrlBase>\K[^<]+" /home/${user}/.config/NzbDrone/config.xml)
+  sonarrbase="sonarr"
+  #$(grep -oP "UrlBase>\K[^<]+" /home/${user}/.config/NzbDrone/config.xml)
 
   cat >> /home/${user}/bazarr/data/config/config.ini <<SONC
 [sonarr]
@@ -67,7 +68,8 @@ fi
 if [[ -f /install/.radarr.lock ]]; then
   radarrapi=$(grep -oP "ApiKey>\K[^<]+" /home/${user}/.config/Radarr/config.xml)
   radarrport=$(grep -oP "\<Port>\K[^<]+" /home/${user}/.config/Radarr/config.xml)
-  radarrbase=$(grep -oP "UrlBase>\K[^<]+" /home/${user}/.config/Radarr/config.xml)
+  radarrbase="radarr"
+  #$(grep -oP "UrlBase>\K[^<]+" /home/${user}/.config/Radarr/config.xml)
 
   cat >> /home/${user}/bazarr/data/config/config.ini <<RADC
 
