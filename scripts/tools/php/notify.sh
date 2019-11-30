@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [[ -f /tmp/rutorrent_errors.log ]]; then
-if grep -Fxq "public tracker" /tmp/rutorrent_errors.log
+if grep -q "public tracker" /tmp/rutorrent_errors.log
 then
 
 pass=$(cut -d: -f2 < /root/.master.info)
@@ -28,8 +28,5 @@ EOF
 )" $slackurl
 
 rm /tmp/rutorrent_errors.log
-
-else
-    echo "code if not found"
 fi
 fi
