@@ -1,17 +1,35 @@
 #!/bin/bash
+
+if [[ -f /tmp/rutorrent_errors.log ]]; then
+if grep -Fxq "public tracker" /tmp/rutorrent_errors.log
+then
+
+pass=$(cut -d: -f2 < /root/.master.info)
 hostname="$(cat /proc/sys/kernel/hostname)"
 hostname="${hostname/ct/}"
 slackurl="https://hooks.dudewtf/services/TLKMV1Z3R/BQM2PJ2SG/cddPy3W3ILDmQK0brEUQTf2U"
 slackurl="${slackurl/dudewtf/slack.com}"
+dashurl="https://my.dev.seedit4.me/api/trackers/report"
 
-cat /tmp/rutorrent_errors.log | grep "public tracker" | while read -r line ; do
-    curl -X POST -H 'Content-type: application/json' --data "$(cat <<EOF
+curl -X POST -H 'Content-type: application/json' --data "$(cat <<EOF
 {
-"text": "<https://my.seedit4.me/boxes/$hostname|$hostname> : $line"
+"public": "true",
+"hostname": "$hostname",
+"pass": "$pass"
+}
+EOF
+)" $dashurl
+
+curl -X POST -H 'Content-type: application/json' --data "$(cat <<EOF
+{
+"text": "<https://my.seedit4.me/boxes/$hostname|$hostname> : public torrent detected."
 }
 EOF
 )" $slackurl
-done;
 
 rm /tmp/rutorrent_errors.log
 
+else
+    echo "code if not found"
+fi
+fi
