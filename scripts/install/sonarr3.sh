@@ -16,12 +16,10 @@ sudo apt update
 waitforapt
 sudo apt -y install sonarr >>  "${SEEDIT_LOG}"  2>&1
 
-
 touch /install/.sonarr3.lock
 
-
 if [[ -f /install/.nginx.lock ]]; then
-  sleep 10
+  sleep 4
   bash /usr/local/bin/swizzin/nginx/sonarr3.sh
   service nginx reload
 fi
