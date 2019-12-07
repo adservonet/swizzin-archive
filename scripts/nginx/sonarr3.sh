@@ -17,7 +17,11 @@ location /sonarr {
 SONARR
 fi
 
-sleep 10
+cat /var/lib/sonarr/config.xml
+
+sleep 20
+
+cat /var/lib/sonarr/config.xml
 
 sed -i "s/<UrlBase>.*<\/UrlBase>/<UrlBase>sonarr<\/UrlBase>/g" /var/lib/sonarr/config.xml
 sed -i "s/<BindAddress>.*<\/BindAddress>/<BindAddress>127\.0\.0\.1<\/BindAddress>/g" /var/lib/sonarr/config.xml
