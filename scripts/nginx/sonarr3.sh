@@ -17,6 +17,7 @@ location /sonarr {
 SONARR
 fi
 
+echo "let's take a little break.. inhale.. exhale.. " >>  "${SEEDIT_LOG}"  2>&1
 sleep 30
 
 sed -i "s/<UrlBase>.*<\/UrlBase>/<UrlBase>sonarr<\/UrlBase>/g" /var/lib/sonarr/config.xml
