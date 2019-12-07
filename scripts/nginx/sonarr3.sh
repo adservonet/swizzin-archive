@@ -33,3 +33,7 @@ cat > /var/lib/sonarr/config.xml <<SONN
 SONN
 
 systemctl start sonarr
+
+sleep 5
+
+systemctl restart sonarr
