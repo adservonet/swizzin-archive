@@ -20,6 +20,7 @@
 MASTER=$(cut -d: -f1 < /root/.master.info)
 BTSYNCIP=$(ip route get 1 | sed -n 's/^.*src \([0-9.]*\) .*$/\1/p')
 port=$(cat /home/seedit4me/.btsync_port)
+port2=$(cat /home/seedit4me/.btsync2_port)
 
 username="$(cut -d: -f1 < /root/.master.info)"
 password="$(cut -d: -f2 < /root/.master.info)"
@@ -53,7 +54,7 @@ function _installBTSync4() {
 function _installBTSync5() {
   cat > /etc/resilio-sync/config.json <<RSCONF
 {
-    "listening_port" : 0,
+    "listening_port" : $port2,
     "storage_path" : "/home/${MASTER}/.config/resilio-sync/",
     "pid_file" : "/var/run/resilio-sync/sync.pid",
     "agree_to_EULA": "yes",
