@@ -18,7 +18,9 @@ sudo apt -y install sonarr >>  "${SEEDIT_LOG}"  2>&1
 
 #systemctl stop sonarr
 
-sleep 8
+echo "let's take a break :)" >>  "${SEEDIT_LOG}"  2>&1
+
+sleep 16
 
 sed -i "s/<UrlBase>.*<\/UrlBase>/<UrlBase>sonarr<\/UrlBase>/g" /var/lib/sonarr/config.xml
 sed -i "s/<BindAddress>.*<\/BindAddress>/<BindAddress>127\.0\.0\.1<\/BindAddress>/g" /var/lib/sonarr/config.xml
