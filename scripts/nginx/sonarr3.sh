@@ -34,6 +34,8 @@ SONN
 
 systemctl start sonarr
 
-sleep 5
-
 systemctl restart sonarr
+
+sleep 10
+
+echo "we are done i guess"  >>  "${SEEDIT_LOG}"  2>&1
