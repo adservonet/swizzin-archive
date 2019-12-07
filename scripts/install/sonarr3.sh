@@ -14,7 +14,8 @@ echo "deb https://apt.sonarr.tv/ubuntu xenial main" | sudo tee /etc/apt/sources.
 waitforapt
 sudo apt update
 waitforapt
-sudo apt -y install sonarr >>  "${SEEDIT_LOG}"  2>&1
+export DEBIAN_FRONTEND=noninteractive
+sudo apt -y -f install sonarr >>  "${SEEDIT_LOG}"  2>&1
 
 systemctl stop sonarr
 
