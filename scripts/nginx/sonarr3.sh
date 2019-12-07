@@ -32,4 +32,4 @@ cat > /var/lib/sonarr/config.xml <<SONN
 </Config>
 SONN
 
-systemctl restart sonarr
+systemctl start sonarr
