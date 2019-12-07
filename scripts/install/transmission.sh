@@ -1,11 +1,15 @@
 #!/bin/bash
 
 user=$(cut -d: -f1 < /root/.master.info)
-#password="$(cut -d: -f2 < /root/.master.info)"
 port=$(cat /home/seedit4me/.transmission_port)
-mkdir /home/seedit4me/torrents/transmission
 
+#password="$(cut -d: -f2 < /root/.master.info)"
 #sha1passwd="$(echo -n "${password}" | sha1sum | cut -b 1-40)"
+
+if [[ ! -d /home/seedit4me/torrents/transmission ]]; then
+mkdir /home/seedit4me/torrents/transmission
+fi
+
 waitforapt
 add-apt-repository -y ppa:transmissionbt/ppa >>  "${SEEDIT_LOG}"  2>&1
 waitforapt
