@@ -16,16 +16,16 @@ sudo apt update
 waitforapt
 sudo apt -y install sonarr >>  "${SEEDIT_LOG}"  2>&1
 
-systemctl stop sonarr
+#systemctl stop sonarr
 
-sleep 1
+sleep 8
 
 sed -i "s/<UrlBase>.*<\/UrlBase>/<UrlBase>sonarr<\/UrlBase>/g" /var/lib/sonarr/config.xml
 sed -i "s/<BindAddress>.*<\/BindAddress>/<BindAddress>127\.0\.0\.1<\/BindAddress>/g" /var/lib/sonarr/config.xml
 
 sleep 1
 
-systemctl start sonarr
+systemctl restart sonarr
 
 touch /install/.sonarr3.lock
 
