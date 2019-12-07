@@ -16,18 +16,12 @@ sudo apt update
 waitforapt
 sudo apt -y install sonarr >>  "${SEEDIT_LOG}"  2>&1
 
-#systemctl stop sonarr
-
-echo "let's take a break :)" >>  "${SEEDIT_LOG}"  2>&1
-
-sleep 16
-
-sed -i "s/<UrlBase>.*<\/UrlBase>/<UrlBase>sonarr<\/UrlBase>/g" /var/lib/sonarr/config.xml
-sed -i "s/<BindAddress>.*<\/BindAddress>/<BindAddress>127\.0\.0\.1<\/BindAddress>/g" /var/lib/sonarr/config.xml
-
-sleep 1
-
-systemctl restart sonarr
 
 touch /install/.sonarr3.lock
 
+
+if [[ -f /install/.nginx.lock ]]; then
+  sleep 10
+  bash /usr/local/bin/swizzin/nginx/sonarr3.sh
+  service nginx reload
+fi

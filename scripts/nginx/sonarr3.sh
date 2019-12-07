@@ -1,6 +1,7 @@
 #!/bin/bash
 
 MASTER=$(cut -d: -f1 < /root/.master.info)
+systemctl stop sonarr
 
 if [[ ! -f /etc/nginx/apps/sonarr3.conf ]]; then
 cat > /etc/nginx/apps/sonarr3.conf <<SONARR
@@ -16,3 +17,7 @@ location /sonarr {
 SONARR
 fi
 
+sed -i "s/<UrlBase>.*<\/UrlBase>/<UrlBase>sonarr<\/UrlBase>/g" /var/lib/sonarr/config.xml
+sed -i "s/<BindAddress>.*<\/BindAddress>/<BindAddress>127\.0\.0\.1<\/BindAddress>/g" /var/lib/sonarr/config.xml
+
+systemctl start sonarr
