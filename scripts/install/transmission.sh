@@ -34,7 +34,7 @@ sed -i "s/\"peer-port-random-low\".*,/\"peer-port-random-low\": $port,/g" /var/l
 sed -i "s/\"umask\".*,/\"umask\": 2,/g" /var/lib/transmission-daemon/info/settings.json
 sed -i "s/\"rpc-authentication-required\".*,/\"rpc-authentication-required\": false,/g" /var/lib/transmission-daemon/info/settings.json
 sed -i "s/\"rpc-host-whitelist-enabled\".*,/\"rpc-host-whitelist-enabled\": false,/g" /var/lib/transmission-daemon/info/settings.json
-sed -i "s/\"utp-enabled\".*,/\"utp-enabled\": false,/g" /var/lib/transmission-daemon/info/settings.json
+sed -i "s/\"utp-enabled\": true/\"utp-enabled\": false/g" /var/lib/transmission-daemon/info/settings.json
 
 sleep 1
 
