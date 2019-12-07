@@ -8,6 +8,8 @@ port=$(cat /home/seedit4me/.transmission_port)
 
 if [[ ! -d /home/seedit4me/torrents/transmission ]]; then
 mkdir /home/seedit4me/torrents/transmission
+chown -R seedit4me:seedit4me /home/seedit4me/torrents/transmission
+chmod -R 775 /home/seedit4me/torrents/transmission
 fi
 
 waitforapt
@@ -19,7 +21,7 @@ apt-get -y install transmission-cli transmission-common transmission-daemon >>  
 
 service transmission-daemon stop
 
-usermod -a -G debian-transmission seedit4me
+usermod -a -G seedit4me debian-transmission
 
 sleep 1
 
@@ -32,6 +34,7 @@ sed -i "s/\"peer-port-random-low\".*,/\"peer-port-random-low\": $port,/g" /var/l
 sed -i "s/\"umask\".*,/\"umask\": 2,/g" /var/lib/transmission-daemon/info/settings.json
 sed -i "s/\"rpc-authentication-required\".*,/\"rpc-authentication-required\": false,/g" /var/lib/transmission-daemon/info/settings.json
 sed -i "s/\"rpc-host-whitelist-enabled\".*,/\"rpc-host-whitelist-enabled\": false,/g" /var/lib/transmission-daemon/info/settings.json
+sed -i "s/\"utp-enabled\".*,/\"utp-enabled\": false,/g" /var/lib/transmission-daemon/info/settings.json
 
 sleep 1
 

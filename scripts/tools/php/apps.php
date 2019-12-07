@@ -64,6 +64,7 @@ $apps = array(
     array("name" => "btsync",         "service" => "resilio-sync",      "user" => ""),
     array("name" => "deluged",        "service" => "deluged",           "user" => $username),
     array("name" => "deluge",         "service" => "deluge-web",        "user" => $username),
+    array("name" => "transmission",   "service" => "transmission-daemon","user" => ""),
     array("name" => "emby",           "service" => "emby-server",       "user" => ""),
     array("name" => "filebrowser",    "service" => "filebrowser",       "user" => ""),
     array("name" => "flood",          "service" => "flood",             "user" => $username),
