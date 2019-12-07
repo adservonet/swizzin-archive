@@ -16,6 +16,8 @@ sudo apt update
 waitforapt
 sudo apt -y install sonarr >>  "${SEEDIT_LOG}"  2>&1
 
+systemctl stop sonarr
+
 touch /install/.sonarr3.lock
 
 if [[ -f /install/.nginx.lock ]]; then
