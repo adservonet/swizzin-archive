@@ -19,6 +19,8 @@ apt -y -f install sonarr >>  "${SEEDIT_LOG}"  2>&1
 
 systemctl stop sonarr
 
+usermod -a -G seedit4me sonarr
+
 touch /install/.sonarr3.lock
 
 if [[ -f /install/.nginx.lock ]]; then
