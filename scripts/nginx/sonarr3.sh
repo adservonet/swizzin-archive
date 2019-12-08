@@ -34,6 +34,7 @@ SONN
 
 chown sonarr:sonarr /var/lib/sonarr/config.xml
 
+systemctl enable sonarr
 systemctl start sonarr
 
 systemctl restart sonarr
