@@ -26,6 +26,9 @@ function _dconf {
   localpass=$(tr -dc 'a-f0-9' < /dev/urandom | fold -w 40 | head -n 1)
   DWP=$(python ${local_packages}/deluge.Userpass.py ${pass} ${DWSALT})
   DUDID=$(python ${local_packages}/deluge.addHost.py)
+
+  port=$(cat /home/seedit4me/.deluge_port)
+
   # -- Secondary awk command -- #
   #DPORT=$(awk -v min=59000 -v max=69024 'BEGIN{srand(); print int(min+rand()*(max-min+1))}')
   #DWPORT=10033
@@ -84,9 +87,9 @@ function _dconf {
     "enc_level": 2,
     "copy_torrent_file": false,
     "max_connections_per_second": 50,
-    "listen_ports": [
-      6881,
-      6891
+    "port": [
+      ${port},
+      ${port}
     ],
     "max_connections_per_torrent": -1,
     "del_copy_torrent_file": false,
@@ -135,7 +138,7 @@ function _dconf {
     "seed_time_limit": 180,
     "cache_size": 512,
     "share_ratio_limit": 2.0,
-    "random_port": true,
+    "random_port": false,
     "listen_interface": "${ip}"
   }
 DC
