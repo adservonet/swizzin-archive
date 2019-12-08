@@ -88,8 +88,12 @@ function _dconf {
     "copy_torrent_file": false,
     "max_connections_per_second": 50,
     "port": [
-      ${port},
-      ${port}
+      $port,
+      $port
+    ],
+    "listen_ports": [
+      $port,
+      $port
     ],
     "max_connections_per_torrent": -1,
     "del_copy_torrent_file": false,
