@@ -36,10 +36,10 @@ if [[ ! -d /srv/rutorrent ]]; then
   rm -rf /srv/rutorrent/conf/config.php
 fi
 
-rm -rf /srv/rutorrent/plugins/*
+#rm -rf /srv/rutorrent/plugins/*
 curl -o /srv/rutorrent/plugins/plugins.tar.gz https://my.seedit4.me/storage/scripts/assets/plugins.tar.gz >> "${SEEDIT_LOG}" 2>&1
 cd /srv/rutorrent/plugins
-tar zxvf /srv/rutorrent/plugins/plugins.tar.gz >> "${SEEDIT_LOG}" 2>&1
+tar zxvf --overwrite /srv/rutorrent/plugins/plugins.tar.gz >> "${SEEDIT_LOG}" 2>&1
 rm -rf plugins.tar.gz
 
 #sed -i 's/useExternal = false;/useExternal = "mktorrent";/' /srv/rutorrent/plugins/create/conf.php
