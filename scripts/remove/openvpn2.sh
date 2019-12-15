@@ -86,9 +86,7 @@ function initialCheck () {
 }
 
 function removeOpenVPN () {
-	echo ""
-	read -rp "Do you really want to remove OpenVPN? [y/n]: " -e -i n REMOVE
-	if [[ "$REMOVE" = 'y' ]]; then
+
 		# Get OpenVPN port from the configuration
 		PORT=$(grep '^port ' /etc/openvpn/server.conf | cut -d " " -f 2)
 
@@ -154,10 +152,6 @@ function removeOpenVPN () {
 		fi
 		echo ""
 		echo "OpenVPN removed!"
-	else
-		echo ""
-		echo "Removal aborted!"
-	fi
 }
 
 # Check for root, TUN, OS...
