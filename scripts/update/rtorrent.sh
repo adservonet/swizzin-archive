@@ -1,4 +1,6 @@
 #!/bin/bash
+exit 1
+
 users=($(cut -d: -f1 < /etc/htpasswd))
 
 for u in "${users[@]}"; do
