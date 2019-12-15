@@ -1,4 +1,5 @@
 #!/bin/bash
+exit 1
 
 #Update club-QuickBox with latest changes
 if [[ -d /srv/rutorrent/plugins/theme/themes/club-QuickBox ]]; then
