@@ -91,6 +91,7 @@ function installUnbound () {
 	if [[ ! -e /etc/unbound/unbound.conf ]]; then
 
 		if [[ "$OS" =~ (debian|ubuntu) ]]; then
+		  waitforapt
 			apt-get install -y unbound
 
 			# Configuration
@@ -211,6 +212,7 @@ function installOpenVPN () {
 
 	if [[ "$OS" =~ (debian|ubuntu) ]]; then
 		apt-get update
+		waitforapt
 		apt-get -y install ca-certificates gnupg
 		# We add the OpenVPN repo to get the latest version.
 		if [[ "$VERSION_ID" = "8" ]]; then
@@ -224,6 +226,7 @@ function installOpenVPN () {
 			apt-get update
 		fi
 		# Ubuntu > 16.04 and Debian > 8 have OpenVPN >= 2.4 without the need of a third party repository.
+		waitforapt
 		apt-get install -y openvpn iptables openssl wget ca-certificates curl
 	elif [[ "$OS" = 'centos' ]]; then
 		yum install -y epel-release
@@ -700,6 +703,7 @@ function removeUnbound () {
 		systemctl stop unbound
 
 		if [[ "$OS" =~ (debian|ubuntu) ]]; then
+		  waitforapt
 			apt-get autoremove --purge -y unbound
 		elif [[ "$OS" = 'arch' ]]; then
 			pacman --noconfirm -R unbound
@@ -761,6 +765,7 @@ function removeOpenVPN () {
 		fi
 
 		if [[ "$OS" =~ (debian|ubuntu) ]]; then
+		  waitforapt
 			apt-get autoremove --purge -y openvpn
 			if [[ -e /etc/apt/sources.list.d/openvpn.list ]];then
 				rm /etc/apt/sources.list.d/openvpn.list
