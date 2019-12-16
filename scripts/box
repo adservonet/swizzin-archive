@@ -130,7 +130,7 @@ function _update() {
   echo -e "Updating swizzin local repository" >> "${SEEDIT_LOG}"  2>&1;
 
   cd /etc/swizzin
-  git checkout master > /dev/null  2>&1
+  git checkout master
   git reset --hard origin/master >> "${SEEDIT_LOG}"  2>&1;
   git pull
   chmod -R 700 /etc/swizzin/scripts
