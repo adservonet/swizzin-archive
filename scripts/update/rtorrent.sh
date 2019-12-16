@@ -1,5 +1,6 @@
 #!/bin/bash
-exit 1
+
+if [ 1 -eq 0 ]; then
 
 users=($(cut -d: -f1 < /etc/htpasswd))
 
@@ -45,3 +46,5 @@ for u in "${users[@]}"; do
     fi
   fi
 done
+
+fi

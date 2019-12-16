@@ -1,5 +1,6 @@
 #!/bin/bash
-exit 1
+
+if [ 1 -eq 0 ]; then
 
 #Update club-QuickBox with latest changes
 if [[ -d /srv/rutorrent/plugins/theme/themes/club-QuickBox ]]; then
@@ -59,4 +60,6 @@ if [[ -f /install/.quota.lock ]] && { ! grep -q "/usr/bin/quota -wu" /srv/rutorr
 DSKSP
 . /etc/swizzin/sources/functions/php
 restart_php_fpm
+fi
+
 fi
