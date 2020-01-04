@@ -12,8 +12,8 @@ location /nzbget {
 
 location /nzbget/ {
   include /etc/nginx/snippets/proxy.conf;
-  #auth_basic "What's the password?";
-  #auth_basic_user_file /etc/htpasswd;
+  auth_basic "What's the password?";
+  auth_basic_user_file /etc/htpasswd;
   rewrite ^/nzbget/(.*) /$1 break;
   proxy_pass http://$remote_user.nzbget;
 }
