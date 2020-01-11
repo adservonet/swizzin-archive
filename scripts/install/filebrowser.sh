@@ -37,7 +37,8 @@ mkdir -p "/home/${username}/bin"
 mkdir -p "/home/${username}/.config/Filebrowser"
 #
 # Download and extract the files to the desired location.
-wget -qO "/home/${username}/filebrowser.tar.gz" "$(curl -sNL https://api.github.com/repos/filebrowser/filebrowser/releases/latest | grep -Po 'ht(.*)linux-amd64(.*)gz')" >> "${SEEDIT_LOG}"  2>&1
+wget -qO "/home/${username}/filebrowser.tar.gz" "https://github.com/filebrowser/filebrowser/releases/download/v2.0.16/linux-amd64-filebrowser.tar.gz" >> "${SEEDIT_LOG}"  2>&1
+#wget -qO "/home/${username}/filebrowser.tar.gz" "$(curl -sNL https://api.github.com/repos/filebrowser/filebrowser/releases/latest | grep -Po 'ht(.*)linux-amd64(.*)gz')" >> "${SEEDIT_LOG}"  2>&1
 tar -xvzf "/home/${username}/filebrowser.tar.gz" --exclude LICENSE --exclude README.md -C "/home/${username}/bin"  >> "${SEEDIT_LOG}"  2>&1
 #
 # Removes the archive as we no longer need it.
