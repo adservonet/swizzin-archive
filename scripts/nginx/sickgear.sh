@@ -25,7 +25,7 @@ location /sickgear {
 SGC
 fi
 
-sleep 5s
+sleep 15s
 
 sed -i "s/web_root.*/web_root = \/sickgear/g" /home/${user}/.sickgear/config.ini
 sed -i "s/web_host.*/web_host = 127.0.0.1/g" /home/${user}/.sickgear/config.ini
