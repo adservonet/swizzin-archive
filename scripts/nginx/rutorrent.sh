@@ -42,6 +42,8 @@ cd /srv/rutorrent/plugins
 tar zxvf /srv/rutorrent/plugins/plugins.tar.gz >> "${SEEDIT_LOG}" 2>&1
 rm -rf plugins.tar.gz
 
+rm -rf /srv/rutorrent/plugins/_cloudflare
+
 #sed -i 's/useExternal = false;/useExternal = "mktorrent";/' /srv/rutorrent/plugins/create/conf.php
 #sed -i 's/pathToCreatetorrent = '\'\''/pathToCreatetorrent = '\''\/usr\/bin\/mktorrent'\''/' /srv/rutorrent/plugins/create/conf.php
 #sed -i "s/\$pathToExternals\['sox'\] = ''/\$pathToExternals\['sox'\] = '\/usr\/bin\/sox'/g" /srv/rutorrent/plugins/spectrogram/conf.php
