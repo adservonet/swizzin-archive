@@ -46,7 +46,10 @@ if [[ $phpv =~ "7.1" ]]; then
   fi
 fi
 
-
+  sudo apt-get -y -q  purge php7.0.*
+  sudo apt-get -y -q  purge php7.1.*
+  sudo apt-get -y -q  purge php7.2.*
+  sudo apt-get -y -q  purge php7.4.*
   apt-get -y -q install libmcrypt-dev libreadline-dev
   #pear config-set php_dir /usr/bin/php
   pear config-set ext_dir /usr/lib/php/20180731
