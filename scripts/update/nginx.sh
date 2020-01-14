@@ -27,24 +27,11 @@ waitforapt
 apt-get -y -qq update
 APT='php7.3-fpm php7.3-common php7.3-cli php7.3-dev php7.3-xml php7.3-curl php7.3-xmlrpc php7.3-json '"${mcrypt}"' php7.3-mbstring php7.3-opcache '"${geoip}"' php7.3-xml php7.3-gd'
 for depends in $APT; do
-  inst=$(dpkg -l | grep $depends)
-  if [[ -z $inst ]]; then
-    last_update=$(stat -c %Y /var/cache/apt/pkgcache.bin)
-    now=$(date +%s)
-    if [ $((now - last_update)) -gt 3600 ]; then
-      apt-get -y -qq update
-    fi
     apt-get -y install "$depends" >>  "${SEEDIT_LOG}"  2>&1
-  fi
 done
 
 cd /etc/php
 phpv=$(ls -d */ | cut -d/ -f1)
-if [[ $phpv =~ "7.1" ]]; then
-  if [[ $phpv =~ "7.0" ]]; then
-    apt-get -y -q purge php7.0-fpm
-  fi
-fi
 
   sudo apt-get -y -q  purge php7.0.*
   sudo apt-get -y -q  purge php7.1.*
@@ -60,7 +47,7 @@ fi
   echo extension=mcrypt.so > /etc/php/7.3/mods-available/mcrypt.ini
   echo extension=mcrypt.so > /etc/php/7.3/fpm/conf.d/20-mcrypt.ini
   echo extension=mcrypt.so > /etc/php/7.3/cli/conf.d/20-mcrypt.ini
-  systemctl restart php7.3-fpm
+  #systemctl restart php7.3-fpm
   sudo update-alternatives --set php /usr/bin/php7.3
 
   sed -i "s/php7.0-fpm/php7.3-fpm/g" /etc/nginx/apps/*.conf
