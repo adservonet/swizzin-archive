@@ -27,15 +27,7 @@ waitforapt
 apt-get -y -qq update
 APT='php7.3-fpm php7.3-common php7.3-cli php7.3-dev php7.3-xml php7.3-curl php7.3-xmlrpc php7.3-json '"${mcrypt}"' php7.3-mbstring php7.3-opcache '"${geoip}"' php7.3-xml php7.3-gd'
 for depends in $APT; do
-  inst=$(dpkg -l | grep $depends)
-  if [[ -z $inst ]]; then
-    last_update=$(stat -c %Y /var/cache/apt/pkgcache.bin)
-    now=$(date +%s)
-    if [ $((now - last_update)) -gt 3600 ]; then
-      apt-get -y -qq update
-    fi
     apt-get -y install "$depends" >>  "${SEEDIT_LOG}"  2>&1
-  fi
 done
 
 cd /etc/php
