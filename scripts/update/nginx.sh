@@ -21,7 +21,7 @@ else
   mcrypt=php-mcrypt
 fi
 
-APT='php-fpm php-cli php-dev php-xml php-curl php-xmlrpc php-json '"${mcrypt}"' php-mbstring php7.3-opcache '"${geoip}"' php-xml'
+APT='php7.3-fpm php7.3-cli php7.3-dev php7.3-xml php7.3-curl php7.3-xmlrpc php7.3-json '"${mcrypt}"' php7.3-mbstring php7.3-opcache '"${geoip}"' php7.3-xml php7.3-gd'
 for depends in $APT; do
   inst=$(dpkg -l | grep $depends)
   if [[ -z $inst ]]; then

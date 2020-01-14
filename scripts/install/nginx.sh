@@ -64,7 +64,7 @@ else
 fi
 
 apt-get -y -qq update
-APT='nginx-extras subversion ssl-cert php-fpm libfcgi0ldbl php-cli php-dev php-xml php-curl php-xmlrpc php-json '"${mcrypt}"' php-mbstring php7.3-opcache '"${geoip}"' php-xml'
+APT='nginx-extras subversion ssl-cert php7.3-fpm libfcgi0ldbl php7.3-cli php7.3-dev php7.3-xml php7.3-curl php7.3-xmlrpc php7.3-json '"${mcrypt}"' php7.3-mbstring php7.3-opcache '"${geoip}"' php7.3-xml php7.3-gd'
 for depends in $APT; do
 apt-get -y install "$depends" >>  "${SEEDIT_LOG}"  2>&1 || { echo "ERROR: APT-GET could not install a required package: ${depends}. That's probably not good..."; }
 done
