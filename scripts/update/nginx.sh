@@ -42,6 +42,21 @@ if [[ $phpv =~ "7.1" ]]; then
   fi
 fi
 
+
+  apt-get -y -q install libmcrypt-dev libreadline-dev
+  #pear config-set php_dir /usr/bin/php
+  pear config-set ext_dir /usr/lib/php/20180731
+  pear config-set php_bin /usr/bin/php7.3
+  pear config-set php_suffix 7.3
+  pear config-set php_ini /etc/php/7.3/fpm/php.ini
+  printf "\n" | pecl install mcrypt-1.0.2
+  echo extension=mcrypt.so > /etc/php/7.3/mods-available/mcrypt.ini
+  echo extension=mcrypt.so > /etc/php/7.3/fpm/conf.d/20-mcrypt.ini
+  echo extension=mcrypt.so > /etc/php/7.3/cli/conf.d/20-mcrypt.ini
+  systemctl restart php7.3-fpm
+  sudo update-alternatives --set php /usr/bin/php7.3
+
+
 if [[ -f /lib/systemd/system/php7.3-fpm.service ]]; then
   sock=php7.3-fpm
 elif [[ -f /lib/systemd/system/php7.2-fpm.service ]]; then
