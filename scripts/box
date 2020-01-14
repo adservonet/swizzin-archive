@@ -134,7 +134,6 @@ function _update() {
   git reset --hard origin/master >> "${SEEDIT_LOG}"  2>&1;
   git pull
   chmod -R 700 /etc/swizzin/scripts
-  for f in /etc/swizzin/scripts/update/*; do . $f; done
 
   waitforapt
   apt-get -y -q update
@@ -142,6 +141,8 @@ function _update() {
   echo "---------------------------------------------" >> /srv/tools/logs/apt_upgrade.log 2>&1
   apt-get -y -q dist-upgrade >> /srv/tools/logs/apt_upgrade.log 2>&1
   apt -y -q autoremove >> /srv/tools/logs/apt_upgrade.log 2>&1
+
+  for f in /etc/swizzin/scripts/update/*; do . $f; done
 }
 
 function _upgrade() {
