@@ -60,7 +60,7 @@ fi
   echo extension=mcrypt.so > /etc/php/7.3/mods-available/mcrypt.ini
   echo extension=mcrypt.so > /etc/php/7.3/fpm/conf.d/20-mcrypt.ini
   echo extension=mcrypt.so > /etc/php/7.3/cli/conf.d/20-mcrypt.ini
-  systemctl restart php7.3-fpm
+  #systemctl restart php7.3-fpm
   sudo update-alternatives --set php /usr/bin/php7.3
 
   sed -i "s/php7.0-fpm/php7.3-fpm/g" /etc/nginx/apps/*.conf
