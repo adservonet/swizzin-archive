@@ -41,6 +41,7 @@ fi
 LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php
 waitforapt
 sudo dpkg --configure -a
+apt-get -y -f install
 apt-get -y -qq update
 APT='nginx-extras subversion ssl-cert php7.3-fpm php7.3-common libfcgi0ldbl php7.3-cli php7.3-dev php7.3-xml php7.3-curl php7.3-xmlrpc php7.3-json php7.3-mbstring php7.3-opcache php-geoip php7.3-xml php7.3-gd'
 for depends in $APT; do
