@@ -23,9 +23,7 @@ chown -R www-data: /srv/tools
 
 touch /install/.tools.lock
 
-croncmd='/bin/bash -c "/srv/tools/notify.sh"'
-cronjob="*/2 * * * * $croncmd"
-( crontab -l | grep -v -F "$croncmd" ; echo "$cronjob" ) | crontab -
+ crontab -l | grep -v notify.sh | crontab -
 
 service cron reload
 
