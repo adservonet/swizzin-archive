@@ -63,8 +63,11 @@ else
   mcrypt=php-mcrypt
 fi
 
+LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php
+waitforapt
+
 apt-get -y -qq update
-APT='nginx-extras subversion ssl-cert php7.3-fpm libfcgi0ldbl php7.3-cli php7.3-dev php7.3-xml php7.3-curl php7.3-xmlrpc php7.3-json '"${mcrypt}"' php7.3-mbstring php7.3-opcache '"${geoip}"' php7.3-xml php7.3-gd'
+APT='nginx-extras subversion ssl-cert php7.3-fpm php7.3-common libfcgi0ldbl php7.3-cli php7.3-dev php7.3-xml php7.3-curl php7.3-xmlrpc php7.3-json '"${mcrypt}"' php7.3-mbstring php7.3-opcache '"${geoip}"' php7.3-xml php7.3-gd'
 for depends in $APT; do
 apt-get -y install "$depends" >>  "${SEEDIT_LOG}"  2>&1 || { echo "ERROR: APT-GET could not install a required package: ${depends}. That's probably not good..."; }
 done
@@ -98,6 +101,7 @@ done
   systemctl restart php7.3-fpm
   sudo update-alternatives --set php /usr/bin/php7.3
 
+  sed -i "s/php7.0-fpm/php7.3-fpm/g" /etc/nginx/apps/*.conf
 
 if [[ -f /lib/systemd/system/php7.3-fpm.service ]]; then
   sock=php7.3-fpm

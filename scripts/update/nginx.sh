@@ -21,7 +21,11 @@ else
   mcrypt=php-mcrypt
 fi
 
-APT='php7.3-fpm php7.3-cli php7.3-dev php7.3-xml php7.3-curl php7.3-xmlrpc php7.3-json '"${mcrypt}"' php7.3-mbstring php7.3-opcache '"${geoip}"' php7.3-xml php7.3-gd'
+LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php
+waitforapt
+
+apt-get -y -qq update
+APT='php7.3-fpm php7.3-common php7.3-cli php7.3-dev php7.3-xml php7.3-curl php7.3-xmlrpc php7.3-json '"${mcrypt}"' php7.3-mbstring php7.3-opcache '"${geoip}"' php7.3-xml php7.3-gd'
 for depends in $APT; do
   inst=$(dpkg -l | grep $depends)
   if [[ -z $inst ]]; then
@@ -56,6 +60,7 @@ fi
   systemctl restart php7.3-fpm
   sudo update-alternatives --set php /usr/bin/php7.3
 
+  sed -i "s/php7.0-fpm/php7.3-fpm/g" /etc/nginx/apps/*.conf
 
 if [[ -f /lib/systemd/system/php7.3-fpm.service ]]; then
   sock=php7.3-fpm
