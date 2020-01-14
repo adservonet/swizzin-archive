@@ -136,7 +136,7 @@ function _update() {
   chmod -R 700 /etc/swizzin/scripts
 
   waitforapt
-  apt-get -y -q update
+  apt-get -y -q update > /dev/null  2>&1
   waitforapt
   echo "---------------------------------------------" >> /srv/tools/logs/apt_upgrade.log 2>&1
   apt-get -y -q dist-upgrade >> /srv/tools/logs/apt_upgrade.log 2>&1
