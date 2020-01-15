@@ -25,6 +25,7 @@ if [[ -f /install/.lounge.sh ]]; then
         sed -i 's/username: "swizzie",/username: "user",/g' /home/lounge/.thelounge/config.js
         sed -i 's/realname: "swizzin",/realname: "_user",/g' /home/lounge/.thelounge/config.js
         sed -i 's/join: "#swizzin"/join: "#seedit4me"/g' /home/lounge/.thelounge/config.js
+        echo "updated lounge with seedit4.me irc info"
     fi
 
     if grep -q 'bind: "127.0.0.1"' /home/lounge/.thelounge/config.js; then
