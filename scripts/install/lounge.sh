@@ -8,8 +8,12 @@ useradd lounge -m -s /bin/bash
 passwd lounge -l >>  "${SEEDIT_LOG}"  2>&1
 
 npm -g config set user root
-npm install -g thelounge >>  "${SEEDIT_LOG}"  2>&1
-sudo -u lounge bash -c "thelounge install thelounge-theme-zenburn" >>  "${SEEDIT_LOG}"  2>&1
+
+cd /home/lounge
+wget -o thelounge.deb https://github.com/thelounge/thelounge/releases/download/v4.0.0/thelounge_4.0.0-1_all.deb
+sudo apt install ./thelounge.deb
+#npm install -g thelounge >>  "${SEEDIT_LOG}"  2>&1
+#sudo -u lounge bash -c "thelounge install thelounge-theme-zenburn" >>  "${SEEDIT_LOG}"  2>&1
 
 mkdir -p /home/lounge/.thelounge/
 
@@ -253,7 +257,7 @@ module.exports = {
 		// @type     string
 		// @default  "lounge-user"
 		//
-		nick: "user",
+		nick: "user%%%",
 
 		//
 		// Username
@@ -434,24 +438,24 @@ if [[ -f /install/.nginx.lock ]]; then
   service nginx reload
 fi
 
-cat > /etc/systemd/system/lounge.service <<EOSD
-[Unit]
-Description=The Lounge IRC client
-After=znc.service
-
-[Service]
-Type=simple
-ExecStart=/usr/bin/thelounge start
-User=lounge
-Group=lounge
-Restart=on-failure
-RestartSec=5
-StartLimitInterval=60s
-StartLimitBurst=3
-
-[Install]
-WantedBy=multi-user.target
-EOSD
+#cat > /etc/systemd/system/lounge.service <<EOSD
+#[Unit]
+#Description=The Lounge IRC client
+#After=znc.service
+#
+#[Service]
+#Type=simple
+#ExecStart=/usr/bin/thelounge start
+#User=lounge
+#Group=lounge
+#Restart=on-failure
+#RestartSec=5
+#StartLimitInterval=60s
+#StartLimitBurst=3
+#
+#[Install]
+#WantedBy=multi-user.target
+#EOSD
 
 
 sudo -u lounge /usr/bin/thelounge install thelounge-theme-zenburn >>  "${SEEDIT_LOG}"  2>&1
@@ -516,8 +520,8 @@ if [[ -n $1 ]]; then
 	_adduser
 	exit 0
 fi
-. /etc/swizzin/sources/functions/npm
-npm_install
+#. /etc/swizzin/sources/functions/npm
+#npm_install
 _install
 _adduser
 
