@@ -213,7 +213,7 @@ module.exports = {
 		// @type     string
 		// @default  "Freenode"
 		//
-		name: "SwizzNet",
+		name: "Seedit4.me",
 
 		//
 		// Host
@@ -221,7 +221,7 @@ module.exports = {
 		// @type     string
 		// @default  "chat.freenode.net"
 		//
-		host: "irc.swizzin.ltd",
+		host: "irc.seedit4.me",
 
 		//
 		// Port
@@ -229,7 +229,7 @@ module.exports = {
 		// @type     int
 		// @default  6697
 		//
-		port: 6697,
+		port: 8010,
 
 		//
 		// Password
@@ -253,7 +253,7 @@ module.exports = {
 		// @type     string
 		// @default  "lounge-user"
 		//
-		nick: "swizzie",
+		nick: "user",
 
 		//
 		// Username
@@ -261,7 +261,7 @@ module.exports = {
 		// @type     string
 		// @default  "lounge-user"
 		//
-		username: "swizzie",
+		username: "user",
 
 		//
 		// Real Name
@@ -269,7 +269,7 @@ module.exports = {
 		// @type     string
 		// @default  "The Lounge User"
 		//
-		realname: "swizzin",
+		realname: "user",
 
 		//
 		// Channels
@@ -278,7 +278,7 @@ module.exports = {
 		// @type     string
 		// @default  "#thelounge"
 		//
-		join: "#swizzin"
+		join: "#seedit4me"
 	},
 
 	//
