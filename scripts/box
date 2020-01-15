@@ -133,12 +133,12 @@ function _update() {
   git pull
   chmod -R 700 /etc/swizzin/scripts
 
-  waitforapt
-  apt-get -y -q update > /dev/null  2>&1
-  apt-get -y -q dist-upgrade
+  #waitforapt
+  #apt-get -y -q update > /dev/null  2>&1
+  #apt-get -y -q dist-upgrade
   for f in /etc/swizzin/scripts/update/*; do . $f; done
   #apt -y -q autoremove
-  echo "-----------------------------------------------------------------------------"
+  echo "update done -----------------------------------------------------------------------------"
 }
 
 function _upgrade() {
