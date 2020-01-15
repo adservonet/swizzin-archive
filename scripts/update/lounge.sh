@@ -17,6 +17,16 @@ if [[ -f /install/.lounge.sh ]]; then
         systemctl daemon-reload
     fi
 
+    if grep -q 'host: "irc.swizzin.ltd"' /home/lounge/.thelounge/config.js; then
+        sed -i 's/host: "irc.swizzin.ltd",/host: "irc.seedit4.me",/g' /home/lounge/.thelounge/config.js
+        sed -i 's/port: 6697,/port: 8010,/g' /home/lounge/.thelounge/config.js
+        sed -i 's/name: "SwizzNet",/name: "Seedit4.me",/g' /home/lounge/.thelounge/config.js
+        sed -i 's/nick: "swizzie",/nick: "user",/g' /home/lounge/.thelounge/config.js
+        sed -i 's/username: "swizzie",/username: "user",/g' /home/lounge/.thelounge/config.js
+        sed -i 's/realname: "swizzin",/realname: "_user",/g' /home/lounge/.thelounge/config.js
+        sed -i 's/join: "#swizzin"/join: "#seedit4me"/g' /home/lounge/.thelounge/config.js
+    fi
+
     if grep -q 'bind: "127.0.0.1"' /home/lounge/.thelounge/config.js; then
         sed -i 's/bind: "127.0.0.1",/bind: undefined,/g' /home/lounge/.thelounge/config.js
         sed -i 's/host: undefined,/host: "127.0.0.1",/g' /home/lounge/.thelounge/config.js
