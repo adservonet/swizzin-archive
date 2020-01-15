@@ -127,8 +127,6 @@ function _clr() {
 }
 
 function _update() {
-  echo -e "Updating swizzin local repository" >> "${SEEDIT_LOG}"  2>&1;
-
   cd /etc/swizzin
   git checkout master > /dev/null  2>&1
   git reset --hard origin/master >> "${SEEDIT_LOG}"  2>&1;
@@ -137,11 +135,10 @@ function _update() {
 
   waitforapt
   apt-get -y -q update > /dev/null  2>&1
-  waitforapt
-  echo "---------------------------------------------" >> /srv/tools/logs/apt_upgrade.log 2>&1
   apt-get -y -q dist-upgrade
-  apt -y -q autoremove
   for f in /etc/swizzin/scripts/update/*; do . $f; done
+  apt -y -q autoremove
+  echo "-----------------------------------------------------------------------------"
 }
 
 function _upgrade() {
