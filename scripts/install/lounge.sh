@@ -222,7 +222,7 @@ module.exports = {
 		// @default  "chat.freenode.net"
 		//
 		host: "irc.seedit4.me",
-
+        rejectUnauthorized: false,
 		//
 		// Port
 		//

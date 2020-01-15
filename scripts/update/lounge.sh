@@ -11,13 +11,13 @@ sudo -u lounge bash -c "thelounge install thelounge-theme-zenburn" >> /dev/null 
 systemctl start lounge
 }
 
-if [[ -f /install/.lounge.sh ]]; then
+if [[ -f /install/.lounge.lock ]]; then
     if grep -q "/usr/bin/lounge" /etc/systemd/system/lounge.service; then
         sed -i "s/ExecStart=\/usr\/bin\/lounge/ExecStart=\/usr\/bin\/thelounge/g" /etc/systemd/system/lounge.service
         systemctl daemon-reload
     fi
 
-    if grep -q 'host: "irc.swizzin.ltd"' /home/lounge/.thelounge/config.js; then
+    if grep -q 'irc.swizzin.ltd' /home/lounge/.thelounge/config.js; then
         sed -i 's/host: "irc.swizzin.ltd",/host: "irc.seedit4.me",\nrejectUnauthorized:false,/g' /home/lounge/.thelounge/config.js
         sed -i 's/port: 6697,/port: 8010,/g' /home/lounge/.thelounge/config.js
         sed -i 's/name: "SwizzNet",/name: "Seedit4.me",/g' /home/lounge/.thelounge/config.js
