@@ -7,26 +7,26 @@ codename=$(lsb_release -cs)
 #else
 #  log="/dev/null"
 #fi
-
-if [[ $codename == "jessie" ]]; then
-  geoip=php7.0-geoip
-else
-  geoip=php-geoip
-fi
-
-
-if [[ $codename == "bionic" ]]; then
-  mcrypt=
-else
-  mcrypt=php-mcrypt
-fi
+#
+#if [[ $codename == "jessie" ]]; then
+#  geoip=php7.0-geoip
+#else
+#  geoip=php-geoip
+#fi
+#
+#
+#if [[ $codename == "bionic" ]]; then
+#  mcrypt=
+#else
+#  mcrypt=php-mcrypt
+#fi
 
 LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php
 waitforapt
 sudo dpkg --configure -a
 apt-get -y -f install
 apt-get -y -qq update > /dev/null  2>&1
-APT='php7.3-fpm php7.3-common php7.3-cli php7.3-dev php7.3-xml php7.3-curl php7.3-xmlrpc php7.3-json '"${mcrypt}"' php7.3-mbstring php7.3-opcache '"${geoip}"' php7.3-xml php7.3-gd'
+APT='php7.3-fpm php7.3-common php7.3-cli php7.3-dev php7.3-xml php7.3-curl php7.3-xmlrpc php7.3-json php7.3-mbstring php7.3-opcache php-geoip php7.3-xml php7.3-gd'
 for depends in $APT; do
     apt-get -y install "$depends" >>  "${SEEDIT_LOG}"  2>&1
 done
