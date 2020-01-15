@@ -18,7 +18,7 @@ if [[ -f /install/.lounge.sh ]]; then
     fi
 
     if grep -q 'host: "irc.swizzin.ltd"' /home/lounge/.thelounge/config.js; then
-        sed -i 's/host: "irc.swizzin.ltd",/host: "irc.seedit4.me",/g' /home/lounge/.thelounge/config.js
+        sed -i 's/host: "irc.swizzin.ltd",/host: "irc.seedit4.me",\nrejectUnauthorized:false,/g' /home/lounge/.thelounge/config.js
         sed -i 's/port: 6697,/port: 8010,/g' /home/lounge/.thelounge/config.js
         sed -i 's/name: "SwizzNet",/name: "Seedit4.me",/g' /home/lounge/.thelounge/config.js
         sed -i 's/nick: "swizzie",/nick: "user",/g' /home/lounge/.thelounge/config.js
