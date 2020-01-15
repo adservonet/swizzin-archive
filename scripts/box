@@ -137,7 +137,7 @@ function _update() {
   apt-get -y -q update > /dev/null  2>&1
   apt-get -y -q dist-upgrade
   for f in /etc/swizzin/scripts/update/*; do . $f; done
-  apt -y -q autoremove
+  #apt -y -q autoremove
   echo "-----------------------------------------------------------------------------"
 }
 
