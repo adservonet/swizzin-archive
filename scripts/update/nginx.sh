@@ -38,6 +38,7 @@ phpv=$(ls -d */ | cut -d/ -f1)
   sudo apt-get -y -q  purge php7.1.*
   sudo apt-get -y -q  purge php7.2.*
   sudo apt-get -y -q  purge php7.4.*
+  sudo dpkg --remove --force-remove-reinstreq php-mcrypt
   apt-get -y -q install libmcrypt-dev
   #pear config-set php_dir /usr/bin/php
   pear config-set ext_dir /usr/lib/php/20180731
