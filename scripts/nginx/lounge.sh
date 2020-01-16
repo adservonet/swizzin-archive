@@ -1,7 +1,7 @@
 #!/bin/bash
 # Nginx configuration for The Lounge
 
-isactive=$(systemctl is-active lounge)
+isactive=$(systemctl is-active thelounge)
 
 cat > /etc/nginx/apps/lounge.conf <<EOF
 location /irc/ {
@@ -14,9 +14,9 @@ proxy_set_header X-Forwarded-For \$remote_addr;
 proxy_read_timeout 1d;
 }
 EOF
-sed -i 's/host: undefined,/host: "127.0.0.1",/g' /home/lounge/.thelounge/config.js
-sed -i 's/reverseProxy: false,/reverseProxy: true,/g' /home/lounge/.thelounge/config.js
+sed -i 's/host: undefined,/host: "127.0.0.1",/g' /etc/thelounge/config.js
+sed -i 's/reverseProxy: false,/reverseProxy: true,/g' /etc/thelounge/config.js
 
 if [[ $isactive == "active" ]]; then
-  systemctl restart lounge
+  systemctl restart thelounge
 fi

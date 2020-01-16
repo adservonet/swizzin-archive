@@ -208,16 +208,16 @@ module.exports = {
         leaveMessage: "The Lounge, hosted @ https://seedit4.me",
 
         defaults: {
-                name: "Freenode",
-                host: "chat.freenode.net",
-                port: 6697,
+                name: "Seedit4.me",
+                host: "irc.seedit4.me",
+                port: 8010,
                 password: "",
                 tls: true,
-                rejectUnauthorized: true,
-                nick: "thelounge%%",
-                username: "thelounge",
+                rejectUnauthorized: false,
+                nick: "user%%%",
+                username: "user",
                 realname: "The Lounge User",
-                join: "#thelounge",
+                join: "#seedit4me",
         },
 
         // ### `displayNetwork`
