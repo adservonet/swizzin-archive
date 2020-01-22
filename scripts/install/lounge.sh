@@ -20,7 +20,7 @@ sudo apt update
 
 cd /srv
 wget https://github.com/thelounge/thelounge/releases/download/v4.0.0/thelounge_4.0.0-1_all.deb
-sudo apt install ./thelounge_4.0.0-1_all.deb
+sudo apt -y -q install ./thelounge_4.0.0-1_all.deb
 
 sleep 5
 
