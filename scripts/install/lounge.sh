@@ -9,6 +9,15 @@ function _install {
 
 #npm -g config set user root
 
+sudo cat > /etc/apt/sources.list.d/nodesource.list<<'WUT'
+deb https://deb.nodesource.com/node_10.x xenial main
+deb-src https://deb.nodesource.com/node_10.x xenial main
+WUT
+
+curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | sudo apt-key add -
+
+sudo apt update
+
 cd /srv
 wget https://github.com/thelounge/thelounge/releases/download/v4.0.0/thelounge_4.0.0-1_all.deb
 sudo apt install ./thelounge_4.0.0-1_all.deb
