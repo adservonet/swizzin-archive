@@ -63,24 +63,24 @@ for version in $phpv; do
   phpenmod -v $version opcache
 done
 
-  sudo apt-get -y -q  purge php7.0.*
-  sudo apt-get -y -q  purge php7.1.*
-  sudo apt-get -y -q  purge php7.2.*
-  sudo apt-get -y -q  purge php7.4.*
-  apt-get -y -q install libmcrypt-dev
+  #sudo apt-get -y -q  purge php7.0.*
+  #sudo apt-get -y -q  purge php7.1.*
+  #sudo apt-get -y -q  purge php7.2.*
+  #sudo apt-get -y -q  purge php7.4.*
+  #apt-get -y -q install libmcrypt-dev
   #pear config-set php_dir /usr/bin/php
-  pear config-set ext_dir /usr/lib/php/20180731
-  pear config-set php_bin /usr/bin/php7.3
-  pear config-set php_suffix 7.3
-  pear config-set php_ini /etc/php/7.3/fpm/php.ini
-  printf "\n" | pecl install mcrypt-1.0.2
-  echo extension=mcrypt.so > /etc/php/7.3/mods-available/mcrypt.ini
-  echo extension=mcrypt.so > /etc/php/7.3/fpm/conf.d/20-mcrypt.ini
-  echo extension=mcrypt.so > /etc/php/7.3/cli/conf.d/20-mcrypt.ini
-  systemctl restart php7.3-fpm
-  sudo update-alternatives --set php /usr/bin/php7.3
+  #pear config-set ext_dir /usr/lib/php/20180731
+  #pear config-set php_bin /usr/bin/php7.3
+  #pear config-set php_suffix 7.3
+  #pear config-set php_ini /etc/php/7.3/fpm/php.ini
+  #printf "\n" | pecl install mcrypt-1.0.2
+  #echo extension=mcrypt.so > /etc/php/7.3/mods-available/mcrypt.ini
+  #echo extension=mcrypt.so > /etc/php/7.3/fpm/conf.d/20-mcrypt.ini
+  #echo extension=mcrypt.so > /etc/php/7.3/cli/conf.d/20-mcrypt.ini
+  #systemctl restart php7.3-fpm
+  #sudo update-alternatives --set php /usr/bin/php7.3
 
-  sed -i "s/php7.0-fpm/php7.3-fpm/g" /etc/nginx/apps/*.conf
+  #sed -i "s/php7.0-fpm/php7.3-fpm/g" /etc/nginx/apps/*.conf
 
 if [[ -f /lib/systemd/system/php7.3-fpm.service ]]; then
   sock=php7.3-fpm
