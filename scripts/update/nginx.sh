@@ -21,38 +21,38 @@ codename=$(lsb_release -cs)
 #  mcrypt=php-mcrypt
 #fi
 
-#LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php
-waitforapt
-#sudo dpkg --configure -a
-#apt-get -y -f install
-apt-get -y -qq update > /dev/null  2>&1
+#  #LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php
+#waitforapt
+#  #sudo dpkg --configure -a
+#  #apt-get -y -f install
+#apt-get -y -qq update > /dev/null  2>&1
 APT='php7.3-fpm php7.3-common php7.3-cli php7.3-dev php7.3-xml php7.3-curl php7.3-xmlrpc php7.3-json php7.3-mbstring php7.3-opcache php-geoip php7.3-xml php7.3-gd'
-for depends in $APT; do
-    apt-get -y install "$depends" >>  "${SEEDIT_LOG}"  2>&1
-done
+#for depends in $APT; do
+#    apt-get -y install "$depends" >>  "${SEEDIT_LOG}"  2>&1
+#done
 
 cd /etc/php
 phpv=$(ls -d */ | cut -d/ -f1)
 
-  sudo apt-get -y -q  purge php7.0.*
-  sudo apt-get -y -q  purge php7.1.*
-  sudo apt-get -y -q  purge php7.2.*
-  sudo apt-get -y -q  purge php7.4.*
-  sudo dpkg --remove --force-remove-reinstreq php-mcrypt
-  apt-get -y -q install libmcrypt-dev
-  #pear config-set php_dir /usr/bin/php
-  pear config-set ext_dir /usr/lib/php/20180731
-  pear config-set php_bin /usr/bin/php7.3
-  pear config-set php_suffix 7.3
-  pear config-set php_ini /etc/php/7.3/fpm/php.ini
-  printf "\n" | pecl install mcrypt-1.0.2
-  echo extension=mcrypt.so > /etc/php/7.3/mods-available/mcrypt.ini
-  echo extension=mcrypt.so > /etc/php/7.3/fpm/conf.d/20-mcrypt.ini
-  echo extension=mcrypt.so > /etc/php/7.3/cli/conf.d/20-mcrypt.ini
-  #systemctl restart php7.3-fpm
-  sudo update-alternatives --set php /usr/bin/php7.3
-
-  sed -i "s/php7.0-fpm/php7.3-fpm/g" /etc/nginx/apps/*.conf
+#  sudo apt-get -y -q  purge php7.0.*
+#  sudo apt-get -y -q  purge php7.1.*
+#  sudo apt-get -y -q  purge php7.2.*
+#  sudo apt-get -y -q  purge php7.4.*
+#  sudo dpkg --remove --force-remove-reinstreq php-mcrypt
+#  apt-get -y -q install libmcrypt-dev
+#  #pear config-set php_dir /usr/bin/php
+#  pear config-set ext_dir /usr/lib/php/20180731
+#  pear config-set php_bin /usr/bin/php7.3
+#  pear config-set php_suffix 7.3
+#  pear config-set php_ini /etc/php/7.3/fpm/php.ini
+#  printf "\n" | pecl install mcrypt-1.0.2
+#  echo extension=mcrypt.so > /etc/php/7.3/mods-available/mcrypt.ini
+#  echo extension=mcrypt.so > /etc/php/7.3/fpm/conf.d/20-mcrypt.ini
+#  echo extension=mcrypt.so > /etc/php/7.3/cli/conf.d/20-mcrypt.ini
+#  #systemctl restart php7.3-fpm
+#  sudo update-alternatives --set php /usr/bin/php7.3
+#
+#  sed -i "s/php7.0-fpm/php7.3-fpm/g" /etc/nginx/apps/*.conf
 
 if [[ -f /lib/systemd/system/php7.3-fpm.service ]]; then
   sock=php7.3-fpm
