@@ -190,9 +190,17 @@ function write_data_table_t($tab) {
   return $r;
 }
 
+function tadata() {
+    global $summary;
+    $trx = $summary['totalrx']*1024+$summary['totalrxk'];
+    $ttx = $summary['totaltx']*1024+$summary['totaltxk'];
+    return array ("trx" => $trx,"ttx" =>$ttx);
+}
+
 get_vnstat_data();
 
 $s = [ "total" => write_summary_s(), "h" => write_data_table_s($hour), "d" => write_data_table_s($day), "m" => write_data_table_s($month)];
 $t = [ "top10d" => write_summary_t(), "h" => write_data_table_t($hour), "d" => write_data_table_t($day), "m" => write_data_table_t($month)];
-$bw = array ("summary" => $s,"top" =>$t);
+$ta = [ "tadata" => tadata()];
+$bw = array ("summary" => $s,"top" =>$t, "ta" => $ta);
 echo json_encode($bw);
