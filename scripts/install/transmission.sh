@@ -22,6 +22,7 @@ apt-get -y install transmission-cli transmission-common transmission-daemon >>  
 service transmission-daemon stop
 
 usermod -a -G seedit4me debian-transmission
+usermod -a -G debian-transmission seedit4me
 
 sleep 1
 
