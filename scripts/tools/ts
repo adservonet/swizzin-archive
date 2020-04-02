@@ -1,0 +1,18 @@
+#!/bin/bash
+
+function _cleanmemcache() {
+  echo "Cleaning system memory cache ... " >> "${SEEDIT_LOG}"  2>&1;
+  echo 1 > /proc/sys/vm/drop_caches
+  sleep 5
+
+  echo "System memory cache cleared!" >> "${SEEDIT_LOG}"  2>&1;
+  sleep 5
+
+  echo >> "${SEEDIT_LOG}"  2>&1;
+  echo >> "${SEEDIT_LOG}"  2>&1;
+  echo "Close this dialog box to refresh your browser" >> "${SEEDIT_LOG}"  2>&1;
+
+  exit
+}
+
+_cleanmemcache
