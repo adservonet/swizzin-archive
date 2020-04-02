@@ -1,18 +1,52 @@
 #!/bin/bash
 
-function _cleanmemcache() {
-  echo "Cleaning system memory cache ... " >> "${SEEDIT_LOG}"  2>&1;
-  echo 1 > /proc/sys/vm/drop_caches
-  sleep 5
+IFACE="venet0"
 
-  echo "System memory cache cleared!" >> "${SEEDIT_LOG}"  2>&1;
-  sleep 5
+function _tc() {
+  TOTALSRX=`vnstat --dumpdb -i $IFACE | grep 'totalrx;' | cut -d';' -f2`
+  TOTALSTX=`vnstat --dumpdb -i $IFACE | grep 'totaltx;' | cut -d';' -f2`
 
-  echo >> "${SEEDIT_LOG}"  2>&1;
-  echo >> "${SEEDIT_LOG}"  2>&1;
-  echo "Close this dialog box to refresh your browser" >> "${SEEDIT_LOG}"  2>&1;
+  TOTALSRXMB=0
+  TOTALSTXMB=0
+  DL=0
+  UL=0
+  LIMIT=0
 
-  exit
+  for TOTALRX in $TOTALSRX
+  do
+    let 'TOTALSRXMB += TOTALRX'
+  done
+
+  for TOTALTX in $TOTALSTX
+  do
+    let 'TOTALSTXMB += TOTALTX'
+  done
+
+  DL=$(($TOTALSRXMB * 1024 * 1024))
+  UL=$(($TOTALSTXMB * 1024 * 1024))
+
+  echo 'DL' $DL
+  echo 'UL' $UL
+
+  HOSTNAME=$(hostname -s)
+  VMID=${HOSTNAME//ct/}
+  echo 'VMID' $VMID
+
+  URL="https://my.dev.seedit4.me/api/vmtinfo/${VMID}/${UL}"
+  echo 'URL' $URL
+
+  LIMIT=$(curl -s -w "\n%{http_code}" "${URL}" | {
+    read body
+    echo $body
+  })
+
+  echo 'LIMIT' $LIMIT
+
+  if (( UL > LIMIT )); then
+    echo 'UNDER LIMIT'
+  fi
+
+  exit 0
 }
 
-_cleanmemcache
+_tc
