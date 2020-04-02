@@ -3,6 +3,7 @@
 IFACE="venet0"
 
 function _tc() {
+  vnstat -u
   TOTALSRX=`vnstat --dumpdb -i $IFACE | grep 'totalrx;' | cut -d';' -f2`
   TOTALSTX=`vnstat --dumpdb -i $IFACE | grep 'totaltx;' | cut -d';' -f2`
 
