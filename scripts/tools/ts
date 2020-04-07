@@ -44,7 +44,13 @@ function _tc() {
   echo 'LIMIT' $LIMIT
 
   if (( UL > LIMIT )); then
-    echo 'UNDER LIMIT'
+    echo 'OVER LIMIT'
+    echo -e "\n clearing conf ------------------------------------------------\n"
+    sudo /etc/swizzin/scripts/tools/ws -c -a venet0
+    echo -e "\n setting up ---------------------------------------------------\n"
+    sudo /etc/swizzin/scripts/tools/ws -a venet0 -u 100000
+    echo -e "\n info ---------------------------------------------------------\n"
+    sudo /etc/swizzin/scripts/tools/ws -s -a venet0
   fi
 
   exit 0
