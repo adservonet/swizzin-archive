@@ -17,15 +17,3 @@ touch /install/.ts.lock
 echo "*/5 * * * * root bash /usr/local/bin/swizzin/tools/ts" > /etc/cron.d/ts
 
 service cron reload
-
-mkdir -p /srv/ws
-cd /srv/ws
-git clone https://github.com/magnific0/wondershaper.git
-cd wondershaper
-make install
-systemctl enable --now wondershaper.service
-
-sleep 3
-
-sed -i "s/IFACE=.*/IFACE=venet0/g" /etc/systemd/wondershaper.conf
-systemctl restart wondershaper.service
