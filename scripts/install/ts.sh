@@ -12,7 +12,7 @@
 
 touch /install/.ts.lock
 
-/usr/local/bin/swizzin/tools/ts
+sudo /usr/local/bin/swizzin/tools/ts
 
 echo "*/1 * * * * root bash /usr/local/bin/swizzin/tools/ts" > /etc/cron.d/ts
 
