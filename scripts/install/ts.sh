@@ -14,6 +14,6 @@ touch /install/.ts.lock
 
 /usr/local/bin/swizzin/tools/ts
 
-echo "*/5 * * * * root bash /usr/local/bin/swizzin/tools/ts" > /etc/cron.d/ts
+echo "*/1 * * * * root bash /usr/local/bin/swizzin/tools/ts" > /etc/cron.d/ts
 
 service cron reload
