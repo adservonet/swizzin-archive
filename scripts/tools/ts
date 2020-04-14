@@ -26,23 +26,33 @@ function _tc() {
   DL=$(($TOTALSRXMB * 1024))
   UL=$(($TOTALSTXMB * 1024))
 
+#  echo 'DL' $DL
+#  echo 'UL' $UL
+
   HOSTNAME=$(hostname -s)
   VMID=${HOSTNAME//ct/}
+#  echo 'VMID' $VMID
 
   URL="https://my.dev.seedit4.me/api/vmtinfo/${VMID}/${UL}"
+#  echo 'URL' $URL
 
   LIMIT=$(curl -s -w "\n%{http_code}" "${URL}" | {
     read body
     echo $body
   })
 
-  if [ LIMIT == 'true' ]; then
+  echo 'LIMIT' $LIMIT
+
+  if [ $LIMIT == 'true' ]; then
+    #echo -e "\n clearing conf ------------------------------------------------\n"
     sudo /etc/swizzin/scripts/tools/ws -c -a venet0
+    #echo -e "\n setting up ---------------------------------------------------\n"
     sudo /etc/swizzin/scripts/tools/ws -a venet0 -u 100000
+    #echo -e "\n info ---------------------------------------------------------\n"
     sudo /etc/swizzin/scripts/tools/ws -s -a venet0
   fi
 
-  if [ LIMIT == 'false' ]; then
+  if [ $LIMIT == 'false' ]; then
     sudo /etc/swizzin/scripts/tools/ws -c -a venet0
   fi
 
