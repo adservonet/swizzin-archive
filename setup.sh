@@ -32,6 +32,7 @@ fi
 _os() {
   if [ ! -d /install ]; then mkdir /install ; fi
   if [ ! -d /root/logs ]; then mkdir /root/logs ; fi
+  export SEEDIT_LOG=/root/logs/install.log
   apt-get -y -qq update
   apt-get -y -qq install lsb-release
   distribution=$(lsb_release -is)
