@@ -107,58 +107,28 @@ server {
   }
 
   location / {
-    return 301 https://\$host\$request_uri;
+    return 301 https://$host$request_uri;
   }
 }
 
 # SSL configuration
 server {
-  listen 443 ssl http2 default_server;
-  listen [::]:443 ssl http2 default_server;
+  listen 443 ssl default_server;
+  listen [::]:443 ssl default_server;
   server_name _;
-
-  send_timeout 100m;
-  resolver 8.8.4.4 8.8.8.8 valid=300s;
-  resolver_timeout 10s;
-
   ssl_certificate /etc/ssl/certs/ssl-cert-snakeoil.pem;
   ssl_certificate_key /etc/ssl/private/ssl-cert-snakeoil.key;
   include snippets/ssl-params.conf;
-
-  #ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
-  #ssl_prefer_server_ciphers on;
-  #ssl_ciphers \'ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:ECDHE-RSA-DES-CBC3-SHA:ECDHE-ECDSA-DES-CBC3-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA256:AES256-SHA256:AES128-SHA:AES256-SHA:AES:CAMELLIA:DES-CBC3-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!MD5:!PSK:!aECDH:!EDH-DSS-DES-CBC3-SHA:!EDH-RSA-DES-CBC3-SHA:!KRB5-DES-CBC3-SHA\';
-  ssl_stapling on;
-  ssl_stapling_verify on;
-  ssl_session_tickets off;
-
-  gzip on;
-  gzip_vary on;
-  gzip_min_length 1000;
-  gzip_proxied any;
-  gzip_types text/plain text/css text/xml application/xml text/javascript application/x-javascript image/svg+xml;
-  gzip_disable "MSIE [1-6]\.";
-
-
-  client_max_body_size 100M;
+  client_max_body_size 40M;
   server_tokens off;
   root /srv/;
-
-  proxy_set_header Sec-WebSocket-Extensions $http_sec_websocket_extensions;
-  proxy_set_header Sec-WebSocket-Key $http_sec_websocket_key;
-  proxy_set_header Sec-WebSocket-Version $http_sec_websocket_version;
-  proxy_http_version 1.1;
-  proxy_set_header Upgrade $http_upgrade;
-  proxy_set_header Connection "Upgrade";
-  proxy_redirect off;
-  proxy_buffering off;
 
   index index.html index.php index.htm;
 
   location ~ \.php$ {
     include snippets/fastcgi-php.conf;
-    fastcgi_pass unix:/run/php/$sock.sock;
-    fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
+    fastcgi_pass unix:/run/php/php7.0-fpm.sock;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
   }
 
   include /etc/nginx/apps/*;
