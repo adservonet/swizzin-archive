@@ -32,9 +32,8 @@ fi
 _os() {
   if [ ! -d /install ]; then mkdir /install ; fi
   if [ ! -d /root/logs ]; then mkdir /root/logs ; fi
-  export SEEDIT_LOG=/root/logs/install.log
-  apt-get -y -qq update >>  "${SEEDIT_LOG}"  2>&1
-  apt-get -y -qq install lsb-release >>  "${SEEDIT_LOG}"  2>&1
+  apt-get -y -qq update
+  apt-get -y -qq install lsb-release
   distribution=$(lsb_release -is)
   release=$(lsb_release -rs)
   codename=$(lsb_release -cs)
@@ -52,19 +51,19 @@ function _preparation() {
   if [[ $distribution = "Ubuntu" ]]; then
     echo "Checking enabled repos"
     if [[ -z $(which add-apt-repository) ]]; then
-      apt-get install -y -q software-properties-common >>  "${SEEDIT_LOG}"  2>&1
+      apt-get install -y -q software-properties-common
     fi
-    add-apt-repository universe >>  "${SEEDIT_LOG}"  2>&1
-    add-apt-repository multiverse >>  "${SEEDIT_LOG}"  2>&1
-    add-apt-repository restricted -u >>  "${SEEDIT_LOG}"  2>&1
+    add-apt-repository universe
+    add-apt-repository multiverse
+    add-apt-repository restricted -u
   fi
-  apt-get -q -y update >>  "${SEEDIT_LOG}"  2>&1
-  apt-get -q -y upgrade >>  "${SEEDIT_LOG}"  2>&1
-apt-get -q -y install whiptail git sudo curl wget lsof fail2ban apache2-utils vnstat tcl tcl-dev build-essential dirmngr apt-transport-https python-pip >>  "${SEEDIT_LOG}"  2>&1
+  apt-get -q -y update
+  apt-get -q -y upgrade
+  apt-get -q -y install whiptail git sudo curl wget lsof fail2ban apache2-utils vnstat tcl tcl-dev build-essential dirmngr apt-transport-https python-pip
   nofile=$(grep "DefaultLimitNOFILE=500000" /etc/systemd/system.conf)
   if [[ ! "$nofile" ]]; then echo "DefaultLimitNOFILE=500000" >> /etc/systemd/system.conf; fi
   echo "Cloning swizzin repo to localhost"
-  git clone https://github.com/illnesse/swizzin.git /etc/swizzin >>  "${SEEDIT_LOG}"  2>&1
+  git clone https://github.com/illnesse/swizzin.git /etc/swizzin
   ln -s /etc/swizzin/scripts/ /usr/local/bin/swizzin
   chmod -R 700 /etc/swizzin/scripts
 }
@@ -84,17 +83,17 @@ function _nukeovh() {
       esac
       if [[ $kernel == yes ]]; then
     if [[ $DISTRO == Ubuntu ]]; then
-      apt-get install -q -y linux-image-generic >> "${SEEDIT_LOG}"  2>&1
+      apt-get install -q -y linux-image-generic
     elif [[ $DISTRO == Debian ]]; then
       arch=$(uname -m)
       if [[ $arch =~ ("i686"|"i386") ]]; then
-        apt-get install -q -y linux-image-686 >> "${SEEDIT_LOG}"  2>&1
+        apt-get install -q -y linux-image-686
       elif [[ $arch == x86_64 ]]; then
-        apt-get install -q -y linux-image-amd64 >> "${SEEDIT_LOG}"  2>&1
+        apt-get install -q -y linux-image-amd64
       fi
     fi
     mv /etc/grub.d/06_OVHkernel /etc/grub.d/25_OVHkernel
-    update-grub >> "${SEEDIT_LOG}"  2>&1
+    update-grub
   fi
   fi
 }
@@ -110,7 +109,7 @@ function _intro() {
 
 function _adduser() {
   while [[ -z $user ]]; do
-    user='seedbox'
+    user='seedit4me'
   done
   while [[ -z "${pass}" ]]; do
     pass='letmein123'
@@ -154,9 +153,15 @@ function _choices() {
       packages+=("$i" '""')
     fi
   done
-  whiptail --title "Install Software" --checklist --noitem --separate-output "Choose your clients and core features." 15 26 7 "${packages[@]}" 2>/root/results; exitstatus=$?; if [ "$exitstatus" = 1 ]; then exit 0; fi
-  #readarray packages < /root/results
-  results=/root/results
+
+#  whiptail --title "Install Software" --checklist --noitem --separate-output "Choose your clients and core features." 15 26 7 "${packages[@]}" 2>/root/results; exitstatus=$?; if [ "$exitstatus" = 1 ]; then exit 0; fi
+  cat > /root/results <<RESULTS
+nginx
+ffmpeg
+panel
+tools
+RESULTS
+results=/root/results
 
   if grep -q nginx "$results"; then
     if [[ -n $(pidof apache2) ]]; then
@@ -167,37 +172,37 @@ function _choices() {
       fi
     fi
   fi
-  if grep -q rtorrent "$results"; then
-    gui=(rutorrent flood)
-    for i in "${gui[@]}"; do
-      app=${i}
-      if [[ ! -f /install/.$app.lock ]]; then
-        guis+=("$i" '""')
-      fi
-    done
-    whiptail --title "rTorrent GUI" --checklist --noitem --separate-output "Optional: Select a GUI for rtorrent" 15 26 7 "${guis[@]}" 2>/root/guis; exitstatus=$?; if [ "$exitstatus" = 1 ]; then exit 0; fi
-    readarray guis < /root/guis
-    for g in "${guis[@]}"; do
-      g=$(echo $g)
-      sed -i "/rtorrent/a $g" /root/results
-    done
-    rm -f /root/guis
-    . /etc/swizzin/sources/functions/rtorrent
-    whiptail_rtorrent
-  fi
-  if grep -q deluge "$results"; then
-    . /etc/swizzin/sources/functions/deluge
-    whiptail_deluge
-    whiptail_libtorrent_rasterbar
-  fi
-  if [[ $(grep -s rutorrent "$gui") ]] && [[ ! $(grep -s nginx "$results") ]]; then
-      if (whiptail --title "nginx conflict" --yesno --yes-button "Install nginx" --no-button "Remove ruTorrent" "WARNING: The installer has detected that ruTorrent is to be installed without nginx. To continue, the installer must either install nginx or remove ruTorrent from the packages to be installed." 8 78); then
-        sed -i '1s/^/nginx\n/' /root/results
-        touch /tmp/.nginx.lock
-      else
-        sed -i '/rutorrent/d' /root/results
-      fi
-  fi
+#  if grep -q rtorrent "$results"; then
+#    gui=(rutorrent flood)
+#    for i in "${gui[@]}"; do
+#      app=${i}
+#      if [[ ! -f /install/.$app.lock ]]; then
+#        guis+=("$i" '""')
+#      fi
+#    done
+#    whiptail --title "rTorrent GUI" --checklist --noitem --separate-output "Optional: Select a GUI for rtorrent" 15 26 7 "${guis[@]}" 2>/root/guis; exitstatus=$?; if [ "$exitstatus" = 1 ]; then exit 0; fi
+#    readarray guis < /root/guis
+#    for g in "${guis[@]}"; do
+#      g=$(echo $g)
+#      sed -i "/rtorrent/a $g" /root/results
+#    done
+#    rm -f /root/guis
+#    . /etc/swizzin/sources/functions/rtorrent
+#    whiptail_rtorrent
+#  fi
+#  if grep -q deluge "$results"; then
+#    . /etc/swizzin/sources/functions/deluge
+#    whiptail_deluge
+#    whiptail_libtorrent_rasterbar
+#  fi
+#  if [[ $(grep -s rutorrent "$gui") ]] && [[ ! $(grep -s nginx "$results") ]]; then
+#      if (whiptail --title "nginx conflict" --yesno --yes-button "Install nginx" --no-button "Remove ruTorrent" "WARNING: The installer has detected that ruTorrent is to be installed without nginx. To continue, the installer must either install nginx or remove ruTorrent from the packages to be installed." 8 78); then
+#        sed -i '1s/^/nginx\n/' /root/results
+#        touch /tmp/.nginx.lock
+#      else
+#        sed -i '/rutorrent/d' /root/results
+#      fi
+#  fi
 
   while IFS= read -r result
   do
@@ -211,7 +216,8 @@ function _choices() {
       extras+=("$i" '""')
     fi
   done
-  whiptail --title "Install Software" --checklist --noitem --separate-output "Make some more choices ^.^ Or don't. idgaf" 15 26 7 "${extras[@]}" 2>/root/results2; exitstatus=$?; if [ "$exitstatus" = 1 ]; then exit 0; fi
+  #whiptail --title "Install Software" --checklist --noitem --separate-output "Make some more choices ^.^ Or don't. idgaf" 15 26 7 "${extras[@]}" 2>/root/results2; exitstatus=$?; if [ "$exitstatus" = 1 ]; then exit 0; fi
+  touch /root/results2
   results2=/root/results2
 }
 
