@@ -2,7 +2,7 @@
 include('cors.php');
 header('Content-Type: application/json');
 
-$interface = 'venet0';//INETFACE;
+$interface = system('ip link | awk -F: \'$0 !~ "lo|tun|vir|wl|^[^0-9]"{print $2;getline}\' | cut -d @ -f 1 | xargs');
 session_start();
 $rx[] = intval(@file_get_contents("/sys/class/net/INETFACE/statistics/rx_bytes"));
 $tx[] = intval(@file_get_contents("/sys/class/net/INETFACE/statistics/tx_bytes"));

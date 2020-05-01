@@ -3,10 +3,10 @@ include('cors.php');
 header('Content-Type: text/plain');
 
 // Network Interface
-$interface = 'venet0';//INETFACE;
-$iface = 'venet0';//INETFACE;
-$iface_list = array('venet0');
-$iface_title['venet0'] = 'External';
+$interface = system('ip link | awk -F: \'$0 !~ "lo|tun|vir|wl|^[^0-9]"{print $2;getline}\' | cut -d @ -f 1 | xargs');
+$iface = $interface;//INETFACE;
+$iface_list = array($interface);
+$iface_title[$interface] = 'External';
 $vnstat_bin = '/usr/bin/vnstat';
 $data_dir = './dumps';
 $byte_notation = null;

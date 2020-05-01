@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IFACE="venet0"
+IFACE=`ip link | awk -F: '$0 !~ "lo|tun|vir|wl|^[^0-9]"{print $2;getline}' | cut -d @ -f 1 | xargs`
 
 function _tc() {
   vnstat -u
@@ -45,15 +45,15 @@ function _tc() {
 
   if [ $LIMIT == 'true' ]; then
     #echo -e "\n clearing conf ------------------------------------------------\n"
-    sudo /etc/swizzin/scripts/tools/ws -c -a venet0
+    sudo /etc/swizzin/scripts/tools/ws -c -a $IFACE
     #echo -e "\n setting up ---------------------------------------------------\n"
-    sudo /etc/swizzin/scripts/tools/ws -a venet0 -u 100000
+    sudo /etc/swizzin/scripts/tools/ws -a $IFACE -u 100000
     #echo -e "\n info ---------------------------------------------------------\n"
-    sudo /etc/swizzin/scripts/tools/ws -s -a venet0
+    sudo /etc/swizzin/scripts/tools/ws -s -a $IFACE
   fi
 
   if [ $LIMIT == 'false' ]; then
-    sudo /etc/swizzin/scripts/tools/ws -c -a venet0
+    sudo /etc/swizzin/scripts/tools/ws -c -a $IFACE
   fi
 
   exit 0
