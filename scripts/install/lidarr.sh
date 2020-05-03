@@ -14,7 +14,6 @@ distribution=$(lsb_release -is)
 version=$(lsb_release -cs)
 . /etc/swizzin/sources/functions/mono
 
-#. /etc/swizzin/sources/functions/waitforapt.sh
 waitforapt
 
 mono_repo_setup

@@ -8,7 +8,6 @@
 
 log="/install/.proftpd.log"
 
-#. /etc/swizzin/sources/functions/waitforapt.sh
 waitforapt
 
 apt remove vsftpd -y

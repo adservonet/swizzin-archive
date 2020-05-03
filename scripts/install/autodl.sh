@@ -26,7 +26,6 @@ function _installautodl() {
   APT='irssi screen unzip libarchive-zip-perl libnet-ssleay-perl libhtml-parser-perl
 	libxml-libxml-perl libjson-perl libjson-xs-perl libxml-libxslt-perl'
 
-	#. /etc/swizzin/sources/functions/waitforapt.sh
   for depends in $APT; do
     waitforapt
     apt-get -y -q install "$depends" >> "${SEEDIT_LOG}"  2>&1 || { echo "ERROR: APT-GET could not find the required dependency: ${depends}. Script Ending." >> "${SEEDIT_LOG}"  2>&1; exit 1; }

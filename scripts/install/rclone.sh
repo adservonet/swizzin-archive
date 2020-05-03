@@ -24,7 +24,6 @@
 #fi
 MASTER=$(cut -d: -f1 < /root/.master.info)
 
-#. /etc/swizzin/sources/functions/waitforapt.sh
 waitforapt
 
 apt-get update -y -q
