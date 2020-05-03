@@ -19,16 +19,17 @@
 #
 MASTER=$(cut -d: -f1 < /root/.master.info)
 BTSYNCIP=$(ip route get 1 | sed -n 's/^.*src \([0-9.]*\) .*$/\1/p')
+<<<<<<< HEAD
 port=$(cat /home/seedit4me/.btsync_port)
 port2=$(cat /home/seedit4me/.btsync2_port)
 
 username="$(cut -d: -f1 < /root/.master.info)"
 password="$(cut -d: -f2 < /root/.master.info)"
 
-#if [[ -f /install/.tools.lock ]]; then
-#  log="/srv/tools/logs/output.log"
+#if [[ -f /tmp/.install.lock ]]; then
+#  OUTTO="/root/logs/install.log"
 #else
-#  log="/dev/null"
+#  OUTTO="/root/logs/swizzin.log"
 #fi
 
 function _installBTSync1() {

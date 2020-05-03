@@ -235,7 +235,7 @@ After=network.target
 
 [Service]
 Type=simple
-User=%I
+User=%i
 
 ExecStart=/usr/bin/deluged -d
 ExecStop=/usr/bin/killall -w -s 9 /usr/bin/deluged
@@ -254,7 +254,7 @@ After=network.target
 
 [Service]
 Type=simple
-User=%I
+User=%i
 
 ExecStart=/usr/bin/deluge-web${args}
 ExecStop=/usr/bin/killall -w -s 9 /usr/bin/deluge-web
@@ -280,12 +280,11 @@ fi
   touch /install/.deluge.lock
 }
 
-#if [[ -f /install/.tools.lock ]]; then
-#  export log="/srv/tools/logs/output.log"
+#if [[ -f /tmp/.install.lock ]]; then
+#  export log="/root/logs/install.log"
 #else
-#  export log="/dev/null"
+#  export log="/root/logs/swizzin.log"
 #fi
-
 local_packages=/usr/local/bin/swizzin
 users=($(cut -d: -f1 < /etc/htpasswd))
 master=$(cut -d: -f1 < /root/.master.info)

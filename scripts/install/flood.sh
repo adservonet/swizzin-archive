@@ -9,26 +9,27 @@ fi
 
 #if [[ -f /tmp/.install.lock ]]; then
 #  log="/root/logs/install.log"
-#elif [[ -f /install/.panel.lock ]]; then
-#  log="/srv/panel/db/output.log"
 #else
-#  log="/dev/null"
+#  log="/root/logs/swizzin.log"
 #fi
 
 . /etc/swizzin/sources/functions/npm
 npm_install
 
-cat > /etc/systemd/system/flood.service <<SYSDF
+if [[ ! $(which node-gyp) ]]; then
+  npm install -g node-gyp >> $log 2>&1
+fi
+
+cat > /etc/systemd/system/flood@.service <<SYSDF
 [Unit]
 Description=Flood rTorrent Web UI
 After=network.target
 
 [Service]
-User=%I
-Group=%I
+User=%i
+Group=%i
 WorkingDirectory=/srv/flood
 ExecStart=/usr/bin/npm start
-
 
 [Install]
 WantedBy=multi-user.target

@@ -21,18 +21,15 @@ port=$(cat /home/seedit4me/.znc_port)
 
 DISTRO=$(lsb_release -is)
 CODENAME=$(lsb_release -cs)
-
-#. /etc/swizzin/sources/functions/waitforapt.sh
-
-#if [[ -f /install/.tools.lock ]]; then
-#  log="/srv/tools/logs/output.log"
+#if [[ -f /tmp/.install.lock ]]; then
+#  OUTTO="/root/logs/install.log"
 #else
-#  log="/dev/null"
+#  OUTTO="/root/logs/swizzin.log"
 #fi
 
-echo "Installing ZNC. Please wait ... " >>  "${SEEDIT_LOG}"  2>&1
-echo "" >>  "${SEEDIT_LOG}"  2>&1
-echo "" >>  "${SEEDIT_LOG}"  2>&1
+echo "Installing ZNC. Please wait ... " >> ${SEEDIT_LOG} 2>&1
+echo "" >> ${SEEDIT_LOG} 2>&1
+echo "" >> ${SEEDIT_LOG} 2>&1
 useradd znc -m -s /bin/bash
 passwd znc -l >>  "${SEEDIT_LOG}"  2>&1
 
@@ -111,15 +108,12 @@ chmod -R 777 /home/znc/.znc/configs
 
 
 systemctl enable znc
-  # echo "#### ZNC configuration will now run. Please answer the following prompts ####"
+  #echo "#### ZNC configuration will now run. Please answer the following prompts ####"
   sleep 5
-  # sudo -H -u znc znc --makeconf
+  #sudo -H -u znc znc --makeconf
   killall -u znc znc > /dev/null 2>&1
   sleep 1
-  if [[ -f /install/.panel.lock ]]; then
-    echo "$(grep Port /home/znc/.znc/configs/znc.conf | sed -e 's/^[ \t]*//')" > /srv/panel/db/znc.txt
-    echo "$(grep SSL /home/znc/.znc/configs/znc.conf | sed -e 's/^[ \t]*//')" >> /srv/panel/db/znc.txt
-  fi
+
   # Check for LE cert, and copy it if available.
 #  chkhost="$(find /etc/nginx/ssl/* -maxdepth 1 -type d | cut -f 5 -d '/')"
 #  if [[ -n $chkhost ]]; then
@@ -128,5 +122,6 @@ systemctl enable znc
 #    crontab -l > newcron.txt | sed -i  "s#cron#cron --post-hook \"cat /etc/nginx/ssl/"$defaulthost"/{key,fullchain}.pem > /home/znc/.znc/znc.pem\"#g" newcron.txt | crontab newcron.txt | rm newcron.txt
 #  fi
   systemctl start znc
-  touch /install/.znc.lock
+  echo "$(grep Port /home/znc/.znc/configs/znc.conf | sed -e 's/^[ \t]*//')" > /install/.znc.lock
+  echo "$(grep SSL /home/znc/.znc/configs/znc.conf | sed -e 's/^[ \t]*//')" >> /install/.znc.lock
 echo "#### ZNC now installed! ####"

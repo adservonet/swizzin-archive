@@ -29,14 +29,11 @@ ENDCOLOR='\033[0m'
 CYAN='\e[96m'
 GREEN='\e[92m'
 
-
-#if [[ -f /install/.tools.lock ]]; then
-#  log="/srv/tools/logs/output.log"
+#if [[ -f /tmp/.install.lock ]]; then
+#  OUTTO="/root/logs/install.log"
 #else
-#  log="/dev/null"
+#  OUTTO="/root/logs/swizzin.log"
 #fi
-
-
 USERNAME=$(cut -d: -f1 < /root/.master.info)
 PASSWD=$(cut -d: -f2 < /root/.master.info)
 

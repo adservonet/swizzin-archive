@@ -72,11 +72,11 @@ After=network.target
 [Service]
 Type=forking
 KillMode=process
-User=%I
+User=%i
 ExecStart=/usr/bin/python /home/${MASTER}/.pyload/pyLoadCore.py --config=/home/${MASTER}/.pyload --pidfile=/home/${MASTER}/.pyload.pid --daemon
 PIDFile=/home/${MASTER}/.pyload.pid
 ExecStop=-/bin/kill -HUP
-WorkingDirectory=/home/%I/
+WorkingDirectory=/home/%i/
 
 [Install]
 WantedBy=multi-user.target
@@ -205,10 +205,10 @@ function _installpyLoad9() {
 
 ip=$(curl -s http://whatismyip.akamai.com)
 MASTER=$(cut -d: -f1 < /root/.master.info)
-#if [[ -f /install/.tools.lock ]]; then
-#  log="/srv/tools/logs/output.log"
+#if [[ -f /tmp/.install.lock ]]; then
+#  OUTTO="/root/logs/install.log"
 #else
-#  log="/dev/null"
+#  OUTTO="/root/logs/swizzin.log"
 #fi
 
 

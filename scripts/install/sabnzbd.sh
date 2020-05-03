@@ -23,10 +23,10 @@ password=$(cut -d: -f2 < /root/.master.info)
 DISTRO=$(lsb_release -is)
 RELEASE=$(lsb_release -cs)
 PUBLICIP=$(ip route get 1 | sed -n 's/^.*src \([0-9.]*\) .*$/\1/p')
-#if [[ -f /install/.tools.lock ]]; then
-#  log="/srv/tools/logs/output.log"
+#if [[ -f /tmp/.install.lock ]]; then
+#  OUTTO="/root/logs/install.log"
 #else
-#  log="/dev/null"
+#  OUTTO="/root/logs/swizzin.log"
 #fi
 
 function _rar() {
@@ -82,10 +82,10 @@ After=network.target
 [Service]
 Type=forking
 KillMode=process
-User=%I
+User=%i
 ExecStart=/usr/bin/screen -f -a -d -m -S sabnzbd python SABnzbd/SABnzbd.py --browser 0 --server 127.0.0.1:65080 --https 65443
 ExecStop=/usr/bin/screen -X -S sabnzbd quit
-WorkingDirectory=/home/%I/
+WorkingDirectory=/home/%i/
 
 [Install]
 WantedBy=multi-user.target

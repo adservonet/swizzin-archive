@@ -105,11 +105,11 @@ After=network.target
 [Service]
 Type=forking
 KillMode=none
-User=%I
-ExecStartPre=-/bin/rm -f /home/%I/.sessions/rtorrent.lock
+User=%i
+ExecStartPre=-/bin/rm -f /home/%i/.sessions/rtorrent.lock
 ExecStart=/usr/bin/screen -d -m -fa -S rtorrent /usr/bin/rtorrent
 ExecStop=/usr/bin/screen -X -S rtorrent quit
-WorkingDirectory=/home/%I/
+WorkingDirectory=/home/%i/
 
 [Install]
 WantedBy=multi-user.target
@@ -123,7 +123,7 @@ export DEBIAN_FRONTEND=noninteractive
 #if [[ -f /tmp/.install.lock ]]; then
 #  export log="/root/logs/install.log"
 #else
-#  export log="/dev/null"
+#  log="/root/logs/swizzin.log"
 #fi
 . /etc/swizzin/sources/functions/rtorrent
 #whiptail_rtorrent

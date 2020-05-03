@@ -53,7 +53,6 @@ function _installSonarr2() {
 }
 
 function _installSonarr3() {
-#. /etc/swizzin/sources/functions/waitforapt.sh
   waitforapt
   apt-get -y update >>  "${SEEDIT_LOG}"  2>&1
   if [[ $distribution == Debian ]]; then
@@ -63,7 +62,6 @@ function _installSonarr3() {
 }
 
 function _installSonarr4() {
-#. /etc/swizzin/sources/functions/waitforapt.sh
   waitforapt
   apt-get install -y nzbdrone >>  "${SEEDIT_LOG}"  2>&1
   touch /install/.sonarr.lock
@@ -82,10 +80,10 @@ After=syslog.target network.target
 [Service]
 Type=forking
 KillMode=process
-User=%I
+User=%i
 ExecStart=/usr/bin/screen -f -a -d -m -S nzbdrone mono /opt/NzbDrone/NzbDrone.exe
 ExecStop=-/bin/kill -HUP
-WorkingDirectory=/home/%I/
+WorkingDirectory=/home/%i/
 
 [Install]
 WantedBy=multi-user.target
@@ -105,18 +103,20 @@ SONARR
 
 function _installSonarr9() {
   echo "Sonarr Install Complete!" >> "${SEEDIT_LOG}"  2>&1;
+#  echo >>"${log}" 2>&1;
+#  echo >>"${log}" 2>&1;
+#  echo "Close this dialog box to refresh your browser" >>"${log}" 2>&1;
 }
 
 function _installSonarr10() {
   exit
 }
 
-#if [[ -f /install/.tools.lock ]]; then
-#  log="/srv/tools/logs/output.log"
+#if [[ -f /tmp/.install.lock ]]; then
+#  log="/root/logs/install.log"
 #else
-#  log="/dev/null"
+#  log="/root/logs/swizzin.log"
 #fi
-
 . /etc/swizzin/sources/functions/mono
 username=$(cut -d: -f1 < /root/.master.info)
 distribution=$(lsb_release -is)

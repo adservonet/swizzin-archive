@@ -40,9 +40,9 @@ After=syslog.target network.target
 [Service]
 Type=forking
 KillMode=control-group
-User=%I
-Group=%I
-ExecStart=/usr/bin/python /home/%I/.couchpotato/CouchPotato.py --daemon
+User=%i
+Group=%i
+ExecStart=/usr/bin/python /home/%i/.couchpotato/CouchPotato.py --daemon
 GuessMainPID=no
 ExecStop=-/bin/kill -HUP
 
@@ -64,10 +64,10 @@ echo >> "${SEEDIT_LOG}"  2>&1;
 echo "couchpotato installation complete." >> "${SEEDIT_LOG}"  2>&1;
 }
 
-#if [[ -f /install/.tools.lock ]]; then
-#  log="/srv/tools/logs/output.log"
+#if [[ -f /tmp/.install.lock ]]; then
+#  OUTTO="/root/logs/install.log"
 #else
-#  log="/dev/null"
+#  OUTTO="/root/logs/swizzin.log"
 #fi
 MASTER=$(cut -d: -f1 < /root/.master.info)
 _install

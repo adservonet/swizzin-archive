@@ -23,10 +23,10 @@ if [[ ! -f /install/.nginx.lock ]]; then
   exit 1
 fi
 MASTER=$(cut -d: -f1 < /root/.master.info)
-#if [[ -f /install/.tools.lock ]]; then
-#  log="/srv/tools/logs/output.log"
+#if [[ -f /tmp/.install.lock ]]; then
+#  OUTTO="/root/logs/install.log"
 #else
-#  log="/dev/null"
+#  OUTTO="/root/logs/swizzin.log"
 #fi
 function _installRapidleech1() {
   sudo git clone https://github.com/Th3-822/rapidleech.git  /home/"${MASTER}"/rapidleech >/dev/null 2>&1

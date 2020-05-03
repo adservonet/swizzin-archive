@@ -44,9 +44,9 @@ After=syslog.target network.target
 [Service]
 Type=forking
 KillMode=control-group
-User=%I
-Group=%I
-ExecStart=/usr/bin/python /home/%I/nzbhydra/nzbhydra.py --daemon --nobrowser --pidfile /home/%I/.nzbhydra/nzbhydra.pid --logfile /home/%I/.nzbhydra/nzbhydra.log --database /home/%I/.nzbhydra/nzbhydra.db --config /home/%I/.nzbhydra/settings.cfg
+User=%i
+Group=%i
+ExecStart=/usr/bin/python /home/%i/nzbhydra/nzbhydra.py --daemon --nobrowser --pidfile /home/%i/.nzbhydra/nzbhydra.pid --logfile /home/%i/.nzbhydra/nzbhydra.log --database /home/%i/.nzbhydra/nzbhydra.db --config /home/%i/.nzbhydra/settings.cfg
 GuessMainPID=no
 ExecStop=-/bin/kill -HUP
 Restart=on-failure
@@ -70,10 +70,10 @@ touch /install/.nzbhydra.lock
 echo "nzbhydra installation complete. " >> "${SEEDIT_LOG}"  2>&1;
 }
 
-#if [[ -f /install/.tools.lock ]]; then
-#  log="/srv/tools/logs/output.log"
+#if [[ -f /tmp/.install.lock ]]; then
+#  OUTTO="/root/logs/install.log"
 #else
-#  log="/dev/null"
+#  OUTTO="/root/logs/swizzin.log"
 #fi
 MASTER=$(cut -d: -f1 < /root/.master.info)
 _install

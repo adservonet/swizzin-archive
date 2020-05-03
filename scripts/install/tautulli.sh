@@ -15,10 +15,8 @@
 #
 #if [[ -f /tmp/.install.lock ]]; then
 #  OUTTO="/root/logs/install.log"
-#elif [[ -f /install/.panel.lock ]]; then
-#  OUTTO="/srv/panel/db/output.log"
 #else
-#  OUTTO="/dev/null"
+#  OUTTO="/root/logs/swizzin.log"
 #fi
 MASTER=$(cut -d: -f1 < /root/.master.info)
 
@@ -69,6 +67,7 @@ if [[ -f /install/.nginx.lock ]]; then
   bash /usr/local/bin/swizzin/nginx/tautulli.sh
   service nginx reload
 fi
+touch /install/.tautulli.lock
 
 echo "Tautulli Install Complete!" >> "${SEEDIT_LOG}"  2>&1;
 #sleep 5

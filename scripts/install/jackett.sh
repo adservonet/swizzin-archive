@@ -17,10 +17,10 @@
 #   including (via compiler) GPL-licensed code must also be made available
 #   under the GPL along with build & install instructions.
 
-#if [[ -f /install/.tools.lock ]]; then
-#  log="/srv/tools/logs/output.log"
+#if [[ -f /tmp/.install.lock ]]; then
+#  OUTTO="/root/logs/install.log"
 #else
-#  log="/dev/null"
+#  OUTTO="/root/logs/swizzin.log"
 #fi
 distribution=$(lsb_release -is)
 version=$(lsb_release -cs)
@@ -40,15 +40,15 @@ chown ${username}.${username} -R Jackett
 
 cat > /etc/systemd/system/jackett@.service <<JAK
 [Unit]
-Description=jackett for %I
+Description=jackett for %i
 After=network.target
 
 [Service]
-SyslogIdentifier=jackett.%I
+SyslogIdentifier=jackett.%i
 Type=simple
-User=%I
-WorkingDirectory=/home/%I/Jackett
-ExecStart=/bin/sh -c "/home/%I/Jackett/jackett_launcher.sh"
+User=%i
+WorkingDirectory=/home/%i/Jackett
+ExecStart=/bin/sh -c "/home/%i/Jackett/jackett_launcher.sh"
 Restart=always
 RestartSec=5
 TimeoutStopSec=20
@@ -119,3 +119,4 @@ echo >> "${SEEDIT_LOG}"  2>&1;
 echo >> "${SEEDIT_LOG}"  2>&1;
 echo "Jackett Install Complete!" >> "${SEEDIT_LOG}"  2>&1;
 
+#echo "Close this dialog box to refresh your browser" >>"${OUTTO}" 2>&1;

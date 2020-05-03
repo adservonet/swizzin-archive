@@ -17,10 +17,10 @@
 
 port=$(cat /home/seedit4me/.quassel_port)
 
-#if [[ -f /install/.tools.lock ]]; then
-#  log="/srv/tools/logs/output.log"
+#if [[ -f /tmp/.install.lock ]]; then
+#  OUTTO="/root/logs/install.log"
 #else
-#  log="/dev/null"
+#  OUTTO="/root/logs/swizzin.log"
 #fi
 distribution=$(lsb_release -is)
 codename=$(lsb_release -cs)

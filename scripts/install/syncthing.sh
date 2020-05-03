@@ -17,14 +17,12 @@
 #   including (via compiler) GPL-licensed code must also be made available
 #   under the GPL along with build & install instructions.
 
-#if [[ -f /install/.tools.lock ]]; then
-#  log="/srv/tools/logs/output.log"
+#if [[ -f /tmp/.install.lock ]]; then
+#  OUTTO="/root/logs/install.log"
 #else
-#  log="/dev/null"
+#  OUTTO="/root/logs/swizzin.log"
 #fi
 MASTER=$(cut -d: -f1 < /root/.master.info)
-
-#. /etc/swizzin/sources/functions/waitforapt.sh
 
 echo "Adding Syncthing Repository ... " >> "${SEEDIT_LOG}"  2>&1;
 curl -s https://syncthing.net/release-key.txt | sudo apt-key add - > /dev/null 2>&1
@@ -39,7 +37,7 @@ sudo apt-get -qy install syncthing >> "${SEEDIT_LOG}"  2>&1;
 echo "Configuring Syncthing & Starting ... " >> "${SEEDIT_LOG}"  2>&1;
 cat > /etc/systemd/system/syncthing@.service <<SYNC
 [Unit]
-Description=Syncthing - Open Source Continuous File Synchronization for %I
+Description=Syncthing - Open Source Continuous File Synchronization for %i
 Documentation=man:syncthing(1)
 After=network.target
 Wants=syncthing-inotify@.service
@@ -64,3 +62,6 @@ fi
 
 touch /install/.syncthing.lock
 echo "Syncthing installation complete!" >> "${SEEDIT_LOG}"  2>&1
+#echo >>"${OUTTO}" 2>&1
+#echo >>"${OUTTO}" 2>&1
+#echo "Close this dialog box to refresh your browser" >>"${OUTTO}" 2>&1
