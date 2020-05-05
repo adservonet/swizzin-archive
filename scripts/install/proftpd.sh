@@ -46,6 +46,7 @@ TimeoutNoTransfer		600
 TimeoutStalled			600
 TimeoutIdle			1200
 TLSRenegotiate none
+TLSOptions NoSessionReuseRequired
 DisplayLogin                    welcome.msg
 DisplayChdir               	.message true
 ListOptions                	"-l"
