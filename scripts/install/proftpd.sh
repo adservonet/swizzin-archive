@@ -45,6 +45,7 @@ TimeoutNoTransfer		600
 TimeoutStalled			600
 TimeoutIdle			1200
 TLSRenegotiate none
+TLSOptions NoSessionReuseRequired
 DisplayLogin                    welcome.msg
 DisplayChdir               	.message true
 ListOptions                	"-l"
@@ -117,7 +118,7 @@ echo 'TLSEngine on' >> /etc/proftpd/tls.conf
 echo 'TLSLog /var/log/proftpd/tls.log' >> /etc/proftpd/tls.conf
 echo 'TLSProtocol TLSv1.2' >> /etc/proftpd/tls.conf
 echo 'TLSCipherSuite AES128+EECDH:AES128+EDH' >> /etc/proftpd/tls.conf
-echo 'TLSOptions NoCertRequest NoSessionReuseRequired AllowClientRenegotiations' >> /etc/proftpd/tls.conf
+echo 'TLSOptions NoCertRequest AllowClientRenegotiations' >> /etc/proftpd/tls.conf
 echo 'TLSRSACertificateFile /etc/proftpd/ssl/proftpd.cert.pem' >> /etc/proftpd/tls.conf
 echo 'TLSRSACertificateKeyFile /etc/proftpd/ssl/proftpd.key.pem' >> /etc/proftpd/tls.conf
 echo 'TLSVerifyClient off' >> /etc/proftpd/tls.conf
