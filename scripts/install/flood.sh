@@ -49,15 +49,17 @@ sed -i "s/secret: 'flood'/secret: '$salt'/g" config.js
 echo "Building Flood for $u. This might take some time..." >>  "${SEEDIT_LOG}"  2>&1
 cd /srv/flood
 npm install >>  "${SEEDIT_LOG}"  2>&1
+npm update >>  "${SEEDIT_LOG}"  2>&1
 npm install -g node-gyp >>  "${SEEDIT_LOG}"  2>&1
 npm run build >>  "${SEEDIT_LOG}"  2>&1
+
+chown -R ${user}:${user} /srv/flood
+
+systemctl enable flood > /dev/null 2>&1
 
 if [[ -f /install/.nginx.lock ]]; then
   bash /usr/local/bin/swizzin/nginx/flood.sh
   systemctl start flood
 fi
-systemctl enable flood > /dev/null 2>&1
-
-
 
 touch /install/.flood.lock
