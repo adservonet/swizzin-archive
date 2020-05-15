@@ -15,10 +15,10 @@
 codename=$(lsb_release -cs)
 user=$(cut -d: -f1 < /root/.master.info)
 password=$(cut -d: -f2 < /root/.master.info)
-SALT=$(shuf -zr -n5 -i 0-9 | tr -d '\0')
-SALTWORD=${SALT}${password}
-SALTWORDHASH=$(echo -n ${SALTWORD} | shasum -a 1 | awk '{print $1}')
-HASH=${SALT}${SALTWORDHASH}
+#SALT=$(shuf -zr -n5 -i 0-9 | tr -d '\0')
+#SALTWORD=${SALT}${password}
+#SALTWORDHASH=$(echo -n ${SALTWORD} | shasum -a 1 | awk '{print $1}')
+#HASH=${SALT}${SALTWORDHASH}
 . /etc/swizzin/sources/functions/pyenv
 
 #if [[ -f /tmp/.install.lock ]]; then
@@ -132,25 +132,66 @@ webinterface - "Webinterface":
 PYCONF
 
 
+sleep 3
+
+#/usr/bin/python /home/${user}/.pyload/pyLoadCore.py --setup --config=/home/${user}/.pyload
+chown -R ${user}: /opt/pyload/
+if [[ -f /install/.nginx.lock ]]; then
+  bash /usr/local/bin/swizzin/nginx/pyload.sh
+  service nginx reload
+fi
+echo "Enabling and starting pyLoad services ... "
+systemctl enable pyload@${user}.service >/dev/null 2>&1
+systemctl start pyload@${user}.service >/dev/null 2>&1
+service nginx reload
+
 
 echo "Initalizing database"
-read < <( /opt/.venv/pyload/bin/python2 /opt/pyload/pyLoadCore.py > /dev/null 2>&1 & echo $! )
-PID=$REPLY
-sleep 10
-#kill -9 $PID
-while kill -0 $PID > /dev/null 2>&1; do
-  sleep 1
-  kill $PID > /dev/null 2>&1
-done
+sleep 3
+cd /opt/pyload/
 
-if [ -f "/opt/pyload/files.db" ]; then
-  sqlite3 /opt/pyload/files.db "\
-    INSERT INTO users('name', 'password') \
-      VALUES('${user}','${HASH}');\
-      "
-else
-  echo "Something went wrong with user setup -- you will be unable to login"
-fi
+cat >/opt/pyload/adduser.py<<PYAU
+from hashlib import sha1
+import random
+
+strpass = "${password}"
+
+salt = reduce(lambda x, y: x + y, [str(random.randint(0, 9)) for i in range(0, 5)])
+h = sha1(salt + strpass)
+password = salt + h.hexdigest()
+
+print(password)
+PYAU
+
+sleep 3
+
+saltedpasswd=$(python /opt/pyload/adduser.py)
+
+sleep 1
+echo "INSERT INTO users (name, password) VALUES ('${user}', '${saltedpasswd}');" > sqlquery
+sleep 1
+sqlite3 files.db ".read sqlquery"
+
+
+
+
+#read < <( /opt/.venv/pyload/bin/python2 /opt/pyload/pyLoadCore.py > /dev/null 2>&1 & echo $! )
+#PID=$REPLY
+#sleep 10
+##kill -9 $PID
+#while kill -0 $PID > /dev/null 2>&1; do
+#  sleep 1
+#  kill $PID > /dev/null 2>&1
+#done
+#
+#if [ -f "/opt/pyload/files.db" ]; then
+#  sqlite3 /opt/pyload/files.db "\
+#    INSERT INTO users('name', 'password') \
+#      VALUES('${user}','${HASH}');\
+#      "
+#else
+#  echo "Something went wrong with user setup -- you will be unable to login"
+#fi
 
 chown -R ${user}: /opt/pyload
 mkdir -p /home/${user}/Downloads
