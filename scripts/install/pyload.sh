@@ -1,17 +1,10 @@
 #!/bin/bash
 #
-# [Quick Box :: Install pyLoad package]
+# [swizzin :: Install pyLoad package]
 #
-# QUICKLAB REPOS
-# QuickLab _ packages  :   https://github.com/QuickBox/QB/packages
-# LOCAL REPOS
-# Local _ packages   :   /etc/QuickBox/packages
-# Author             :   QuickBox.IO | JMSolo
-# URL                :   https://quickbox.io
+# Swizzin by liara
 #
-# Modifications for Swizzin by liara
-#
-# QuickBox Copyright (C) 2017 QuickBox.io
+# swizzin Copyright (C) 2020 swizzin.ltd
 # Licensed under GNU General Public License v3.0 GPL-3 (in short)
 #
 #   You may copy, distribute and modify the software as long as you track
@@ -19,90 +12,50 @@
 #   including (via compiler) GPL-licensed code must also be made available
 #   under the GPL along with build & install instructions.
 #
+codename=$(lsb_release -cs)
+user=$(cut -d: -f1 < /root/.master.info)
+password=$(cut -d: -f2 < /root/.master.info)
+SALT=$(shuf -zr -n5 -i 0-9 | tr -d '\0')
+SALTWORD=${SALT}${password}
+SALTWORDHASH=$(echo -n ${SALTWORD} | shasum -a 1 | awk '{print $1}')
+HASH=${SALT}${SALTWORDHASH}
+. /etc/swizzin/sources/functions/pyenv
 
-function _installpyLoad1() {
-  echo "Installing any additional dependencies needed for pyLoad ... "
-  apt-get install -y sqlite3 tesseract-ocr gocr rhino pyqt4-dev-tools python-imaging python-dev libcurl4-openssl-dev >> "${SEEDIT_LOG}"  2>&1
-  apt-get -y autoremove >> "${SEEDIT_LOG}"  2>&1
-}
+#if [[ -f /tmp/.install.lock ]]; then
+#  log="/root/logs/install.log"
+#else
+#  log="/root/logs/swizzin.log"
+#fi
+fi
 
-function _installpyLoad2() {
-  echo "Setting up python package management system in /home/${MASTER}/.pip ... "
-  mkdir /home/${MASTER}/.pip && cd /home/${MASTER}/.pip
-  wget https://bootstrap.pypa.io/get-pip.py >> "${SEEDIT_LOG}"  2>&1
-  python get-pip.py >> "${SEEDIT_LOG}"  2>&1
-}
+echo "Installing dependencies needed for pyLoad ... "
 
-function _installpyLoad3() {
-  echo "Installing pyLoad packages ... "
-  pip install wheel --upgrade >> "${SEEDIT_LOG}"  2>&1
-  pip install setuptools --upgrade >> "${SEEDIT_LOG}"  2>&1
-  pip install ply --upgrade >> "${SEEDIT_LOG}"  2>&1
-  pip install cryptography --upgrade >/dev/null 2>&1
-  pip install distribute >/dev/null 2>&1
-  pip install pyOpenSSL >/dev/null 2>&1
-  pip install cffi --upgrade >/dev/null 2>&1
-  pip install pycurl >/dev/null 2>&1
-  pip install django >/dev/null 2>&1
-  pip install pyimaging >/dev/null 2>&1
-  pip install web2py >/dev/null 2>&1
-  pip install beaker >/dev/null 2>&1
-  pip install thrift >/dev/null 2>&1
-  pip install pycrypto >/dev/null 2>&1
-  pip install feedparser >/dev/null 2>&1
-  pip install beautifulsoup >/dev/null 2>&1
-  pip install tesseract >/dev/null 2>&1
-}
+if [[ $codename =~ ("xenial"|"stretch"|"buster"|"bionic") ]]; then
+  LIST='tesseract-ocr gocr rhino python2.7-dev python-pip python-virtualenv virtualenv libcurl4-openssl-dev sqlite3'
+else
+  LIST='tesseract-ocr gocr rhino libcurl4-openssl-dev python2.7-dev sqlite3'
+fi
 
-function _installpyLoad4() {
-  echo "Grabbing latest stable pyLoad repository ... "
-  mkdir /home/${MASTER}/.pyload
-  cd /home/${MASTER} && git clone --branch "stable" https://github.com/pyload/pyload.git .pyload >/dev/null 2>&1
-  printf "/home/${MASTER}/.pyload" > /home/${MASTER}/.pyload/module/config/configdir
-  mkdir -p /var/run/pyload
-}
+apt-get -y update >> "${SEEDIT_LOG}"  2>&1
+for depend in $LIST; do
+  apt-get -qq -y install $depend >> "${SEEDIT_LOG}"  2>&1 || { echo "ERROR: APT-GET could not install a required package: ${depend}. That's probably not good..."; }
+done
 
-function _installpyLoad5() {
-  echo "Building pyLoad systemd template ... "
-cat >/etc/systemd/system/pyload@.service<<PYSV
-[Unit]
-Description=pyLoad
-After=network.target
+if [[ ! $codename =~ ("xenial"|"stretch"|"buster"|"bionic") ]]; then
+  python_getpip
+fi
 
-[Service]
-Type=forking
-KillMode=process
-User=%i
-ExecStart=/usr/bin/python /home/${MASTER}/.pyload/pyLoadCore.py --config=/home/${MASTER}/.pyload --pidfile=/home/${MASTER}/.pyload.pid --daemon
-PIDFile=/home/${MASTER}/.pyload.pid
-ExecStop=-/bin/kill -HUP
-WorkingDirectory=/home/%i/
+python2_venv ${user} pyload
 
-[Install]
-WantedBy=multi-user.target
+PIP='wheel setuptools pycurl pycrypto tesseract pillow pyOpenSSL js2py feedparser beautifulsoup'
+/opt/.venv/pyload/bin/pip install $PIP >> "${SEEDIT_LOG}"  2>&1
+chown -R ${user}: /opt/.venv/pyload
 
-PYSV
-}
+git clone --branch "stable" https://github.com/pyload/pyload.git /opt/pyload >> "${SEEDIT_LOG}"  2>&1
 
-function _installpyLoad6() {
-  echo "Adjusting permissions ... "
-  chown -R ${MASTER}.${MASTER} /home/${MASTER}/.pip
-  chown -R ${MASTER}.${MASTER} /home/${MASTER}/.pyload
-  chown -R ${MASTER}.${MASTER} /var/run/pyload
-}
+echo "/opt/pyload" > /opt/pyload/module/config/configdir
 
-function _installpyLoad7() {
-  touch /install/.pyload.lock
-  systemctl daemon-reload >/dev/null 2>&1
-  echo "#### pyLoad setup will now run ####"
-#  if [[ -f /install/.nginx.lock ]]; then
-#    echo "#### To ensure proper proxy configuration:"
-#    echo "#### please leave remote access enabled ####"
-#    echo "#### and do not alter the default port (8000) ####"
-#  fi
-  sleep 5
-
-cat >/home/${MASTER}/.pyload/pyload.conf<<PYCFG
+cat > /opt/pyload/pyload.conf <<PYCONF
 version: 1
 
 download - "Download":
@@ -121,7 +74,7 @@ downloadTime - "Download Time":
 general - "General":
         bool checksum : "Use Checksum" = False
         bool debug_mode : "Debug Mode" = False
-        folder download_folder : "Download Folder" = Downloads
+        folder download_folder : "Download Folder" = /home/${user}/Downloads
         bool folder_per_package : "Create folder for each package" = True
         en;de;fr;it;es;nl;sv;ru;pl;cs;sr;pt_BR language : "Language" = en
         int min_free_space : "Min Free Space (MB)" = 200
@@ -176,78 +129,54 @@ webinterface - "Webinterface":
         int port : "Port" = 8712
         str prefix : "Path Prefix" = /pyload/pyload
         builtin;threaded;fastcgi;lightweight server : "Server" = builtin
-        pyplex;classic;modern template : "Template" = modern
-PYCFG
+        modern;pyplex;classic template : "Template" = modern
+PYCONF
 
 
-sleep 3
 
-  #/usr/bin/python /home/${MASTER}/.pyload/pyLoadCore.py --setup --config=/home/${MASTER}/.pyload
-  chown -R ${MASTER}: /home/${MASTER}/.pyload
+echo "Initalizing database"
+read < <( /opt/.venv/pyload/bin/python2 /opt/pyload/pyLoadCore.py > /dev/null 2>&1 & echo $! )
+PID=$REPLY
+sleep 10
+#kill -9 $PID
+while kill -0 $PID > /dev/null 2>&1; do
+  sleep 1
+  kill $PID > /dev/null 2>&1
+done
+
+if [ -f "/opt/pyload/files.db" ]; then
+  sqlite3 /opt/pyload/files.db "\
+    INSERT INTO users('name', 'password') \
+      VALUES('${user}','${HASH}');\
+      "
+else
+  echo "Something went wrong with user setup -- you will be unable to login"
+fi
+
+chown -R ${user}: /opt/pyload
+mkdir -p /home/${user}/Downloads
+chown ${user}: /home/${user}/Downloads
+
+cat >/etc/systemd/system/pyload.service<<PYSD
+[Unit]
+Description=pyLoad
+After=network.target
+
+[Service]
+User=${user}
+ExecStart=/opt/.venv/pyload/bin/python2 /opt/pyload/pyLoadCore.py --config=/opt/pyload
+WorkingDirectory=/opt/pyload
+
+[Install]
+WantedBy=multi-user.target
+PYSD
+
   if [[ -f /install/.nginx.lock ]]; then
     bash /usr/local/bin/swizzin/nginx/pyload.sh
-    service nginx reload
+  systemctl reload nginx
   fi
   echo "Enabling and starting pyLoad services ... "
-  systemctl enable pyload@${MASTER}.service >/dev/null 2>&1
-  systemctl start pyload@${MASTER}.service >/dev/null 2>&1
-  service nginx reload
-}
-
-function _installpyLoad8() {
-  echo "pyLoad Install Complete!" >> "${SEEDIT_LOG}"  2>&1
-}
-
-function _installpyLoad9() {
-  exit
-}
+systemctl enable --now pyload.service >> "${SEEDIT_LOG}"  2>&1
+touch /install/.pyload.lock
 
 
-ip=$(curl -s http://whatismyip.akamai.com)
-MASTER=$(cut -d: -f1 < /root/.master.info)
-#if [[ -f /tmp/.install.lock ]]; then
-#  OUTTO="/root/logs/install.log"
-#else
-#  OUTTO="/root/logs/swizzin.log"
-#fi
-
-
-echo "Installing any additional dependencies needed for pyLoad ... " >> "${SEEDIT_LOG}"  2>&1;_installpyLoad1
-echo "Setting up python package management system in /home/${MASTER}/.pip ... " >> "${SEEDIT_LOG}"  2>&1;_installpyLoad2
-echo "Installing pyLoad packages ... " >> "${SEEDIT_LOG}"  2>&1;_installpyLoad3
-echo "Grabbing latest stable pyLoad repository ... " >> "${SEEDIT_LOG}"  2>&1;_installpyLoad4
-echo "Building pyLoad systemd template ... " >> "${SEEDIT_LOG}"  2>&1;_installpyLoad5
-echo "Adjusting permissions ... " >> "${SEEDIT_LOG}"  2>&1;_installpyLoad6
-echo "Enabling and starting pyLoad services ... " >> "${SEEDIT_LOG}"  2>&1;_installpyLoad7
-
-sleep 3
-cd /home/${MASTER}/.pyload
-user=$(cut -d: -f1 < /root/.master.info)
-passwd=$(cut -d: -f2 < /root/.master.info)
-
-cat >/home/${MASTER}/.pyload/adduser.py<<PYAU
-from hashlib import sha1
-import random
-
-strpass = "${passwd}"
-
-salt = reduce(lambda x, y: x + y, [str(random.randint(0, 9)) for i in range(0, 5)])
-h = sha1(salt + strpass)
-password = salt + h.hexdigest()
-
-print(password)
-PYAU
-
-sleep 3
-
-saltedpasswd=$(python /home/${MASTER}/.pyload/adduser.py)
-
-sleep 1
-echo "INSERT INTO users (name, password) VALUES ('${user}', '${saltedpasswd}');" > sqlquery
-sleep 1
-sqlite3 files.db ".read sqlquery"
-
-
-
-_installpyLoad8
-_installpyLoad9
