@@ -21,10 +21,12 @@ chmod 755 /srv/tools/*.sh
 chmod +x /srv/tools/*.sh
 chown -R www-data: /srv/tools
 
+waitforapt
+apt install -y -q apparmor-utils
+
 touch /install/.tools.lock
 
- crontab -l | grep -v notify.sh | crontab -
-
+crontab -l | grep -v notify.sh | crontab -
 service cron reload
 
 if [[ ! -f /install/.nginx.lock ]]; then

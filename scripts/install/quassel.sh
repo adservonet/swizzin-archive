@@ -34,7 +34,7 @@ if [[ $distribution == Ubuntu ]]; then
   echo "Installing Quassel PPA"
   apt-get install -q -y software-properties-common  >>  "${SEEDIT_LOG}"  2>&1
 	apt-add-repository ppa:mamarley/quassel -y  >>  "${SEEDIT_LOG}"  2>&1
-	apt-get -qq -y --force-yes update  >>  "${SEEDIT_LOG}"  2>&1
+	apt-get -q -y update  >>  "${SEEDIT_LOG}"  2>&1
   apt-get -q -y install quassel-core  >>  "${SEEDIT_LOG}"  2>&1
 else
   if [[ $codename == "buster" ]]; then
@@ -59,6 +59,8 @@ sed -i -e 's/4242/'$port'/g' /lib/systemd/system/quasselcore.service
 sed -i -e 's/4242/'$port'/g' /etc/default/quasselcore
 
 sleep 3s
+
+aa-complain /usr/bin/quasselcore
 
 mv /etc/init.d/quasselcore /etc/init.d/quasselcore.BAK
 systemctl enable --now quasselcore
