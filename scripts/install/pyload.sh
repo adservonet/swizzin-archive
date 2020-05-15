@@ -168,12 +168,8 @@ sleep 3
 saltedpasswd=$(python /opt/pyload/adduser.py)
 
 sleep 1
-echo "INSERT INTO users (name, password) VALUES ('${user}', '${saltedpasswd}');" > sqlquery
-sleep 1
-sqlite3 files.db ".read sqlquery"
-
-
-
+echo "INSERT INTO users('name', 'password') VALUES('${user}','${saltedpasswd}');"
+sqlite3 /opt/pyload/files.db "INSERT INTO users('name', 'password') VALUES('${user}','${saltedpasswd}');"
 
 #read < <( /opt/.venv/pyload/bin/python2 /opt/pyload/pyLoadCore.py > /dev/null 2>&1 & echo $! )
 #PID=$REPLY
