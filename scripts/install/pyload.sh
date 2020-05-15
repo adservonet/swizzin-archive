@@ -25,7 +25,7 @@ HASH=${SALT}${SALTWORDHASH}
 #  log="/root/logs/install.log"
 #else
 #  log="/root/logs/swizzin.log"
-fi
+#fi
 
 echo "Installing dependencies needed for pyLoad ... "
 
