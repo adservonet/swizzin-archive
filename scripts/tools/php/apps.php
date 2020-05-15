@@ -59,7 +59,7 @@ function isEnabled($process, $username = false)
 $username = "seedit4me";
 
 $apps = array(
-    array("name" => "openvpn2",       "service" => "openvpn",           "user" => ""),
+    array("name" => "openvpn2",       "service" => "openvpn",           "user" => "server"),
     array("name" => "proftpd",        "service" => "proftpd",           "user" => ""),
     array("name" => "bazarr",         "service" => "bazarr",            "user" => ""),
     array("name" => "btsync",         "service" => "resilio-sync",      "user" => ""),
