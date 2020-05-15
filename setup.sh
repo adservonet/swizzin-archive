@@ -41,7 +41,7 @@ _os() {
     if [[ ! $distribution =~ ("Debian"|"Ubuntu") ]]; then
       echo "Your distribution ($distribution) is not supported. Swizzin requires Ubuntu or Debian." && exit 1
     fi
-    if [[ ! $codename =~ ("xenial"|"bionic"|"jessie"|"stretch"|"buster") ]]; then
+    if [[ ! $codename =~ ("xenial"|"bionic"|"stretch"|"buster"|"focal") ]]; then
       echo "Your release ($codename) of $distribution is not supported." && exit 1
     fi
   echo "I have determined you are using $distribution $release."
@@ -60,13 +60,14 @@ function _preparation() {
   fi
   apt-get -q -y update
   apt-get -q -y upgrade
-  apt-get -q -y install whiptail git sudo curl wget lsof fail2ban apache2-utils vnstat tcl tcl-dev build-essential dirmngr apt-transport-https python-pip
+
+  echo "Installing dependencies"
+  # this apt-get should be checked and handled if fails, otherwise the install borks. 
+  apt-get -q -y install whiptail git sudo curl wget lsof fail2ban apache2-utils vnstat tcl tcl-dev build-essential dirmngr apt-transport-https
   nofile=$(grep "DefaultLimitNOFILE=500000" /etc/systemd/system.conf)
   if [[ ! "$nofile" ]]; then echo "DefaultLimitNOFILE=500000" >> /etc/systemd/system.conf; fi
   echo "Cloning swizzin repo to localhost"
   git clone -b lxd https://github.com/illnesse/swizzin.git /etc/swizzin
-  #cd /etc/swizzin
-  #git reset --hard origin/lxd
   ln -s /etc/swizzin/scripts/ /usr/local/bin/swizzin
   chmod -R 700 /etc/swizzin/scripts
 }
@@ -76,7 +77,7 @@ function _nukeovh() {
   if [[ -n $grsec ]]; then
     echo
     echo -e "Your server is currently running with kernel version: $(uname -r)"
-    echo -e "While not it is not required to switch, kernels with grsec are not recommend due to conflicts in the panel and other packages."
+    echo -e "While it is not required to switch, kernels with grsec are not recommend due to conflicts in the panel and other packages."
     echo
     echo -ne "Would you like swizzin to install the distribution kernel? (Default: Y) "; read input
       case $input in
@@ -101,11 +102,6 @@ function _nukeovh() {
   fi
 }
 
-function _skel() {
-  rm -rf /etc/skel
-  cp -R /etc/swizzin/sources/skel /etc/skel
-}
-
 function _intro() {
   whiptail --title "Swizzin seedbox installer" --msgbox "Yo, what's up? Let's install this swiz." 15 50
 }
@@ -120,9 +116,7 @@ function _adduser() {
   echo "$user:$pass" > /root/.master.info
   if [[ -d /home/"$user" ]]; then
     echo "User directory already exists ... "
-    #_skel
-    #cd /etc/skel
-    #cp -R * /home/$user/
+
     echo "Changing password to new password"
     chpasswd<<<"${user}:${pass}"
     htpasswd -b -c /etc/htpasswd $user $pass
@@ -131,7 +125,6 @@ function _adduser() {
     chown -R $user:$user /home/${user}
   else
     echo -e "Creating new user \e[1;95m$user\e[0m ... "
-    #_skel
     useradd "${user}" -m -G www-data -s /bin/bash
     chpasswd<<<"${user}:${pass}"
     htpasswd -b -c /etc/htpasswd $user $pass
@@ -140,7 +133,9 @@ function _adduser() {
   fi
   chmod 750 /home/${user}
   if grep ${user} /etc/sudoers.d/swizzin >/dev/null 2>&1 ; then echo "No sudoers modification made ... " ; else	echo "${user}	ALL=(ALL:ALL) ALL" >> /etc/sudoers.d/swizzin ; fi
-  echo "D /var/run/${user} 0750 ${user} ${user} -" >> /etc/tmpfiles.d/${user}.conf
+  
+  echo "D /run/${user} 0750 ${user} ${user} -" >> /etc/tmpfiles.d/${user}.conf
+  
   systemd-tmpfiles /etc/tmpfiles.d/${user}.conf --create
 }
 
@@ -156,7 +151,6 @@ function _choices() {
       packages+=("$i" '""')
     fi
   done
-
 #  whiptail --title "Install Software" --checklist --noitem --separate-output "Choose your clients and core features." 15 26 7 "${packages[@]}" 2>/root/results; exitstatus=$?; if [ "$exitstatus" = 1 ]; then exit 0; fi
   cat > /root/results <<RESULTS
 nginx
@@ -275,7 +269,7 @@ function _post {
 
 _os
 _preparation
-_skel
+
 _adduser
 _choices
 _install
