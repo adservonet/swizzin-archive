@@ -171,7 +171,7 @@ ssl - "SSL":
 
 webinterface - "Webinterface":
         bool activated : "Activated" = True
-        ip host : "IP" = 127.0.0.1
+        ip host : "IP" = 0.0.0.0
         bool https : "Use HTTPS" = False
         int port : "Port" = 8712
         str prefix : "Path Prefix" = /pyload/pyload
