@@ -19,13 +19,6 @@
 #fi
 username=$(cut -d: -f1 < /root/.master.info)
 
-#if [[ -f /install/.nginx.lock ]]; then
-#echo "Setting up emby nginx configuration ... " >> "${SEEDIT_LOG}"  2>&1;
-#  bash /usr/local/bin/swizzin/nginx/emby.sh
-#  service nginx reload
-#fi
-
-
 if [[ ! $(command -v mono) ]]; then
   echo "Adding mono repository and installing mono ... " >> "${SEEDIT_LOG}"  2>&1
   . /etc/swizzin/sources/functions/mono
@@ -48,7 +41,7 @@ echo "Installing emby from GitHub releases ... " >> "${SEEDIT_LOG}"  2>&1
 if [[ -f /install/.nginx.lock ]]; then
 echo "Setting up emby nginx configuration ... " >> "${SEEDIT_LOG}"  2>&1
   bash /usr/local/bin/swizzin/nginx/emby.sh
-  service nginx reload
+  systemctl reload nginx
 fi
 
 usermod -a -G ${username} emby
@@ -60,3 +53,4 @@ systemctl unmask emby-server
 systemctl enable emby-server
 systemctl restart emby-server  >> "${SEEDIT_LOG}"  2>&1
 touch /install/.emby.lock
+  
