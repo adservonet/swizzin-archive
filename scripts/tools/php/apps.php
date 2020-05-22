@@ -80,7 +80,7 @@ $apps = array(
     array("name" => "plex",           "service" => "plexmediaserver",   "user" => ""),
     array("name" => "plexpy",         "service" => "plexpy",            "user" => ""),
     array("name" => "tautulli",       "service" => "tautulli",          "user" => ""),
-    array("name" => "pyload",         "service" => "pyload",            "user" => $username),
+    array("name" => "pyload",         "service" => "pyload",            "user" => ""),
     array("name" => "radarr",         "service" => "radarr",            "user" => ""),
     array("name" => "rclone",         "service" => "rclone",            "user" => $username),
     array("name" => "rutorrent",      "service" => "rtorrent",          "user" => $username),
