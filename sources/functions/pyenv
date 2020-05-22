@@ -1,3 +1,9 @@
+if [[ -f /install/.tools.lock ]]; then
+    export SEEDIT_LOG=/srv/tools/logs/output.log
+else
+    export SEEDIT_LOG=/root/logs/install.log
+fi
+
 function pyenv_install() {
   if [[ ! -d /opt/pyenv ]]; then
     echo "Setting up pyenv version manager"
