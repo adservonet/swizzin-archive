@@ -30,7 +30,7 @@ echo "deb http://apt.syncthing.net/ syncthing release" > /etc/apt/sources.list.d
 
 echo "Installing Syncthing ... " >> "${SEEDIT_LOG}"  2>&1;
 waitforapt
-sudo apt-get -q update >> "${SEEDIT_LOG}"  2>&1;
+sudo apt-get -q update > /dev/null 2>&1
 waitforapt
 sudo apt-get -qy install syncthing >> "${SEEDIT_LOG}"  2>&1;
 
@@ -57,7 +57,7 @@ systemctl start syncthing@${MASTER} > /dev/null 2>&1
 
 if [[ -f /install/.nginx.lock ]]; then
   bash /usr/local/bin/swizzin/nginx/syncthing.sh
-  service nginx reload
+  systemctl reload nginx
 fi
 
 touch /install/.syncthing.lock
