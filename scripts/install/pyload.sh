@@ -126,7 +126,7 @@ webinterface - "Webinterface":
         ip host : "IP" = 0.0.0.0
         bool https : "Use HTTPS" = False
         int port : "Port" = 8712
-        str prefix : "Path Prefix" = /pyload
+        str prefix : "Path Prefix" = 
         builtin;threaded;fastcgi;lightweight server : "Server" = builtin
         modern;pyplex;classic template : "Template" = modern
 PYCONF
