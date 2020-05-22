@@ -20,7 +20,7 @@ location /flood {
 }
 
 location /flood/ {
-  include /etc/nginx/snippets/proxy.conf;
+  #include /etc/nginx/snippets/proxy.conf;
   auth_basic "What's the password?";
   auth_basic_user_file /etc/htpasswd;
   proxy_pass http://$remote_user.flood;
