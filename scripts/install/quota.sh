@@ -81,20 +81,21 @@ function _installquota(){
     exit 1
   fi
 
+  echo "Installing dependencies"
   if [[ $DISTRO == Ubuntu ]]; then
     sed -ie '/\'"${loc}"'/ s/'${hook}'/'${hook}',usrjquota=aquota.user,jqfmt=vfsv1/' /etc/fstab
-    apt-get install -y linux-image-extra-virtual quota >> "${SEEDIT_LOG}"  2>&1
+    DEBIAN_FRONTEND=noninteractive apt-get install -qy -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" linux-image-extra-virtual quota >> "${SEEDIT_LOG}"  2>&1
     mount -o remount ${loc} >> "${SEEDIT_LOG}"  2>&1
     quotacheck -auMF vfsv1 >> "${SEEDIT_LOG}"  2>&1
     quotaon -uv / >> "${SEEDIT_LOG}"  2>&1
-    service quota start >> "${SEEDIT_LOG}"  2>&1
+    systemctl start quota start >> "${SEEDIT_LOG}"  2>&1
   elif [[ $DISTRO == Debian ]]; then
     sed -ie '/\'"${loc}"'/ s/'${hook}'/'${hook}',usrjquota=aquota.user,jqfmt=vfsv1/' /etc/fstab
-    apt-get install -y quota >> "${SEEDIT_LOG}"  2>&1
+    DEBIAN_FRONTEND=noninteractive apt-get install -qy -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" quota >> "${SEEDIT_LOG}"  2>&1
     mount -o remount ${loc} >> "${SEEDIT_LOG}"  2>&1
     quotacheck -auMF vfsv1 >> "${SEEDIT_LOG}"  2>&1
     quotaon -uv / >> "${SEEDIT_LOG}"  2>&1
-    service quota start >> "${SEEDIT_LOG}"  2>&1
+    systemctl start quota >> "${SEEDIT_LOG}"  2>&1
   fi
 
   if [[ -d /srv/rutorrent ]]; then
