@@ -131,13 +131,17 @@ function _update() {
   git checkout lxd > /dev/null  2>&1
   git fetch origin lxd > /dev/null  2>&1
   git reset --hard origin/lxd >> "${SEEDIT_LOG}"  2>&1;
-  chmod -R 700 /etc/swizzin/scripts
 
-  #waitforapt
-  #apt-get -y -q update > /dev/null  2>&1
-  #apt-get -y -q dist-upgrade
-  for f in /etc/swizzin/scripts/update/*; do 
-    bash "$f"; 
+  chmod -R 700 /etc/swizzin/scripts
+  chown -R seedit4me:seedit4me /home/seedit4me/torrents
+  chmod -R 775 /home/seedit4me/torrents
+
+  waitforapt
+  apt-get -y -q update > /dev/null  2>&1
+  apt-get -y -q dist-upgrade
+
+  for f in /etc/swizzin/scripts/update/*; do
+    bash "$f";
   done
   #apt -y -q autoremove
   echo "update done -----------------------------------------------------------------------------"
