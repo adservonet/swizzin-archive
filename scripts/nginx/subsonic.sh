@@ -9,21 +9,15 @@
 #   including (via compiler) GPL-licensed code must also be made available
 #   under the GPL along with build & install instructions.
 MASTER=$(cut -d: -f1 < /root/.master.info)
-isactive=$(systemctl is-active subsonic)
 
 if [[ ! -f /etc/nginx/apps/subsonic.conf ]]; then
 cat > /etc/nginx/apps/subsonic.conf <<SUB
 location /subsonic {
-  #include /etc/nginx/snippets/proxy.conf;
+  include /etc/nginx/snippets/proxy.conf;
   proxy_pass              http://127.0.0.1:4040;
 }
 SUB
 fi
-
-sleep 5
-
 sed -i 's/SUBSONIC_HOST=0.0.0.0/SUBSONIC_HOST=127.0.0.1/g' /usr/share/subsonic/subsonic.sh
 sed -i 's/SUBSONIC_CONTEXT_PATH=\//SUBSONIC_CONTEXT_PATH=\/subsonic/g' /usr/share/subsonic/subsonic.sh
-if [[ $isactive == "active" ]]; then
-  service subsonic restart
-fi
+systemctl try-restart subsonic
