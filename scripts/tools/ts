@@ -2,6 +2,7 @@
 
 IFACE=`ip link | awk -F: '$0 !~ "lo|tun|vir|wl|^[^0-9]"{print $2;getline}' | cut -d @ -f 1 | xargs`
 
+
 function _tc() {
   vnstat -u
   TOTALSRX=`vnstat --dumpdb -i $IFACE | grep 'totalrx;' | cut -d';' -f2`
