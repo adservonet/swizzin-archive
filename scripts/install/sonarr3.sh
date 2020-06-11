@@ -68,6 +68,21 @@ SONARR
 #[Install]
 #WantedBy=multi-user.target
 
+cat > /var/lib/sonarr/config.xml <<SONN
+<Config>
+  <LogLevel>Info</LogLevel>
+  <EnableSsl>False</EnableSsl>
+  <Port>8989</Port>
+  <SslPort>9898</SslPort>
+  <UrlBase>sonarr</UrlBase>
+  <BindAddress>127.0.0.1</BindAddress>
+  <ApiKey>23195f535ee8406fb4b82637dc94db06</ApiKey>
+  <AuthenticationMethod>None</AuthenticationMethod>
+  <UpdateMechanism>BuiltIn</UpdateMechanism>
+  <Branch>master</Branch>
+</Config>
+SONN
+
   systemctl enable --now sonarr@${username} >> ${log} 2>&1
   sleep 10
 

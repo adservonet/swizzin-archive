@@ -17,28 +17,6 @@ location /sonarr {
 SONARR
 fi
 
-cat > /var/lib/sonarr/config.xml <<SONN
-<Config>
-  <LogLevel>Info</LogLevel>
-  <EnableSsl>False</EnableSsl>
-  <Port>8989</Port>
-  <SslPort>9898</SslPort>
-  <UrlBase>sonarr</UrlBase>
-  <BindAddress>127.0.0.1</BindAddress>
-  <ApiKey>23195f535ee8406fb4b82637dc94db06</ApiKey>
-  <AuthenticationMethod>None</AuthenticationMethod>
-  <UpdateMechanism>BuiltIn</UpdateMechanism>
-  <Branch>master</Branch>
-</Config>
-SONN
-
-chown sonarr:sonarr /var/lib/sonarr/config.xml
-
-systemctl enable sonarr
-systemctl start sonarr
-
-systemctl restart sonarr
-
-sleep 10
+sleep 3
 
 echo "we are done i guess"  >>  "${log}"  2>&1
