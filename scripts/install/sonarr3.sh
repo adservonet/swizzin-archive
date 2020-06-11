@@ -25,7 +25,7 @@ usermod -a -G seedit4me sonarr
 usermod -a -G sonarr seedit4me
 systemctl stop sonarr
 
-mv /lib/systemd/system/sonarr.service /lib/systemd/system/sonarr@.service
+#mv /lib/systemd/system/sonarr.service /lib/systemd/system/sonarr@.service
 
 chown -R "${username}":"${username}" /usr/lib/sonarr/
 chown -R "${username}":"${username}" /var/lib/sonarr/
@@ -38,10 +38,9 @@ After=network.target
 [Service]
 User=%i
 Group=%i
-UMask=002
 
-Type=simple
-ExecStart=/usr/bin/mono --debug /usr/lib/sonarr/bin/Sonarr.exe -nobrowser -data=/var/lib/son$
+Type=forking
+ExecStart=/usr/bin/mono --debug /usr/lib/sonarr/bin/Sonarr.exe -nobrowser -data=/var/lib/sonarr
 TimeoutStopSec=20
 KillMode=process
 Restart=on-failure
