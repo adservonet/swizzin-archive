@@ -18,6 +18,7 @@
 #   under the GPL along with build & install instructions.
 #
 MASTER=$(cut -d: -f1 < /root/.master.info)
+OUTTO = $log
 #if [[ -f /tmp/.install.lock ]]; then
 #  OUTTO="/root/logs/install.log"
 #else
@@ -25,10 +26,10 @@ MASTER=$(cut -d: -f1 < /root/.master.info)
 #fi
 
 function _removeBTSync() {
-  sudo service resilio-sync stop
-  sudo apt-get -y remove --purge resilio-sync* >> "${log}"  2>&1
-  deluser rslsync >> "${log}"  2>&1
-  delgroup rslsync >> "${log}"  2>&1
+  systemctl stop resilio-sync
+  sudo apt-get -y remove --purge resilio-sync* >>"${OUTTO}" 2>&1
+  deluser rslsync >>"${OUTTO}" 2>&1
+  delgroup rslsync >>"${OUTTO}" 2>&1
   if [[ -d /home/rslsync ]]; then
     rm -rf /home/rslsync
   fi

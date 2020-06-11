@@ -2,20 +2,17 @@
 
 function whiptail_deluge () {
   if [[ -z $deluge ]]; then
+    . /etc/swizzin/sources/functions/apt
+    repov=$(get_repo_version deluge)
     case $(lsb_release -cs) in
-    "jessie")
-      function=$(whiptail --title "Install Software" --menu "Choose a Deluge version:" --ok-button "Continue" --nocancel 12 50 3 \
-                "Repo Install" "" \
-                "Deluge 1.3" "" 3>&1 1>&2 2>&3)
-    ;;
     *)
       function=$(whiptail --title "Install Software" --menu "Choose a Deluge version:" --ok-button "Continue" --nocancel 12 50 3 \
-                "Repo Install" "" \
+                "Repo" "(${repov})" \
                 "Deluge 1.3" "" \
                 "Deluge 2.0" "" 3>&1 1>&2 2>&3)
     ;;
     esac
-    if [[ $function == "Repo Install" ]]; then
+    if [[ $function == "Repo" ]]; then
       export deluge=repo
     elif [[ $function == "Deluge 1.3" ]]; then
       export deluge=1.3-stable
@@ -43,16 +40,20 @@ function whiptail_deluge () {
 function whiptail_libtorrent_rasterbar () {
   if [[ -z $libtorrent ]]; then
     if [[ ! $deluge == master ]]; then
+        . /etc/swizzin/sources/functions/apt
+    repov=$(get_repo_version libtorrent-rasterbar7)
+    repov+=$(get_repo_version libtorrent-rasterbar8)
+    repov+=$(get_repo_version libtorrent-rasterbar9)
       case $(lsb_release -cs) in
-        "jessie"|"stretch"|"xenial"|"bionic")
+        "stretch"|"xenial"|"bionic")
         function=$(whiptail --title "Install Software" --menu "Choose a libtorrent branch:" --ok-button "Continue" --nocancel 12 50 3 \
-                    Repo "from apt" \
+                    Repo "(${repov})" \
                     1.0 "compiled - branch RC_1_0" \
                     1.1 "compiled - branch RC_1_1" 3>&1 1>&2 2>&3)
         ;;
         *)
         function=$(whiptail --title "Install Software" --menu "Choose a libtorrent branch:" --ok-button "Continue" --nocancel 12 50 3 \
-                    Repo "" \
+                    Repo "(${repov})" \
                     1.1 "libtorrent branch RC_1_1" 3>&1 1>&2 2>&3)
         ;;
       esac
@@ -105,9 +106,6 @@ function build_libtorrent_rasterbar () {
       fi
     done
       case $release in
-          "jessie")
-          apt-get install -y -q libtorrent-rasterbar7 python-libtorrent python3-libtorrent
-          ;;
           "xenial")
           apt-get install -y -q libtorrent-rasterbar8 python-libtorrent python3-libtorrent
           ;;
@@ -120,6 +118,8 @@ function build_libtorrent_rasterbar () {
       case $deluge in
         master)
           python=python3
+          pythonbin=$python
+          pythonapt=python3-dev
           case $release in
             "stretch"|"xenial")
               configure_args="--with-boost-python=boost_python-py35"
@@ -132,7 +132,15 @@ function build_libtorrent_rasterbar () {
         ;;
         1.3-stable)
           python=python
+          pythonbin=python2
+          pythonapt=python2.7-dev
           remove=python3-libtorrent
+          case $release in
+            "focal")
+              #configure_args="--with-boost-python=boost_python27"
+              LIST="libboost1.67-dev libboost-python1.67-dev libboost-system1.67-dev libboost-chrono1.67-dev libboost-random1.67-dev build-essential autoconf automake libtool libssl-dev libgeoip-dev geoip-database ${pythonapt} python-setuptools"
+            ;;
+          esac
         ;;
       esac
     fi
@@ -144,12 +152,13 @@ function build_libtorrent_rasterbar () {
       fi
     done
     LTRC=$libtorrent
-    LIST='build-essential autoconf automake libtool libboost-system-dev libboost-python-dev libssl-dev libgeoip-dev libboost-chrono-dev libboost-random-dev geoip-database python3-dev python-setuptools'
-
+    if [[ -z $LIST ]]; then
+      LIST="build-essential autoconf automake libtool libboost-system-dev libboost-python-dev libssl-dev libgeoip-dev libboost-chrono-dev libboost-random-dev geoip-database ${pythonapt} python-setuptools"
+    fi
     for depend in $LIST; do
-      waitforapt
       apt-get -qq -y install $depend >> "${log}"  2>&1 || { echo "ERROR: APT-GET could not install a required package: ${depend}. That's probably not good..."; }
     done
+      apt-get -y -q autoremove >>"${log}" 2>&1
     install_fpm
     #OpenSSL 1.1.0 might fk a lot of things up -- Requires at least libboost-1.62 to build
     #if [[ ! ${codename} =~ ("xenial")|("yakkety") ]]; then
@@ -167,7 +176,10 @@ function build_libtorrent_rasterbar () {
     #fi
 
     cd /tmp
-    git clone -b ${LTRC} https://github.com/arvidn/libtorrent.git >> "${log}"  2>&1 || { echo "ERROR: git could not clone the libtorrent repository"  >> "${log}"  2>&1; exit 1; }
+    . /etc/swizzin/sources/functions/utils
+    rm_if_exists "/tmp/libtorrent"
+
+    git clone -b ${LTRC} https://github.com/arvidn/libtorrent.git >>"${log}" 2>&1 || { echo "ERROR: git could not clone the libtorrent repository"; exit 1; }
     cd libtorrent
     ./autotool.sh >> "${log}"  2>&1
     ./configure --with-lib-geoip --with-libiconv >> "${log}"  2>&1
@@ -187,8 +199,8 @@ function build_libtorrent_rasterbar () {
     dpkg -i /root/dist/libtorrent-rasterbar_${VERSION}.deb
     if [[ -n $deluge ]]; then
       echo "Building python binding ..."
-      PYTHON=${python} ./configure --enable-python-binding --with-libiconv ${configure_args} >> "${log}"  2>&1
-      fpm --verbose --python-bin=${python} --python-package-name-prefix=${python} -n ${python}-libtorrent -f -p /root/dist/${python}-libtorrent_VERSION.deb --version ${VERSION} --description "Libtorrent rasterbar python bindings compiled by swizzin" -s python -t deb /tmp/libtorrent/bindings/python/setup.py >>  "${log}"  2>&1
+      PYTHON=${pythonbin} ./configure --enable-python-binding --with-libiconv ${configure_args} >>"${log}" 2>&1
+      fpm --verbose --python-bin=${pythonbin} --python-package-name-prefix=${python} -n ${python}-libtorrent -f -p /root/dist/${python}-libtorrent_VERSION.deb --version ${VERSION} --description "Libtorrent rasterbar python bindings compiled by swizzin" -s python -t deb /tmp/libtorrent/bindings/python/setup.py >> $log 2>&1
       dpkg -i /root/dist/${python}-libtorrent_${VERSION}.deb
     fi
     ldconfig
@@ -201,8 +213,6 @@ function build_libtorrent_rasterbar () {
 
 function build_deluge () {
   if [[ $deluge == repo ]]; then
-    pip install --upgrade cryptography >> "${log}"  2>&1
-    python -m easy_install --upgrade pyOpenSSL >> "${log}"  2>&1
     apt-get -q -y update >> "${log}"  2>&1
     apt-get -q -y install deluged deluge-web deluge-console >> "${log}"  2>&1
     chmod 644 /etc/swizzin/scripts/deluge.UpdateTracker.py
@@ -219,16 +229,27 @@ function build_deluge () {
         args="--python-disable-dependency=pyxdg --python-disable-dependency=pyopenssl -d python3-openssl -d python3-xdg"
       ;;
       1.3-stable)
+        if [[ $release == "focal" ]]; then
+          LIST='python2.7-dev intltool xdg-utils librsvg2-common'
+          PIP='twisted pyopenssl setuptools pyxdg chardet notify pygame mako service_identity'
+        else
         LIST='python python-twisted python-openssl python-setuptools intltool python-xdg python-chardet python-notify python-pygame python-glade2 librsvg2-common xdg-utils python-mako'
+        fi
         pythonver=python2
         distver=python2.7
         args=
       ;;
     esac
     for depend in $LIST; do
-      waitforapt
-      apt-get -qq -y install $depend >> "${log}"  2>&1 || { echo "ERROR: APT-GET could not install a required package: ${depend}. That's probably not good..." >>  "${log}"  2>&1; }
+      apt-get -qq -y install $depend >>"${log}" 2>&1 || { echo "ERROR: APT-GET could not install a required package: ${depend}. That's probably not good..."; }
     done
+    if [[ -n $PIP ]]; then
+      . /etc/swizzin/sources/functions/pyenv
+      python_getpip
+      for p in $PIP; do
+        pip install $p >> $log 2>&1
+      done
+    fi
     . /etc/swizzin/sources/functions/fpm
     install_fpm
     if [[ $pythonver == python3 ]]; then
@@ -241,14 +262,11 @@ function build_deluge () {
             packages=(setuptools pycparser asn1crypto cffi constantly incremental attrs automat idna hyperlink pyhamcrest cryptography pyopenssl service_identity zope.interface twisted)
             mkdir -p /root/dist/python3
             for depend in $LIST; do
-              waitforapt
-              apt-get -qq -y install $depend >> "${log}"  2>&1 || { echo "ERROR: APT-GET could not install a required package: ${depend}. That's probably not good..." >>  "${log}"  2>&1; }
+              apt-get -qq -y install $depend >>"${log}" 2>&1 || { echo "ERROR: APT-GET could not install a required package: ${depend}. That's probably not good..."; }
             done
             for d in ${packages[@]}; do
-              waitforapt
-              fpm -s python -t deb --python-pip=pip3 --python-bin=${pythonver} --python-package-name-prefix=${pythonver} -f -p /root/dist/python3/python3-$d.deb $d >>  "${log}"  2>&1
-              waitforapt
-              dpkg -i /root/dist/python3/python3-$d.deb >>  "${log}"  2>&1
+              fpm -s python -t deb --python-pip=pip3 --python-bin=${pythonver} --python-package-name-prefix=${pythonver} -f -p /root/dist/python3/python3-$d.deb $d >> ${log} 2>&1
+              dpkg -i /root/dist/python3/python3-$d.deb >> ${log} 2>&1
             done
           ;;
           "stretch")
@@ -256,15 +274,14 @@ function build_deluge () {
             check_debian_backports
             LIST='python3-twisted'
             for depend in $LIST; do
-              waitforapt
-              apt-get -qq -y install -t stretch-backports $depend >> "${log}"  2>&1 || { echo "ERROR: APT-GET could not install a required package: ${depend}. That's probably not good..." >>  "${log}"  2>&1; }
+              apt-get -qq -y install -t stretch-backports $depend >>"${log}" 2>&1 || { echo "ERROR: APT-GET could not install a required package: ${depend}. That's probably not good..."; }
             done
           ;;
         esac
       fi
     fi
     cd /tmp
-    git clone -b ${deluge} git://deluge-torrent.org/deluge.git >> "${log}"  2>&1 || { echo "WARN: Cloning Deluge from deluge-torrent.org failed, attempting github backup." >> "${log}"  2>&1; git clone -b ${deluge} https://github.com/deluge-torrent/deluge/  >> "${log}"  2>&1 || { echo "ERROR: Cloning Deluge from github failed" >> "${log}"  2>&1; exit 1; } ; }
+    git clone -b ${deluge} git://deluge-torrent.org/deluge.git >>"${log}" 2>&1 || { echo "WARN: Cloning Deluge from deluge-torrent.org failed, attempting github backup."; git clone -b ${deluge} https://github.com/deluge-torrent/deluge/ >>"${log}" 2>&1 || { echo "ERROR: Cloning Deluge from github failed"; exit 1; } ; }
     cd deluge
     VERSION=$(git describe | cut -d- -f2)
     sed -i 's/-dev//g' setup.cfg
@@ -292,7 +309,7 @@ function dweb_check () {
   dvermajor=$(deluged -v | grep deluged | grep -oP '\d+\.\d+\.\d+' | cut -d. -f1)
   for u in ${users[@]}; do
     localpass=$(grep localclient /home/$u/.config/deluge/auth | cut -d: -f2)
-    DUDID=$(/usr/local/bin/swizzin/deluge.addHost.py)
+    DUDID=$(python2 /usr/local/bin/swizzin/deluge.addHost.py)
     DPORT=$(grep daemon_port /home/$u/.config/deluge/core.conf | grep -oP '\d+' )
 
     case $dvermajor in
