@@ -6,8 +6,8 @@ users=($(cut -d: -f1 < /etc/htpasswd))
 
 
 if [[ -f /install/.rtorrent.lock ]]; then
-  echo "uninstalling rtorrent.."  >> "${SEEDIT_LOG}" 2>&1
-  bash /usr/local/bin/swizzin/remove/rtorrent.sh  >> "${SEEDIT_LOG}" 2>&1
+  echo "uninstalling rtorrent.."  >> "${log}" 2>&1
+  bash /usr/local/bin/swizzin/remove/rtorrent.sh  >> "${log}" 2>&1
 fi
 
 rm -rf /srv/rutorrent

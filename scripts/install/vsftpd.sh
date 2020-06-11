@@ -15,8 +15,8 @@
 #  log="/root/logs/swizzin.log"
 #fi
 
-apt-get -y update >>  "${SEEDIT_LOG}"  2>&1
-apt-get -y install vsftpd ssl-cert>>  "${SEEDIT_LOG}"  2>&1
+apt-get -y update >>  "${log}"  2>&1
+apt-get -y install vsftpd ssl-cert>>  "${log}"  2>&1
 
 cat > /etc/vsftpd.conf <<VSC
 listen=NO

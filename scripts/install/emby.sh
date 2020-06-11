@@ -20,18 +20,18 @@
 username=$(cut -d: -f1 < /root/.master.info)
 
 if [[ ! $(command -v mono) ]]; then
-  echo "Adding mono repository and installing mono ... " >> "${SEEDIT_LOG}"  2>&1
+  echo "Adding mono repository and installing mono ... " >> "${log}"  2>&1
   . /etc/swizzin/sources/functions/mono
   mono_repo_setup
   waitforapt
-  apt-get install -y libmono-cil-dev  >> "${SEEDIT_LOG}"  2>&1
+  apt-get install -y libmono-cil-dev  >> "${log}"  2>&1
 fi
 
-echo "Installing emby from GitHub releases ... " >> "${SEEDIT_LOG}"  2>&1
+echo "Installing emby from GitHub releases ... " >> "${log}"  2>&1
   current=$(curl -L -s -H 'Accept: application/json' https://github.com/MediaBrowser/Emby.Releases/releases/latest | sed -e 's/.*"tag_name":"\([^"]*\)".*/\1/')
   cd /tmp
   wget -q -O emby.dpkg https://github.com/MediaBrowser/Emby.Releases/releases/download/${current}/emby-server-deb_${current}_amd64.deb
-  dpkg -i --force-confnew emby.dpkg  >> "${SEEDIT_LOG}"  2>&1
+  dpkg -i --force-confnew emby.dpkg  >> "${log}"  2>&1
   rm emby.dpkg
 
   if [[ -f /etc/emby-server.conf ]]; then
@@ -39,7 +39,7 @@ echo "Installing emby from GitHub releases ... " >> "${SEEDIT_LOG}"  2>&1
   fi
 
 if [[ -f /install/.nginx.lock ]]; then
-echo "Setting up emby nginx configuration ... " >> "${SEEDIT_LOG}"  2>&1
+echo "Setting up emby nginx configuration ... " >> "${log}"  2>&1
   bash /usr/local/bin/swizzin/nginx/emby.sh
   systemctl reload nginx
 fi
@@ -51,6 +51,6 @@ chown -R emby:emby /var/lib/emby
 
 systemctl unmask emby-server
 systemctl enable emby-server
-systemctl restart emby-server  >> "${SEEDIT_LOG}"  2>&1
+systemctl restart emby-server  >> "${log}"  2>&1
 touch /install/.emby.lock
   

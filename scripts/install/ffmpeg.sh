@@ -21,6 +21,6 @@ export codename=$(lsb_release -cs)
 #  log="/root/logs/swizzin.log"
 #fi
 
-apt-get -y install ffmpeg >>  "${SEEDIT_LOG}"  2>&1
+apt-get -y install ffmpeg >>  "${log}"  2>&1
 
 touch /install/.ffmpeg.lock

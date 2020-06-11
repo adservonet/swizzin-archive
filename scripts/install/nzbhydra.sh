@@ -15,14 +15,14 @@
 #
 function _install() {
 # for output to dashboard
-echo "Installing NZBHydra ... " >> "${SEEDIT_LOG}"  2>&1;
+echo "Installing NZBHydra ... " >> "${log}"  2>&1;
 # for output to box
 #echo "Installing NZBHydra ... "
 warning=$(echo -e "[ \e[1;91mWARNING\e[0m ]")
 apt-get -y update >/dev/null 2>&1
 apt-get -y install git-core python-dev >/dev/null 2>&1;
-##echo >> "${SEEDIT_LOG}"  2>&1;
-echo "Cloning NZBHydra git ... " >> "${SEEDIT_LOG}"  2>&1;
+##echo >> "${log}"  2>&1;
+echo "Cloning NZBHydra git ... " >> "${log}"  2>&1;
 git clone -q https://github.com/theotherp/nzbhydra.git /home/${MASTER}/nzbhydra || { echo "GIT failed"; exit 1; }
 chown ${MASTER}:${MASTER} -R /home/${MASTER}/nzbhydra
 mkdir /home/${MASTER}/.nzbhydra
@@ -31,7 +31,7 @@ chown ${MASTER}:${MASTER} -R /home/${MASTER}/.nzbhydra
 
 function _services(){
 # for output to dashboard
-echo "Installing and enabling service ... " >> "${SEEDIT_LOG}"  2>&1;
+echo "Installing and enabling service ... " >> "${log}"  2>&1;
 # for output to box
 echo "Installing and enabling service ... "
 
@@ -67,7 +67,7 @@ if [[ -f /install/.nginx.lock ]]; then
 fi
 
 touch /install/.nzbhydra.lock
-echo "nzbhydra installation complete. " >> "${SEEDIT_LOG}"  2>&1;
+echo "nzbhydra installation complete. " >> "${log}"  2>&1;
 }
 
 #if [[ -f /tmp/.install.lock ]]; then

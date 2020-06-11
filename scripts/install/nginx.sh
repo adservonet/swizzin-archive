@@ -30,7 +30,7 @@ if [[ -n $(pidof apache2) ]]; then
     echo "Purging apache2 ... "
     systemctl disable apache2 >> /dev/null 2>&1
     systemctl stop apache2
-    apt-get -y -q purge apache2 >>  "${SEEDIT_LOG}"  2>&1
+    apt-get -y -q purge apache2 >>  "${log}"  2>&1
   elif [[ $apache2 == "disable" ]]; then
     echo "Disabling apache2 ... "
     systemctl disable apache2 >> /dev/null 2>&1
@@ -45,7 +45,7 @@ apt-get -y -f install
 apt-get -y -qq update
 APT='nginx-extras subversion ssl-cert php7.3-fpm php7.3-common libfcgi0ldbl php7.3-cli php7.3-dev php7.3-xml php7.3-curl php7.3-xmlrpc php7.3-json php7.3-mbstring php7.3-opcache php-geoip php7.3-xml php7.3-gd php7.3-sqlite3 php7.3-zip'
 for depends in $APT; do
-apt-get -y install "$depends" >>  "${SEEDIT_LOG}"  2>&1 || { echo "ERROR: APT-GET could not install a required package: ${depends}. That's probably not good..."; }
+apt-get -y install "$depends" >>  "${log}"  2>&1 || { echo "ERROR: APT-GET could not install a required package: ${depends}. That's probably not good..."; }
 done
 
 cd /etc/php
@@ -150,7 +150,7 @@ mkdir -p /etc/nginx/apps/
 chmod 700 /etc/nginx/ssl
 
 cd /etc/nginx/ssl
-openssl dhparam -out dhparam.pem 2048 >> "${SEEDIT_LOG}"  2>&1
+openssl dhparam -out dhparam.pem 2048 >> "${log}"  2>&1
 
 cat > /etc/nginx/snippets/ssl-params.conf <<SSC
 ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
@@ -201,7 +201,7 @@ proxy_no_cache \$cookie_session;
 proxy_buffers 32 4k;
 PROX
 
-svn export https://github.com/Naereen/Nginx-Fancyindex-Theme/trunk/Nginx-Fancyindex-Theme-dark /srv/fancyindex >>  "${SEEDIT_LOG}"  2>&1
+svn export https://github.com/Naereen/Nginx-Fancyindex-Theme/trunk/Nginx-Fancyindex-Theme-dark /srv/fancyindex >>  "${log}"  2>&1
 cat > /etc/nginx/snippets/fancyindex.conf <<FIC
 fancyindex on;
 fancyindex_localtime on;

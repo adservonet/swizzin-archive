@@ -13,11 +13,11 @@ chmod -R 775 /home/seedit4me/torrents/transmission
 fi
 
 waitforapt
-add-apt-repository -y ppa:transmissionbt/ppa >>  "${SEEDIT_LOG}"  2>&1
+add-apt-repository -y ppa:transmissionbt/ppa >>  "${log}"  2>&1
 waitforapt
-apt-get update >>  "${SEEDIT_LOG}"  2>&1
+apt-get update >>  "${log}"  2>&1
 waitforapt
-apt-get -y install transmission-cli transmission-common transmission-daemon >>  "${SEEDIT_LOG}"  2>&1
+apt-get -y install transmission-cli transmission-common transmission-daemon >>  "${log}"  2>&1
 
 service transmission-daemon stop
 

@@ -31,8 +31,8 @@ PUBLICIP=$(ip route get 1 | sed -n 's/^.*src \([0-9.]*\) .*$/\1/p')
 
 function _rar() {
 	cd /tmp
-  	wget -q http://www.rarlab.com/rar/rarlinux-x64-5.5.0.tar.gz >>  "${SEEDIT_LOG}"  2>&1
-  	tar -xzf rarlinux-x64-5.5.0.tar.gz >/dev/null 2>&1 >>  "${SEEDIT_LOG}"  2>&1
+  	wget -q http://www.rarlab.com/rar/rarlinux-x64-5.5.0.tar.gz >>  "${log}"  2>&1
+  	tar -xzf rarlinux-x64-5.5.0.tar.gz >/dev/null 2>&1 >>  "${log}"  2>&1
   	cp rar/*rar /bin >/dev/null 2>&1
   	rm -rf rarlinux*.tar.gz >/dev/null 2>&1
   	rm -rf /tmp/rar >/dev/null 2>&1
@@ -54,7 +54,7 @@ function _rar() {
 
 apt-get update >/dev/null 2>&1
 apt-get -y install par2 python-configobj python-dbus python-feedparser python-gi python-libxml2 \
-  python-utidylib python-yenc python-cheetah python-openssl screen  >>  "${SEEDIT_LOG}"  2>&1
+  python-utidylib python-yenc python-cheetah python-openssl screen  >>  "${log}"  2>&1
 
 if [[ -z $(which rar) ]]; then
   if [[ $DISTRO == "Debian" ]]; then
@@ -67,11 +67,11 @@ cd /home/${username}/
 #wget -qO SABnzbd.tar.gz https://github.com/sabnzbd/sabnzbd/releases/download/1.1.1/SABnzbd-1.1.1-src.tar.gz
 #tar xf SABnzbd.tar.gz >/dev/null 2>&1
 #mv SABnzbd-* SABnzbd
-git clone -b 2.3.x https://github.com/sabnzbd/sabnzbd.git /home/${username}/SABnzbd  >>  "${SEEDIT_LOG}"  2>&1
+git clone -b 2.3.x https://github.com/sabnzbd/sabnzbd.git /home/${username}/SABnzbd  >>  "${log}"  2>&1
 chown ${username}.${username} -R SABnzbd
 #rm SABnzbd.tar.gz
-pip install http://www.golug.it/pub/yenc/yenc-0.4.0.tar.gz  >>  "${SEEDIT_LOG}"  2>&1
-apt-get install p7zip-full -y  >>  "${SEEDIT_LOG}"  2>&1
+pip install http://www.golug.it/pub/yenc/yenc-0.4.0.tar.gz  >>  "${log}"  2>&1
+apt-get install p7zip-full -y  >>  "${log}"  2>&1
 touch /install/.sabnzbd.lock
 
 cat >/etc/systemd/system/sabnzbd@.service<<EOF
@@ -93,7 +93,7 @@ WantedBy=multi-user.target
 EOF
 
 systemctl daemon-reload >/dev/null 2>&1
-systemctl enable sabnzbd@${username}.service  >>  "${SEEDIT_LOG}"  2>&1
+systemctl enable sabnzbd@${username}.service  >>  "${log}"  2>&1
 systemctl start sabnzbd@${username}.service >/dev/null 2>&1
 
 if [[ -f /install/.nginx.lock ]]; then

@@ -27,11 +27,11 @@ CODENAME=$(lsb_release -cs)
 #  OUTTO="/root/logs/swizzin.log"
 #fi
 
-echo "Installing ZNC. Please wait ... " >> ${SEEDIT_LOG} 2>&1
-echo "" >> ${SEEDIT_LOG} 2>&1
-echo "" >> ${SEEDIT_LOG} 2>&1
+echo "Installing ZNC. Please wait ... " >> ${log} 2>&1
+echo "" >> ${log} 2>&1
+echo "" >> ${log} 2>&1
 useradd znc -m -s /bin/bash
-passwd znc -l >>  "${SEEDIT_LOG}"  2>&1
+passwd znc -l >>  "${log}"  2>&1
 
 if [[ $DISTRO == Debian ]]; then
   . /etc/swizzin/sources/functions/backports
@@ -42,12 +42,12 @@ Pin: release a=${CODENAME}-backports
 Pin-Priority: 500
 ZNCP
 elif [[ $DISTRO == Ubuntu ]]; then
-  add-apt-repository --yes ppa:teward/znc >>  "${SEEDIT_LOG}"  2>&1
+  add-apt-repository --yes ppa:teward/znc >>  "${log}"  2>&1
 fi
   waitforapt
-  apt-get update -q -y >>  "${SEEDIT_LOG}"  2>&1
+  apt-get update -q -y >>  "${log}"  2>&1
   waitforapt
-  apt-get install znc -q -y >>  "${SEEDIT_LOG}"  2>&1
+  apt-get install znc -q -y >>  "${log}"  2>&1
   #sudo -u znc crontab -l | echo -e "*/10 * * * * /usr/bin/znc >/dev/null 2>&1\n@reboot /usr/bin/znc >/dev/null 2>&1" | crontab -u znc - > /dev/null 2>&1
   cat > /etc/systemd/system/znc.service <<ZNC
 [Unit]

@@ -41,4 +41,4 @@ systemctl restart sonarr
 
 sleep 10
 
-echo "we are done i guess"  >>  "${SEEDIT_LOG}"  2>&1
+echo "we are done i guess"  >>  "${log}"  2>&1

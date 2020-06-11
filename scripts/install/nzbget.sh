@@ -13,7 +13,7 @@
 
 function _download {
   cd /tmp
-  wget https://nzbget.net/download/nzbget-latest-bin-linux.run >>  "${SEEDIT_LOG}"  2>&1
+  wget https://nzbget.net/download/nzbget-latest-bin-linux.run >>  "${log}"  2>&1
 }
 
 function _service {
@@ -40,7 +40,7 @@ NZBGD
 function _install {
   cd /tmp
     for u in "${users[@]}"; do
-      sh nzbget-latest-bin-linux.run --destdir /home/$u/nzbget >>  "${SEEDIT_LOG}"  2>&1
+      sh nzbget-latest-bin-linux.run --destdir /home/$u/nzbget >>  "${log}"  2>&1
       chown -R $u:$u /home/$u/nzbget
       if [[ $u == $master ]]; then
         :
@@ -78,7 +78,7 @@ function _install {
   fi
 
   for u in "${users[@]}"; do
-    systemctl enable nzbget@$u >>  "${SEEDIT_LOG}"  2>&1
+    systemctl enable nzbget@$u >>  "${log}"  2>&1
     systemctl start nzbget@$u
   done
 }

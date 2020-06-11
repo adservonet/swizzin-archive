@@ -84,18 +84,18 @@ function _installquota(){
   echo "Installing dependencies"
   if [[ $DISTRO == Ubuntu ]]; then
     sed -ie '/\'"${loc}"'/ s/'${hook}'/'${hook}',usrjquota=aquota.user,jqfmt=vfsv1/' /etc/fstab
-    DEBIAN_FRONTEND=noninteractive apt-get install -qy -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" linux-image-extra-virtual quota >> "${SEEDIT_LOG}"  2>&1
-    mount -o remount ${loc} >> "${SEEDIT_LOG}"  2>&1
-    quotacheck -auMF vfsv1 >> "${SEEDIT_LOG}"  2>&1
-    quotaon -uv / >> "${SEEDIT_LOG}"  2>&1
-    systemctl start quota start >> "${SEEDIT_LOG}"  2>&1
+    DEBIAN_FRONTEND=noninteractive apt-get install -qy -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" linux-image-extra-virtual quota >> "${log}"  2>&1
+    mount -o remount ${loc} >> "${log}"  2>&1
+    quotacheck -auMF vfsv1 >> "${log}"  2>&1
+    quotaon -uv / >> "${log}"  2>&1
+    systemctl start quota start >> "${log}"  2>&1
   elif [[ $DISTRO == Debian ]]; then
     sed -ie '/\'"${loc}"'/ s/'${hook}'/'${hook}',usrjquota=aquota.user,jqfmt=vfsv1/' /etc/fstab
-    DEBIAN_FRONTEND=noninteractive apt-get install -qy -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" quota >> "${SEEDIT_LOG}"  2>&1
-    mount -o remount ${loc} >> "${SEEDIT_LOG}"  2>&1
-    quotacheck -auMF vfsv1 >> "${SEEDIT_LOG}"  2>&1
-    quotaon -uv / >> "${SEEDIT_LOG}"  2>&1
-    systemctl start quota >> "${SEEDIT_LOG}"  2>&1
+    DEBIAN_FRONTEND=noninteractive apt-get install -qy -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" quota >> "${log}"  2>&1
+    mount -o remount ${loc} >> "${log}"  2>&1
+    quotacheck -auMF vfsv1 >> "${log}"  2>&1
+    quotaon -uv / >> "${log}"  2>&1
+    systemctl start quota >> "${log}"  2>&1
   fi
 
   if [[ -d /srv/rutorrent ]]; then

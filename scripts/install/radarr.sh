@@ -21,9 +21,9 @@ function _string() { perl -le 'print map {(a..z,A..Z,0..9)[rand 62] } 0..pop' 15
 #################################################################################
 
 function _installRadarrIntro() {
-  echo "Radarr will now be installed." >> "${SEEDIT_LOG}"  2>&1;
-  echo "This process may take up to 2 minutes." >> "${SEEDIT_LOG}"  2>&1;
-  echo "Please wait until install is completed." >> "${SEEDIT_LOG}"  2>&1;
+  echo "Radarr will now be installed." >> "${log}"  2>&1;
+  echo "This process may take up to 2 minutes." >> "${log}"  2>&1;
+  echo "Please wait until install is completed." >> "${log}"  2>&1;
   # output to box
   echo "Radarr will now be installed."
   echo "This process may take up to 2 minutes."
@@ -43,12 +43,12 @@ function _installRadarrCode() {
   waitforapt
   apt-get -y -q update > /dev/null 2>&1
   waitforapt
-  apt-get install -y libmono-cil-dev curl mediainfo >> "${SEEDIT_LOG}"  2>&1;
+  apt-get install -y libmono-cil-dev curl mediainfo >> "${log}"  2>&1;
   echo "Installing Radar ... "
   if [[ ! -d /opt ]]; then mkdir /opt; fi
   cd /opt
-  wget $( curl -s https://api.github.com/repos/Radarr/Radarr/releases | grep linux.tar.gz | grep browser_download_url | head -1 | cut -d \" -f 4 )  >> "${SEEDIT_LOG}"  2>&1;
-  tar -xvzf Radarr.*.linux.tar.gz  >> "${SEEDIT_LOG}"  2>&1;
+  wget $( curl -s https://api.github.com/repos/Radarr/Radarr/releases | grep linux.tar.gz | grep browser_download_url | head -1 | cut -d \" -f 4 )  >> "${log}"  2>&1;
+  tar -xvzf Radarr.*.linux.tar.gz  >> "${log}"  2>&1;
   rm -rf /opt/Radarr.*.linux.tar.gz
   touch /install/.radarr.lock
 }
@@ -92,7 +92,7 @@ EOF
 
 function _installRadarrFinish() {
   # output to dashboard
-  echo "Radarr Install Complete!" >> "${SEEDIT_LOG}"  2>&1;
+  echo "Radarr Install Complete!" >> "${log}"  2>&1;
 }
 
 function _installRadarrExit() {
@@ -111,8 +111,8 @@ version=$(lsb_release -cs)
 ip=$(curl -s http://whatismyip.akamai.com)
 
 _installRadarrIntro
-echo "Installing dependencies ... " >> "${SEEDIT_LOG}"  2>&1;_installRadarrDependencies
-echo "Installing Radar ... " >> "${SEEDIT_LOG}"  2>&1;_installRadarrCode
-echo "Configuring Radar ... " >> "${SEEDIT_LOG}"  2>&1;_installRadarrConfigure
+echo "Installing dependencies ... " >> "${log}"  2>&1;_installRadarrDependencies
+echo "Installing Radar ... " >> "${log}"  2>&1;_installRadarrCode
+echo "Configuring Radar ... " >> "${log}"  2>&1;_installRadarrConfigure
 _installRadarrFinish
 _installRadarrExit

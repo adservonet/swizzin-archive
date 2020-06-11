@@ -34,9 +34,9 @@ echo "Installing plex keys and sources ... "
   echo
 
 echo "Updating system ... "
-  apt-get install apt-transport-https -y >>  "${SEEDIT_LOG}"  2>&1
-  apt-get -y update >>  "${SEEDIT_LOG}"  2>&1
-  apt-get install -o Dpkg::Options::="--force-confold" -y -f plexmediaserver --allow-unauthenticated >>  "${SEEDIT_LOG}"  2>&1
+  apt-get install apt-transport-https -y >>  "${log}"  2>&1
+  apt-get -y update >>  "${log}"  2>&1
+  apt-get install -o Dpkg::Options::="--force-confold" -y -f plexmediaserver --allow-unauthenticated >>  "${log}"  2>&1
     #DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical apt-get -q -y -o -f "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" install plexmediaserver >/dev/null 2>&1
     echo
 

@@ -37,9 +37,9 @@ if [[ -n $active ]]; then
   fi
 fi
 
-apt-get -y -q update >> "${SEEDIT_LOG}"  2>&1
-apt-get -y -q install git-core openssl libssl-dev python3-cheetah python3 python3-pip python3-dev >> "${SEEDIT_LOG}"  2>&1
-pip3 install lxml regex scandir soupsieve >> "${SEEDIT_LOG}"  2>&1
+apt-get -y -q update >> "${log}"  2>&1
+apt-get -y -q install git-core openssl libssl-dev python3-cheetah python3 python3-pip python3-dev >> "${log}"  2>&1
+pip3 install lxml regex scandir soupsieve >> "${log}"  2>&1
 function _rar () {
   cd /tmp
   wget -q http://www.rarlab.com/rar/rarlinux-x64-5.5.0.tar.gz
@@ -50,7 +50,7 @@ function _rar () {
 }
 
 if [[ -z $(which rar) ]]; then
-  apt-get -y install rar unrar >> "${SEEDIT_LOG}"  2>&1 || { echo "INFO: Could not find rar/unrar in the repositories. It is likely you do not have the multiverse repo enabled. Installing directly."; _rar; }
+  apt-get -y install rar unrar >> "${log}"  2>&1 || { echo "INFO: Could not find rar/unrar in the repositories. It is likely you do not have the multiverse repo enabled. Installing directly."; _rar; }
 fi
 sudo git clone https://github.com/SickGear/SickGear.git  /home/$user/.sickgear >/dev/null 2>&1
 

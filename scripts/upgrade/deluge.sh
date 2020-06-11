@@ -17,7 +17,7 @@ whiptail_deluge
 whiptail_libtorrent_rasterbar
 dver=$(deluged -v | grep deluged | grep -oP '\d+\.\d+\.\d+')
 if [[ $dver == 1.3* ]] && [[ $deluge == master ]]; then
-  echo "Major version upgrade detected. User-data will be backed-up." >> "${SEEDIT_LOG}"  2>&1;
+  echo "Major version upgrade detected. User-data will be backed-up." >> "${log}"  2>&1;
 fi
 users=($(cut -d: -f1 < /etc/htpasswd))
 noexec=$(grep "/tmp" /etc/fstab | grep noexec)
@@ -34,10 +34,10 @@ if [[ -n $noexec ]]; then
   noexec=1
 fi
 
-echo "Checking for outdated deluge install method."  >> "${SEEDIT_LOG}"  2>&1; remove_ltcheckinstall
-echo "Rebuilding libtorrent ... " >> "${SEEDIT_LOG}"  2>&1; build_libtorrent_rasterbar
+echo "Checking for outdated deluge install method."  >> "${log}"  2>&1; remove_ltcheckinstall
+echo "Rebuilding libtorrent ... " >> "${log}"  2>&1; build_libtorrent_rasterbar
 cleanup_deluge
-echo "Upgrading Deluge. Please wait ... " >> "${SEEDIT_LOG}"  2>&1; build_deluge
+echo "Upgrading Deluge. Please wait ... " >> "${log}"  2>&1; build_deluge
 if [[ -n $noexec ]]; then
 	mount -o remount,noexec /tmp
 fi
@@ -48,10 +48,10 @@ if [[ -f /install/.nginx.lock ]]; then
   service nginx reload
 fi
 
-echo "Fixing Web Service and Hostlist ... " >> "${SEEDIT_LOG}"  2>&1; dweb_check
+echo "Fixing Web Service and Hostlist ... " >> "${log}"  2>&1; dweb_check
 
 for u in "${users[@]}"; do
-  echo "Running ltconfig check ..." >> "${SEEDIT_LOG}"  2>&1; ltconfig
+  echo "Running ltconfig check ..." >> "${log}"  2>&1; ltconfig
   systemctl try-restart deluged@${u}
   systemctl try-restart deluge-web@${u}
 done

@@ -47,16 +47,16 @@ function _installRapidleech4() {
   service nginx reload
 }
 function _installRapidleech5() {
-    echo "Rapidleech Install Complete!" >> "${SEEDIT_LOG}"  2>&1;
+    echo "Rapidleech Install Complete!" >> "${log}"  2>&1;
     service nginx reload
 }
 function _installRapidleech6() {
     exit
 }
 
-echo "Installing rapidleech ... " >> "${SEEDIT_LOG}"  2>&1;_installRapidleech1
-echo "Setting up rapidleech permissions ... " >> "${SEEDIT_LOG}"  2>&1;_installRapidleech2
-echo "Setting up rapidleech nginx configuration ... " >> "${SEEDIT_LOG}"  2>&1;_installRapidleech3
-echo "Reloading nginx ... " >> "${SEEDIT_LOG}"  2>&1;_installRapidleech4
+echo "Installing rapidleech ... " >> "${log}"  2>&1;_installRapidleech1
+echo "Setting up rapidleech permissions ... " >> "${log}"  2>&1;_installRapidleech2
+echo "Setting up rapidleech nginx configuration ... " >> "${log}"  2>&1;_installRapidleech3
+echo "Reloading nginx ... " >> "${log}"  2>&1;_installRapidleech4
 _installRapidleech5
 _installRapidleech6

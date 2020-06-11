@@ -35,9 +35,9 @@ else
   LIST='tesseract-ocr gocr rhino libcurl4-openssl-dev python2.7-dev sqlite3'
 fi
 
-apt-get -y update >> "${SEEDIT_LOG}"  2>&1
+apt-get -y update >> "${log}"  2>&1
 for depend in $LIST; do
-  apt-get -qq -y install $depend >> "${SEEDIT_LOG}"  2>&1 || { echo "ERROR: APT-GET could not install a required package: ${depend}. That's probably not good..."; }
+  apt-get -qq -y install $depend >> "${log}"  2>&1 || { echo "ERROR: APT-GET could not install a required package: ${depend}. That's probably not good..."; }
 done
 
 if [[ ! $codename =~ ("xenial"|"stretch"|"buster"|"bionic") ]]; then
@@ -47,10 +47,10 @@ fi
 python2_venv ${user} pyload
 
 PIP='wheel setuptools pycurl pycrypto tesseract pillow pyOpenSSL js2py feedparser beautifulsoup'
-/opt/.venv/pyload/bin/pip install $PIP >> "${SEEDIT_LOG}"  2>&1
+/opt/.venv/pyload/bin/pip install $PIP >> "${log}"  2>&1
 chown -R ${user}: /opt/.venv/pyload
 
-git clone --branch "stable" https://github.com/pyload/pyload.git /opt/pyload >> "${SEEDIT_LOG}"  2>&1
+git clone --branch "stable" https://github.com/pyload/pyload.git /opt/pyload >> "${log}"  2>&1
 
 echo "/opt/pyload" > /opt/pyload/module/config/configdir
 
@@ -196,7 +196,7 @@ PYSD
   systemctl reload nginx
   fi
   echo "Enabling and starting pyLoad services ... "
-systemctl enable --now pyload.service >> "${SEEDIT_LOG}"  2>&1
+systemctl enable --now pyload.service >> "${log}"  2>&1
 touch /install/.pyload.lock
 
 

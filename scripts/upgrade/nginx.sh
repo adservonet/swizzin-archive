@@ -50,7 +50,7 @@ fi
 for i in "${locks[@]}"; do
   app=${i}
   if [[ -f /install/.$app.lock ]]; then
-    echo "Reinstalling nginx config for $app"  >> "${SEEDIT_LOG}"  2>&1;
+    echo "Reinstalling nginx config for $app"  >> "${log}"  2>&1;
     /usr/local/bin/swizzin/nginx/$app.sh
   fi
 done

@@ -28,7 +28,7 @@ codename=$(lsb_release -cs)
 #apt-get -y -qq update > /dev/null  2>&1
 APT='php7.3-fpm php7.3-common php7.3-cli php7.3-dev php7.3-xml php7.3-curl php7.3-xmlrpc php7.3-json php7.3-mbstring php7.3-opcache php-geoip php7.3-xml php7.3-gd php7.3-sqlite3 php7.3-zip'
 #for depends in $APT; do
-#    apt-get -y install "$depends" >>  "${SEEDIT_LOG}"  2>&1
+#    apt-get -y install "$depends" >>  "${log}"  2>&1
 #done
 
 cd /etc/php

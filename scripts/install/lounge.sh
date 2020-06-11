@@ -5,7 +5,7 @@
 function _install {
 
 #useradd lounge -m -s /bin/bash
-#passwd lounge -l >>  "${SEEDIT_LOG}"  2>&1
+#passwd lounge -l >>  "${log}"  2>&1
 
 #npm -g config set user root
 
@@ -26,8 +26,8 @@ sleep 5
 
 systemctl stop thelounge
 
-#npm install -g thelounge >>  "${SEEDIT_LOG}"  2>&1
-#sudo -u lounge bash -c "thelounge install thelounge-theme-zenburn" >>  "${SEEDIT_LOG}"  2>&1
+#npm install -g thelounge >>  "${log}"  2>&1
+#sudo -u lounge bash -c "thelounge install thelounge-theme-zenburn" >>  "${log}"  2>&1
 
 #mkdir -p /home/lounge/.thelounge/
 
@@ -401,27 +401,27 @@ fi
 #EOSD
 
 
-sudo -u thelounge /usr/bin/thelounge install thelounge-theme-zenburn >>  "${SEEDIT_LOG}"  2>&1
-sudo -u thelounge /usr/bin/thelounge install thelounge-theme-mininapse >>  "${SEEDIT_LOG}"  2>&1
-sudo -u thelounge /usr/bin/thelounge install thelounge-theme-crypto >>  "${SEEDIT_LOG}"  2>&1
-sudo -u thelounge /usr/bin/thelounge install thelounge-theme-ion >>  "${SEEDIT_LOG}"  2>&1
-sudo -u thelounge /usr/bin/thelounge install thelounge-theme-classic >>  "${SEEDIT_LOG}"  2>&1
-sudo -u thelounge /usr/bin/thelounge install thelounge-theme-solarized-fork-monospace >>  "${SEEDIT_LOG}"  2>&1
-sudo -u thelounge /usr/bin/thelounge install thelounge-theme-zenburn-monospace >>  "${SEEDIT_LOG}"  2>&1
-sudo -u thelounge /usr/bin/thelounge install thelounge-theme-abyss >>  "${SEEDIT_LOG}"  2>&1
-sudo -u thelounge /usr/bin/thelounge install thelounge-theme-amoled >>  "${SEEDIT_LOG}"  2>&1
-sudo -u thelounge /usr/bin/thelounge install thelounge-theme-material >>  "${SEEDIT_LOG}"  2>&1
-sudo -u thelounge /usr/bin/thelounge install thelounge-theme-scoutlink >>  "${SEEDIT_LOG}"  2>&1
-sudo -u thelounge /usr/bin/thelounge install thelounge-theme-mortified >>  "${SEEDIT_LOG}"  2>&1
-sudo -u thelounge /usr/bin/thelounge install thelounge-theme-solarized >>  "${SEEDIT_LOG}"  2>&1
-sudo -u thelounge /usr/bin/thelounge install thelounge-theme-hexified >>  "${SEEDIT_LOG}"  2>&1
-sudo -u thelounge /usr/bin/thelounge install thelounge-theme-light >>  "${SEEDIT_LOG}"  2>&1
-sudo -u thelounge /usr/bin/thelounge install thelounge-theme-onedark >>  "${SEEDIT_LOG}"  2>&1
-sudo -u thelounge /usr/bin/thelounge install thelounge-theme-common >>  "${SEEDIT_LOG}"  2>&1
-sudo -u thelounge /usr/bin/thelounge install thelounge-theme-purplenight >>  "${SEEDIT_LOG}"  2>&1
+sudo -u thelounge /usr/bin/thelounge install thelounge-theme-zenburn >>  "${log}"  2>&1
+sudo -u thelounge /usr/bin/thelounge install thelounge-theme-mininapse >>  "${log}"  2>&1
+sudo -u thelounge /usr/bin/thelounge install thelounge-theme-crypto >>  "${log}"  2>&1
+sudo -u thelounge /usr/bin/thelounge install thelounge-theme-ion >>  "${log}"  2>&1
+sudo -u thelounge /usr/bin/thelounge install thelounge-theme-classic >>  "${log}"  2>&1
+sudo -u thelounge /usr/bin/thelounge install thelounge-theme-solarized-fork-monospace >>  "${log}"  2>&1
+sudo -u thelounge /usr/bin/thelounge install thelounge-theme-zenburn-monospace >>  "${log}"  2>&1
+sudo -u thelounge /usr/bin/thelounge install thelounge-theme-abyss >>  "${log}"  2>&1
+sudo -u thelounge /usr/bin/thelounge install thelounge-theme-amoled >>  "${log}"  2>&1
+sudo -u thelounge /usr/bin/thelounge install thelounge-theme-material >>  "${log}"  2>&1
+sudo -u thelounge /usr/bin/thelounge install thelounge-theme-scoutlink >>  "${log}"  2>&1
+sudo -u thelounge /usr/bin/thelounge install thelounge-theme-mortified >>  "${log}"  2>&1
+sudo -u thelounge /usr/bin/thelounge install thelounge-theme-solarized >>  "${log}"  2>&1
+sudo -u thelounge /usr/bin/thelounge install thelounge-theme-hexified >>  "${log}"  2>&1
+sudo -u thelounge /usr/bin/thelounge install thelounge-theme-light >>  "${log}"  2>&1
+sudo -u thelounge /usr/bin/thelounge install thelounge-theme-onedark >>  "${log}"  2>&1
+sudo -u thelounge /usr/bin/thelounge install thelounge-theme-common >>  "${log}"  2>&1
+sudo -u thelounge /usr/bin/thelounge install thelounge-theme-purplenight >>  "${log}"  2>&1
 
 
-systemctl restart thelounge >>  "${SEEDIT_LOG}"  2>&1
+systemctl restart thelounge >>  "${log}"  2>&1
 
 sleep 3
 }
