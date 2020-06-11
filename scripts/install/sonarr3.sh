@@ -28,6 +28,7 @@ systemctl stop sonarr
 mv /lib/systemd/system/sonarr.service /lib/systemd/system/sonarr@.service
 
 chown -R "${username}":"${username}" /usr/lib/sonarr/
+chown -R "${username}":"${username}" /var/lib/sonarr/
 
 cat > /lib/systemd/system/sonarr@.service <<SONARR
 [Unit]
@@ -37,8 +38,9 @@ After=network.target
 [Service]
 User=%i
 Group=%i
+UMask=002
 
-Type=forking
+Type=simple
 ExecStart=/usr/bin/mono --debug /usr/lib/sonarr/bin/Sonarr.exe -nobrowser -data=/var/lib/son$
 TimeoutStopSec=20
 KillMode=process
@@ -47,6 +49,24 @@ Restart=on-failure
 [Install]
 WantedBy=multi-user.target
 SONARR
+
+#[Unit]
+#Description=Sonarr Daemon
+#After=network.target
+#
+#[Service]
+#User=sonarr
+#Group=sonarr
+#UMask=002
+#
+#Type=simple
+#ExecStart=/usr/bin/mono --debug /usr/lib/sonarr/bin/Sonarr.exe -nobrowser -data=/var/lib/son$
+#TimeoutStopSec=20
+#KillMode=process
+#Restart=on-failure
+#
+#[Install]
+#WantedBy=multi-user.target
 
   systemctl enable --now sonarr@${username} >> ${log} 2>&1
   sleep 10
