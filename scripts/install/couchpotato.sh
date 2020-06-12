@@ -64,6 +64,9 @@ WantedBy=multi-user.target
 CPSD
 
 systemctl enable --now couchpotato >> ${log} 2>&1
+systemctl start couchpotato >> ${log} 2>&1
+
+sleep 3
 
 if [[ -f /install/.nginx.lock ]]; then
   bash /usr/local/bin/swizzin/nginx/couchpotato.sh
