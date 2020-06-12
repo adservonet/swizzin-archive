@@ -12,7 +12,7 @@
 if [[ ! -f /etc/nginx/apps/rclone.conf ]]; then
 cat > /etc/nginx/apps/rclone.conf <<RCLOAD
 location /rclone/ {
-#  include /etc/nginx/snippets/proxy.conf;
+  include /etc/nginx/snippets/proxy.conf;
   proxy_pass http://127.0.0.1:5572;
 
 #  proxy_set_header Accept-Encoding "";
