@@ -80,7 +80,7 @@ for u in "${users[@]}"; do
 done
 }
 
-OUTTO = $log
+OUTTO=$log
 
 #if [[ -f /tmp/.install.lock ]]; then
 #  OUTTO="/root/logs/install.log"

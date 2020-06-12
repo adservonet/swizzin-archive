@@ -18,7 +18,7 @@
 #   under the GPL along with build & install instructions.
 #
 MASTER=$(cut -d: -f1 < /root/.master.info)
-OUTTO = $log
+OUTTO=$log
 #if [[ -f /tmp/.install.lock ]]; then
 #  OUTTO="/root/logs/install.log"
 #else
