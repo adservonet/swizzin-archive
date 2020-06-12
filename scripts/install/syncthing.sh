@@ -17,6 +17,8 @@
 #   including (via compiler) GPL-licensed code must also be made available
 #   under the GPL along with build & install instructions.
 
+OUTTO=$log
+
 #if [[ -f /tmp/.install.lock ]]; then
 #  OUTTO="/root/logs/install.log"
 #else
@@ -24,17 +26,15 @@
 #fi
 MASTER=$(cut -d: -f1 < /root/.master.info)
 
-echo "Adding Syncthing Repository ... " >> "${log}"  2>&1;
+echo "Adding Syncthing Repository ... " >>"${OUTTO}" 2>&1;
 curl -s https://syncthing.net/release-key.txt | sudo apt-key add - > /dev/null 2>&1
 echo "deb http://apt.syncthing.net/ syncthing release" > /etc/apt/sources.list.d/syncthing.list
 
-echo "Installing Syncthing ... " >> "${log}"  2>&1;
-waitforapt
+echo "Installing Syncthing ... " >>"${OUTTO}" 2>&1;
 sudo apt-get -q update > /dev/null 2>&1
-waitforapt
-sudo apt-get -qy install syncthing >> "${log}"  2>&1;
+sudo apt-get -qy install syncthing > /dev/null 2>&1
 
-echo "Configuring Syncthing & Starting ... " >> "${log}"  2>&1;
+echo "Configuring Syncthing & Starting ... " >>"${OUTTO}" 2>&1;
 cat > /etc/systemd/system/syncthing@.service <<SYNC
 [Unit]
 Description=Syncthing - Open Source Continuous File Synchronization for %i
@@ -61,7 +61,7 @@ if [[ -f /install/.nginx.lock ]]; then
 fi
 
 touch /install/.syncthing.lock
-echo "Syncthing installation complete!" >> "${log}"  2>&1
+echo "Syncthing installation complete!" >>"${OUTTO}" 2>&1
 #echo >>"${OUTTO}" 2>&1
 #echo >>"${OUTTO}" 2>&1
 #echo "Close this dialog box to refresh your browser" >>"${OUTTO}" 2>&1
