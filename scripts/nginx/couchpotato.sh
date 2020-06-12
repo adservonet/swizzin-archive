@@ -25,7 +25,7 @@ RAD
 fi
 sleep 5
 sed -i "s/url_base.*/url_base = couchpotato\nhost = 127.0.0.1/g" /opt/couchpotato/settings.conf
-#sed -i 's/url_base.*/url_base = \/couchpotato/g' /opt/couchpotato/settings.conf
+sed -i 's/url_base.*/url_base = \/couchpotato/g' /opt/couchpotato/settings.conf
 if [[ $isactive == "active" ]]; then
   systemctl start couchpotato
 fi
