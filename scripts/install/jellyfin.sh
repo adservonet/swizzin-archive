@@ -326,11 +326,11 @@ touch "/install/.jellyfin.lock"
 # A helpful echo to the terminal.
 echo -e "\nThe Jellyfin installation has completed\n"
 #
-if [[ ! -f /install/.nginx.lock ]]; then
-    echo -e "Jellyfin is available at: https://$(curl -s4 icanhazip.com):${app_port_https}\n"
-else
-    echo -e "Jellyfin is now available in the panel\n"
-    echo -e "Please visit https://$ip_address/jellyfin\n"
-fi
+#if [[ ! -f /install/.nginx.lock ]]; then
+#    echo -e "Jellyfin is available at: https://$(curl -s4 icanhazip.com):${app_port_https}\n"
+#else
+#    echo -e "Jellyfin is now available in the panel\n"
+#    echo -e "Please visit https://$ip_address/jellyfin\n"
+#fi
 #
 exit
