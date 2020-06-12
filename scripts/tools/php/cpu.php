@@ -10,7 +10,7 @@ function microtime_float() {
 }
 
 $loads = sys_getloadavg();
-$core_nums = trim(shell_exec("grep -P '^processor' /proc/cpuinfo|wc -l"));
+$core_nums = trim(shell_exec("grep -P '^siblings' /proc/cpuinfo | awk '{print $3}' | head -n 1"));
 $load = round($loads[0]/($core_nums + 1)*100, 2);
 
 $out = array("cpu" => $load);
