@@ -56,7 +56,7 @@ After=syslog.target network.target
 Type=forking
 User=${user}
 Group=${user}
-ExecStart=/opt/.venv/couchpotato/bin/python2 /opt/couchpotato/CouchPotato.py --daemon --data_dir /home/${user}/.config/couchpotato
+ExecStart=/opt/.venv/couchpotato/bin/python2 /opt/couchpotato/CouchPotato.py --daemon --data_dir /opt/couchpotato/
 GuessMainPID=no
 
 [Install]
