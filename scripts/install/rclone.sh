@@ -51,7 +51,7 @@ After=network.target
 Type=simple
 User=%i
 Group=%i
-ExecStart=/usr/bin/rclone  rcd --rc-web-gui --rc-user=${user} --rc-pass=${passwd} --rc-addr 127.0.0.1:5572 --rc-baseurl /rclone
+ExecStart=/usr/bin/rclone  rcd --rc-web-gui --rc-web-gui-no-open-browser --rc-user=${user} --rc-pass=${passwd} --rc-addr 127.0.0.1:5572 --rc-baseurl /rclone
 ExecStop=/bin/fusermount -u /home/%i/cloud
 Restart=on-failure
 RestartSec=30
