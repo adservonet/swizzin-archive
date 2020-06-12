@@ -61,9 +61,9 @@ chown -R ${user}: /opt/.venv/sickgear
 
 install_rar
 
-sudo git clone https://github.com/SickGear/SickGear.git  /opt/sickgear/sickgear >> ${log} 2>&1
+sudo git clone https://github.com/SickGear/SickGear.git  /opt/sickgear >> ${log} 2>&1
 
-chown -R $user:$user /opt/sickgear/sickgear
+chown -R $user:$user /opt/sickgear
 
 cat > /etc/systemd/system/sickgear.service <<SRS
 [Unit]
