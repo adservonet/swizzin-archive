@@ -47,29 +47,29 @@ else
 #    fi
 #  done
 #  echo -e "Please wait while nextcloud is installed ... "
+#  waitforapt
 
-  waitforapt
-  DEBIAN_FRONTEND=noninteractive apt-get -y install mariadb-server  >> "${log}"  2>&1;
+  echo -e "Please wait while nextcloud is installed ... "
+  DEBIAN_FRONTEND=noninteractive apt-get -y install mariadb-server > /dev/null 2>&1
   if [[ $(systemctl is-active mysql) != "active" ]]; then
     systemctl start mysql
   fi
   mysqladmin -u root password ${password}
 fi
 #Depends
-waitforapt
-apt-get install -y -q unzip php7.3-mysql libxml2-dev php7.3-common php7.3-gd php7.3-json php7.3-curl  php7.3-zip php7.3-xml php7.3-mbstring  >> "${log}"  2>&1;
+apt-get install -y -q unzip php-mysql libxml2-dev php-common php-gd php-json php-curl  php-zip php-xml php-mbstring > /dev/null 2>&1
 #a2enmod rewrite > /dev/null 2>&1
 cd /tmp
 
 #Nextcloud 16 no longer supports php7.0, so 15 is the last supported release for Debian 9
 codename=$(lsb_release -cs)
-if [[ $codename =~ ("stretch"|"jessie"|"xenial") ]]; then
+if [[ $codename =~ ("stretch"|"xenial") ]]; then
   version="nextcloud-$(curl -s https://nextcloud.com/changelog/ | grep -A5 '"latest15"' | grep 'id=' | cut -d'"' -f2 | sed 's/-/./g')"
 else
   version=latest
 fi
-wget -q https://download.nextcloud.com/server/releases/${version}.zip  >> "${log}"  2>&1;
-unzip ${version}.zip  >> "${log}"  2>&1;
+wget -q https://download.nextcloud.com/server/releases/${version}.zip > /dev/null 2>&1
+unzip ${version}.zip > /dev/null 2>&1
 mv nextcloud /srv
 rm -rf /tmp/${version}.zip
 
@@ -103,15 +103,9 @@ then
  chown ${rootuser}:${htgroup} ${ocpath}/data/.htaccess
 fi
 
-if [[ -f /lib/systemd/system/php7.3-fpm.service ]]; then
-  sock=php7.3-fpm
-elif [[ -f /lib/systemd/system/php7.2-fpm.service ]]; then
-  sock=php7.2-fpm
-elif [[ -f /lib/systemd/system/php7.1-fpm.service ]]; then
-  sock=php7.1-fpm
-else
-  sock=php7.0-fpm
-fi
+. /etc/swizzin/sources/functions/php
+phpversion=$(php_service_version)
+sock="php${phpversion}-fpm"
 
 cat > /etc/nginx/apps/nextcloud.conf <<EOF
 # The following 2 rules are only needed for the user_webfinger app.
@@ -224,7 +218,7 @@ mysql --user="root" --password="$password" --execute="CREATE USER nextcloud@loca
 mysql --user="root" --password="$password" --execute="GRANT ALL PRIVILEGES ON nextcloud.* TO nextcloud@localhost;"
 mysql --user="root" --password="$password" --execute="FLUSH PRIVILEGES;"
 
-service nginx reload
+systemctl reload nginx
 touch /install/.nextcloud.lock
 
 echo -e "Visit https://${ip}/nextcloud to finish installation."
