@@ -49,24 +49,6 @@ Restart=on-failure
 WantedBy=multi-user.target
 SONARR
 
-#[Unit]
-#Description=Sonarr Daemon
-#After=network.target
-#
-#[Service]
-#User=sonarr
-#Group=sonarr
-#UMask=002
-#
-#Type=simple
-#ExecStart=/usr/bin/mono --debug /usr/lib/sonarr/bin/Sonarr.exe -nobrowser -data=/var/lib/son$
-#TimeoutStopSec=20
-#KillMode=process
-#Restart=on-failure
-#
-#[Install]
-#WantedBy=multi-user.target
-
 cat > /var/lib/sonarr/config.xml <<SONN
 <Config>
   <LogLevel>Info</LogLevel>
