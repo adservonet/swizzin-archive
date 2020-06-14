@@ -62,6 +62,8 @@ fi
 }
 
 _mkconf_transmission () {
+  port=$(cat /home/seedit4me/.transmission_port)
+
     _setenv_transmission 
 cat > /home/${user}/.config/transmission-daemon/settings.json <<EOF
 {
