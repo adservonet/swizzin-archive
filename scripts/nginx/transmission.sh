@@ -3,6 +3,7 @@
 # by liara for swizzin
 # copyright 2020 swizzin.ltd
 
+MASTER=$(cut -d: -f1 < /root/.master.info)
 users=($(cut -d: -f1 < /etc/htpasswd))
 
 if [[ ! -f /etc/nginx/apps/transmission.conf ]]; then
@@ -21,7 +22,7 @@ location /transmission/ {
     proxy_pass_header  X-Transmission-Session-Id;
     add_header   Front-End-Https   on;
     auth_basic "What's the password?";
-    auth_basic_user_file /etc/htpasswd;
+    auth_basic_user_file /etc/htpasswd.d/htpasswd.${MASTER};
     proxy_pass http://\$remote_user.transmission;
 }
 TCONF
