@@ -19,10 +19,6 @@ location /syncthing/ {
   proxy_set_header        X-Forwarded-Proto \$scheme;
   auth_basic "What's the password?";
   auth_basic_user_file /etc/htpasswd.d/htpasswd.${MASTER};
-
-  proxy_read_timeout      600s;
-  proxy_send_timeout      600s;
-
 }
 SYNC
 fi
