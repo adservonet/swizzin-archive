@@ -580,12 +580,21 @@ if [[ $COMPRESSION_ENABLED == "y"  ]]; then
 fi
 
 	# Generate the custom client.ovpn
+	CLIENT="seedit4me-user1"
+	newClient
+	CLIENT="seedit4me-user2"
+	newClient
+	CLIENT="seedit4me-user3"
+	newClient
+	CLIENT="seedit4me-user4"
+	newClient
+	CLIENT="seedit4me-user5"
 	newClient
 	echo "If you want to add more clients, you simply need to run this script another time!"
 }
 
 function newClient () {
-  CLIENT="seedit4me"
+
   PASS="1"
 
 	cd /etc/openvpn/easy-rsa/ || return
@@ -600,13 +609,14 @@ function newClient () {
 	esac
 
 	# Home directory of the user, where the client configuration (.ovpn) will be written
-	if [ -e "/home/$CLIENT" ]; then  # if $1 is a user name
-		homeDir="/home/$CLIENT"
-	elif [ "${SUDO_USER}" ]; then   # if not, use SUDO_USER
-		homeDir="/home/${SUDO_USER}"
-	else  # if not SUDO_USER, use /root
-		homeDir="/root"
-	fi
+#	if [ -e "/home/seedit4me" ]; then  # if $1 is a user name
+#		homeDir="/home/$CLIENT"
+#	elif [ "${SUDO_USER}" ]; then   # if not, use SUDO_USER
+#		homeDir="/home/${SUDO_USER}"
+#	else  # if not SUDO_USER, use /root
+#		homeDir="/root"
+#	fi
+  homeDir="/home/seedit4me"
 
 	# Determine if we use tls-auth or tls-crypt
 	if grep -qs "^tls-crypt" /etc/openvpn/server.conf; then
