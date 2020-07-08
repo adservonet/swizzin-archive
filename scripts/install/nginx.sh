@@ -45,7 +45,7 @@ apt-get -y -f install
 apt-get -y -qq update
 APT='nginx-extras subversion ssl-cert php7.3-fpm php7.3-common libfcgi0ldbl php7.3-cli php7.3-dev php7.3-xml php7.3-curl php7.3-xmlrpc php7.3-json php7.3-mbstring php7.3-opcache php-geoip php7.3-xml php7.3-gd php7.3-sqlite3 php7.3-zip'
 for depends in $APT; do
-apt-get -y install "$depends" >>  "${log}"  2>&1 || { echo "ERROR: APT-GET could not install a required package: ${depends}. That's probably not good..."; }
+apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install "$depends" >>  "${log}"  2>&1 || { echo "ERROR: APT-GET could not install a required package: ${depends}. That's probably not good..."; }
 done
 
 cd /etc/php
@@ -119,7 +119,7 @@ server {
   ssl_certificate /etc/ssl/certs/ssl-cert-snakeoil.pem;
   ssl_certificate_key /etc/ssl/private/ssl-cert-snakeoil.key;
   include snippets/ssl-params.conf;
-  client_max_body_size 40M;
+  client_max_body_size 512M;
   server_tokens off;
   root /srv/;
 
@@ -176,7 +176,7 @@ ssl_dhparam /etc/nginx/ssl/dhparam.pem;
 SSC
 
 cat > /etc/nginx/snippets/proxy.conf <<PROX
-client_max_body_size 10m;
+client_max_body_size 512M;
 client_body_buffer_size 128k;
 
 #Timeout if the real server is dead
