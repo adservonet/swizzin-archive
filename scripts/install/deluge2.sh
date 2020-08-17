@@ -274,7 +274,7 @@ if [[ -f /install/.nginx.lock ]]; then
   systemctl reload nginx
 fi
 
-  touch /install/.deluge.lock
+  touch /install/.deluge2.lock
   touch /install/.delugeweb.lock
 }
 
@@ -298,8 +298,8 @@ if [[ -n $1 ]]; then
   exit 0
 fi
 
-export deluge=repo
-export libtorrent=repo
+export deluge=master
+export libtorrent=RC_1_2
 
 if [[ -n $noexec ]]; then
 	mount -o remount,exec /tmp
