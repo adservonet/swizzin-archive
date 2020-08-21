@@ -22,8 +22,10 @@ function _dconf {
     fi
   n=$RANDOM
   DPORT=$((n%59000+10024))
-  DWSALT=$(tr -dc 'a-zA-Z0-9' < /dev/urandom | fold -w 32 | head -n 1)
-  localpass=$(tr -dc 'a-f0-9' < /dev/urandom | fold -w 40 | head -n 1)
+  DWSALT=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32; echo "")
+#  DWSALT=$(tr -dc 'a-zA-Z0-9' < /dev/urandom | fold -w 32 | head -n 1)
+  localpass=$(head /dev/urandom | tr -dc a-z0-9 | head -c 40; echo "")
+#  localpass=$(tr -dc 'a-f0-9' < /dev/urandom | fold -w 40 | head -n 1)
   DWP=$(python2 ${local_packages}/deluge.Userpass.py ${pass} ${DWSALT})
   DUDID=$(python2 ${local_packages}/deluge.addHost.py)
   port=$(cat /home/seedit4me/.deluge_port)
