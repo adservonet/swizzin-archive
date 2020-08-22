@@ -14,6 +14,11 @@ location /qbittorrent {
 
     proxy_pass        http://127.0.0.1:9148/;
 
+    proxy_hide_header
+    proxy_hide_header
+    proxy_set_header Origin '';
+    proxy_set_header Referer '';
+
     auth_basic "What's the password?";
     auth_basic_user_file /etc/htpasswd.d/htpasswd.${MASTER};
 }
