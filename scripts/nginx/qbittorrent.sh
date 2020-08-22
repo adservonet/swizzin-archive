@@ -10,7 +10,7 @@ location /qbittorrent {
     rewrite ^(.*[^/])$ $1/ redirect;
 }
 location ~ ^/qbittorrent/(?<url>.*) {
-    proxy_pass http://<IP>:<PORT>/$url;
+    proxy_pass http://127.0.0.1:9148/\$url;
     include /config/proxy.conf;
     proxy_hide_header Referer;
     proxy_hide_header Origin;
