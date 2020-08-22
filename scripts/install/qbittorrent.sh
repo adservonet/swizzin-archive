@@ -20,7 +20,7 @@ adduser --system --group qbittorrent-nox >>  "${log}"  2>&1
 usermod -a -G seedit4me qbittorrent-nox >>  "${log}"  2>&1
 usermod -a -G qbittorrent-nox seedit4me >>  "${log}"  2>&1
 
-cat > /etc/systemd/system/qbittorrent@.service <<SSS
+cat > /etc/systemd/system/qbittorrent.service <<SSS
 [Unit]
 Description=qBittorrent Command Line Client
 After=network.target
@@ -38,11 +38,12 @@ Restart=on-failure
 WantedBy=multi-user.target
 SSS
 
-systemctl start qbittorrent
+systemctl enable qbittorrent >>  "${log}"  2>&1
+systemctl start qbittorrent >>  "${log}"  2>&1
 
 
-#if [[ -f /install/.nginx.lock ]]; then
-#  bash /usr/local/bin/swizzin/nginx/qbittorrent.sh
-#fi
+if [[ -f /install/.nginx.lock ]]; then
+  bash /usr/local/bin/swizzin/nginx/qbittorrent.sh
+fi
 
 touch /install/.qbittorrent.lock
