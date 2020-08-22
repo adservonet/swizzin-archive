@@ -22,7 +22,13 @@ chmod +x /srv/tools/*.sh
 chown -R www-data: /srv/tools
 
 waitforapt
-apt install -y -q apparmor-utils
+apt install -y -q apparmor-utils htop net-tools
+
+if ! [ -c /dev/net/tun ]; then
+  mkdir /dev/net
+	mknod /dev/net/tun c 10 200
+	ip tuntap add mode tap
+fi
 
 touch /install/.tools.lock
 
