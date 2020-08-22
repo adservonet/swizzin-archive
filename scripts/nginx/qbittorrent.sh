@@ -10,23 +10,33 @@ location /qbittorrent {
     rewrite ^(.*[^/])$ $1/ redirect;
 }
 location ~ ^/qbittorrent/(?<url>.*) {
-    proxy_pass http://127.0.0.1:9148/$url;
+    proxy_pass http://<IP>:<PORT>/$url;
     include /config/proxy.conf;
     proxy_hide_header Referer;
     proxy_hide_header Origin;
     proxy_set_header Referer '';
     proxy_set_header Origin '';
-
-    #    proxy_pass_header  X-Transmission-Session-Id;
-    proxy_set_header   X-Forwarded-Host   \$host;
-    proxy_set_header   X-Forwarded-Server \$host;
-    proxy_set_header   X-Forwarded-For    \$proxy_add_x_forwarded_for;
-
-    auth_basic "What's the password?";
-    auth_basic_user_file /etc/htpasswd.d/htpasswd.${MASTER};
-
 }
 
+#location /qbittorrent {
+#    include /etc/nginx/snippets/proxy.conf;
+#
+##    proxy_pass_header  X-Transmission-Session-Id;
+#    proxy_set_header   X-Forwarded-Host   \$host;
+#    proxy_set_header   X-Forwarded-Server \$host;
+#    proxy_set_header   X-Forwarded-For    \$proxy_add_x_forwarded_for;
+#
+#    proxy_pass        http://127.0.0.1:9148/;
+#
+#    proxy_hide_header       Referer;
+#    proxy_hide_header       Origin;
+#    proxy_set_header        Referer                 '';
+#    proxy_set_header        Origin                  '';
+#    add_header              X-Frame-Options         "SAMEORIGIN";
+#
+#    auth_basic "What's the password?";
+#    auth_basic_user_file /etc/htpasswd.d/htpasswd.${MASTER};
+#}
 CFG
 fi
 
