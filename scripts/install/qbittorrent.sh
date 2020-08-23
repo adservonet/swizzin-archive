@@ -38,12 +38,22 @@ Restart=on-failure
 WantedBy=multi-user.target
 SSS
 
-sed -i -e 's/Connection\\PortRangeMin=.*/Connection\\PortRangeMin='$port' /g' /home/qbittorrent-nox/.config/qBittorrent/qBittorrent.conf
-
 
 systemctl enable qbittorrent >>  "${log}"  2>&1
 systemctl start qbittorrent >>  "${log}"  2>&1
 
+sleep 10
+
+sed -i -e 's/Connection\\PortRangeMin=.*/Connection\\PortRangeMin='$port' /g' /home/qbittorrent-nox/.config/qBittorrent/qBittorrent.conf
+echo "Bittorrent\DHT=false" >> /home/qbittorrent-nox/.config/qBittorrent/qBittorrent.conf
+echo "Bittorrent\LSD=false" >> /home/qbittorrent-nox/.config/qBittorrent/qBittorrent.conf
+echo "Bittorrent\PeX=false" >> /home/qbittorrent-nox/.config/qBittorrent/qBittorrent.conf
+echo "WebUI\LocalHostAuth=false" >> /home/qbittorrent-nox/.config/qBittorrent/qBittorrent.conf
+
+#echo "WebUI\Username=seedit4me" >> /home/qbittorrent-nox/.config/qBittorrent/qBittorrent.conf
+#echo "WebUI\Password_PBKDF2="@ByteArray(Nhc0IAtfyl49psuYV+7BoA==:WyEqotj1k7/5x6dgqv9lUKo7Ez69Lqh8CxstajGgi+DwrdwUnZiDEwbK97zhZJB+c6SKlKPVsWq3uxYAS54dNA==)"
+
+systemctl restart qbittorrent >>  "${log}"  2>&1
 
 if [[ -f /install/.nginx.lock ]]; then
   bash /usr/local/bin/swizzin/nginx/qbittorrent.sh
