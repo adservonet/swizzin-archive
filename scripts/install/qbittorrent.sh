@@ -38,6 +38,9 @@ Restart=on-failure
 WantedBy=multi-user.target
 SSS
 
+sed -i -e 's/Connection\\PortRangeMin=.*/Connection\\PortRangeMin='$port' /g' /home/qbittorrent-nox/.config/qBittorrent/qBittorrent.conf
+
+
 systemctl enable qbittorrent >>  "${log}"  2>&1
 systemctl start qbittorrent >>  "${log}"  2>&1
 
