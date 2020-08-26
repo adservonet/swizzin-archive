@@ -5,6 +5,17 @@ MASTER=$(cut -d: -f1 < /root/.master.info)
 if [[ ! -f /etc/nginx/apps/qbittorrent.conf ]]; then
   cat > /etc/nginx/apps/qbittorrent.conf <<CFG
 
+location ^~ /qbittorrent/api {
+    auth_request off;
+    rewrite /qbittorrent(.*) \$1 break;
+    proxy_pass http://127.0.0.1:9148;
+    proxy_hide_header Referer;
+    proxy_hide_header Origin;
+    proxy_set_header Referer '';
+    proxy_set_header Origin '';
+
+}
+
 location /qbittorrent {
     rewrite ^(.*[^/])$ $1/ redirect;
 }
