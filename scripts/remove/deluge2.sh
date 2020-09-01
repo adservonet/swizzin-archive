@@ -32,5 +32,5 @@ dpkg -r python3-libtorrent > /dev/null 2>&1
 
 rm -rf /usr/lib/python2.7/dist-packages/deluge*
 
-rm /install/.deluge.lock
+rm /install/.deluge2.lock
 rm /install/.libtorrent.lock
