@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IFACE=`ip link | awk -F: '$0 !~ "lo|tun|vir|wl|^[^0-9]"{print $2;getline}' | cut -d @ -f 1 | xargs`
+IFACE=`/usr/bin/sudo ip route | grep default | sed -e "s/^.*dev.//" -e "s/.proto.*//" | awk '{print $1}'`
 
 
 function _tc() {
@@ -27,8 +27,9 @@ function _tc() {
   DL=$(($TOTALSRXMB * 1024))
   UL=$(($TOTALSTXMB * 1024))
 
-#  echo 'DL' $DL
-#  echo 'UL' $UL
+  echo 'IFACE' $IFACE;
+  echo 'DL' $DL;
+  echo 'UL' $UL;
 
   HOSTNAME=$(hostname -s)
   VMID=${HOSTNAME//ct/}
