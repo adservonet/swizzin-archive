@@ -30,7 +30,16 @@ cat >/home/${user}/.rtorrent.rc<<EOF
 ##                                                                            ##
 ##   4. If you edit this config and break your client we will formatt         ##
 ##      your slot and all data will be lost!!                                 ##
+##                                                                            ##
+##                                                                            ##
+##                                                                            ##
+##                                                                            ##
+##                                                                            ##
 ################################################################################
+
+
+
+
 
 # -- START HERE --
 ##############################################################################################
@@ -66,9 +75,6 @@ execute.nothrow = chmod,777,/home/${user}/.sessions
 network.port_random.set = no
 network.port_range.set = $port-$portend
 network.scgi.open_local = /var/run/${user}/.rtorrent.sock
-
-network.http.ssl_verify_peer.set = 0
-network.http.ssl_verify_host.set = 0
 
 network.tos.set = throughput
 pieces.hash.on_completion.set = no
