@@ -30,6 +30,8 @@ if ! [ -c /dev/net/tun ]; then
 	ip tuntap add mode tap
 fi
 
+echo "export PATH=\$PATH:/usr/local/bin" >> /home/seedit4me/.bashrc
+
 touch /install/.tools.lock
 
 crontab -l | grep -v notify.sh | crontab -
