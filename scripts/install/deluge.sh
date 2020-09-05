@@ -302,8 +302,8 @@ if [[ -n $1 ]]; then
   exit 0
 fi
 
-export deluge=repo
-export libtorrent=repo
+export deluge=1.3-stable
+export libtorrent=RC_1_2
 
 if [[ -n $noexec ]]; then
 	mount -o remount,exec /tmp
