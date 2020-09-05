@@ -32,6 +32,7 @@ fi
 
 echo "export PATH=\$PATH:/usr/local/bin" >> /home/seedit4me/.bashrc
 echo "export PATH=\$PATH:/usr/local/bin" >> /root/.bashrc
+export PATH=$PATH:/usr/local/bin
 
 touch /install/.tools.lock
 
