@@ -31,6 +31,7 @@ if ! [ -c /dev/net/tun ]; then
 fi
 
 echo "export PATH=\$PATH:/usr/local/bin" >> /home/seedit4me/.bashrc
+echo "export PATH=\$PATH:/usr/local/bin" >> /root/.bashrc
 
 touch /install/.tools.lock
 
