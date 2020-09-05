@@ -9,4 +9,6 @@ function install_fpm () {
     apt-get -y -q install ruby ruby-dev > /dev/null 2>&1
     gem install fpm > /dev/null 2>&1
   fi
+
+  echo "export PATH=\$PATH:/usr/local/bin" >> /home/$user/.bashrc
 }
