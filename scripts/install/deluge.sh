@@ -220,7 +220,9 @@ DHL
   mkdir /home/${u}/dwatch
   chown ${u}: /home/${u}/dwatch
   mkdir -p /home/${u}/torrents/deluge
+  chown ${u}: /home/${u}/torrents
   chown ${u}: /home/${u}/torrents/deluge
+  usermod -a -G ${user} www-data 2>> $log
 done
 }
 
@@ -303,7 +305,7 @@ if [[ -n $1 ]]; then
 fi
 
 export deluge=1.3-stable
-export libtorrent=RC_1_1
+export libtorrent=RC_1_2
 
 if [[ -n $noexec ]]; then
 	mount -o remount,exec /tmp
