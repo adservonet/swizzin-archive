@@ -130,6 +130,8 @@ location /rtorrent.downloads {
 EOR
 fi
 
+echo "UPDATING client_max_body_size"
+
 cat > /etc/nginx/snippets/proxy.conf <<PROX
 client_max_body_size 512M;
 client_body_buffer_size 128k;
