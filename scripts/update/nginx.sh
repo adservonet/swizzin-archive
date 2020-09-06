@@ -130,6 +130,32 @@ location /rtorrent.downloads {
 EOR
 fi
 
+cat > /etc/nginx/snippets/proxy.conf <<PROX
+client_max_body_size 512M;
+client_body_buffer_size 128k;
+
+#Timeout if the real server is dead
+proxy_next_upstream error timeout invalid_header http_500 http_502 http_503;
+
+# Advanced Proxy Config
+send_timeout 5m;
+proxy_read_timeout 240;
+proxy_send_timeout 240;
+proxy_connect_timeout 240;
+
+# Basic Proxy Config
+proxy_set_header Host \$host;
+proxy_set_header X-Real-IP \$remote_addr;
+proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+proxy_set_header X-Forwarded-Proto https;
+#proxy_redirect  http://  \$scheme://;
+proxy_http_version 1.1;
+proxy_set_header Connection "";
+proxy_cache_bypass \$cookie_session;
+proxy_no_cache \$cookie_session;
+proxy_buffers 32 4k;
+PROX
+
 if grep -q "php" /etc/nginx/apps/dindex.conf; then
   :
 else
