@@ -57,10 +57,10 @@ else
     current_version=`curl https://beta.rclone.org/version.txt`
 fi
 
-if [ "$version" = "$current_version" ]; then
+#if [ "$version" = "$current_version" ]; then
 #    printf "\nThe latest ${install_beta}version of rclone ${version} is already installed.\n\n"
 #    exit 3
-fi
+#fi
 
 
 
