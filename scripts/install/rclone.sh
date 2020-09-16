@@ -38,7 +38,7 @@ echo "Downloading and installing rclone ..." >> "${SEEDIT_LOG}"  2>&1;
 # One-liner to check arch/os type, as well as download latest rclone for relevant system.
 #curl https://rclone.org/install.sh | sudo bash -s beta
 # override their broken shit with local version
-. /etc/swizzin/sources/functions/rclone
+bash /etc/swizzin/sources/functions/rclone
 
 # Make sure rclone downloads and installs without error before proceeding
 if [ $? -eq 0 ]; then
