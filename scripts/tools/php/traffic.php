@@ -3,7 +3,7 @@ include('cors.php');
 header('Content-Type: text/plain');
 
 // Network Interface
-$interface = exec('ip link | awk -F: \'$0 !~ "lo|tun|vir|wl|^[^0-9]"{print $2;getline}\' | cut -d @ -f 1 | xargs');
+$interface = exec("/usr/bin/sudo ip route | grep default | sed -e \"s/^.*dev.//\" -e \"s/.proto.*//\" | awk '{print $1}'");
 $iface = $interface;//INETFACE;
 $iface_list = array($interface);
 $iface_title[$interface] = 'External';
