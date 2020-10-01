@@ -91,8 +91,7 @@ function installUnbound () {
 	if [[ ! -e /etc/unbound/unbound.conf ]]; then
 
 		if [[ "$OS" =~ (debian|ubuntu) ]]; then
-		  waitforapt
-			apt-get install -y unbound
+		  apt_install unbound
 
 			# Configuration
 			echo 'interface: 10.8.0.1
@@ -211,9 +210,7 @@ function installOpenVPN () {
 	NIC=$(ip -4 route ls | grep default | grep -Po '(?<=dev )(\S+)' | head -1)
 
 	if [[ "$OS" =~ (debian|ubuntu) ]]; then
-		apt-get update
-		waitforapt
-		apt-get -y install ca-certificates gnupg
+		apt_install ca-certificates gnupg
 		# We add the OpenVPN repo to get the latest version.
 		if [[ "$VERSION_ID" = "8" ]]; then
 			echo "deb http://build.openvpn.net/debian/openvpn/stable jessie main" > /etc/apt/sources.list.d/openvpn.list
@@ -226,8 +223,7 @@ function installOpenVPN () {
 			apt-get update
 		fi
 		# Ubuntu > 16.04 and Debian > 8 have OpenVPN >= 2.4 without the need of a third party repository.
-		waitforapt
-		apt-get install -y openvpn iptables openssl wget ca-certificates curl
+		apt_install openvpn iptables openssl wget ca-certificates curl
 	elif [[ "$OS" = 'centos' ]]; then
 		yum install -y epel-release
 		yum install -y openvpn iptables openssl wget ca-certificates curl
@@ -715,8 +711,7 @@ function removeUnbound () {
 		systemctl stop unbound
 
 		if [[ "$OS" =~ (debian|ubuntu) ]]; then
-		  waitforapt
-			apt-get autoremove --purge -y unbound
+		  apt_remove --purge unbound
 		elif [[ "$OS" = 'arch' ]]; then
 			pacman --noconfirm -R unbound
 		elif [[ "$OS" = 'centos' ]]; then
@@ -777,11 +772,10 @@ function removeOpenVPN () {
 		fi
 
 		if [[ "$OS" =~ (debian|ubuntu) ]]; then
-		  waitforapt
-			apt-get autoremove --purge -y openvpn
+		  apt_remove --purge openvpn
 			if [[ -e /etc/apt/sources.list.d/openvpn.list ]];then
 				rm /etc/apt/sources.list.d/openvpn.list
-				apt-get update
+				apt_update
 			fi
 		elif [[ "$OS" = 'arch' ]]; then
 			pacman --noconfirm -R openvpn

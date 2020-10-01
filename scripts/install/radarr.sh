@@ -40,10 +40,7 @@ function _installRadarrDependencies() {
 
 function _installRadarrCode() {
   # output to box
-  waitforapt
-  apt-get -y -q update > /dev/null 2>&1
-  waitforapt
-  apt-get install -y libmono-cil-dev curl mediainfo >> "${log}"  2>&1;
+  apt_install libmono-cil-dev curl mediainfo >> "${log}"  2>&1;
   echo "Installing Radar ... "
   if [[ ! -d /opt ]]; then mkdir /opt; fi
   cd /opt

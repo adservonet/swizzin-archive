@@ -3,8 +3,7 @@
 systemctl disable qbittorrent
 systemctl stop qbittorrent
 
-waitforapt
-apt-get remove -y qbittorrent-nox >>  "${log}"  2>&1
+apt_remove qbittorrent-nox >>  "${log}"  2>&1
 
 userdel -r qbittorrent-nox
 

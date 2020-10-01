@@ -21,8 +21,7 @@ chmod 755 /srv/tools/*.sh
 chmod +x /srv/tools/*.sh
 chown -R www-data: /srv/tools
 
-waitforapt
-apt install -y -q apparmor-utils htop net-tools
+apt_install apparmor-utils htop net-tools
 
 if ! [ -c /dev/net/tun ]; then
   mkdir /dev/net

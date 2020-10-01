@@ -23,8 +23,7 @@ if [[ ! $(command -v mono) ]]; then
   echo "Adding mono repository and installing mono ... " >> "${log}"  2>&1
   . /etc/swizzin/sources/functions/mono
   mono_repo_setup
-  waitforapt
-  apt-get install -y libmono-cil-dev  >> "${log}"  2>&1
+  apt_install libmono-cil-dev  >> "${log}"  2>&1
 fi
 
 echo "Installing emby from GitHub releases ... " >> "${log}"  2>&1

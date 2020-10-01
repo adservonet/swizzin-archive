@@ -45,10 +45,7 @@ ZNCP
 elif [[ $DISTRO == Ubuntu ]]; then
   add-apt-repository --yes ppa:teward/znc >>  "${log}"  2>&1
 fi
-  waitforapt
-  apt-get update -q -y >>  "${log}"  2>&1
-  waitforapt
-  apt-get install znc -q -y >>  "${log}"  2>&1
+  apt_install znc -q -y >>  "${log}"  2>&1
   #sudo -u znc crontab -l | echo -e "*/10 * * * * /usr/bin/znc >/dev/null 2>&1\n@reboot /usr/bin/znc >/dev/null 2>&1" | crontab -u znc - > /dev/null 2>&1
   cat > /etc/systemd/system/znc.service <<ZNC
 [Unit]

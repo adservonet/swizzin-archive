@@ -12,10 +12,9 @@ chown -R seedit4me:seedit4me /home/seedit4me/torrents/qbittorrent
 chmod -R 775 /home/seedit4me/torrents/qbittorrent
 fi
 
-waitforapt
+apt_update
 add-apt-repository -y ppa:qbittorrent-team/qbittorrent-stable >>  "${log}"  2>&1
-apt-get update >>  "${log}"  2>&1
-apt install -y qbittorrent-nox >>  "${log}"  2>&1
+apt_install qbittorrent-nox >>  "${log}"  2>&1
 adduser --system --group qbittorrent-nox >>  "${log}"  2>&1
 usermod -a -G seedit4me qbittorrent-nox >>  "${log}"  2>&1
 usermod -a -G qbittorrent-nox seedit4me >>  "${log}"  2>&1

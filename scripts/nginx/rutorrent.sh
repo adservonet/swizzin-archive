@@ -16,13 +16,7 @@ fi
 
 users=($(cut -d: -f1 < /etc/htpasswd))
 
-waitforapt
-
-apt-get update -y -q >>/dev/null 2>&1
-
-waitforapt
-
-apt-get install -y -q sox geoip-database python python-setuptools python-pip  >> "${log}" 2>&1
+apt_install sox geoip-database python python-setuptools python-pip  >> "${log}" 2>&1
 
 pip install cloudscraper >> /dev/null 2>&1
 

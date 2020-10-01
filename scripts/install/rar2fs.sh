@@ -1,8 +1,6 @@
 #!/bin/bash
 
-waitforapt
-
-sudo apt-get install make g++ autoconf libfuse-dev --yes
+apt_install make g++ autoconf libfuse-dev
 git clone https://github.com/hasse69/rar2fs.git
 cd rar2fs
 wget http://www.rarlab.com/rar/unrarsrc-5.4.5.tar.gz

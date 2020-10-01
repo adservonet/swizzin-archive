@@ -5,7 +5,7 @@ current=$(curl -L -s -H 'Accept: application/json' https://github.com/MediaBrows
 cd /tmp
 wget -q -O emby.dpkg https://github.com/MediaBrowser/Emby.Releases/releases/download/${current}/emby-server-deb_${current}_amd64.deb  >> "${log}"  2>&1;
 
-waitforapt
+apt_update
 
 mkdir -p /var/lib/emby/logs
 chmod 777 /var/lib/emby/logs

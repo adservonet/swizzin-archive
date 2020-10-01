@@ -39,7 +39,7 @@ if [[ -n $(pidof apache2) ]]; then
 fi
 
 LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php
-waitforapt
+apt_update
 sudo dpkg --configure -a
 apt-get -y -f install
 apt-get -y -qq update

@@ -12,12 +12,9 @@ chown -R seedit4me:seedit4me /home/seedit4me/torrents/transmission
 chmod -R 775 /home/seedit4me/torrents/transmission
 fi
 
-waitforapt
+apt_update
 add-apt-repository -y ppa:transmissionbt/ppa >>  "${log}"  2>&1
-waitforapt
-apt-get update >>  "${log}"  2>&1
-waitforapt
-apt-get -y install transmission-cli transmission-common transmission-daemon >>  "${log}"  2>&1
+apt_install transmission-cli transmission-common transmission-daemon >>  "${log}"  2>&1
 
 service transmission-daemon stop
 

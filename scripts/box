@@ -145,9 +145,6 @@ function _update() {
   chown -R seedit4me:seedit4me /home/seedit4me/torrents
   chmod -R 775 /home/seedit4me/torrents
 
-  # waitforapt
-  # apt-get -y -q update > /dev/null  2>&1
-  # apt-get -y -q dist-upgrade
   for f in /etc/swizzin/scripts/update/*; do
     bash "$f";
   done
@@ -463,57 +460,57 @@ function _nukeovh() {
   fi
 }
 
-function waitforapt {
-
-  if [[ -f /install/.tools.lock ]]; then
-    export log=/srv/tools/logs/output.log
-  else
-    export log=/root/logs/install.log
-  fi
-
-
-  i=0
-  echo "waiting for apt locks"
-  echo "waiting for apt locks"  >> "${log}" 2>&1;
-  while sudo fuser /var/{lib/{dpkg,apt/lists},cache/apt/archives}/lock >/dev/null 2>&1; do
-    ((i++))
-
-    if [ $i -lt 30 ]; then
-      expr 30 - $i
-      expr 30 - $i >> "${log}" 2>&1;
-    fi
-
-    if [ $i == 30 ]; then
-      echo "killall apt-get"
-      echo "killall apt-get" >> "${log}" 2>&1;
-      echo "waiting another 30 seconds till i delete locks"
-      echo "waiting another 30 seconds till i delete locks" >> "${log}" 2>&1;
-      sudo killall apt-get >> "${log}" 2>&1;
-    fi
-
-    if [ $i -gt 30 ]; then
-      expr 60 - $i
-      expr 60 - $i >> "${log}" 2>&1;
-    fi
-
-    if [ $i == 60 ]; then
-      echo "deleting locks"
-      echo "deleting locks" >> "${log}" 2>&1;
-      sudo rm /var/lib/dpkg/lock
-      sudo rm /var/lib/dpkg/lock-frontend
-      sudo rm /var/cache/apt/archives/lock
-      sudo rm /var/cache/debconf/*.dat
-
-      sudo rm /var/lib/apt/lists/lock
-      sudo rm /var/cache/apt/archives/lock
-      sudo rm /var/lib/dpkg/updates/*
-      #sudo apt-get update
-    fi
-
-    sleep 1
-
-  done
-}
+#function waitforapt {
+#
+#  if [[ -f /install/.tools.lock ]]; then
+#    export log=/srv/tools/logs/output.log
+#  else
+#    export log=/root/logs/install.log
+#  fi
+#
+#
+#  i=0
+#  echo "waiting for apt locks"
+#  echo "waiting for apt locks"  >> "${log}" 2>&1;
+#  while sudo fuser /var/{lib/{dpkg,apt/lists},cache/apt/archives}/lock >/dev/null 2>&1; do
+#    ((i++))
+#
+#    if [ $i -lt 30 ]; then
+#      expr 30 - $i
+#      expr 30 - $i >> "${log}" 2>&1;
+#    fi
+#
+#    if [ $i == 30 ]; then
+#      echo "killall apt-get"
+#      echo "killall apt-get" >> "${log}" 2>&1;
+#      echo "waiting another 30 seconds till i delete locks"
+#      echo "waiting another 30 seconds till i delete locks" >> "${log}" 2>&1;
+#      sudo killall apt-get >> "${log}" 2>&1;
+#    fi
+#
+#    if [ $i -gt 30 ]; then
+#      expr 60 - $i
+#      expr 60 - $i >> "${log}" 2>&1;
+#    fi
+#
+#    if [ $i == 60 ]; then
+#      echo "deleting locks"
+#      echo "deleting locks" >> "${log}" 2>&1;
+#      sudo rm /var/lib/dpkg/lock
+#      sudo rm /var/lib/dpkg/lock-frontend
+#      sudo rm /var/cache/apt/archives/lock
+#      sudo rm /var/cache/debconf/*.dat
+#
+#      sudo rm /var/lib/apt/lists/lock
+#      sudo rm /var/cache/apt/archives/lock
+#      sudo rm /var/lib/dpkg/updates/*
+#      #sudo apt-get update
+#    fi
+#
+#    sleep 1
+#
+#  done
+#}
 
 normal=$(tput sgr0)
 yellow=$(tput setaf 3)
@@ -527,7 +524,7 @@ fi
 
 echo -e 'Dpkg::Options {\n"--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf;
 export DEBIAN_FRONTEND=noninteractive
-export -f waitforapt
+#export -f waitforapt
 
 case "$1" in
   "")

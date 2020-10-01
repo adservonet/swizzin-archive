@@ -8,17 +8,12 @@
 
 log="/install/.proftpd.log"
 
-waitforapt
+apt_remove vsftpd
 
-apt remove vsftpd -y
-
-waitforapt
-
-apt install debconf-utils -y  >>  "${log}"  2>&1
+apt_install debconf-utils  >>  "${log}"  2>&1
 echo "proftpd-basic shared/proftpd/inetd_or_standalone select standalone" | debconf-set-selections  >>  "${log}"  2>&1
 
-waitforapt
-apt install proftpd-basic -y  >>  "${log}"  2>&1
+apt_install proftpd-basic  >>  "${log}"  2>&1
 
 
 cat > /etc/proftpd/proftpd.conf <<PFC
@@ -87,8 +82,7 @@ Include /etc/proftpd/conf.d/
 
 PFC
 
-waitforapt
-apt install -y openssl
+apt_install openssl
 
 echo 'DefaultRoot ~' >> /etc/proftpd/proftpd.conf
 

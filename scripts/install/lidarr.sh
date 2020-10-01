@@ -14,17 +14,11 @@ distribution=$(lsb_release -is)
 version=$(lsb_release -cs)
 . /etc/swizzin/sources/functions/mono
 
-waitforapt
+apt_update
 
 mono_repo_setup
 
-waitforapt
-
-apt-get update -y -q
-
-waitforapt
-
-apt-get install -y libmono-cil-dev >>  "${log}"  2>&1
+apt_install libmono-cil-dev >>  "${log}"  2>&1
 
 
 cd /home/${user}/
