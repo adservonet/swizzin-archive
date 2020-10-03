@@ -149,21 +149,22 @@ function _apt_reset() {
   while sudo fuser /var/{lib/{dpkg,apt/lists},cache/apt/archives}/lock >/dev/null 2>&1; do
     ((i++))
 
-    if [ $i -lt 30 ]; then
-      expr 30 - $i
+    if [ $i -lt 5 ]; then
+      expr 5 - $i
     fi
 
-    if [ $i == 30 ]; then
+    if [ $i == 5 ]; then
       echo "killall apt-get"
       echo "waiting another 30 seconds till i delete locks"
       sudo killall apt-get >> "${log}" 2>&1;
+      sudo killall apt >> "${log}" 2>&1;
     fi
 
-    if [ $i -gt 30 ]; then
-      expr 60 - $i
+    if [ $i -gt 5 ]; then
+      expr 10 - $i
     fi
 
-    if [ $i == 60 ]; then
+    if [ $i == 10 ]; then
       echo "deleting locks"
       sudo rm /var/lib/dpkg/lock
       sudo rm /var/lib/dpkg/lock-frontend
