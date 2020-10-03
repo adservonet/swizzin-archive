@@ -114,8 +114,7 @@ WorkingDirectory=/home/%i/
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable rtorrent@${user} >> "${log}" 2>&1
-service rtorrent@${user} start
+systemctl enable --now rtorrent@${user} 2>> $log
 }
 
 export DEBIAN_FRONTEND=noninteractive
@@ -126,31 +125,8 @@ export DEBIAN_FRONTEND=noninteractive
 #  log="/root/logs/swizzin.log"
 #fi
 . /etc/swizzin/sources/functions/rtorrent
-#whiptail_rtorrent
-
-#if [[ $function == 0.9.8 ]]; then
-#  export rtorrentver='0.9.8'
-#  export libtorrentver='0.13.8'
-#elif [[ $function == 0.9.7 ]]; then
-#  export rtorrentver='0.9.7'
-#  export libtorrentver='0.13.7'
-#elif [[ $function == 0.9.6 ]]; then
-#  export rtorrentver='0.9.6'
-#  export libtorrentver='0.13.6'
-#elif [[ $function == 0.9.4 ]]; then
-#  export rtorrentver='0.9.4'
-#  export libtorrentver='0.13.4'
-#elif [[ $function == 0.9.3 ]]; then
-#  export rtorrentver='0.9.3'
-#  export libtorrentver='0.13.3'
-#elif [[ $function == feature-bind ]]; then
-#  export rtorrentver='feature-bind'
-#  export libtorrentver='feature-bind'
-#elif [[ $function == repo ]]; then
   export rtorrentver='repo'
   export libtorrentver='repo'
-#fi
-
 
 noexec=$(grep "/tmp" /etc/fstab | grep noexec)
 user=$(cut -d: -f1 < /root/.master.info)
