@@ -79,23 +79,24 @@ function _install() {
 }
 
 function _remove() {
-removea=()
-locks=($(find /usr/local/bin/swizzin/remove -type f -printf "%f\n" | cut -d "." -f 1 | sort -d))
-for i in "${locks[@]}"; do
-  app=${i}
-  if [[ -f /install/.$app.lock ]]; then
-    removea+=("$i" '""')
-  fi
-done
-whiptail --title "Remove Software" --noitem --checklist --separate-output "Make some choices:" 15 26 7 "${removea[@]}" 2>results
-  readarray result < results
-  for i in "${result[@]}"; do
-    result=$(echo $i)
-    echo -e "Removing ${result}"
-    bash /usr/local/bin/swizzin/remove/${result}.sh
+  _apt_reset
+  removea=()
+  locks=($(find /usr/local/bin/swizzin/remove -type f -printf "%f\n" | cut -d "." -f 1 | sort -d))
+  for i in "${locks[@]}"; do
+    app=${i}
+    if [[ -f /install/.$app.lock ]]; then
+      removea+=("$i" '""')
+    fi
   done
-rm results
-_function
+  whiptail --title "Remove Software" --noitem --checklist --separate-output "Make some choices:" 15 26 7 "${removea[@]}" 2>results
+    readarray result < results
+    for i in "${result[@]}"; do
+      result=$(echo $i)
+      echo -e "Removing ${result}"
+      bash /usr/local/bin/swizzin/remove/${result}.sh
+    done
+  rm results
+  _function
 }
 
 function _cli() {
@@ -144,40 +145,16 @@ function _apt_reset() {
     export log=/root/logs/install.log
   fi
 
-  i=0
-  echo "waiting for apt locks"
-  while sudo fuser /var/{lib/{dpkg,apt/lists},cache/apt/archives}/lock >/dev/null 2>&1; do
-    ((i++))
+  sudo killall apt-get >> "${log}" 2>&1;
+  sudo killall apt >> "${log}" 2>&1;
+  sudo rm /var/lib/dpkg/lock
+  sudo rm /var/lib/dpkg/lock-frontend
+  sudo rm /var/cache/apt/archives/lock
+  sudo rm /var/cache/debconf/*.dat
 
-    if [ $i -lt 5 ]; then
-      expr 5 - $i
-    fi
-
-    if [ $i == 5 ]; then
-      echo "killall apt-get"
-      echo "waiting another 30 seconds till i delete locks"
-      sudo killall apt-get >> "${log}" 2>&1;
-      sudo killall apt >> "${log}" 2>&1;
-    fi
-
-    if [ $i -gt 5 ]; then
-      expr 10 - $i
-    fi
-
-    if [ $i == 10 ]; then
-      echo "deleting locks"
-      sudo rm /var/lib/dpkg/lock
-      sudo rm /var/lib/dpkg/lock-frontend
-      sudo rm /var/cache/apt/archives/lock
-      sudo rm /var/cache/debconf/*.dat
-
-      sudo rm /var/lib/apt/lists/lock
-      sudo rm /var/cache/apt/archives/lock
-      sudo rm /var/lib/dpkg/updates/*
-    fi
-
-    sleep 1
-  done
+  sudo rm /var/lib/apt/lists/lock
+  sudo rm /var/cache/apt/archives/lock
+  sudo rm /var/lib/dpkg/updates/*
 }
 
 function _update() {
@@ -200,6 +177,7 @@ function _update() {
 }
 
 function _upgrade() {
+  _apt_reset
   arg=("$@")
   packages=("${arg[@]:1}")
   repo=($(find /usr/local/bin/swizzin/upgrade -type f -printf "%f\n" | cut -d "." -f 1))
