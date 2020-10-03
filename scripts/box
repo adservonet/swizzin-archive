@@ -38,6 +38,7 @@ function _function() {
 }
 
 function _install() {
+  _apt_reset
   installa=()
   locks=($(find /usr/local/bin/swizzin/install -type f -printf "%f\n" | cut -d "." -f 1 | sort -d))
   for i in "${locks[@]}"; do
@@ -134,7 +135,7 @@ function _clr() {
   fi
 }
 
-function _update() {
+function _apt_reset() {
   echo "resetting apt -----------------------------------------------------------------------------"
 
   if [[ -f /install/.tools.lock ]]; then
@@ -176,8 +177,10 @@ function _update() {
 
     sleep 1
   done
+}
 
-
+function _update() {
+  _apt_reset
   echo "updating swizzin -----------------------------------------------------------------------------"
   cd /etc/swizzin
   git checkout lxd > /dev/null  2>&1
