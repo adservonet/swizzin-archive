@@ -308,7 +308,7 @@ if [[ -n $1 ]]; then
 fi
 
 export deluge=master
-export libtorrent=RC_1_2
+export libtorrent=RC_1_1
 
 if ! skip_libtorrent_rasterbar; then
     whiptail_libtorrent_rasterbar
