@@ -53,7 +53,9 @@ if [[ -z $(which rar) ]]; then
   apt-get -y install rar unrar >> "${SEEDIT_LOG}"  2>&1 || { echo "INFO: Could not find rar/unrar in the repositories. It is likely you do not have the multiverse repo enabled. Installing directly."; _rar; }
 fi
 sudo git clone https://github.com/SickChill/SickChill.git  /home/$user/.sickchill >/dev/null 2>&1
-
+cd /home/$user/.sickchill
+#git checkout python2.7
+git reset --hard origin/python2.7
 chown -R $user:$user /home/$user/.sickchill
 
 cat > /etc/systemd/system/sickchill@.service <<SSS
