@@ -3,24 +3,29 @@
 # Author: liara
 
 user=$(cut -d: -f1 < /root/.master.info)
+codename=$(lsb_release -cs)
+. /etc/swizzin/sources/functions/pyenv
+. /etc/swizzin/sources/functions/utils
+
+
 if [[ -f /tmp/.install.lock ]]; then
   log="/root/logs/install.log"
 else
   log="/root/logs/swizzin.log"
 fi
 
-if [[ $(systemctl is-active medusa@${user}) == "active" ]]; then
+if [[ $(systemctl is-active medusa) == "active" ]]; then
   active=medusa
 fi
 
-if [[ $(systemctl is-active sickgear@${user}) == "active" ]]; then
+if [[ $(systemctl is-active sickgear) == "active" ]]; then
   active=sickgear
 fi
 
 if [[ -n $active ]]; then
   echo "SickChill and Medusa and Sickgear cannot be active at the same time."
   echo "Do you want to disable $active and continue with the installation?"
-  echo "Don't worry, your install will remain at /home/${user}/.$active"
+  echo "Don't worry, your install will remain at /opt/$active"
   while true; do
   read -p "Do you want to disable $active? " yn
       case "$yn" in
@@ -30,33 +35,33 @@ if [[ -n $active ]]; then
       esac
   done
   if [[ $disable == "yes" ]]; then
-    systemctl disable ${active}@${user}
-    systemctl stop ${active}@${user}
+    systemctl disable --now ${active}
   else
     exit 1
   fi
 fi
 
-apt-get -y -q update >>  "${log}"  2>&1
-apt-get -y -q install git-core openssl libssl-dev python2.7 >>  "${log}"  2>&1
-
-function _rar () {
-  cd /tmp
-  wget -q http://www.rarlab.com/rar/rarlinux-x64-5.5.0.tar.gz
-  tar -xzf rarlinux-x64-5.5.0.tar.gz >/dev/null 2>&1
-  cp rar/*rar /bin >/dev/null 2>&1
-  rm -rf rarlinux*.tar.gz >/dev/null 2>&1
-  rm -rf /tmp/rar >/dev/null 2>&1
-}
-
-if [[ -z $(which rar) ]]; then
-  apt-get -y install rar unrar >> "${log}"  2>&1 || { echo "INFO: Could not find rar/unrar in the repositories. It is likely you do not have the multiverse repo enabled. Installing directly."; _rar; }
+if [[ $codename =~ ("xenial"|"stretch") ]]; then
+    pyenv_install
+    pyenv_install_version 3.7.7
+    pyenv_create_venv 3.7.7 /opt/.venv/sickchill
+else
+    LIST='git python3-dev python3-venv python3-pip'
+    apt_install $LIST
+    python3 -m venv /opt/.venv/sickchill
 fi
-sudo git clone https://github.com/SickChill/SickChill.git  /home/$user/.sickchill >/dev/null 2>&1
 
-chown -R $user:$user /home/$user/.sickchill
+chown -R ${user}: /opt/.venv/sickchill
+echo "Cloning SickChill ..."
+git clone https://github.com/SickChill/SickChill.git  /opt/sickchill >> ${log} 2>&1
+chown -R $user: /opt/sickchill
+echo "Installing requirements.txt with pip ..."
+sudo -u ${user} bash -c "/opt/.venv/sickchill/bin/pip3 install -r /opt/sickchill/requirements.txt" >> $log 2>&1
 
-cat > /etc/systemd/system/sickchill@.service <<SSS
+
+install_rar
+
+cat > /etc/systemd/system/sickchill.service <<SCSD
 [Unit]
 Description=SickChill
 After=syslog.target network.target
@@ -64,21 +69,20 @@ After=syslog.target network.target
 [Service]
 Type=forking
 GuessMainPID=no
-User=%i
-Group=%i
-ExecStart=/usr/bin/python /home/%i/.sickchill/SickBeard.py -q --daemon --nolaunch --datadir=/home/%i/.sickchill
+User=${user}
+Group=${user}
+ExecStart=/opt/.venv/sickchill/bin/python3 /opt/sickchill/SickChill.py -q --daemon --nolaunch --datadir=/opt/sickchill
 
 
 [Install]
 WantedBy=multi-user.target
-SSS
+SCSD
 
-  systemctl enable sickchill@$user > /dev/null 2>&1
-  systemctl start sickchill@$user
+systemctl enable --now sickchill >> ${log} 2>&1
 
 if [[ -f /install/.nginx.lock ]]; then
   bash /usr/local/bin/swizzin/nginx/sickchill.sh
-  service nginx reload
+  systemctl reload nginx
 fi
 
 touch /install/.sickchill.lock

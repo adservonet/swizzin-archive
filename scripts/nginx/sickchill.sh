@@ -9,9 +9,9 @@
 #   including (via compiler) GPL-licensed code must also be made available
 #   under the GPL along with build & install instructions.
 user=$(cut -d: -f1 < /root/.master.info)
-isactive=$(systemctl is-active sickchill@$user)
+isactive=$(systemctl is-active sickchill)
 if [[ $isactive == "active" ]]; then
-  systemctl stop sickchill@${user}
+  systemctl stop sickchill
 fi
 
 if [[ ! -f /etc/nginx/apps/sickchill.conf ]]; then
@@ -24,11 +24,9 @@ location /sickchill {
 }
 SRC
 fi
-
 sleep 5s
-
-sed -i "s/web_root.*/web_root = \/sickchill/g" /home/${user}/.sickchill/config.ini
-sed -i "s/web_host.*/web_host = 127.0.0.1/g" /home/${user}/.sickchill/config.ini
+sed -i "s/web_root.*/web_root = \/sickchill/g" /opt/sickchill/config.ini
+sed -i "s/web_host.*/web_host = 127.0.0.1/g" /opt/sickchill/config.ini
 if [[ $isactive == "active" ]]; then
-  systemctl start sickchill@${user}
+  systemctl start sickchill
 fi
