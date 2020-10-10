@@ -87,7 +87,7 @@ $apps = array(
     array("name" => "rutorrent",      "service" => "rtorrent",          "user" => $username),
     array("name" => "qbittorrent",    "service" => "qbittorrent",       "user" => ""),
     array("name" => "sabnzbd",        "service" => "sabnzbd",           "user" => $username),
-    array("name" => "sickchill",      "service" => "sickchill",         "user" => $username),
+    array("name" => "sickchill",      "service" => "sickchill",         "user" => ""),
     array("name" => "medusa",         "service" => "medusa",            "user" => $username),
     array("name" => "netdata",        "service" => "netdata",           "user" => ""),
     array("name" => "sonarr",         "service" => "sonarr",            "user" => $username),
