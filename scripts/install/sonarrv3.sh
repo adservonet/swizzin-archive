@@ -200,7 +200,7 @@ _nginx_sonarr () {
     fi
 }
 
-_sonarrv2_flow
+#_sonarrv2_flow
 _add_sonarr_repos
 _install_sonarrv3
 # _add2usergroups_sonarrv3
