@@ -37,8 +37,8 @@ case $codename in
   "buster")
   echo "Adding adoptopenjdk repository"
   apt_install software-properties-common
-  wget -qO- https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | apt-key --keyring /etc/apt/trusted.gpg.d/adoptopenjdk.gpg add - >>"${OUTTO}" 2>&1
-  add-apt-repository --yes https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/ >>"${OUTTO}" 2>&1
+  wget -qO- https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | apt-key --keyring /etc/apt/trusted.gpg.d/adoptopenjdk.gpg add - >>"${log}" 2>&1
+  add-apt-repository --yes https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/ >>"${log}" 2>&1
   apt_update
   apt_install adoptopenjdk-8-hotspot
   ;;
@@ -51,7 +51,7 @@ current=$(wget -qO- http://www.subsonic.org/pages/download.jsp | grep -m1 .deb |
 latest=$(wget -qO- http://www.subsonic.org/pages/$current | grep -m1 .deb | cut -d'"' -f2)
 wget -qO /root/subsonic-tmp/subsonic.deb $latest || { echo "Could not download Subsonic. Exiting."; exit 1; }
 cd /root/subsonic-tmp
-dpkg -i subsonic.deb >>"${OUTTO}" 2>&1
+dpkg -i subsonic.deb >>"${log}" 2>&1
 
 touch /install/.subsonic.lock
 
@@ -66,10 +66,10 @@ MASTER=$(cut -d: -f1 < /root/.master.info )
 SUBSONICIP=$(ip route get 1 | sed -n 's/^.*src \([0-9.]*\) .*$/\1/p')
 
 SUBSONIC_HOME=/srv/subsonic
-SUBSONIC_HOST=0.0.0.0
+SUBSONIC_HOST=127.0.0.1
 SUBSONIC_PORT=4040
 SUBSONIC_HTTPS_PORT=0
-SUBSONIC_CONTEXT_PATH=/
+SUBSONIC_CONTEXT_PATH=/subsonic/
 SUBSONIC_MAX_MEMORY=200
 SUBSONIC_PIDFILE=
 SUBSONIC_DEFAULT_MUSIC_FOLDER=/home/\$MASTER/Music
