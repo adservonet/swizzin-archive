@@ -34,10 +34,8 @@ function _removeSonarr() {
   fi
     sudo rm /install/.sonarr.lock
 
-  if [[ -f /install/.nginx.lock ]]; then
-    rm -f /etc/nginx/apps/sonarr.conf
-    systemctl reload nginx
-  fi
+  rm -f /etc/nginx/apps/sonarr.conf
+  systemctl reload nginx
 }
 
 _removeSonarr
