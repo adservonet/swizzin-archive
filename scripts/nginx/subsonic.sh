@@ -14,8 +14,12 @@ if [[ ! -f /etc/nginx/apps/subsonic.conf ]]; then
 cat > /etc/nginx/apps/subsonic.conf <<SUB
 location /subsonic {
   include /etc/nginx/snippets/proxy.conf;
-  proxy_pass              http://127.0.0.1:18040;
+  proxy_pass              http://127.0.0.1:4040;
 }
 SUB
 fi
+
+sed -i 's/SUBSONIC_HOST=0.0.0.0/SUBSONIC_HOST=127.0.0.1/g' /usr/share/subsonic/subsonic.sh
+sed -i 's/SUBSONIC_CONTEXT_PATH=\//SUBSONIC_CONTEXT_PATH=\/subsonic/g' /usr/share/subsonic/subsonic.sh
+
 systemctl try-restart subsonic
