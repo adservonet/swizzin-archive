@@ -22,6 +22,11 @@ location /transmission/ {
     proxy_set_header   X-Forwarded-Server \$host;
     proxy_set_header   X-Forwarded-For    \$proxy_add_x_forwarded_for;
 
+    proxy_set_header Host \$http_host;
+    proxy_set_header X-NginX-Proxy true;
+
+    add_header   Front-End-Https   on;
+
     proxy_pass        http://127.0.0.1:9091/transmission/web;
     auth_basic "What's the password?";
     auth_basic_user_file /etc/htpasswd.d/htpasswd.${MASTER};
