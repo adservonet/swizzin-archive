@@ -66,7 +66,7 @@ $apps = array(
     array("name" => "deluge",         "service" => "deluged",           "user" => $username),
     array("name" => "deluge2",        "service" => "deluged",           "user" => $username),
     array("name" => "deluge-web",     "service" => "deluge-web",        "user" => $username),
-    array("name" => "transmission",   "service" => "transmission-daemon","user" => ""),
+    array("name" => "transmission",   "service" => "transmission",      "user" => $username),
     array("name" => "emby",           "service" => "emby-server",       "user" => ""),
     array("name" => "filebrowser",    "service" => "filebrowser",       "user" => ""),
     array("name" => "flood",          "service" => "flood",             "user" => $username),
