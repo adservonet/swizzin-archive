@@ -4,6 +4,7 @@
 # copyright 2020 swizzin.ltd
 
 users=($(cut -d: -f1 < /etc/htpasswd))
+MASTER=$(cut -d: -f1 < /root/.master.info)
 
 apt_install jq
 
@@ -38,6 +39,8 @@ location /upload {
 
 TCONF
 fi
+
+systemctl reload nginx
 
 #for u in ${users[@]}; do
 #    active=$(systemctl is-active transmission@$u)
