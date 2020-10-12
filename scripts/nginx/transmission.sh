@@ -27,7 +27,7 @@ location /transmission/ {
 
     add_header   Front-End-Https   on;
 
-    proxy_pass        http://127.0.0.1:9091/transmission/web;
+    proxy_pass        http://127.0.0.1:9091/transmission/web/;
     auth_basic "What's the password?";
     auth_basic_user_file /etc/htpasswd.d/htpasswd.${MASTER};
 }
