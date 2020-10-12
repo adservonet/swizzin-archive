@@ -5,6 +5,8 @@
 
 users=($(cut -d: -f1 < /etc/htpasswd))
 
+apt_install jq
+
 if [[ ! -f /etc/nginx/apps/transmission.conf ]]; then
     cat > /etc/nginx/apps/transmission.conf <<TCONF
 location /transmission {
