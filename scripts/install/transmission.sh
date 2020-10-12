@@ -34,7 +34,7 @@ _start_transmission () {
 }
 
 _setenv_transmission(){
-    [[ -z $download_dir ]] && export download_dir='transmission/downloads'
+    [[ -z $download_dir ]] && export download_dir='torrents/transmission'
 
     [[ -z $incomplete_dir ]] && export incomplete_dir='transmission/incomplete'
     [[ -z $incomplete_dir_enabled ]] && export incomplete_dir_enabled="false"
