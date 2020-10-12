@@ -35,10 +35,7 @@ else
   LIST='tesseract-ocr gocr rhino libcurl4-openssl-dev python2.7-dev sqlite3'
 fi
 
-apt-get -y update >> "${log}"  2>&1
-for depend in $LIST; do
-  apt-get -qq -y install $depend >> "${log}"  2>&1 || { echo "ERROR: APT-GET could not install a required package: ${depend}. That's probably not good..."; }
-done
+apt_install $LIST
 
 if [[ ! $codename =~ ("xenial"|"stretch"|"buster"|"bionic") ]]; then
   python_getpip
@@ -196,7 +193,7 @@ PYSD
   systemctl reload nginx
   fi
   echo "Enabling and starting pyLoad services ... "
-systemctl enable --now pyload.service >> "${log}"  2>&1
+systemctl enable --now pyload.service >> ${log} 2>&1
 touch /install/.pyload.lock
 
 
