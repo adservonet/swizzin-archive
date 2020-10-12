@@ -235,7 +235,7 @@ for user in ${users[@]}; do
     _unsetenv_transmission
 done
 
-if [[ ! -f /install/.nginx.lock ]]; then
+if [[ -f /install/.nginx.lock ]]; then
     echo "Creating nginx config"
     _nginx_transmission
 fi
