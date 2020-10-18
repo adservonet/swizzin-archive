@@ -54,4 +54,7 @@ if [[ -f /install/.nginx.lock ]]; then
     systemctl reload nginx
 fi
 
+sleep 5
+systemctl restart qbittorrent@seedit4me
+
 touch /install/.qbittorrent.lock
