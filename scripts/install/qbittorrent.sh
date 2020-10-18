@@ -6,9 +6,10 @@ user=$(cut -d: -f1 < /root/.master.info)
 port=$(cat /home/seedit4me/.qbittorrent_port)
 
 if [[ ! -d /home/seedit4me/torrents/qbittorrent ]]; then
-mkdir /home/seedit4me/torrents/qbittorrent
-chown -R seedit4me:seedit4me /home/seedit4me/torrents/qbittorrent
-chmod -R 775 /home/seedit4me/torrents/qbittorrent
+  mkdir /home/seedit4me/torrents/qbittorrent
+  chown -R seedit4me:seedit4me /home/seedit4me/torrents/qbittorrent
+  chmod -R 775 /home/seedit4me/torrents/qbittorrent
+fi
 
 #if [[ -f /tmp/.install.lock ]]; then
 #  export log="/root/logs/install.log"
