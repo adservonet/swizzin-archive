@@ -94,7 +94,7 @@ EOQBS
 
 function qbittorrent_user_config() {
     user=$1
-    port=$(cat /home/seedit4me/.qbittorrent_port)
+    xport=$(cat /home/seedit4me/.qbittorrent_port)
     local_packages=/usr/local/bin/swizzin
     qbtv=$(qbittorrent-nox --version | grep -oP '\d+\.\d+\.\d+')
     password=$(_get_user_password ${user})
@@ -126,7 +126,7 @@ Bittorrent\MaxConnecs=-1
 Bittorrent\MaxConnecsPerTorrent=-1
 Bittorrent\MaxUploads=-1
 Bittorrent\MaxUploadsPerTorrent=-1
-Connection\PortRangeMin=${port}
+Connection\PortRangeMin=${xport}
 Downloads\SavePath=/home/${user}/torrents/qbittorrent/
 Queueing\QueueingEnabled=false
 WebUI\Address=*
