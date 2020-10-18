@@ -48,20 +48,6 @@ for user in ${users[@]}; do
     systemctl enable --now qbittorrent@${user}
 done
 
-
-sleep 10
-
-sed -i -e 's/Connection\\PortRangeMin=.*/Connection\\PortRangeMin='$port' /g' /home/qbittorrent-nox/.config/qBittorrent/qBittorrent.conf
-echo "Bittorrent\DHT=false" >> /home/qbittorrent-nox/.config/qBittorrent/qBittorrent.conf
-echo "Bittorrent\LSD=false" >> /home/qbittorrent-nox/.config/qBittorrent/qBittorrent.conf
-echo "Bittorrent\PeX=false" >> /home/qbittorrent-nox/.config/qBittorrent/qBittorrent.conf
-echo "WebUI\LocalHostAuth=false" >> /home/qbittorrent-nox/.config/qBittorrent/qBittorrent.conf
-echo "Downloads\SavePath=/home/seedit4me/torrents/qbittorrent/" >> /home/qbittorrent-nox/.config/qBittorrent/qBittorrent.conf
-
-systemctl restart qbittorrent >>  "${log}"  2>&1
-
-
-
 if [[ -f /install/.nginx.lock ]]; then
     bash /etc/swizzin/scripts/nginx/qbittorrent.sh
     systemctl reload nginx

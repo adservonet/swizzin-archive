@@ -8,26 +8,27 @@ function whiptail_qbittorrent () {
     latestv41=$(curl -s https://github.com/qbittorrent/qBittorrent/releases | grep -m1 -oP '4\.1\.\d')
     if [[ -z $latestv41 ]]; then latestv41=4.1.9; fi
     latestv=$(curl -s https://github.com/qbittorrent/qBittorrent/releases | grep -m1 .tar.gz | grep -oP '\d.\d?.?\d')
-    case ${codename} in
-    "xenial"|"stretch")
-        function=$(whiptail --title "Install Software" --menu "Choose a qBittorrent version:" --ok-button "Continue" --nocancel 12 50 3 \
-                "Repo" "(${repov})" \
-                "4.1" "(${latestv41})" 3>&1 1>&2 2>&3)
-    ;;
-    *)
-        function=$(whiptail --title "Install Software" --menu "Choose a qBittorrent version:" --ok-button "Continue" --nocancel 12 50 3 \
-                "Repo" "(${repov})" \
-                "4.1" "(${latestv41})" \
-                "Latest" "(${latestv})" 3>&1 1>&2 2>&3)
-    ;;
-    esac
-    if [[ $function == "Repo" ]]; then
-        export qbittorrent=repo
-    elif [[ $function == "4.1" ]]; then
-        export qbittorrent=${latestv41}
-    elif [[ $function == "Latest" ]]; then
-        export qbittorrent=${latestv}
-    fi
+#    case ${codename} in
+#    "xenial"|"stretch")
+#        function=$(whiptail --title "Install Software" --menu "Choose a qBittorrent version:" --ok-button "Continue" --nocancel 12 50 3 \
+#                "Repo" "(${repov})" \
+#                "4.1" "(${latestv41})" 3>&1 1>&2 2>&3)
+#    ;;
+#    *)
+#        function=$(whiptail --title "Install Software" --menu "Choose a qBittorrent version:" --ok-button "Continue" --nocancel 12 50 3 \
+#                "Repo" "(${repov})" \
+#                "4.1" "(${latestv41})" \
+#                "Latest" "(${latestv})" 3>&1 1>&2 2>&3)
+#    ;;
+#    esac
+#    if [[ $function == "Repo" ]]; then
+#        export qbittorrent=repo
+#    elif [[ $function == "4.1" ]]; then
+#        export qbittorrent=${latestv41}
+#    elif [[ $function == "Latest" ]]; then
+#        export qbittorrent=${latestv}
+#    fi
+    export qbittorrent=${latestv}
   fi
 }
 
@@ -93,6 +94,7 @@ EOQBS
 
 function qbittorrent_user_config() {
     user=$1
+    port=$(cat /home/seedit4me/.qbittorrent_port)
     local_packages=/usr/local/bin/swizzin
     qbtv=$(qbittorrent-nox --version | grep -oP '\d+\.\d+\.\d+')
     password=$(_get_user_password ${user})
@@ -117,10 +119,14 @@ function qbittorrent_user_config() {
 Session\DisableAutoTMMByDefault=false 
 
 [Preferences]
+Bittorrent\DHT=false
+Bittorrent\LSD=false
+Bittorrent\PeX=false
 Bittorrent\MaxConnecs=-1
 Bittorrent\MaxConnecsPerTorrent=-1
 Bittorrent\MaxUploads=-1
 Bittorrent\MaxUploadsPerTorrent=-1
+Connection\PortRangeMin=${port}
 Downloads\SavePath=/home/${user}/torrents/qbittorrent/
 Queueing\QueueingEnabled=false
 WebUI\Address=*
@@ -131,6 +137,7 @@ WebUI\ClickjackingProtection=true
 WebUI\LocalHostAuth=true
 WebUI\MaxAuthenticationFailCount=5
 ${QBTWP}
+WebUI\LocalHostAuth=false
 WebUI\Port=${port}
 WebUI\RootFolder=
 WebUI\SecureCookie=true
