@@ -120,13 +120,13 @@ function build_libtorrent_rasterbar () {
   . /etc/swizzin/sources/functions/fpm
 
   if [[ $libtorrent = "repo" ]]; then
-    cleanup=(python3-libtorrent python-libtorrent libtorrent-rasterbar libtorrent-rasterbar-dev)
-    for a in ${cleanup[@]}; do
-      if dpkg -l | grep $a | grep swizzin > /dev/null 2>&1; then
-        echo "Found $a. Removing."
-        dpkg -r $a > /dev/null 2>&1
-      fi
-    done
+#    cleanup=(python3-libtorrent python-libtorrent libtorrent-rasterbar libtorrent-rasterbar-dev)
+#    for a in ${cleanup[@]}; do
+#      if dpkg -l | grep $a | grep swizzin > /dev/null 2>&1; then
+#        echo "Found $a. Removing."
+#        dpkg -r $a > /dev/null 2>&1
+#      fi
+#    done
       case $release in
           "xenial")
           apt_install libtorrent-rasterbar8 python-libtorrent python3-libtorrent libtorrent-rasterbar-dev pkg-config
@@ -181,13 +181,13 @@ function build_libtorrent_rasterbar () {
             ;;
       esac
     fi
-    cleanup=($remove libtorrent-rasterbar7 libtorrent-rasterbar8 libtorrent-rasterbar9)
-    for a in ${cleanup[@]}; do
-      if dpkg -l | grep $a > /dev/null 2>&1; then
-        echo "Found package conflict: $a. Removing."
-        dpkg -r $a > /dev/null 2>&1
-      fi
-    done
+#    cleanup=($remove libtorrent-rasterbar7 libtorrent-rasterbar8 libtorrent-rasterbar9)
+#    for a in ${cleanup[@]}; do
+#      if dpkg -l | grep $a > /dev/null 2>&1; then
+#        echo "Found package conflict: $a. Removing."
+#        dpkg -r $a > /dev/null 2>&1
+#      fi
+#    done
     LTRC=$libtorrent
     if [[ -z $LIST ]]; then
       LIST="build-essential autoconf automake pkg-config libtool libboost-system-dev libboost-python-dev libssl-dev libgeoip-dev libboost-chrono-dev libboost-random-dev geoip-database ${pythonapt} python-setuptools"
