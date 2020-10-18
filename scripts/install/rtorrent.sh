@@ -126,7 +126,7 @@ export DEBIAN_FRONTEND=noninteractive
 #fi
 . /etc/swizzin/sources/functions/rtorrent
   export rtorrentver='repo'
-  export libtorrentver='repo'
+  export libtorrentver=RC_1_2
 
 noexec=$(grep "/tmp" /etc/fstab | grep noexec)
 user=$(cut -d: -f1 < /root/.master.info)
