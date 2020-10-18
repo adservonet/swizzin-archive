@@ -23,9 +23,12 @@ function _dconf {
   n=$RANDOM
   DPORT=$((n%59000+10024))
   DWSALT=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32; echo "")
-#  DWSALT=$(tr -dc 'a-zA-Z0-9' < /dev/urandom | fold -w 32 | head -n 1)
   localpass=$(head /dev/urandom | tr -dc a-z0-9 | head -c 40; echo "")
-#  localpass=$(tr -dc 'a-f0-9' < /dev/urandom | fold -w 40 | head -n 1)
+  if $(command -v python2.7 > /dev/null 2>&1); then
+    pythonversion=python2.7
+  elif $(command -v python3 > /dev/null 2>&1); then
+    pythonversion=python3
+  fi
   DWP=$(python2 ${local_packages}/deluge.Userpass.py ${pass} ${DWSALT})
   DUDID=$(python2 ${local_packages}/deluge.addHost.py)
   port=$(cat /home/seedit4me/.deluge_port)
@@ -311,7 +314,7 @@ export deluge=1.3-stable
 export libtorrent=RC_1_1
 
 if ! skip_libtorrent_rasterbar; then
-    whiptail_libtorrent_rasterbar
+    #whiptail_libtorrent_rasterbar
   echo "Building libtorrent-rasterbar"; build_libtorrent_rasterbar
 fi
 

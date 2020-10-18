@@ -35,10 +35,11 @@ if [[ -n $1 ]]; then
     exit 0
 fi
 
+export libtorrent=RC_1_2
 whiptail_qbittorrent
+
 if ! skip_libtorrent_rasterbar; then
-    export libtorrent=RC_1_2
-#    whiptail_libtorrent_rasterbar
+    #whiptail_libtorrent_rasterbar
     echo "Building libtorrent-rasterbar"; build_libtorrent_rasterbar
 fi
 

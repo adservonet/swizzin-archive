@@ -311,7 +311,7 @@ export deluge=master
 export libtorrent=repo
 
 if ! skip_libtorrent_rasterbar; then
-    whiptail_libtorrent_rasterbar
+    #whiptail_libtorrent_rasterbar
   echo "Building libtorrent-rasterbar"; build_libtorrent_rasterbar
 fi
 
