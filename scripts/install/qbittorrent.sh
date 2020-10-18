@@ -37,7 +37,8 @@ fi
 
 whiptail_qbittorrent
 if ! skip_libtorrent_rasterbar; then
-    whiptail_libtorrent_rasterbar
+    export libtorrent=RC_1_2
+#    whiptail_libtorrent_rasterbar
     echo "Building libtorrent-rasterbar"; build_libtorrent_rasterbar
 fi
 
