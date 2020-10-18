@@ -35,7 +35,7 @@ if [[ -n $1 ]]; then
     exit 0
 fi
 
-export libtorrent=RC_1_2
+export libtorrent=RC_1_1
 whiptail_qbittorrent
 
 if ! skip_libtorrent_rasterbar; then
