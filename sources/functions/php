@@ -1,5 +1,11 @@
 #!/bin/bash
 
+#if [[ -f /tmp/.install.lock ]]; then
+#  export log="/root/logs/install.log"
+#else
+#  log="/root/logs/swizzin.log"
+#fi
+
 #Gets the version nginx is using and restarts it
 function restart_php_fpm () {
     version=$(php_service_version)
