@@ -11,51 +11,52 @@ if [[ ! -d /home/seedit4me/torrents/qbittorrent ]]; then
   chmod -R 775 /home/seedit4me/torrents/qbittorrent
 fi
 
-#if [[ -f /tmp/.install.lock ]]; then
-#  export log="/root/logs/install.log"
-#else
-#  export log="/root/logs/swizzin.log"
-#fi
+apt_update
+add-apt-repository -y ppa:qbittorrent-team/qbittorrent-stable >>  "${log}"  2>&1
+apt_install qbittorrent-nox >>  "${log}"  2>&1
+adduser --system --group qbittorrent-nox >>  "${log}"  2>&1
+usermod -a -G seedit4me qbittorrent-nox >>  "${log}"  2>&1
+usermod -a -G qbittorrent-nox seedit4me >>  "${log}"  2>&1
 
-# Source the required functions
-. /etc/swizzin/sources/functions/qbittorrent
-. /etc/swizzin/sources/functions/libtorrent
-. /etc/swizzin/sources/functions/utils
-. /etc/swizzin/sources/functions/fpm
+cat > /etc/systemd/system/qbittorrent.service <<SSS
+[Unit]
+Description=qBittorrent Command Line Client
+After=network.target
 
-users=($(_get_user_list))
+[Service]
+#Do not change to "simple"
+Type=forking
+User=qbittorrent-nox
+Group=qbittorrent-nox
+UMask=007
+ExecStart=/usr/bin/qbittorrent-nox -d --webui-port=9148
+Restart=on-failure
 
-if [[ -n $1 ]]; then
-    user=$1
-    qbittorrent_user_config ${user}
-    if [[ -f /install/.nginx.lock ]]; then
-        bash /etc/swizzin/scripts/nginx/qbittorrent.sh
-        systemctl reload nginx
-    fi
-    exit 0
-fi
+[Install]
+WantedBy=multi-user.target
+SSS
 
-export libtorrent=RC_1_1
-whiptail_qbittorrent
 
-if ! skip_libtorrent_rasterbar; then
-    #whiptail_libtorrent_rasterbar
-    echo "Building libtorrent-rasterbar"; build_libtorrent_rasterbar
-fi
+systemctl enable qbittorrent >>  "${log}"  2>&1
+systemctl start qbittorrent >>  "${log}"  2>&1
 
-echo "Building qBittorrent"; build_qbittorrent
-qbittorrent_service
-for user in ${users[@]}; do
-    qbittorrent_user_config ${user}
-    systemctl enable --now qbittorrent@${user}
-done
+sleep 10
+
+sed -i -e 's/Connection\\PortRangeMin=.*/Connection\\PortRangeMin='$port' /g' /home/qbittorrent-nox/.config/qBittorrent/qBittorrent.conf
+echo "Bittorrent\DHT=false" >> /home/qbittorrent-nox/.config/qBittorrent/qBittorrent.conf
+echo "Bittorrent\LSD=false" >> /home/qbittorrent-nox/.config/qBittorrent/qBittorrent.conf
+echo "Bittorrent\PeX=false" >> /home/qbittorrent-nox/.config/qBittorrent/qBittorrent.conf
+echo "WebUI\LocalHostAuth=false" >> /home/qbittorrent-nox/.config/qBittorrent/qBittorrent.conf
+echo "Downloads\SavePath=/home/seedit4me/torrents/qbittorrent/" >> /home/qbittorrent-nox/.config/qBittorrent/qBittorrent.conf
+
+#echo "WebUI\Username=seedit4me" >> /home/qbittorrent-nox/.config/qBittorrent/qBittorrent.conf
+#echo "WebUI\Password_PBKDF2="@ByteArray(Nhc0IAtfyl49psuYV+7BoA==:WyEqotj1k7/5x6dgqv9lUKo7Ez69Lqh8CxstajGgi+DwrdwUnZiDEwbK97zhZJB+c6SKlKPVsWq3uxYAS54dNA==)"
+
+systemctl restart qbittorrent >>  "${log}"  2>&1
 
 if [[ -f /install/.nginx.lock ]]; then
-    bash /etc/swizzin/scripts/nginx/qbittorrent.sh
-    systemctl reload nginx
+  bash /usr/local/bin/swizzin/nginx/qbittorrent.sh
 fi
 
-sleep 5
-systemctl restart qbittorrent@seedit4me
-
 touch /install/.qbittorrent.lock
+

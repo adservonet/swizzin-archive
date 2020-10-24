@@ -1,19 +1,11 @@
 #!/bin/bash
-. /etc/swizzin/sources/functions/utils
 
-users=($(_get_user_list))
-for user in ${users[@]}; do
-    systemctl disable --now qbittorrent@${user}
-    rm -rf /home/${user}/.config/qbittorrent
-done
-rm /etc/nginx/apps/qbittorrent.conf
-rm /etc/nginx/conf.d/*.qbittorrent.conf
-rm /etc/systemd/system/qbittorrent@.service
-dpkg -r qbittorrent-nox > /dev/null 2>&1
+systemctl disable qbittorrent
+systemctl stop qbittorrent
 
-systemctl reload nginx
-rm /install/.qbittorrent.lock
+apt_remove qbittorrent-nox >>  "${log}"  2>&1
 
-if [[ ! -f /install/.deluge.lock ]]; then
-    bash /etc/swizzin/scripts/remove/libtorrent.sh
-fi
+userdel -r qbittorrent-nox
+
+rm -rf /etc/nginx/apps/qbittorrent.conf
+rm -rf /install/.qbittorrent.lock
