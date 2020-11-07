@@ -13,6 +13,9 @@ mkdir /srv/organizr
 chown ${MASTER}: /srv/organizr
 
 git clone https://github.com/causefx/Organizr /srv/organizr
+cd /srv/organizr
+git reset --hard 5b31c6b
+
 
 chown -R www-data:www-data /srv/organizr
 
