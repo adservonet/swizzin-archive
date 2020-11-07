@@ -28,10 +28,9 @@ location ~ \.php$
     #fastcgi_index index.php;
     fastcgi_param SCRIPT_FILENAME /srv\$fastcgi_script_name;
   }
-
-  location /api/v2 {
-	  try_files $uri /api/v2/index.php\$is_args\$args;
-  }
+}
+location /api/v2 {
+  try_files $uri /api/v2/index.php\$is_args\$args;
 }
 RAP
 fi
