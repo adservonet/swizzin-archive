@@ -21,7 +21,7 @@ user=$(cut -d: -f1 < /root/.master.info )
 waitforapt
 apt-get -y -q update >> "${SEEDIT_LOG}"  2>&1
 waitforapt
-apt-get -y -q install python-pip >> "${SEEDIT_LOG}"  2>&1
+apt-get -y -q install python-pip python3-pip >> "${SEEDIT_LOG}"  2>&1
 cd /home/${user}
 
 #wget https://www.python.org/ftp/python/2.7.13/Python-2.7.13.tgz
