@@ -9,7 +9,7 @@ function whiptail_libtorrent_rasterbar () {
         case $(lsb_release -cs) in
             "xenial"|"focal")
                 function="1.1"
-                echo "Defaulting to libtorrent branch RC_1_1 for shared compatbility"
+                echo_info "Defaulting to libtorrent branch RC_1_1 for shared compatbility"
                 ;;
             *)
                 function=$(whiptail --title "Install Software" --menu "Choose a libtorrent branch:" --ok-button "Continue" --nocancel 12 50 3 \
@@ -123,7 +123,7 @@ function build_libtorrent_rasterbar () {
     cleanup=(python3-libtorrent python-libtorrent libtorrent-rasterbar libtorrent-rasterbar-dev)
     for a in ${cleanup[@]}; do
       if dpkg -l | grep $a | grep swizzin > /dev/null 2>&1; then
-        echo "Found $a. Removing."
+        echo_info "Found $a. Removing."
         dpkg -r $a > /dev/null 2>&1
       fi
     done
@@ -184,7 +184,7 @@ function build_libtorrent_rasterbar () {
     cleanup=($remove libtorrent-rasterbar7 libtorrent-rasterbar8 libtorrent-rasterbar9)
     for a in ${cleanup[@]}; do
       if dpkg -l | grep $a > /dev/null 2>&1; then
-        echo "Found package conflict: $a. Removing."
+        echo_info "Found package conflict: $a. Removing."
         dpkg -r $a > /dev/null 2>&1
       fi
     done
@@ -207,7 +207,7 @@ function build_libtorrent_rasterbar () {
         swap=true
         tmp_swap_on
     fi
-    git clone -b ${LTRC} https://github.com/arvidn/libtorrent.git >>"${log}" 2>&1 || { echo "ERROR: git could not clone the libtorrent repository"; exit 1; }
+    git clone -b ${LTRC} https://github.com/arvidn/libtorrent.git >>"${log}" 2>&1 || { echo_error "ERROR: git could not clone the libtorrent repository"; exit 1; }
     cd libtorrent
     if [[ ! $LTRC =~ ("RC_1_0"|"RC_1_1") ]]; then
         configure_args="-std=c++14"
@@ -240,10 +240,11 @@ function build_libtorrent_rasterbar () {
     /usr/local/bin/fpm -f -C /tmp/dist/libtorrent -p /root/dist/libtorrent-rasterbar_VERSION.deb -s dir -t deb -n libtorrent-rasterbar --version ${VERSION} --description "Libtorrent rasterbar compiled by swizzin$tag" > /dev/null 2>&1
     dpkg -i /root/dist/libtorrent-rasterbar_${VERSION}.deb
     if [[ -n $deluge ]]; then
-      echo "Building python binding ..."
+      echo_progress_start "Building python binding"
       PYTHON=${pythonbin} ./configure --enable-python-binding --with-libiconv ${python_configure_args} CXXFLAGS=${configure_args} >>"${log}" 2>&1
       /usr/local/bin/fpm --verbose --python-bin=${pythonbin} --python-package-name-prefix=${python} -n ${python}-libtorrent -f -p /root/dist/${python}-libtorrent_VERSION.deb --version ${VERSION} --description "Libtorrent rasterbar python bindings compiled by swizzin$tag" -s python -t deb /tmp/libtorrent/bindings/python/setup.py >> $log 2>&1
       dpkg -i /root/dist/${python}-libtorrent_${VERSION}.deb
+      echo_progress_done "Pbox ython binding built"
     fi
     ldconfig
     cd /tmp

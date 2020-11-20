@@ -21,8 +21,7 @@ function _get_user_password () {
     user_to_get="$1"
     password=''
 
-    for file in /root/.master.info /root/*.info ; do 
-        ##TODO fix when there is no addition users other than .master. It works but it's just ugly
+	for file in $(find /root/ -maxdepth 1 -name '*.info' | sort); do
         if [[ -f $file ]]; then 
             user_in_file=$(cat $file | cut -d: -f1)
             if [ "$user_in_file" = "$user_to_get" ]; then 
@@ -46,12 +45,14 @@ function _get_user_password () {
 
 #Returns all users managed by swizzin as a newline separated list
 function _get_user_list () {
-    for file in /root/.master.info /root/*.info; do 
-        ##TODO fix when there is no addition users other than .master. It works but it's just ugly
+	output=""
+	for file in $(find /root/ -maxdepth 1 -name '*.info' ! -name .master.info | sort); do
         if [[ -f $file ]]; then 
-            cut -d: -f1 < "$file"
+			output+="$(cut -d: -f1 < "$file")\n"
         fi
     done
+	output+=$(cut -d: -f1 < /root/.master.info)
+	echo -e "$output" | sort | uniq
 }
 
 #Returns the username of the master
@@ -73,9 +74,11 @@ function port() {
     comm -23 <(seq ${LOW_BOUND} ${UPPER_BOUND} | sort) <(ss -Htan | awk '{print $4}' | cut -d':' -f2 | sort -u) | shuf | head -n 1
 }
 
-
 function check_ram() {
-    if [[ -z $1 ]]; then echo "Must specify a value to compare"; return 1; fi
+	if [[ -z $1 ]]; then
+		echo_error "Must specify a value to compare"
+		return 1
+	fi
     if ! dpkg -s bc > /dev/null 2>&1; then
         apt_install bc
     fi
@@ -91,10 +94,14 @@ function check_ram() {
 }
 
 function tmp_swap_on() {
-    echo "Setup is enabling the use of a temporary 2GB swap file"
-    dd if=/dev/zero of=/.swapfile bs=1M count=2048 > /dev/null 2>&1 || { echo "ERROR: Cannot continue with install because swap file could not be created. Does device have 2GB of free space?"; exit 1; }
+	echo_progress_start "Setup is enabling the use of a temporary 2GB swap file"
+	dd if=/dev/zero of=/.swapfile bs=1M count=2048 > /dev/null 2>&1 || {
+		echo_error "Cannot continue with install because swap file could not be created. Does device have 2GB of free space?"
+		exit 1
+	}
     mkswap /.swapfile > /dev/null 2>&1
     swapon /.swapfile > /dev/null 2>&1
+	echo_progress_done 'Swap enabled'
 }
 
 function tmp_swap_off() {
