@@ -74,6 +74,11 @@ mv nextcloud /srv
 rm -rf /tmp/${version}.zip
 
 #Set permissions as per nextcloud
+
+mkdir -p /home/seedit4me/nextcloud
+chown www-data:www-data /home/seedit4me/nextcloud
+ chmod 770 /home/seedit4me/nextcloud
+ 
 ocpath='/srv/nextcloud'
 htuser='www-data'
 htgroup='www-data'
