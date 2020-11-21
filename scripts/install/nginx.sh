@@ -9,14 +9,10 @@
 #   including (via compiler) GPL-licensed code must also be made available
 #   under the GPL along with build & install instructions.
 #
+
 distribution=$(lsb_release -is)
 release=$(lsb_release -rs)
 codename=$(lsb_release -cs)
-#if [[ -f /tmp/.install.lock ]]; then
-#  log="/root/logs/install.log"
-#else
-#  log="/root/logs/swizzin.log"
-#fi
 
 if [[ -n $(pidof apache2) ]]; then
   if [[ -z $apache2 ]]; then
@@ -27,14 +23,16 @@ if [[ -n $(pidof apache2) ]]; then
     fi
   fi
   if [[ $apache2 == "purge" ]]; then
-    echo "Purging apache2 ... "
+    echo_progress_start "Purging apache2"
     systemctl disable apache2 >> /dev/null 2>&1
     systemctl stop apache2
-    apt-get -y -q purge apache2 >>  "${log}"  2>&1
+    apt_remove --purge apache2
+    echo_progress_done "Apache purged"
   elif [[ $apache2 == "disable" ]]; then
-    echo "Disabling apache2 ... "
+    echo_progress_start "Disabling apache2"
     systemctl disable apache2 >> /dev/null 2>&1
     systemctl stop apache2
+    echo_progress_done "Apache disabled"
   fi
 fi
 
@@ -50,6 +48,7 @@ done
 
 cd /etc/php
 phpv=$(ls -d */ | cut -d/ -f1)
+echo_progress_start "Making adjustments to PHP"
 for version in $phpv; do
   sed -i -e "s/post_max_size = 8M/post_max_size = 64M/" \
           -e "s/upload_max_filesize = 2M/upload_max_filesize = 92M/" \
@@ -62,6 +61,7 @@ for version in $phpv; do
           -e "s/;opcache.revalidate_freq=2/opcache.revalidate_freq=240/" /etc/php/$version/fpm/php.ini
   phpenmod -v $version opcache
 done
+echo_progress_done "PHP config modified"
 
   sudo apt-get -y -q  purge php7.0.*
   sudo apt-get -y -q  purge php7.1.*
@@ -93,6 +93,8 @@ else
 fi
 
 rm -rf /etc/nginx/sites-enabled/default
+
+echo_progress_start "Creating default nginx site config and certificates"
 cat > /etc/nginx/sites-enabled/default <<NGC
 server {
   listen 80 default_server;
@@ -150,7 +152,7 @@ mkdir -p /etc/nginx/apps/
 chmod 700 /etc/nginx/ssl
 
 cd /etc/nginx/ssl
-openssl dhparam -out dhparam.pem 2048 >> "${log}"  2>&1
+openssl dhparam -out dhparam.pem 2048 >>$log 2>&1
 
 cat > /etc/nginx/snippets/ssl-params.conf <<SSC
 ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
@@ -200,8 +202,10 @@ proxy_cache_bypass \$cookie_session;
 proxy_no_cache \$cookie_session;
 proxy_buffers 32 4k;
 PROX
+echo_progress_done "Config installed"
 
-svn export https://github.com/Naereen/Nginx-Fancyindex-Theme/trunk/Nginx-Fancyindex-Theme-dark /srv/fancyindex >>  "${log}"  2>&1
+echo_progress_start "Installing fancyindex"
+svn export https://github.com/Naereen/Nginx-Fancyindex-Theme/trunk/Nginx-Fancyindex-Theme-dark /srv/fancyindex >> $log 2>&1
 cat > /etc/nginx/snippets/fancyindex.conf <<FIC
 fancyindex on;
 fancyindex_localtime on;
@@ -214,21 +218,25 @@ fancyindex_name_length 255; # Maximum file name length in bytes, change as you l
 FIC
 sed -i 's/href="\/[^\/]*/href="\/fancyindex/g' /srv/fancyindex/header.html
 sed -i 's/src="\/[^\/]*/src="\/fancyindex/g' /srv/fancyindex/footer.html
-
+echo_progress_done "Fancyindex installed"
 
 locks=($(find /usr/local/bin/swizzin/nginx -type f -printf "%f\n" | cut -d "." -f 1 | sort -d -r))
 for i in "${locks[@]}"; do
   app=${i}
   if [[ -f /install/.$app.lock ]]; then
-    echo "Installing nginx config for $app"
-    /usr/local/bin/swizzin/nginx/$app.sh
+    echo_progress_start "Installing nginx config for $app"
+    bash /usr/local/bin/swizzin/nginx/$app.sh
+    echo_progress_done "Nginx config for $app installed"
   fi
 done
 
+echo_progress_start "Restarting nginx"
 systemctl restart nginx
+echo_progress_done "Nginx restared"
 
+#shellcheck source=sources/functions/php
 . /etc/swizzin/sources/functions/php
 restart_php_fpm
 
-
+echo_success "Nginx installed"
 touch /install/.nginx.lock
