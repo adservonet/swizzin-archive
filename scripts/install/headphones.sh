@@ -1,15 +1,8 @@
 #!/bin/bash
 #
-# [Quick Box :: Install Headphones package]
+# swizzin install headphones
 #
-# GITHUB REPOS
-# GitHub _ packages  :   https://github.com/QuickBox/QB/packages
-# LOCAL REPOS
-# Local _ packages   :   /etc/QuickBox/packages
-# Author             :   QuickBox.IO | JMSolo
-# URL                :   https://quickbox.io
-#
-# QuickBox Copyright (C) 2017 QuickBox.io
+# swizzin Copyright (C) 2020 swizzin.ltd
 # Licensed under GNU General Public License v3.0 GPL-3 (in short)
 #
 #   You may copy, distribute and modify the software as long as you track
@@ -17,117 +10,68 @@
 #   including (via compiler) GPL-licensed code must also be made available
 #   under the GPL along with build & install instructions.
 #
-#   QuickBox.IO does not grant the end-user the right to distribute this
-#   code in a means to supply commercial monetization. If you would like
-#   to include QuickBox in your commercial project, write to echo@quickbox.io
-#   with a summary of your project as well as its intended use for moentization.
 #
 
-YELLOW='\e[93m'
-RED='\e[91m'
-ENDCOLOR='\033[0m'
-CYAN='\e[96m'
-GREEN='\e[92m'
+user=$(cut -d: -f1 < /root/.master.info)
+password=$(cut -d: -f2 < /root/.master.info)
+codename=$(lsb_release -cs)
+#shellcheck source=sources/functions/pyenv
+. /etc/swizzin/sources/functions/pyenv
 
-#if [[ -f /tmp/.install.lock ]]; then
-#  OUTTO="/root/logs/install.log"
-#else
-#  OUTTO="/root/logs/swizzin.log"
-#fi
-USERNAME=$(cut -d: -f1 < /root/.master.info)
-PASSWD=$(cut -d: -f2 < /root/.master.info)
+if [[ $codename =~ ("xenial"|"stretch"|"buster"|"bionic") ]]; then
+    LIST='git python2.7-dev virtualenv python-virtualenv python-pip'
+else
+    LIST='git python2.7-dev'
+fi
 
+apt_install $LIST
 
-APPNAME='headphones'
-APPSHORTNAME='hp'
-APPPATH='/home/'$USERNAME'/.headphones'
-APPTITLE='Headphones'
-APPDEPS='git-core python python-cheetah python-pyasn1'
-APPGIT='https://github.com/rembo10/headphones.git'
-APPDPORT='8004'
-APPSETTINGS=$APPPATH'/config.ini'
-PORTSEARCH='http_port = '
-USERSEARCH='http_username = '
-PASSSEARCH='http_password = '
-# New password encrypted
-NEWPASS='$PASSWD'
-# New password unencrypted
-APPNEWPASS='$PASSWD'
+if [[ ! $codename =~ ("xenial"|"stretch"|"buster"|"bionic") ]]; then
+  python_getpip
+fi
 
-echo
-sleep 1
-echo -e "Refreshing packages list ..." >> "${log}"  2>&1;
-echo -e $YELLOW'--->Refreshing packages list...'$ENDCOLOR
-sudo apt-get update
+python2_venv ${user} headphones
 
-echo
-sleep 1
-echo -e "Installing prerequisites for $APPTITLE ..." >> "${log}"  2>&1;
-echo -e $YELLOW'--->Installing prerequisites for '$APPTITLE'...'$ENDCOLOR
-sudo apt-get -y install $APPDEPS
+PIP='wheel cheetah asn1'
+echo_progress_start "Installing python dependencies"
+/opt/.venv/headphones/bin/pip install $PIP >>"${log}" 2>&1
+chown -R ${user}: /opt/.venv/headphones
+echo_progress_done "Python dependencies installed"
 
-echo
-sleep 1
-echo -e "Downloading latest $APPTITLE ... " >> "${log}"  2>&1;
-echo -e $YELLOW'--->Downloading latest '$APPTITLE'...'$ENDCOLOR
-git clone $APPGIT $APPPATH || { echo -e $RED'Git not found.'$ENDCOLOR ; exit 1; }
+echo_progress_start "Cloning Headphones source code"
+git clone https://github.com/rembo10/headphones.git /opt/headphones >>"${log}" 2>&1
+chown -R $user: /opt/headphones
+echo_progress_done "Source cloned"
 
-echo
-sleep 1
-echo -e "Setting $APPTITLE permissions for $USERNAME ... " >> "${log}"  2>&1;
-echo -e $YELLOW'--->Setting '$APPTITLE' permissions for '$USERNAME'...'$ENDCOLOR
-sudo chown -R $USERNAME:$USERNAME $APPPATH >/dev/null 2>&1
-sudo chmod -R 775 $APPPATH >/dev/null 2>&1
-sudo chmod -R g+s $APPPATH >/dev/null 2>&1
-
-echo
-sleep 1
-echo -e "Configuring $APPTITLE Install ..." >> "${log}"  2>&1;
-echo -e $YELLOW'--->Configuring '$APPTITLE' Install...'$ENDCOLOR
-APPSHORTNAMEU="${APPSHORTNAME^^}"
-DEFAULTFILE='/tmp/'$APPNAME'_default'
-echo $APPSHORTNAMEU"_HOME="$APPPATH"/" >> $DEFAULTFILE || { echo 'Could not create '$APPTITLE' default file.' ; exit 1; }
-echo $APPSHORTNAMEU"_DATA="$APPPATH"/" >> $DEFAULTFILE
-echo -e 'Enabling user '$CYAN$USERNAME$ENDCOLOR' to run '$APPTITLE'...'
-echo $APPSHORTNAMEU"_USER="$USERNAME >> $DEFAULTFILE
-
-
-sudo mv $DEFAULTFILE "/etc/default/"$APPNAME || { echo 'Could not move '$APPTITLE' default file.' ; exit 1; }
-cat > /etc/systemd/system/headphones.service <<HEADP
+echo_progress_start "Installing systemd service"
+cat > /etc/systemd/system/headphones.service <<HEADSD
 [Unit]
 Description=Headphones
 Wants=network.target network-online.target
 After=network.target network-online.target
 
 [Service]
-ExecStart=/usr/bin/python2 /home/USER/.headphones/Headphones.py -d --pidfile /var/run/USER/headphones.pid --datadir /home/USER/.headphones --nolaunch --config /home/USER/.headphones/config.ini --port 8004
-PIDFile=/var/run/USER/headphones.pid
 Type=forking
-User=USER
-Group=USER
+User=${user}
+Group=${user}
+ExecStart=/opt/.venv/headphones/bin/python2 /opt/headphones/Headphones.py -d --pidfile /run/${user}/headphones.pid --datadir /opt/headphones --nolaunch --config /opt/headphones/config.ini --port 8004
+PIDFile=/run/${user}/headphones.pid
+
 
 [Install]
 WantedBy=multi-user.target
-HEADP
-sed -i "s/USER/${USERNAME}/g" /etc/systemd/system/$APPNAME.service
+HEADSD
 
-echo -e "Starting $APPTITLE ... " >> "${log}"  2>&1;
-echo -e $YELLOW'--->Starting '$APPTITLE$ENDCOLOR
-systemctl enable $APPNAME >/dev/null 2>&1
-systemctl start $APPNAME >/dev/null 2>&1
+systemctl enable -q --now headphones 2>&1  | tee -a $log
 sleep 10
+echo_progress_done "Systemd service installed"
 
-mkdir -p $APPPATH/logs
 if [[ -f /install/.nginx.lock ]]; then
+  echo_progress_start "Installing nginx config"
   bash /usr/local/bin/swizzin/nginx/headphones.sh
-  service nginx reload
-  echo "Install complete! Please note headphones access url is: https://$(ip route get 1 | sed -n 's/^.*src \([0-9.]*\) .*$/\1/p')/headphones/home"
+  systemctl reload nginx
+  echo_info "Please note headphones access url is: https://$(ip route get 1 | sed -n 's/^.*src \([0-9.]*\) .*$/\1/p')/headphones/home"
 fi
+echo_success "Headphones installed"
 
-
-touch /install/.$APPNAME.lock
-echo
-
-echo "$APPTITLE Install Complete!" >> "${log}"  2>&1;
-
-exit
+touch /install/.headphones.lock
