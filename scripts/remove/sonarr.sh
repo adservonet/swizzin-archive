@@ -20,7 +20,7 @@
 username=$(cut -d: -f1 < /root/.master.info)
 
 function _removeSonarr() {
-  systemctl stop sonarr@"${username}"
+  systemctl stop -q sonarr@"${username}"
   systemctl -q disable sonarr@"${username}"
   rm -rf /etc/systemd/system/sonarr\@.service
   systemctl daemon-reload
@@ -34,8 +34,10 @@ function _removeSonarr() {
   fi
     sudo rm /install/.sonarr.lock
 
+  if [[ -f /install/.nginx.lock ]]; then
   rm -f /etc/nginx/apps/sonarr.conf
   systemctl reload nginx
+  fi
 }
 
 _removeSonarr

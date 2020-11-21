@@ -5,10 +5,10 @@
 # Copyright (C) 2017 Swizzin
 # Licensed under GNU General Public License v3.0 GPL-3
 #################################################################################
-systemctl stop shellinabox
-systemctl disable shellinabox
+systemctl stop -q shellinabox
+systemctl disable -q shellinabox
 
-apt-get -y purge shellinabox
+apt_remove --purge shellinabox
 
 rm -rf /etc/systemd/system/shellinabox.service
 rm -rf /install/.shellinabox.lock

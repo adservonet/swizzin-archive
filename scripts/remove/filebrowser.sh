@@ -3,9 +3,9 @@
 username="$(cut -d: -f1 < /root/.master.info)"
 #
 function remove_filebrowser() {
-    systemctl stop "filebrowser.service"
+    systemctl stop -q "filebrowser.service"
     #
-    systemctl disable "filebrowser.service"
+    systemctl disable -q "filebrowser.service"
     #
     rm -f "/etc/systemd/system/filebrowser.service"
     #
@@ -16,7 +16,7 @@ function remove_filebrowser() {
     #
     if [[ -f /install/.nginx.lock ]]; then
         rm -f "/etc/nginx/apps/filebrowser.conf"
-        service nginx reload
+        systemctl reload nginx
     fi
     #
     rm -f "/install/.filebrowser.lock"

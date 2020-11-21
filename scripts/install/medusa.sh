@@ -2,63 +2,54 @@
 # Medusa installer for swizzin
 # Author: liara
 
-#if [[ -f /tmp/.install.lock ]]; then
-#  log="/root/logs/install.log"
-#else
-#  log="/root/logs/swizzin.log"
-#fi
-distribution=$(lsb_release -is)
 user=$(cut -d: -f1 < /root/.master.info)
+#shellcheck source=sources/functions/utils
+. /etc/swizzin/sources/functions/utils
 
-if [[ $(systemctl is-active sickgear@${user}) == "active" ]]; then
+if [[ $(systemctl is-active sickgear) == "active" ]]; then
   active=sickgear
 fi
 
-if [[ $(systemctl is-active sickchill@${user}) == "active" ]]; then
+if [[ $(systemctl is-active sickchill) == "active" ]]; then
   active=sickchill
 fi
 
 if [[ -n $active ]]; then
-  echo "SickChill and Medusa and Sickgear cannot be active at the same time."
-  echo "Do you want to disable $active and continue with the installation?"
-  echo "Don't worry, your install will remain at /home/${user}/.$active"
-  while true; do
-  read -p "Do you want to disable $active? " yn
-      case "$yn" in
-          [Yy]|[Yy][Ee][Ss]) disable=yes; break;;
-          [Nn]|[Nn][Oo]) disable=; break;;
-          *) echo "Please answer yes or no.";;
-      esac
-  done
+  echo_info "SickChill and Medusa and Sickgear cannot be active at the same time.\nDo you want to disable $active and continue with the installation?\nDon't worry, your install will remain at /opt/$active"
+if ask "Do you want to disable $active?" Y; then
+ disable=yes
+fi
   if [[ $disable == "yes" ]]; then
-    systemctl disable ${active}@${user}
-    systemctl stop ${active}@${user}
+    echo_progress_start "Disabling service"
+    systemctl disable -q --now ${active} >> ${log} 2>&1
+    echo_progress_done
   else
     exit 1
   fi
 fi
 
-apt-get -y -q update >>  "${log}"  2>&1
-apt-get -y -q install git-core openssl libssl-dev python2.7 >>  "${log}"  2>&1
+mkdir -p /opt/.venv
+chown ${user}: /opt/.venv
 
-function _rar () {
-  cd /tmp
-  wget -q http://www.rarlab.com/rar/rarlinux-x64-5.5.0.tar.gz
-  tar -xzf rarlinux-x64-5.5.0.tar.gz >/dev/null 2>&1
-  cp rar/*rar /bin >/dev/null 2>&1
-  rm -rf rarlinux*.tar.gz >/dev/null 2>&1
-  rm -rf /tmp/rar >/dev/null 2>&1
-}
+apt_install git-core openssl libssl-dev python3 python3-venv
 
-if [[ -z $(which rar) ]]; then
-  apt-get -y install rar unrar >> "${log}"  2>&1 || { echo "INFO: Could not find rar/unrar in the repositories. It is likely you do not have the multiverse repo enabled. Installing directly."; _rar; }
-fi
+# maybe TODO pyenv this up and down?
+echo_progress_start "Making venv for medusa"
+python3 -m venv /opt/.venv/medusa
+chown -R ${user}: /opt/.venv/medusa
+echo_progress_done
 
-cd /home/${user}/
-git clone https://github.com/pymedusa/Medusa.git .medusa
-chown -R ${user}:${user} .medusa
+install_rar
 
-cat > /etc/systemd/system/medusa@.service <<MSD
+echo_progress_start "Cloning medusa source code"
+cd /opt/
+git clone https://github.com/pymedusa/Medusa.git medusa >> ${log} 2>&1
+chown -R ${user}:${user} medusa
+echo_progress_done
+
+echo_progress_start "Installing systemd service"
+
+cat > /etc/systemd/system/medusa.service <<MSD
 [Unit]
 Description=Medusa
 After=syslog.target network.target
@@ -66,9 +57,9 @@ After=syslog.target network.target
 [Service]
 Type=forking
 GuessMainPID=no
-User=%i
-Group=%i
-ExecStart=/usr/bin/python /home/%i/.medusa/SickBeard.py -q --daemon --nolaunch --datadir=/home/%i/.medusa
+User=${user}
+Group=${user}
+ExecStart=/opt/.venv/medusa/bin/python3 /opt/medusa/SickBeard.py -q --daemon --nolaunch --datadir=/opt/medusa
 ExecStop=-/bin/kill -HUP
 
 
@@ -76,13 +67,15 @@ ExecStop=-/bin/kill -HUP
 WantedBy=multi-user.target
 MSD
 
-systemctl enable medusa@${user} >> "${log}"  2>&1
-systemctl start medusa@${user}
-
+systemctl enable -q --now medusa 2>&1  | tee -a $log
+echo_progress_done "Medusa started"
 
 if [[ -f /install/.nginx.lock ]]; then
+  echo_progress_start "Configuring nginx"
   bash /usr/local/bin/swizzin/nginx/medusa.sh
-  service nginx reload
+  systemctl reload nginx
+  echo_progress_done
 fi
 
+echo_success "Medua installed"
 touch /install/.medusa.lock
