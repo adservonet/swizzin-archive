@@ -20,6 +20,10 @@
 MASTER=$(cut -d: -f1 < /root/.master.info)
 codename=$(lsb_release -cs)
 
+sudo add-apt-repository ppa:linuxuprising/java
+apt_update
+apt_install oracle-java15-installer python3-pip
+
 mkdir /root/subsonic-tmp
 
 case $codename in
