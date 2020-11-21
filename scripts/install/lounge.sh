@@ -387,7 +387,7 @@ sudo -u lounge /usr/bin/thelounge install thelounge-theme-common >>  "${log}"  2
 sudo -u lounge /usr/bin/thelounge install thelounge-theme-purplenight >>  "${log}"  2>&1
 
 
-systemctl restart thelounge 2>&1  | tee -a $log
+systemctl restart lounge 2>&1  | tee -a $log
 
 sleep 3
 echo_progress_done "Lounge started"
