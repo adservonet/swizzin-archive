@@ -337,7 +337,7 @@ module.exports = {
 };
 EOF
 
-#chown -R lounge: /home/lounge
+chown -R lounge: /home/lounge
 
 if [[ -f /install/.nginx.lock ]]; then
 	echo_progress_start "Configuring nginx"
@@ -367,24 +367,24 @@ WantedBy=multi-user.target
 EOSD
 
 systemctl enable -q --now lounge 2>&1  | tee -a $log
-sudo -u thelounge /usr/bin/thelounge install thelounge-theme-zenburn >>  "${log}"  2>&1
-sudo -u thelounge /usr/bin/thelounge install thelounge-theme-mininapse >>  "${log}"  2>&1
-sudo -u thelounge /usr/bin/thelounge install thelounge-theme-crypto >>  "${log}"  2>&1
-sudo -u thelounge /usr/bin/thelounge install thelounge-theme-ion >>  "${log}"  2>&1
-sudo -u thelounge /usr/bin/thelounge install thelounge-theme-classic >>  "${log}"  2>&1
-sudo -u thelounge /usr/bin/thelounge install thelounge-theme-solarized-fork-monospace >>  "${log}"  2>&1
-sudo -u thelounge /usr/bin/thelounge install thelounge-theme-zenburn-monospace >>  "${log}"  2>&1
-sudo -u thelounge /usr/bin/thelounge install thelounge-theme-abyss >>  "${log}"  2>&1
-sudo -u thelounge /usr/bin/thelounge install thelounge-theme-amoled >>  "${log}"  2>&1
-sudo -u thelounge /usr/bin/thelounge install thelounge-theme-material >>  "${log}"  2>&1
-sudo -u thelounge /usr/bin/thelounge install thelounge-theme-scoutlink >>  "${log}"  2>&1
-sudo -u thelounge /usr/bin/thelounge install thelounge-theme-mortified >>  "${log}"  2>&1
-sudo -u thelounge /usr/bin/thelounge install thelounge-theme-solarized >>  "${log}"  2>&1
-sudo -u thelounge /usr/bin/thelounge install thelounge-theme-hexified >>  "${log}"  2>&1
-sudo -u thelounge /usr/bin/thelounge install thelounge-theme-light >>  "${log}"  2>&1
-sudo -u thelounge /usr/bin/thelounge install thelounge-theme-onedark >>  "${log}"  2>&1
-sudo -u thelounge /usr/bin/thelounge install thelounge-theme-common >>  "${log}"  2>&1
-sudo -u thelounge /usr/bin/thelounge install thelounge-theme-purplenight >>  "${log}"  2>&1
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-zenburn >>  "${log}"  2>&1
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-mininapse >>  "${log}"  2>&1
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-crypto >>  "${log}"  2>&1
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-ion >>  "${log}"  2>&1
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-classic >>  "${log}"  2>&1
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-solarized-fork-monospace >>  "${log}"  2>&1
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-zenburn-monospace >>  "${log}"  2>&1
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-abyss >>  "${log}"  2>&1
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-amoled >>  "${log}"  2>&1
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-material >>  "${log}"  2>&1
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-scoutlink >>  "${log}"  2>&1
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-mortified >>  "${log}"  2>&1
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-solarized >>  "${log}"  2>&1
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-hexified >>  "${log}"  2>&1
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-light >>  "${log}"  2>&1
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-onedark >>  "${log}"  2>&1
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-common >>  "${log}"  2>&1
+sudo -u lounge /usr/bin/thelounge install thelounge-theme-purplenight >>  "${log}"  2>&1
 
 
 systemctl restart thelounge 2>&1  | tee -a $log
