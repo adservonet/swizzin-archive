@@ -19,15 +19,8 @@ password=$(cut -d: -f2 < /root/.master.info)
 #SALTWORD=${SALT}${password}
 #SALTWORDHASH=$(echo -n ${SALTWORD} | shasum -a 1 | awk '{print $1}')
 #HASH=${SALT}${SALTWORDHASH}
+#shellcheck source=sources/functions/pyenv
 . /etc/swizzin/sources/functions/pyenv
-
-#if [[ -f /tmp/.install.lock ]]; then
-#  log="/root/logs/install.log"
-#else
-#  log="/root/logs/swizzin.log"
-#fi
-
-echo "Installing dependencies needed for pyLoad ... "
 
 if [[ $codename =~ ("xenial"|"stretch"|"buster"|"bionic") ]]; then
   LIST='tesseract-ocr gocr rhino python2.7-dev python-pip python-virtualenv virtualenv libcurl4-openssl-dev sqlite3'
@@ -43,12 +36,17 @@ fi
 
 python2_venv ${user} pyload
 
-PIP='wheel setuptools pycurl pycrypto tesseract pillow pyOpenSSL js2py feedparser beautifulsoup'
+echo_progress_start "Installing python dependencies"
+PIP='wheel setuptools<45 pycurl pycrypto tesseract pillow pyOpenSSL js2py feedparser beautifulsoup'
 /opt/.venv/pyload/bin/pip install $PIP >> "${log}"  2>&1
 chown -R ${user}: /opt/.venv/pyload
+echo_progress_done
 
+echo_progress_start "Cloning pyLoad"
 git clone --branch "stable" https://github.com/pyload/pyload.git /opt/pyload >> "${log}"  2>&1
+echo_progress_done
 
+echo_progress_start "Configuring pyLoad"
 echo "/opt/pyload" > /opt/pyload/module/config/configdir
 
 cat > /opt/pyload/pyload.conf <<PYCONF
@@ -128,10 +126,13 @@ webinterface - "Webinterface":
         modern;pyplex;classic template : "Template" = modern
 PYCONF
 
+echo_progress_done
 
-
-echo "Initalizing database"
-read < <( /opt/.venv/pyload/bin/python2 /opt/pyload/pyLoadCore.py > /dev/null 2>&1 & echo $! )
+echo_progress_start "Initalizing database"
+read < <(
+    /opt/.venv/pyload/bin/python2 /opt/pyload/pyLoadCore.py >/dev/null 2>&1 &
+    echo $!
+)
 PID=$REPLY
 sleep 10
 #kill -9 $PID
@@ -166,14 +167,17 @@ if [ -f "/opt/pyload/files.db" ]; then
     INSERT INTO users('name', 'password') \
       VALUES('${user}','${saltedpasswd}');\
       "
+    echo_progress_done
 else
-  echo "Something went wrong with user setup -- you will be unable to login"
+    echo_error "Something went wrong with user setup -- you will be unable to login"
+    #TODO maybe exit then?
 fi
 
 chown -R ${user}: /opt/pyload
 mkdir -p /home/${user}/Downloads
 chown ${user}: /home/${user}/Downloads
 
+echo_progress_start "Insatlling systemd service"
 cat >/etc/systemd/system/pyload.service<<PYSD
 [Unit]
 Description=pyLoad
@@ -187,13 +191,17 @@ WorkingDirectory=/opt/pyload
 [Install]
 WantedBy=multi-user.target
 PYSD
+echo_progress_done
 
   if [[ -f /install/.nginx.lock ]]; then
+    echo_progress_start "Configuring nginx"
     bash /usr/local/bin/swizzin/nginx/pyload.sh
   systemctl reload nginx
+    echo_progress_done
   fi
-  echo "Enabling and starting pyLoad services ... "
-systemctl enable --now pyload.service >> ${log} 2>&1
+echo_progress_start "Enabling and starting pyLoad services"
+systemctl enable -q --now pyload.service 2>&1 | tee -a $log
+echo_progress_done
+
+echo_success "PyLoad installed"
 touch /install/.pyload.lock
-
-
