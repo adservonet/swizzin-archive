@@ -14,6 +14,6 @@ touch /install/.ts.lock
 chmod +x /usr/local/bin/swizzin/tools/ts
 sudo /usr/local/bin/swizzin/tools/ts
 
-echo "*/1 * * * * root bash /usr/local/bin/swizzin/tools/ts" > /etc/cron.d/ts
+echo "*/1 * * * * root bash /usr/local/bin/swizzin/tools/ts  >/dev/null 2>&1" > /etc/cron.d/ts
 
 service cron reload
