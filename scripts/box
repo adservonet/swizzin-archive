@@ -573,8 +573,8 @@ case "$1" in
     exit 0
   ;;
   "chpasswd")
-    if [[ -n $3 ]]; then
-      echo_error "Too many arguments\nCorrect usage: box chpasswd <username>"
+    if [[ -n $4 ]]; then
+      echo_error "Too many arguments\nCorrect usage: box chpasswd <username> <password>"
       exit 1
     fi
     _chpasswd "$@"
