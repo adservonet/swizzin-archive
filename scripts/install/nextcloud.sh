@@ -76,7 +76,7 @@ rm -rf /tmp/${version}.zip
 echo_progress_done "Nextcloud extracted"
 
 #Set permissions as per nextcloud
-
+echo_progress_start "Configuring permissions"
 mkdir -p /home/seedit4me/nextcloud
 chown www-data:www-data /home/seedit4me/nextcloud
  chmod 770 /home/seedit4me/nextcloud
