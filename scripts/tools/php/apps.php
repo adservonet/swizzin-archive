@@ -60,6 +60,7 @@ $username = "seedit4me";
 
 $apps = array(
     array("name" => "panel",          "service" => "panel",             "user" => ""),
+    array("name" => "x2go",           "service" => "x2goserver",        "user" => ""),
     array("name" => "jellyfin",       "service" => "jellyfin",          "user" => ""),
     array("name" => "openvpn2",       "service" => "openvpn",           "user" => "server"),
     array("name" => "proftpd",        "service" => "proftpd",           "user" => ""),
