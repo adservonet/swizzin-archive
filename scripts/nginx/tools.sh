@@ -16,7 +16,7 @@ printf "${IFACE}" > /srv/tools/interface.txt
 printf "${user}" > /srv/tools/master.txt
 LOCALE=en_GB.UTF-8
 LANG=lang_en
-echo "*/1 * * * * root bash /usr/local/bin/swizzin/tools/set_interface_tools" > /etc/cron.d/set_interface_tools
+echo "*/1 * * * * root bash /usr/local/bin/swizzin/tools/set_interface_tools >/dev/null 2>&1" > /etc/cron.d/set_interface_tools
 
 if [[ -f /lib/systemd/system/php7.3-fpm.service ]]; then
   sock=php7.3-fpm
