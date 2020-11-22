@@ -7,10 +7,10 @@
 # Licensed under GNU General Public License v3.0 GPL-3
 #################################################################################
 
-apt-get -y -q update > /dev/null 2>&1
-apt-get -y install shellinabox > /dev/null 2>&1
+apt_install shellinabox
 
-service shellinabox stop > /dev/null 2>&1
+echo_progress_start "Configuring shellinabox"
+systemctl stop shellinabox >> $log 2>&1
 rm -rf /etc/init.d/shellinabox
 
 cat > /etc/systemd/system/shellinabox.service <<SIAB
@@ -31,14 +31,16 @@ Restart=on-abort
 WantedBy=multi-user.target
 SIAB
 
-systemctl daemon-reload
-systemctl enable shellinabox > /dev/null 2>&1
-systemctl start shellinabox
+systemctl daemon-reload -q
+systemctl enable -q shellinabox 2>&1  | tee -a $log
+systemctl start shellinabox >> $log 2>&1
+echo_progress_done "Configured and restarted"
 
 if [[ -f /install/.nginx.lock ]]; then
+    echo_progress_start "Configuring nginx"
     bash /usr/local/bin/swizzin/nginx/shellinabox.sh
+    echo_progress_done
 fi
 
-
-
+echo_success "Shellinabox installed"
 touch /install/.shellinabox.lock

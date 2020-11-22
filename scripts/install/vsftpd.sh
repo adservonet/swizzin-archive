@@ -9,15 +9,10 @@
 #   including (via compiler) GPL-licensed code must also be made available
 #   under the GPL along with build & install instructions.
 #
-#if [[ -f /tmp/.install.lock ]]; then
-#  log="/root/logs/install.log"
-#else
-#  log="/root/logs/swizzin.log"
-#fi
 
-apt-get -y update >> $log 2>&1
-apt-get -y install vsftpd ssl-cert>> $log 2>&1
+apt_install vsftpd ssl-cert
 
+echo_progress_start "Configuring vsftpd"
 cat > /etc/vsftpd.conf <<VSC
 listen=NO
 listen_ipv6=YES
@@ -45,8 +40,8 @@ secure_chroot_dir=/var/run/vsftpd/empty
 #############################################
 #Uncomment these lines to enable FXP support#
 #############################################
-pasv_promiscuous=YES
-port_promiscuous=YES
+#pasv_promiscuous=YES
+#port_promiscuous=YES
 
 ###################
 #Set a custom port#
@@ -55,13 +50,13 @@ port_promiscuous=YES
 VSC
 
 # Check for LE cert, and copy it if available.
-chkhost="$(find /etc/nginx/ssl/* -maxdepth 1 -type d | cut -f 5 -d '/')"
-if [[ -n $chkhost ]]; then
-    defaulthost=$(grep -m1 "server_name" /etc/nginx/sites-enabled/default | awk '{print $2}' | sed 's/;//g')
-    sed -i "s#rsa_cert_file=/etc/ssl/certs/ssl-cert-snakeoil.pem#rsa_cert_file=/etc/nginx/ssl/${defaulthost}/fullchain.pem#g" /etc/vsftpd.conf
-    sed -i "s#rsa_private_key_file=/etc/ssl/private/ssl-cert-snakeoil.key#rsa_private_key_file=/etc/nginx/ssl/${defaulthost}/key.pem#g" /etc/vsftpd.conf
-fi
+# shellcheck source=sources/functions/letsencrypt
+. /etc/swizzin/sources/functions/letsencrypt
+le_vsftpd_hook
+
 
 systemctl restart vsftpd
+echo_progress_done "Configured vsftpd"
 
+echo_success "Vsftpd installed"
 touch /install/.vsftpd.lock

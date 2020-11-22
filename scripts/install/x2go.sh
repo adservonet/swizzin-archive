@@ -14,27 +14,22 @@
 #
 #################################################################################
 
-#if [[ -f /tmp/.install.lock ]]; then
-#  log="/root/logs/install.log"
-#else
-#  log="/root/logs/swizzin.log"
-#fi
-
 distribution=$(lsb_release -is)
 release=$(lsb_release -cs)
-echo -n "Installing Xfce4 (this may take a bit) ... "
-apt-get install -y xfce4 >>  "${log}"  2>&1
-#disable lightdm because it causes suspend issues on Ubuntu
-systemctl disable --now lightdm >>  "${log}"  2>&1
+echo_info "Please note that both xfce4 and x2go are VERY heavy packages to install and will take quite some time. If you're concerned whether the install is still running or not, please inspect the swizzin log through another session by running \`tail -f /root/logs/swizzin.log\`"
 
-echo -n "Installing x2go repositories ... "
+apt_install xfce4 midori
+#disable lightdm because it causes suspend issues on Ubuntu
+systemctl disable --now lightdm >>${log} 2>&1
+
+echo_progress_start "Installing x2go repositories ... "
 
 if [[ $distribution == Ubuntu ]]; then
-	apt-get install -q -y software-properties-common >>  "${log}"  2>&1
-	apt-add-repository ppa:x2go/stable -y >>  "${log}"  2>&1
-	apt-get -y update >>  "${log}"  2>&1
+    apt_install software-properties-common
+    apt-add-repository ppa:x2go/stable -y >>${log} 2>&1
+    echo_progress_done "Repos installed via PPA"
+    apt_update
 else
-
 cat >/etc/apt/sources.list.d/x2go.list<<EOF
 # X2Go Repository (release builds)
 deb http://packages.x2go.org/debian ${release} main
@@ -46,22 +41,12 @@ deb-src http://packages.x2go.org/debian ${release} main
 # X2Go Repository (sources of nightly builds)
 #deb-src http://packages.x2go.org/debian ${release} heuler
 EOF
-
-apt-get -y update>>  "${log}"  2>&1
-if [[ $release == "jessie" ]]; then
-	gpg --keyserver keys.gnupg.net --recv E1F958385BFE2B6E >>  "${log}"  2>&1
-	gpg --export E1F958385BFE2B6E > /etc/apt/trusted.gpg.d/x2go.gpg
-else
-  apt-key --keyring /etc/apt/trusted.gpg.d/x2go.gpg adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys E1F958385BFE2B6E >>  "${log}"  2>&1
+    echo_progress_done "Repo added"
+    apt-key --keyring /etc/apt/trusted.gpg.d/x2go.gpg adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys E1F958385BFE2B6E >>${log} 2>&1
+    apt_update
+    apt_install x2go-keyring
 fi
 
-apt-get -y update >>  "${log}"  2>&1
-apt-get -y install x2go-keyring >>  "${log}"  2>&1 && apt-get update >>  "${log}"  2>&1
-fi
-
-
-echo -n "Installing X2go (this may take a bit) ... "
-apt-get -y install x2goserver x2goserver-xsession >>  "${log}"  2>&1
-apt-get -y install pulseaudio >>  "${log}"  2>&1
+apt_install x2goserver x2goserver-xsession pulseaudio
 
 touch /install/.x2go.lock

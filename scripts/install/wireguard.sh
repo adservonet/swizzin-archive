@@ -9,63 +9,77 @@
 #   including (via compiler) GPL-licensed code must also be made available
 #   under the GPL along with build & install instructions.
 
-OUTTO=$log
-
-#if [[ -f /tmp/.install.lock ]]; then
-#  OUTTO="/root/logs/install.log"
-#else
-#  OUTTO="/root/logs/swizzin.log"
-#fi
-distribution=$(lsb_release -is)
-codename=$(lsb_release -cs)
-ip=$(ip route get 1 | sed -n 's/^.*src \([0-9.]*\) .*$/\1/p')
-u=$(cut -d: -f1 < /root/.master.info)
-IFACE=($(ip link show|grep -i broadcast|grep -m1 UP |cut -d: -f 2|cut -d@ -f 1|sed -e 's/ //g'))
-MASTER=$(ip link show|grep -i broadcast|grep -e MASTER |cut -d: -f 2|cut -d@ -f 1|sed -e 's/ //g')
-
-if [[ -n $MASTER ]]; then
-  iface=$MASTER
-else
-  iface=${IFACE[0]}
-fi
-
-echo "Setup has detected that $iface is your main interface, is this correct?"
+function _defiface_confirm() {
+	echo_query "Setup has detected that $defiface is your main interface, is this correct?" ""
   select yn in "yes" "no"; do
     case $yn in
-        yes ) break;;
+			yes ) wgiface=$defiface; break;;
         no ) _selectiface; break;;
     esac
 done
-
-function _selectiface () {
-  echo "Please choose the correct interface from the following list:"
-  select seliface in "${IFACE[@]}"; do
-    case $seliface in
-      *) iface=$seliface; break;;
-    esac
-  done
-  echo "Your interface has been set as $iface"
 }
 
-echo "Groovy. Please wait a few moments while wireguard is installed ..."
+function _selectiface () {
+	echo_query "Please choose the correct interface from the following list:" ""
+	select seliface in "${IFACES[@]}"; do
+    case $seliface in
+		*) wgiface=$seliface; break;;
+    esac
+  done
+	# echo "Your interface has been set as $wgiface"
+	# echo "Groovy. Please wait a few moments while wireguard is installed ..."
+}
 
+function _install_wg () {
 if [[ $distribution == "Debian" ]]; then
+        if [[ ! $codename == "stretch" ]]; then
+            check_debian_backports
+        else
+            echo_info "Adding debian unstable repository and limiting packages"
     echo "deb http://deb.debian.org/debian/ unstable main" > /etc/apt/sources.list.d/unstable.list
-    printf 'Package: *\nPin: release a=unstable\nPin-Priority: 150\n\nPackage: *\nPin: release a=stretch-backports\nPin-Priority: 250' > /etc/apt/preferences.d/limit-unstable
+            printf 'Package: *\nPin: release a=unstable\nPin-Priority: 10\n\nPackage: *\nPin: release a=stretch-backports\nPin-Priority: 250' > /etc/apt/preferences.d/limit-unstable
+        fi
 elif [[ $codename =~ ("bionic"|"xenial") ]]; then
-    add-apt-repository -y ppa:wireguard/wireguard >> $OUTTO 2>&1
+        #This *should* be enabled by default but you know what they say about assumptions.
+		check_ubuntu_updates
 fi
 
-apt-get -q update >> $OUTTO 2>&1
-apt-get -y install wireguard qrencode >> $OUTTO 2>&1
-
+	apt_update
+	apt_install --recommends wireguard qrencode
 
 if [[ ! -d /etc/wireguard ]]; then
     mkdir /etc/wireguard
 fi
 
-mkdir -p /home/$u/.wireguard/{server,client}
+	chown -R root:root /etc/wireguard/
+	chmod -R 700 /etc/wireguard
 
+	if ! modprobe wireguard >> $log 2>&1 ; then
+		echo_error "Could not modprobe Wireguard, script will now terminate."
+        echo_info "Please ensure a kernel headers package is installed that matches the currently running kernel.
+Currently running kernel:
+$(uname -r)
+Installed kernel headers: 
+$(dpkg -l | awk '{print $2}' | grep headers | grep amd64 | grep -v linux-headers-amd64 | sed 's/^/  '/g)
+
+You may be able to resolve this error with \`apt install linux-headers-$(uname -r)\` or a system reboot. If you are using a custom kernel, your package names may differ.
+Please consult the swizzin log for further info if required."
+		exit 1
+	fi
+	systemctl daemon-reload -q
+	echo_progress_done
+
+	echo "net.ipv4.ip_forward = 1" >> /etc/sysctl.conf
+	sysctl -p > /dev/null 2>&1
+    echo "$wgiface" > /install/.wireguard.lock
+	touch /install/.wireguard.lock
+}
+
+
+function _mkconf_wg () {
+	echo_progress_start "Configuring Wireguard for $u"
+
+	mkdir -p /home/$u/.wireguard/{server,client}
 
 cd /home/$u/.wireguard/server
 wg genkey | tee wg$(id -u $u).key | wg pubkey > wg$(id -u $u).pub
@@ -84,13 +98,12 @@ peerpub=$(cat /home/$u/.wireguard/client/$u.pub)
 net=$(id -u $u | cut -c 1-3)
 sub=$(id -u $u | rev | cut -c 1 | rev)
 subnet=10.$net.$sub.
-
 cat > /etc/wireguard/wg$(id -u $u).conf <<EOWGS
 [Interface]
 Address = ${subnet}1
 SaveConfig = true
-PostUp = iptables -A FORWARD -i wg$(id -u $u) -j ACCEPT; iptables -A FORWARD -i wg$(id -u $u) -o $iface -m state --state RELATED,ESTABLISHED -j ACCEPT; iptables -A FORWARD -i $iface -o wg$(id -u $u) -m state --state RELATED,ESTABLISHED -j ACCEPT; iptables -t nat -A POSTROUTING -o $iface -s ${subnet}0/24 -j SNAT --to-source $ip
-PostDown = iptables -D FORWARD -i wg$(id -u $u) -j ACCEPT; iptables -D FORWARD -i wg$(id -u $u) -o $iface -m state --state RELATED,ESTABLISHED -j ACCEPT; iptables -D FORWARD -i $iface -o wg$(id -u $u) -m state --state RELATED,ESTABLISHED -j ACCEPT; iptables -t nat -A POSTROUTING -o $iface -s ${subnet}0/24 -j SNAT --to-source $ip
+PostUp = iptables -A FORWARD -i wg$(id -u $u) -j ACCEPT; iptables -A FORWARD -i wg$(id -u $u) -o $wgiface -m state --state RELATED,ESTABLISHED -j ACCEPT; iptables -A FORWARD -i $wgiface -o wg$(id -u $u) -m state --state RELATED,ESTABLISHED -j ACCEPT; iptables -t nat -A POSTROUTING -o $wgiface -s ${subnet}0/24 -j SNAT --to-source $ip
+PostDown = iptables -D FORWARD -i wg$(id -u $u) -j ACCEPT; iptables -D FORWARD -i wg$(id -u $u) -o $wgiface -m state --state RELATED,ESTABLISHED -j ACCEPT; iptables -D FORWARD -i $wgiface -o wg$(id -u $u) -m state --state RELATED,ESTABLISHED -j ACCEPT; iptables -t nat -A POSTROUTING -o $wgiface -s ${subnet}0/24 -j SNAT --to-source $ip
 ListenPort = 5$(id -u $u)
 PrivateKey = $serverpriv
 
@@ -130,27 +143,44 @@ AllowedIPs = 0.0.0.0/0
 #PersistentKeepalive = 25
 EOWGC
 
-chown -R root:root /etc/wireguard/
-chmod 700 /etc/wireguard
-sudo chmod -R og-rwx /etc/wireguard/*
-echo ""
-modprobe wireguard
-systemctl daemon-reload
-systemctl enable --now wg-quick@wg$(id -u $u)
-systemctl start wg-quick@wg$(id -u $u)
+	systemctl enable -q --now wg-quick@wg$(id -u $u) 2>&1  | tee -a $log
+	if [[ $? == 0 ]]; then 
+		echo_progress_done "Enabled for $u (wg$(id -u $u)). Config stored in /home/$u/.wireguard/$u.conf"
+	else
+		echo_error "Configuration for $u failed"
+	fi
+}
 
-echo "Wireguard has been enabled (wg$(id -u $u)). Your client configuration is:"
-echo ""
-cat /home/$u/.wireguard/$u.conf
+# shellcheck source=sources/functions/utils
+. /etc/swizzin/sources/functions/utils
+. /etc/swizzin/sources/functions/backports
 
-echo ""
-echo "You can access this configuration at any time at ~/.wireguard/$u.conf"
-echo ""
-echo "To generate a QR code of this configuration automatically for the android client, use the command:"
-echo "qrencode -t ansiutf8 < ~/.wireguard/$u.conf"
+distribution=$(lsb_release -is)
+codename=$(lsb_release -cs)
+ip=$(ip route get 1 | sed -n 's/^.*src \([0-9.]*\) .*$/\1/p')
+if [[ -f /install/.wireguard.lock ]]; then
+    wgiface=$(cat /install/.wireguard.lock)
+fi
+if [[ -z $wgiface ]]; then
+    defiface=$(route | grep '^default' | grep -o '[^ ]*$')
+    IFACES=($(ip link show | grep -i broadcast | grep UP | grep qlen | cut -d: -f 2 |cut -d@ -f 1 | sed -e 's/ //g'))
+    #MASTER=$(ip link show | grep -i broadcast | grep -e MASTER | cut -d: -f 2| cut -d@ -f 1 | sed -e 's/ //g')
+    _defiface_confirm
+    if [[ -f /install/.wireguard.lock ]]; then echo $wgiface > /install/.wireguard.lock; fi
+fi
 
-echo "net.ipv4.ip_forward = 1" >> /etc/sysctl.conf
+#When a new user is being installed
+if [[ -n $1 ]]; then
+	u=$1
+	_mkconf_wg
+	exit 0
+fi
 
-sysctl -p > /dev/null 2>&1
+_install_wg
 
-touch /install/.wireguard.lock
+users=($(_get_user_list))
+for u in ${users[@]}; do
+	_mkconf_wg
+done
+masteruser=$(_get_master_username)
+echo_info "Configuration QR code can be generated with the following command:\n${bold}qrencode -t ansiutf8 < /home/$masteruser/.wireguard/$masteruser.conf"

@@ -13,32 +13,22 @@
 #   including (via compiler) GPL-licensed code must also be made available
 #   under the GPL along with build & install instructions.
 #
-#if [[ -f /tmp/.install.lock ]]; then
-#  OUTTO="/root/logs/install.log"
-#else
-#  OUTTO="/root/logs/swizzin.log"
-#fi
-MASTER=$(cut -d: -f1 < /root/.master.info)
 
-apt-get update -y -q >> "${log}"  2>&1;
-apt-get -y -q install python python-setuptools tzdata >> "${log}"  2>&1
+user=$(cut -d: -f1 < /root/.master.info)
+
+apt_install python3
+
 cd /opt
-#LATEST=$(curl -s https://api.github.com/repos/tautulli/tautulli/releases/latest | grep "\"name\":" | cut -d : -f 2 | tr -d \", | cut -d " " -f 3)
-echo "Downloading latest Tautulli version ${LATEST}" >>"${log}" 2>&1;
-git clone https://github.com/Tautulli/Tautulli.git tautulli
-#mkdir -p /opt/tautulli
-#curl -s https://api.github.com/repos/tautulli/tautulli/releases/latest | grep "tarball" | cut -d : -f 2,3 | tr -d \", | wget -q -i- -O- | tar xz -C /opt/tautulli --strip-components 1
+echo_progress_start "Cloning latest Tautulli repo"
+git clone https://github.com/Tautulli/Tautulli.git tautulli >>"${log}" 2>&1
+echo_progress_done
 
-echo "Adding user and setting up Tautulli" >>"${log}" 2>&1;
+echo_progress_start "Adding user and setting up Tautulli"
 adduser --system --no-create-home tautulli >>"${log}" 2>&1
-
-echo "Adjusting permissions" >>"${log}" 2>&1;
 chown tautulli:nogroup -R /opt/tautulli
+echo_progress_done
 
-
-
-
-echo "Enabling Tautulli Systemd configuration"
+echo_progress_start "Enabling Tautulli Systemd configuration"
 cat > /etc/systemd/system/tautulli.service <<PPY
 [Unit]
 Description=Tautulli - Stats for Plex Media Server usage
@@ -46,7 +36,7 @@ Wants=network-online.target
 After=network-online.target
 
 [Service]
-ExecStart=/opt/tautulli/Tautulli.py --quiet --daemon --nolaunch --config /opt/tautulli/config.ini --datadir /opt/tautulli
+ExecStart=/usr/bin/python3 /opt/tautulli/Tautulli.py --quiet --daemon --nolaunch --config /opt/tautulli/config.ini --datadir /opt/tautulli
 GuessMainPID=no
 Type=forking
 User=tautulli
@@ -56,21 +46,20 @@ Group=nogroup
 WantedBy=multi-user.target
 PPY
 
-systemctl enable tautulli > /dev/null 2>&1
-systemctl start tautulli
+systemctl enable -q --now tautulli 2>&1  | tee -a $log
+
+echo_progress_done "Tautulli started"
 
 if [[ -f /install/.nginx.lock ]]; then
+  echo_progress_start "Configuring nginx"
   while [ ! -f /opt/tautulli/config.ini ]
   do
     sleep 2
   done
   bash /usr/local/bin/swizzin/nginx/tautulli.sh
-  service nginx reload
+  systemctl reload nginx
+  echo_progress_done
 fi
 touch /install/.tautulli.lock
 
-echo "Tautulli Install Complete!" >> "${log}"  2>&1;
-#sleep 5
-#echo >>"${OUTTO}" 2>&1;
-#echo >>"${OUTTO}" 2>&1;
-#echo "Close this dialog box to refresh your browser" >>"${OUTTO}" 2>&1;
+echo_success "Tautulli installed"

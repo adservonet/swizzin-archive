@@ -59,6 +59,7 @@ function isEnabled($process, $username = false)
 $username = "seedit4me";
 
 $apps = array(
+    array("name" => "panel",          "service" => "panel",             "user" => ""),
     array("name" => "openvpn2",       "service" => "openvpn",           "user" => "server"),
     array("name" => "proftpd",        "service" => "proftpd",           "user" => ""),
     array("name" => "bazarr",         "service" => "bazarr",            "user" => ""),
@@ -86,7 +87,7 @@ $apps = array(
     array("name" => "rclone",         "service" => "rclone",            "user" => $username),
     array("name" => "rutorrent",      "service" => "rtorrent",          "user" => $username),
     array("name" => "qbittorrent",    "service" => "qbittorrent",       "user" => ""),
-    array("name" => "sabnzbd",        "service" => "sabnzbd",           "user" => $username),
+    array("name" => "sabnzbd",        "service" => "sabnzbd",           "user" => ""),
     array("name" => "sickchill",      "service" => "sickchill",         "user" => ""),
     array("name" => "medusa",         "service" => "medusa",            "user" => $username),
     array("name" => "netdata",        "service" => "netdata",           "user" => ""),
