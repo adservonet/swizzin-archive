@@ -521,7 +521,6 @@ echo_log_only ">>>> \`box $*\`, \tGIT HEAD @ $git_hash"
 
 echo -e 'Dpkg::Options {\n"--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf;
 export DEBIAN_FRONTEND=noninteractive
-#export -f waitforapt
 
 case "$1" in
   "")

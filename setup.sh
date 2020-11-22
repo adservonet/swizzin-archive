@@ -29,12 +29,22 @@ if [[ ! $(uname -m) == "x86_64" ]]; then
   read -rep 'By pressing enter to continue, you agree to the above statement. Press control-c to quit.'
 fi
 
+#shellcheck disable=SC2154
+if [[ $dev = "true" ]]; then
+  # If you're looking at this code, this is for those of us who just want to have a development setup fast without cloning the upstream repo
+  # You can run `dev=true bash /path/to/setup.sh` to enable the "dev mode"
+  echo "DEVVEOVEOVEOVOOEOOEVEEEEEOOOOOEEEEEOOOOO hi"
+fi
+
 _os() {
   if [ ! -d /install ]; then mkdir /install ; fi
   if [ ! -d /root/logs ]; then mkdir /root/logs ; fi
   export log=/root/logs/install.log
-  apt-get -y -qq update
-  apt-get -y -qq install lsb-release
+  # echo "Checking OS version and release ... "
+  if ! which lsb_release > /dev/null; then 
+    apt-get -y -qq update >> ${log} 2>&1
+    apt-get -y -qq install lsb-release >> ${log} 2>&1
+  fi
   distribution=$(lsb_release -is)
   release=$(lsb_release -rs)
   codename=$(lsb_release -cs)
@@ -44,32 +54,38 @@ _os() {
     if [[ ! $codename =~ ("xenial"|"bionic"|"stretch"|"buster"|"focal") ]]; then
       echo "Your release ($codename) of $distribution is not supported." && exit 1
     fi
-  echo "I have determined you are using $distribution $release."
+  # echo "I have determined you are using $distribution $release."
 }
 
 function _preparation() {
   echo "Updating system and grabbing core dependencies."
   if [[ $distribution = "Ubuntu" ]]; then
-    echo "Checking enabled repos"
-    if [[ -z $(which add-apt-repository) ]]; then
-      apt-get install -y -q software-properties-common
+    echo "Enabling required repos"
+    if ! which add-apt-repository > /dev/null; then
+      apt-get install -y -q software-properties-common >> ${log} 2>&1
     fi
-    add-apt-repository universe
-    add-apt-repository multiverse
-    add-apt-repository restricted -u
+    add-apt-repository universe >> ${log} 2>&1
+    add-apt-repository multiverse >> ${log} 2>&1
+    add-apt-repository restricted -u >> ${log} 2>&1
   fi
-  apt-get -q -y update
-  apt-get -q -y upgrade
+  
+  echo "Performing a system upgrade"
+  apt-get -q -y update >> ${log} 2>&1
+  apt-get -q -y upgrade >> ${log} 2>&1
 
   echo "Installing dependencies"
   # this apt-get should be checked and handled if fails, otherwise the install borks. 
-  apt-get -q -y install whiptail git sudo curl wget lsof fail2ban apache2-utils vnstat tcl tcl-dev build-essential dirmngr apt-transport-https
+  apt-get -y install whiptail git sudo curl wget lsof fail2ban apache2-utils vnstat tcl tcl-dev build-essential dirmngr apt-transport-https bc uuid-runtime jq net-tools fortune >> ${log} 2>&1
   nofile=$(grep "DefaultLimitNOFILE=500000" /etc/systemd/system.conf)
   if [[ ! "$nofile" ]]; then echo "DefaultLimitNOFILE=500000" >> /etc/systemd/system.conf; fi
   echo "Cloning swizzin repo to localhost"
   git clone -b lxd https://github.com/illnesse/swizzin.git /etc/swizzin
   ln -s /etc/swizzin/scripts/ /usr/local/bin/swizzin
   chmod -R 700 /etc/swizzin/scripts
+  #shellcheck source=sources/functions/apt
+  . /etc/swizzin/sources/functions/apt
+  #shellcheck source=sources/functions/ask
+  . /etc/swizzin/sources/functions/ask
 }
 
 function _nukeovh() {
@@ -87,23 +103,23 @@ function _nukeovh() {
       esac
       if [[ $kernel == yes ]]; then
     if [[ $DISTRO == Ubuntu ]]; then
-      apt-get install -q -y linux-image-generic
+          apt-get install -q -y linux-image-generic >>"${log}" 2>&1
     elif [[ $DISTRO == Debian ]]; then
       arch=$(uname -m)
       if [[ $arch =~ ("i686"|"i386") ]]; then
-        apt-get install -q -y linux-image-686
+            apt-get install -q -y linux-image-686 >>"${log}" 2>&1
       elif [[ $arch == x86_64 ]]; then
-        apt-get install -q -y linux-image-amd64
+            apt-get install -q -y linux-image-amd64 >>"${log}" 2>&1
       fi
     fi
     mv /etc/grub.d/06_OVHkernel /etc/grub.d/25_OVHkernel
-    update-grub
+        update-grub >>"${log}" 2>&1
   fi
   fi
 }
 
 function _intro() {
-  whiptail --title "Swizzin seedbox installer" --msgbox "Yo, what's up? Let's install this swiz." 15 50
+  whiptail --title "Swizzin seedbox installer" --msgbox "Yo, what's up? Let's install this swiz." 7 43
 }
 
 function _adduser() {
@@ -125,8 +141,8 @@ function _adduser() {
     chown -R $user:$user /home/${user}
   else
     echo -e "Creating new user \e[1;95m$user\e[0m ... "
-    useradd "${user}" -m -G www-data -s /bin/bash
-    chpasswd<<<"${user}:${pass}"
+    useradd "${user}" -m -G www-data -s /bin/bash || { echo "There was an error creating the user ${user}. Please check your logs."; exit 1; }
+    chpasswd<<<"${user}:${pass}" || { echo "There was an error setting the password for ${user}. Please check your logs."; exit 1; }
     htpasswd -b -c /etc/htpasswd $user $pass
     mkdir -p /etc/htpasswd.d/
     htpasswd -b -c /etc/htpasswd.d/htpasswd.${user} $user $pass
