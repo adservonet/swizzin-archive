@@ -1,15 +1,8 @@
 #!/bin/bash
 #
-# [Quick Box :: Install sabnzbd]
+# Install sabnzbd for swizzin
 #
-# QUICKLAB REPOS
-# QuickLab _ packages  :   https://github.com/QuickBox/quickbox_packages
-# LOCAL REPOS
-# Local _ packages   :   /etc/QuickBox/packages
-# Author             :   QuickBox.IO | kclawl
-# URL                :   https://quickbox.io
-#
-# QuickBox Copyright (C) 2017 QuickBox.io
+# swizzin Copyright (C) 2020 swizzin.ltd
 # Licensed under GNU General Public License v3.0 GPL-3 (in short)
 #
 #   You may copy, distribute and modify the software as long as you track
@@ -17,93 +10,96 @@
 #   including (via compiler) GPL-licensed code must also be made available
 #   under the GPL along with build & install instructions.
 
-username=$(cut -d: -f1 < /root/.master.info)
+user=$(cut -d: -f1 < /root/.master.info)
 password=$(cut -d: -f2 < /root/.master.info)
+distribution=$(lsb_release -is)
+codename=$(lsb_release -cs)
+#latest=$(curl -s https://sabnzbd.org/downloads | grep -m1 Linux | grep download-link-src | grep -oP "href=\"\K[^\"]+")
+latest=$(curl -sL https://api.github.com/repos/sabnzbd/sabnzbd/releases/latest | grep -Po '(?<="browser_download_url":).*?[^\\].tar.gz"' | sed 's/"//g')
+latestversion=$(echo $latest | awk -F "/" '{print $NF}' | cut -d- -f2)
 
-DISTRO=$(lsb_release -is)
-RELEASE=$(lsb_release -cs)
-PUBLICIP=$(ip route get 1 | sed -n 's/^.*src \([0-9.]*\) .*$/\1/p')
-#if [[ -f /tmp/.install.lock ]]; then
-#  OUTTO="/root/logs/install.log"
-#else
-#  OUTTO="/root/logs/swizzin.log"
-#fi
+. /etc/swizzin/sources/functions/pyenv
+. /etc/swizzin/sources/functions/utils
 
-function _rar() {
-	cd /tmp
-  	wget -q http://www.rarlab.com/rar/rarlinux-x64-5.5.0.tar.gz >>  "${log}"  2>&1
-  	tar -xzf rarlinux-x64-5.5.0.tar.gz >/dev/null 2>&1 >>  "${log}"  2>&1
-  	cp rar/*rar /bin >/dev/null 2>&1
-  	rm -rf rarlinux*.tar.gz >/dev/null 2>&1
-  	rm -rf /tmp/rar >/dev/null 2>&1
-}
+LIST='par2 p7zip-full python3-dev python3-setuptools python3-pip python3-venv libffi-dev libssl-dev libglib2.0-dev libdbus-1-dev'
 
-#apt-get -y install software-properties-common >/dev/null 2>&1
+apt_install $LIST
 
-#if [[ $DISTRO == "Debian" ]]; then
-#  gpg --keyserver http://keyserver.ubuntu.com --recv  F13930B14BB9F05F
-#  gpg --export F13930B14BB9F05F > /etc/apt/trusted.gpg.d/jcfp_ubuntu_sab-addons.gpg
-#  if [[ $RELEASE = "stretch" ]]; then
-#    echo "deb http://ppa.launchpad.net/jcfp/ppa/ubuntu xenial main" > /etc/apt/sources.list.d/sab-addons.list
-#  elif [[ $RELEASE = "jessie" ]]; then
-#    echo "deb http://ppa.launchpad.net/jcfp/ppa/ubuntu precise main" > /etc/apt/sources.list.d/sab-addons.list
-#  fi
-#else
-#  add-apt-repository -y ppa:jcfp/sab-addons >/dev/null 2>&1
-#fi
+python3_venv ${user} sabnzbd
 
-apt-get update >/dev/null 2>&1
-apt-get -y install par2 python-configobj python-dbus python-feedparser python-gi python-libxml2 \
-  python-utidylib python-yenc python-cheetah python-openssl screen  >>  "${log}"  2>&1
+install_rar
 
-if [[ -z $(which rar) ]]; then
-  if [[ $DISTRO == "Debian" ]]; then
-    _rar
-  else
-    apt-get -y install rar unrar >>/dev/null 2>&1 || { echo "INFO: Could not find rar/unrar in the repositories. It is likely you do not have the multiverse repo enabled. Installing directly."; _rar; }
-  fi
+echo_progress_start "Downloading and extracting sabnzbd"
+cd /opt
+mkdir -p /opt/sabnzbd
+wget -O sabnzbd.tar.gz $latest >> $log 2>&1
+tar xzf sabnzbd.tar.gz --strip-components=1 -C /opt/sabnzbd >> ${log} 2>&1
+rm -rf sabnzbd.tar.gz
+echo_progress_done
+
+echo_progress_start "Installing pip requirements"
+if [[ $latestversion =~ ^3\.0\.[1-2] ]]; then
+    sed -i "s/feedparser.*/feedparser<6.0.0/g" /opt/sabnzbd/requirements.txt
 fi
-cd /home/${username}/
-#wget -qO SABnzbd.tar.gz https://github.com/sabnzbd/sabnzbd/releases/download/1.1.1/SABnzbd-1.1.1-src.tar.gz
-#tar xf SABnzbd.tar.gz >/dev/null 2>&1
-#mv SABnzbd-* SABnzbd
-git clone -b 2.3.x https://github.com/sabnzbd/sabnzbd.git /home/${username}/SABnzbd  >>  "${log}"  2>&1
-chown ${username}.${username} -R SABnzbd
-#rm SABnzbd.tar.gz
-pip install http://www.golug.it/pub/yenc/yenc-0.4.0.tar.gz  >>  "${log}"  2>&1
-apt-get install p7zip-full -y  >>  "${log}"  2>&1
-touch /install/.sabnzbd.lock
+/opt/.venv/sabnzbd/bin/pip install -r /opt/sabnzbd/requirements.txt >>"${log}" 2>&1
+echo_progress_done
 
-cat >/etc/systemd/system/sabnzbd@.service<<EOF
+chown -R ${user}: /opt/.venv/sabnzbd
+mkdir -p /home/${user}/.config/sabnzbd
+mkdir -p /home/${user}/Downloads/{complete,incomplete}
+chown -R ${user}: /opt/sabnzbd
+chown ${user}: /home/${user}/.config
+chown -R ${user}: /home/${user}/.config/sabnzbd
+chown ${user}: /home/${user}/Downloads
+chown ${user}: /home/${user}/Downloads/{complete,incomplete}
+
+echo_progress_start "Installing systemd service"
+cat >/etc/systemd/system/sabnzbd.service<<SABSD
 [Unit]
-Description=sabnzbd
-After=network.target
+Description=Sabnzbd
+Wants=network-online.target
+After=network-online.target
 
 [Service]
-Type=forking
-KillMode=process
-User=%i
-ExecStart=/usr/bin/screen -f -a -d -m -S sabnzbd python SABnzbd/SABnzbd.py --browser 0 --server 127.0.0.1:65080 --https 65443
-ExecStop=/usr/bin/screen -X -S sabnzbd quit
-WorkingDirectory=/home/%i/
+User=${user}
+ExecStart=/opt/.venv/sabnzbd/bin/python /opt/sabnzbd/SABnzbd.py --config-file /home/${user}/.config/sabnzbd/sabnzbd.ini --logging 1
+WorkingDirectory=/opt/sabnzbd
+Restart=on-failure
 
 [Install]
 WantedBy=multi-user.target
 
-EOF
+SABSD
 
-systemctl daemon-reload >/dev/null 2>&1
-systemctl enable sabnzbd@${username}.service  >>  "${log}"  2>&1
-systemctl start sabnzbd@${username}.service >/dev/null 2>&1
+systemctl enable -q --now sabnzbd 2>&1  | tee -a $log
+sleep 2
+echo_progress_done "SABnzbd started"
+
+echo_progress_start "Configuring SABnzbd"
+systemctl stop sabnzbd >> ${log} 2>&1
+sed -i "s/host_whitelist = .*/host_whitelist = $(hostname -f), $(hostname)/g" /home/${user}/.config/sabnzbd/sabnzbd.ini
+sed -i "s|^host = .*|host = 0.0.0.0|g" /home/${user}/.config/sabnzbd/sabnzbd.ini
+sed -i "0,/^port = /s/^port = .*/port = 65080/" /home/${user}/.config/sabnzbd/sabnzbd.ini
+sed -i "s|^download_dir = .*|download_dir = ~/Downloads/incomplete|g" /home/${user}/.config/sabnzbd/sabnzbd.ini
+sed -i "s|^complete_dir = .*|complete_dir = ~/Downloads/complete|g" /home/${user}/.config/sabnzbd/sabnzbd.ini
+#sed -i "s|^ionice = .*|ionice = -c2 -n5|g" /home/${user}/.config/sabnzbd/sabnzbd.ini
+#sed -i "s|^par_option = .*|par_option = -t4|g" /home/${user}/.config/sabnzbd/sabnzbd.ini
+#sed -i "s|^nice = .*|nice = -n10|g" /home/${user}/.config/sabnzbd/sabnzbd.ini
+#sed -i "s|^pause_on_post_processing = .*|pause_on_post_processing = 1|g" /home/${user}/.config/sabnzbd/sabnzbd.ini
+#sed -i "s|^enable_all_par = .*|enable_all_par = 1|g" /home/${user}/.config/sabnzbd/sabnzbd.ini
+#sed -i "s|^direct_unpack_threads = .*|direct_unpack_threads = 1|g" /home/${user}/.config/sabnzbd/sabnzbd.ini
+sed -i "0,/password = /s/password = .*/password = ${password}/" /home/${user}/.config/sabnzbd/sabnzbd.ini
+sed -i "0,/username = /s/username = .*/username = ${user}/" /home/${user}/.config/sabnzbd/sabnzbd.ini
+systemctl restart sabnzbd >> ${log} 2>&1
+echo_progress_done
+
 
 if [[ -f /install/.nginx.lock ]]; then
+echo_progress_start "Configuring Nginx"
   bash /usr/local/bin/swizzin/nginx/sabnzbd.sh
-  service nginx reload
+  systemctl reload nginx
+  echo_progress_done
 fi
 
-sleep 5s
-
-sed -i -e 's/password = ""/password = "'$password'" /g' /home/${username}/.sabnzbd/sabnzbd.ini
-sed -i -e 's/username = ""/username = "'$username'" /g' /home/seedit4me/.sabnzbd/sabnzbd.ini
-
-systemctl restart sabnzbd@${username}.service >/dev/null 2>&1
+echo_success "Sabnzbd installed"
+touch /install/.sabnzbd.lock

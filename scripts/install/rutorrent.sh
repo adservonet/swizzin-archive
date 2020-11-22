@@ -2,7 +2,7 @@
 # ruTorrent installation wrapper
 
 if [[ ! -f /install/.nginx.lock ]]; then
-  echo "nginx does not appear to be installed, ruTorrent requires a webserver to function. Please install nginx first before installing this package."
+  echo_error "nginx does not appear to be installed, ruTorrent requires a webserver to function. Please install nginx first before installing this package."
   exit 1
 fi
 
@@ -11,6 +11,7 @@ if [[ ! -f /install/.rtorrent.lock ]]; then
   bash /usr/local/bin/swizzin/install/rtorrent.sh  >> "${log}" 2>&1
 fi
 
-bash /usr/local/bin/swizzin/nginx/rutorrent.sh  >> "${log}" 2>&1
-systemctl force-reload nginx
+bash /usr/local/bin/swizzin/nginx/rutorrent.sh
+systemctl reload nginx
+echo_success "ruTorrent installed"
 touch /install/.rutorrent.lock

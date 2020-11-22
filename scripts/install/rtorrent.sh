@@ -13,47 +13,12 @@ function _string() { perl -le 'print map {(a..z,A..Z,0..9)[rand 62] } 0..pop' 15
 
 function _rconf() {
 cat >/home/${user}/.rtorrent.rc<<EOF
-################################################################################
-## Seedit4me Configuration file for rTorrent.                                 ##
-## Last updated Aug 2019 by Peter                                             ##
-##   If you choose to edit this file, there are a couple of things to note:   ##
-##   1. Be sure this file is saved with \n (LF) line breaks.  If you're       ##
-##      connecting via SSH and using nano (or similar), this shouldn't be a   ##
-##      problem.  However, if you're on Windows and are (S)FTP'ing the file   ##
-##      to your computer, there's a chance that the line breaks may change.   ##
-##      If there aren't LF line breaks, rTorrent will not start.              ##
-##   2. Please respect the fact that this is a shared server.  Hash checking  ##
-##      on completion is disabled because most times it will spike the load   ##
-##      while it's checking the files.  For large torrents, this can take a   ##
-##      very long time, and generally isn't even needed.                      ##
-##   3. scgi must not be changed, in order for ruTorrent to work.             ##
-##                                                                            ##
-##   4. If you edit this config and break your client we will formatt         ##
-##      your slot and all data will be lost!!                                 ##
-##                                                                            ##
-##                                                                            ##
-##                                                                            ##
-##                                                                            ##
-##                                                                            ##
-################################################################################
-
-
-
-
-
 # -- START HERE --
-##############################################################################################
-## These control where rTorrent looks for .torrents and where files are saved DO NOT CHANGE ##
-##############################################################################################
 directory.default.set = /home/${user}/torrents/rtorrent
 schedule2 = chmod_scgi_socket, 0, 0, "execute2=chmod,\"g+w,o=\",/var/run/${user}/.rtorrent.sock"
 schedule = watch_directory,5,5,load.start=/home/${user}/rwatch/*.torrent
 session.path.set = /home/${user}/.sessions/
 network.xmlrpc.size_limit.set = 2097152
-
-#################################################
-## These settings are mostly user customizable ##
-#################################################
 protocol.pex.set = no
 throttle.global_down.max_rate.set = 0
 throttle.global_up.max_rate.set = 0
@@ -63,10 +28,6 @@ throttle.max_uploads.global.set = 100
 throttle.min_peers.normal.set = 1
 throttle.min_peers.seed.set = 2
 trackers.use_udp.set = yes
-
-###############################################################
-## These settings shouldn't be changed DO NOT CHANGE        ##
-###############################################################
 
 encoding.add = UTF-8
 encryption = allow_incoming,try_outgoing,enable_retry
@@ -81,6 +42,7 @@ pieces.hash.on_completion.set = no
 
 schedule = low_diskspace,5,60,close_low_diskspace=5120M
 execute = {sh,-c,/usr/bin/php /srv/rutorrent/php/initplugins.php ${user} &}
+
 # -- END HERE --
 EOF
 chown ${user}.${user} -R /home/${user}/.rtorrent.rc
@@ -88,12 +50,12 @@ chown ${user}.${user} -R /home/${user}/.rtorrent.rc
 
 
 function _makedirs() {
-	mkdir -p /home/${user}/torrents/rtorrent >> "${log}" 2>&1
+	mkdir -p /home/${user}/torrents/rtorrent 2>> $log
 	mkdir -p /home/${user}/.sessions
 	mkdir -p /home/${user}/rwatch
-	chown -R ${user}.${user} /home/${user}/{torrents,.sessions,rwatch} >> "${log}" 2>&1
-	usermod -a -G www-data ${user} >> "${log}" 2>&1
-	usermod -a -G ${user} www-data >> "${log}" 2>&1
+	chown -R ${user}.${user} /home/${user}/{torrents,.sessions,rwatch} 2>> $log
+	usermod -a -G www-data ${user} 2>> $log
+	usermod -a -G ${user} www-data 2>> $log
 }
 
 _systemd() {
@@ -114,20 +76,15 @@ WorkingDirectory=/home/%i/
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable --now rtorrent@${user} 2>> $log
+systemctl enable -q --now rtorrent@${user} 2>> $log
 }
 
 export DEBIAN_FRONTEND=noninteractive
 
-#if [[ -f /tmp/.install.lock ]]; then
-#  export log="/root/logs/install.log"
-#else
-#  log="/root/logs/swizzin.log"
-#fi
-. /etc/swizzin/sources/functions/rtorrent
   export rtorrentver='repo'
   export libtorrentver=RC_1_2
 
+. /etc/swizzin/sources/functions/rtorrent
 noexec=$(grep "/tmp" /etc/fstab | grep noexec)
 user=$(cut -d: -f1 < /root/.master.info)
 rutorrent="/srv/rutorrent/"
@@ -145,18 +102,19 @@ if [[ -n $noexec ]]; then
 	mount -o remount,exec /tmp
 	noexec=1
 fi
-	  echo "Installing rTorrent Dependencies ... " >> "${log}" 2>&1;depends_rtorrent
+		depends_rtorrent;
 		if [[ ! $rtorrentver == repo ]]; then
-			echo "Building xmlrpc-c from source ... " >> "${log}" 2>&1;build_xmlrpc-c
-			echo "Building libtorrent from source ... " >> "${log}" 2>&1;build_libtorrent_rakshasa
-			echo "Building rtorrent from source ... " >> "${log}" 2>&1;build_rtorrent
+			echo_progress_start "Building xmlrpc-c from source";build_xmlrpc-c;echo_progress_done
+			echo_progress_start "Building libtorrent from source";build_libtorrent_rakshasa;echo_progress_done
+			echo_progress_start "Building rtorrent from source";build_rtorrent;echo_progress_done
 		else
-			echo "Installing rtorrent with apt-get ... " >> "${log}" 2>&1;rtorrent_apt
+			echo_info "Installing rtorrent with apt-get";rtorrent_apt
 		fi
-		echo "Making ${user} directory structure ... " >> "${log}" 2>&1;_makedirs
-		echo "setting up rtorrent.rc ... " >> "${log}" 2>&1;_rconf;_systemd
+		echo_progress_start "Making ${user} directory structure";_makedirs;echo_progress_done
+		echo_progress_start "setting up rtorrent.rc";_rconf;_systemd;echo_progress_done
 
 if [[ -n $noexec ]]; then
 	mount -o remount,noexec /tmp
 fi
+		echo_success "rTorrent installed"
 		touch /install/.rtorrent.lock
