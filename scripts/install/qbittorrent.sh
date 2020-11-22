@@ -55,8 +55,10 @@ echo "Downloads\SavePath=/home/seedit4me/torrents/qbittorrent/" >> /home/qbittor
 systemctl restart qbittorrent >>  "${log}"  2>&1
 
 if [[ -f /install/.nginx.lock ]]; then
-  bash /usr/local/bin/swizzin/nginx/qbittorrent.sh
+    echo_progress_start "Configuring nginx"
+    bash /etc/swizzin/scripts/nginx/qbittorrent.sh
+    systemctl reload nginx >> $log 2>&1
+    echo_progress_done 
 fi
 
 touch /install/.qbittorrent.lock
-

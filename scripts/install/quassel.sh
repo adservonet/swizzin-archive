@@ -16,40 +16,39 @@
 #################################################################################
 
 port=$(cat /home/seedit4me/.quassel_port)
-
-#if [[ -f /tmp/.install.lock ]]; then
-#  OUTTO="/root/logs/install.log"
-#else
-#  OUTTO="/root/logs/swizzin.log"
-#fi
 distribution=$(lsb_release -is)
 codename=$(lsb_release -cs)
 IP=$(ip route get 1 | sed -n 's/^.*src \([0-9.]*\) .*$/\1/p')
 user=$(cut -d: -f1 < /root/.master.info)
-. /etc/swizzin/sources/functions/backports
-
-echo "Installing Quassel PPA (Ubuntu) or grabbing latest backport (Debian) ... " >>  "${log}"  2>&1
 
 if [[ $distribution == Ubuntu ]]; then
-  echo "Installing Quassel PPA"
-  apt-get install -q -y software-properties-common  >>  "${log}"  2>&1
-	apt-add-repository ppa:mamarley/quassel -y  >>  "${log}"  2>&1
-	apt-get -q -y update  >>  "${log}"  2>&1
-  apt-get -q -y install quassel-core  >>  "${log}"  2>&1
+  if [[ $codename =~ ("xenial"|"bionic") ]]; then
+    echo_progress_start "Installing Quassel PPA"
+    apt_install software-properties-common
+    apt-add-repository ppa:mamarley/quassel -y >> "$log" 2>&1
+    apt_update
+    echo_progress_done
+  fi
+  apt_install quassel-core
 else
+  #shellcheck source=sources/functions/backports
+  . /etc/swizzin/sources/functions/backports
   if [[ $codename == "buster" ]]; then
-    echo "Grabbing latest release"
-    apt-get -y -q quassel-core  >>  "${log}"  2>&1
+    apt_install quassel-core
   elif [[ $codename == "stretch" ]]; then
     check_debian_backports
-    echo "Grabbing latest backport"
-    apt-get -y -q install quassel-core  >>  "${log}"  2>&1
+    echo_info "Using latest backport"
+    set_packages_to_backports quassel-core
+    apt_install quassel-core
   else
-    echo "Grabbing latest backport"
-  wget -r -l1 --no-parent --no-directories -A "quassel-core*.deb" https://iskrembilen.com/quassel-packages-debian/  >>  "${log}"  2>&1
-  dpkg -i quassel-core*  >>  "${log}"  2>&1
+    echo_info "Using latest backport"
+    wget -r -l1 --no-parent --no-directories -A "quassel-core*.deb" https://iskrembilen.com/quassel-packages-debian/ >> "$log" 2>&1
+    echo_progress_start "Installing quassel dpkg"
+    dpkg -i quassel-core* >> "$log" 2>&1
+    echo_progress_done "Quassel installed"
   rm quassel-core*
-  apt-get install -f -y -q  >>  "${log}"  2>&1
+    #Note: this is here due to the dependencies not being installed for the dpkg-installed package
+    apt-get install -f -y -q >> "$log" 2>&1
 fi
 fi
 
@@ -63,14 +62,10 @@ sleep 3s
 aa-complain /usr/bin/quasselcore
 
 mv /etc/init.d/quasselcore /etc/init.d/quasselcore.BAK
-systemctl enable --now quasselcore
+systemctl enable -q --now quasselcore 2>&1  | tee -a $log
+echo_progress_done
 
-systemctl restart quasselcore.service
-
-
-echo "Quassel has now been installed! " >>  "${log}"  2>&1
-echo "Please install quassel-client on your personal computer "
-echo "and connect to the newly created core at "
-echo "${IP}:${port} to set up your account"
+echo_success "Quassel installed"
+echo_info "Please install quassel-client on your personal computer and connect to the newly created core at ${IP}:4242 to set up your account"
 
 touch /install/.quassel.lock

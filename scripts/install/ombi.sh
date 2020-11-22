@@ -15,12 +15,13 @@
 #
 
 function _depends() {
+  echo_progress_start "Installing ombi apt sources"
   if [[ ! -f /etc/apt/sources.list.d/ombi.list ]]; then
     echo "deb http://repo.ombi.turd.me/stable/ jessie main" > /etc/apt/sources.list.d/ombi.list
     wget -qO - https://repo.ombi.turd.me/pubkey.txt | sudo apt-key add -
   fi
-
-  apt-get update -q >>  "${log}"  2>&1
+  apt_update
+  echo_progress_done "Sources installed and refreshed"
 }
 
 function _install() {
@@ -33,11 +34,12 @@ function _install() {
   #rm Ombi.zip
   #cd /opt
   #chown -R ${user}: ombi
-  apt-get install -y -q ombi  >>  "${log}"  2>&1
+  apt_install ombi
 }
 
 
 function _services() {
+  echo_progress_start "Installing systemd service"
 cat > /etc/systemd/system/ombi.service <<OMB
 [Unit]
 Description=Ombi - PMS Requests System
@@ -58,26 +60,25 @@ WantedBy=multi-user.target
 OMB
 
   touch /install/.ombi.lock
+  echo_progress_done "Service installed"
   if [[ -f /install/.nginx.lock ]]; then
+    echo_progress_start "Configuring nginx"
     bash /usr/local/bin/swizzin/nginx/ombi.sh
-    service nginx reload
+    systemctl reload nginx
+    echo_progress_done "Nginx configured"
   fi
-  systemctl enable ombi >>  "${log}"  2>&1
+  echo_progress_start "Enabling and starting ombi"
+  systemctl enable -q ombi 2>&1  | tee -a $log
   systemctl restart ombi
+  echo_progress_done "Ombi started"
 }
 
-
-#if [[ -f /tmp/.install.lock ]]; then
-#  OUTTO="/root/logs/install.log"
-#else
-#  OUTTO="/root/logs/swizzin.log"
-#fi
 distribution=$(lsb_release -is)
 user=$(cut -d: -f1 < /root/.master.info)
 
-echo -ne "Initializing plex ... $i\033[0K\r" >>  "${log}"  2>&1
+# echo -ne "Initializing plex ... $i\033[0K\r"
 
-echo -en "\rUpdating dependencies ... \033[0K\r" >>  "${log}"  2>&1;_depends
-echo -en "\rInstalling Ombi ... \033[0K\r" >>  "${log}"  2>&1;_install
-echo -en "\rInitializing Ombi service ... \033[0K\r" >>  "${log}"  2>&1;_services
-echo -e "\rOmbi Installation Complete!\033[0K\r" >>  "${log}"  2>&1
+_depends
+_install
+_services
+echo_success "Ombi installed"

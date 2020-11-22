@@ -16,11 +16,6 @@
 #   under the GPL along with build & install instructions.
 #
 
-#if [[ -f /tmp/.install.lock ]]; then
-#  log="/root/logs/install.log"
-#else
-#  log="/root/logs/swizzin.log"
-#fi
 master=$(cut -d: -f1 < /root/.master.info)
 
 #versions=https://plex.tv/api/downloads/1.json
@@ -28,14 +23,14 @@ master=$(cut -d: -f1 < /root/.master.info)
 #releases=$(grep -ioe '"label"[^}]*' <<<"${wgetresults}" | grep -i "\"distro\":\"ubuntu\"" | grep -m1 -i "\"build\":\"linux-ubuntu-x86_64\"")
 #latest=$(echo ${releases} | grep -m1 -ioe 'https://[^\"]*')
 
-echo "Installing plex keys and sources ... "
+  echo_progress_start "Installing plex keys and sources ... "
+  apt_install apt-transport-https
   wget -q https://downloads.plex.tv/plex-keys/PlexSign.key -O - | sudo apt-key add -
   echo "deb https://downloads.plex.tv/repo/deb public main" > /etc/apt/sources.list.d/plexmediaserver.list     
   echo
 
-echo "Updating system ... "
-  apt-get install apt-transport-https -y >>  "${log}"  2>&1
-  apt-get -y update >>  "${log}"  2>&1
+  apt_update
+  echo_progress_done "Sources and keys retrieved and installed"
   apt-get install -o Dpkg::Options::="--force-confold" -y -f plexmediaserver --allow-unauthenticated >>  "${log}"  2>&1
     #DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical apt-get -q -y -o -f "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" install plexmediaserver >/dev/null 2>&1
     echo
@@ -50,7 +45,6 @@ echo "Updating system ... "
     usermod -a -G ${master} plex
     service plexmediaserver restart >/dev/null 2>&1
     touch /install/.plex.lock
-    echo
 
-echo "Plex Install Complete!"
+echo_success "Plex installed"
 

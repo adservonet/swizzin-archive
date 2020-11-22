@@ -20,39 +20,27 @@
 function _string() { perl -le 'print map {(a..z,A..Z,0..9)[rand 62] } 0..pop' 15 ; }
 #################################################################################
 
-function _installRadarrIntro() {
-  echo "Radarr will now be installed." >> "${log}"  2>&1;
-  echo "This process may take up to 2 minutes." >> "${log}"  2>&1;
-  echo "Please wait until install is completed." >> "${log}"  2>&1;
-  # output to box
-  echo "Radarr will now be installed."
-  echo "This process may take up to 2 minutes."
-  echo "Please wait until install is completed."
-  echo
-  sleep 5
-}
-
 function _installRadarrDependencies() {
-  # output to box
-  echo "Installing dependencies ... "
+  echo_progress_start "Installing dependencies"
   mono_repo_setup
+  echo_progress_done
 }
 
 function _installRadarrCode() {
-  # output to box
-  apt_install libmono-cil-dev curl mediainfo >> "${log}"  2>&1;
-  echo "Installing Radar ... "
+  apt_install libmono-cil-dev curl mediainfo
+  echo_progress_start "Installing Radarr"
   if [[ ! -d /opt ]]; then mkdir /opt; fi
   cd /opt
-  wget $( curl -s https://api.github.com/repos/Radarr/Radarr/releases | grep linux.tar.gz | grep browser_download_url | head -1 | cut -d \" -f 4 )  >> "${log}"  2>&1;
-  tar -xvzf Radarr.*.linux.tar.gz  >> "${log}"  2>&1;
+  wget $( curl -s https://api.github.com/repos/Radarr/Radarr/releases | grep linux.tar.gz | grep browser_download_url | head -1 | cut -d \" -f 4 ) > /dev/null 2>&1
+  tar -xvzf Radarr.*.linux.tar.gz >/dev/null 2>&1
   rm -rf /opt/Radarr.*.linux.tar.gz
+  echo_progress_done "Radarr installed"
   touch /install/.radarr.lock
 }
 
 function _installRadarrConfigure() {
   # output to box
-  echo "Configuring Radar ... "
+  echo_progress_start "Installing systemd service"
 cat > /etc/systemd/system/radarr.service <<EOF
 [Unit]
 Description=Radarr Daemon
@@ -71,45 +59,32 @@ Restart=on-failure
 WantedBy=multi-user.target
 EOF
 
-
   mkdir -p /home/${username}/.config
   chown -R ${username}:${username} /home/${username}/.config
 #  chmod 775 /home/${username}/.config
   chown -R ${username}:${username} /opt/Radarr/
   systemctl daemon-reload
-  systemctl enable radarr.service > /dev/null 2>&1
+  systemctl enable -q radarr.service 2>&1  | tee -a $log
   systemctl start radarr.service
+  echo_progress_done "Radarr started"
 
   if [[ -f /install/.nginx.lock ]]; then
+    echo_progress_start "Configuring nginx"
     sleep 10
     bash /usr/local/bin/swizzin/nginx/radarr.sh
-    service nginx reload
+    systemctl reload nginx
+    echo_progress_done
   fi
 }
 
-function _installRadarrFinish() {
-  # output to dashboard
-  echo "Radarr Install Complete!" >> "${log}"  2>&1;
-}
-
-function _installRadarrExit() {
-	exit 0
-}
-
-#if [[ -f /tmp/.install.lock ]]; then
-#  OUTTO="/root/logs/install.log"
-#else
-#  OUTTO="/root/logs/swizzin.log"
-#fi
 username=$(cut -d: -f1 < /root/.master.info)
 distribution=$(lsb_release -is)
 version=$(lsb_release -cs)
 . /etc/swizzin/sources/functions/mono
 ip=$(curl -s http://whatismyip.akamai.com)
 
-_installRadarrIntro
-echo "Installing dependencies ... " >> "${log}"  2>&1;_installRadarrDependencies
-echo "Installing Radar ... " >> "${log}"  2>&1;_installRadarrCode
-echo "Configuring Radar ... " >> "${log}"  2>&1;_installRadarrConfigure
-_installRadarrFinish
-_installRadarrExit
+# _installRadarrIntro
+_installRadarrDependencies
+_installRadarrCode
+_installRadarrConfigure
+echo_success "Radarr installed"

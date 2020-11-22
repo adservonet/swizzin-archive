@@ -17,28 +17,23 @@
 #   including (via compiler) GPL-licensed code must also be made available
 #   under the GPL along with build & install instructions.
 
-OUTTO=$log
 
-#if [[ -f /tmp/.install.lock ]]; then
-#  OUTTO="/root/logs/install.log"
-#else
-#  OUTTO="/root/logs/swizzin.log"
-#fi
-MASTER=$(cut -d: -f1 < /root/.master.info)
+# Install fuse
+apt_install fuse
+sed -i -e 's/#user_allow_other/user_allow_other/' /etc/fuse.conf
 
-echo "Downloading and installing rclone ..." >>"${OUTTO}" 2>&1;
-
-apt_install fuse >>  "${OUTTO}"  2>&1
+echo_progress_start "Downloading and installing rclone"
 # One-liner to check arch/os type, as well as download latest rclone for relevant system.
-curl https://rclone.org/install.sh | sudo bash
+wget -q https://rclone.org/install.sh -O /tmp/rcloneinstall.sh >> $log 2>&1
 
 # Make sure rclone downloads and installs without error before proceeding
-if [ $? -eq 0 ]; then
-    echo "Adding rclone mount service..." >>"${OUTTO}" 2>&1;
+if ! bash /tmp/rcloneinstall.sh ; then
+  echo_error "Rclone installer failed"
+  exit 1
+fi
 
 user=$(cut -d: -f1 < /root/.master.info)
 passwd=$(cut -d: -f2 < /root/.master.info)
-
 cat >/etc/systemd/system/rclone@.service<<EOF
 [Unit]
 Description=rclonemount
@@ -59,18 +54,17 @@ StartLimitBurst=3
 WantedBy=multi-user.target
 
 EOF
+echo_progress_done
 
 touch /install/.rclone.lock
-    echo "rclone installation complete!" >>"${OUTTO}" 2>&1;
-else
-    echo "Issue occured during rclone installation." >>"${OUTTO}" 2>&1;
-fi
+echo_success "Rclone installed"
+#echo_info "Setup Rclone remote named \"gdrive\" And run sudo systemctl start rclone@username.service"
 
   if [[ -f /install/.nginx.lock ]]; then
     bash /usr/local/bin/swizzin/nginx/rclone.sh
     systemctl reload nginx
   fi
   
-  echo "Enabling and starting rclone services ... " >> "${OUTTO}"  2>&1;
-  systemctl enable rclone@${MASTER}.service >/dev/null >> "${OUTTO}"  2>&1;
-  systemctl start rclone@${MASTER}.service >/dev/null >> "${OUTTO}"  2>&1;
+
+  systemctl enable rclone@${MASTER}.service >/dev/null >> "${log}"  2>&1;
+  systemctl start rclone@${MASTER}.service >/dev/null >> "${log}"  2>&1;
