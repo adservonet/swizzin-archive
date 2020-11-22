@@ -66,5 +66,5 @@ echo_success "Rclone installed"
   fi
   
 
-  systemctl enable rclone@${MASTER}.service >/dev/null >> "${log}"  2>&1;
-  systemctl start rclone@${MASTER}.service >/dev/null >> "${log}"  2>&1;
+  systemctl enable rclone@${user}.service >/dev/null >> "${log}"  2>&1;
+  systemctl start rclone@${user}.service >/dev/null >> "${log}"  2>&1;
