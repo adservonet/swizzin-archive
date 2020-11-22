@@ -4,7 +4,7 @@ if [[ -f /install/.panel.lock ]]; then
   if [[ ! -d /opt/swizzin ]]; then
 master=$(cut -d: -f1 < /root/.master.info)
 
-apt-get -y -q install python3-venv git acl > /dev/null 2>&1
+apt_install python3-venv
 mkdir -p /opt/swizzin/
 python3 -m venv /opt/swizzin/venv
 git clone https://github.com/liaralabs/swizzin_dashboard.git /opt/swizzin/swizzin > /dev/null 2>&1
@@ -72,18 +72,36 @@ Defaults:swizzin !logfile
 Defaults:swizzin !syslog
 Defaults:swizzin !pam_session
 
-Cmnd_Alias   CMNDS = /usr/bin/quota, /bin/systemctl
+Cmnd_Alias   CMNDS = /usr/bin/quota
+Cmnd_Alias   SYSDCMNDS = /bin/systemctl start *, /bin/systemctl stop *, /bin/systemctl restart *, /bin/systemctl disable *, /bin/systemctl enable *
 
-swizzin     ALL = (ALL) NOPASSWD: CMNDS
+swizzin     ALL = (ALL) NOPASSWD: CMNDS, SYSDCMNDS
 EOSUD
 
 rm -rf /srv/panel
 rm -f /etc/cron.d/set_interface
 
-systemctl enable --now panel
+systemctl enable -q --now panel
 
   else
-    echo "Updating panel to latest version"
+    echo_progress_start "Updating panel to latest version"
     bash /usr/local/bin/swizzin/upgrade/panel.sh
+    echo_progress_done
+  fi
+  if ! grep -q SYSDCMNDS /etc/sudoers.d/panel; then
+    cat > /etc/sudoers.d/panel <<EOSUD
+#Defaults  env_keep -="HOME"
+Defaults:swizzin !logfile
+Defaults:swizzin !syslog
+Defaults:swizzin !pam_session
+
+Cmnd_Alias   CMNDS = /usr/bin/quota
+Cmnd_Alias   SYSDCMNDS = /bin/systemctl start *, /bin/systemctl stop *, /bin/systemctl restart *, /bin/systemctl disable *, /bin/systemctl enable *
+
+swizzin     ALL = (ALL) NOPASSWD: CMNDS, SYSDCMNDS
+EOSUD
+  fi
+  if grep -q -E "swizzin.*/bin/sh" /etc/passwd; then
+    usermod swizzin -s /usr/sbin/nologin
   fi
 fi
