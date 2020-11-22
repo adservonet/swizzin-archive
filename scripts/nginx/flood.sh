@@ -2,11 +2,7 @@
 # nginx configuration for flood
 # Author: liara
 
-#if [[ -f /tmp/.install.lock ]]; then
-#  log="/root/logs/install.log"
-#else
-#  log="/root/logs/swizzin.log"
-#fi
+
 
 users=($(cut -d: -f1 < /etc/htpasswd))
 if [[ -n $1 ]]; then
@@ -56,9 +52,9 @@ FLUP
   sed -i "s/baseURI: '\/'/baseURI: '\/flood'/g" /home/$u/.flood/config.js
 
   if [[ ! -d /home/$u/.flood/server/assets ]]; then
-    su - $u -c "cd /home/$u/.flood; npm run build" >> "${log}" 2>&1
+    su - $u -c "cd /home/$u/.flood; npm run build" >> $log 2>&1
   elif [[ -d /home/$u/.flood/server/assets ]] && [[ $base == "/" ]]; then
-    su - $u -c "cd /home/$u/.flood; npm run build" >> "${log}" 2>&1
+    su - $u -c "cd /home/$u/.flood; npm run build" >> $log 2>&1
   fi
 
   if [[ ! -f /etc/nginx/apps/${u}.scgi.conf ]]; then

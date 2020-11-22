@@ -61,6 +61,7 @@ sleep 3s
 
 aa-complain /usr/bin/quasselcore
 
+echo_progress_start "Starting quassel"
 mv /etc/init.d/quasselcore /etc/init.d/quasselcore.BAK
 systemctl enable -q --now quasselcore 2>&1  | tee -a $log
 echo_progress_done

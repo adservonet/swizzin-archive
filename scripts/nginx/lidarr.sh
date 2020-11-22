@@ -44,5 +44,5 @@ LID
 chown -R ${user}: /home/${user}/.config
 
 if [[ $isactive == "active" ]]; then
-  systemctl start lidarr >>  "${log}"  2>&1
+  systemctl start lidarr
 fi
