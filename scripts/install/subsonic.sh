@@ -20,9 +20,13 @@
 MASTER=$(cut -d: -f1 < /root/.master.info)
 codename=$(lsb_release -cs)
 
-sudo add-apt-repository -y ppa:linuxuprising/java
-apt_update
-apt_install oracle-java15-installer python3-pip
+#sudo add-apt-repository -y ppa:linuxuprising/java
+#apt_update
+
+#echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections
+#echo debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-selections
+#echo oracle-java15-installer shared/accepted-oracle-license-v1-2 boolean true | sudo debconf-set-selections
+#apt_install oracle-java15-installer python3-pip
 
 mkdir /root/subsonic-tmp
 

@@ -12,11 +12,14 @@
 #################################################################################
 
 function _download {
+  echo_progress_start "Downloading install script"
   cd /tmp
-  wget https://nzbget.net/download/nzbget-latest-bin-linux.run >>  "${log}"  2>&1
+  wget https://nzbget.net/download/nzbget-latest-bin-linux.run >> $log 2>&1
+  echo_progress_done
 }
 
 function _service {
+  echo_progress_start "Installing systemd service"
   cat > /etc/systemd/system/nzbget@.service <<NZBGD
 [Unit]
 Description=NZBGet Daemon
@@ -35,12 +38,14 @@ Restart=on-failure
 [Install]
 WantedBy=multi-user.target
 NZBGD
+echo_progress_done
 }
 
 function _install {
   cd /tmp
     for u in "${users[@]}"; do
-      sh nzbget-latest-bin-linux.run --destdir /home/$u/nzbget >>  "${log}"  2>&1
+      echo_progress_start "Installing nzbget for $u"
+      sh nzbget-latest-bin-linux.run --destdir /home/$u/nzbget >> $log 2>&1
       chown -R $u:$u /home/$u/nzbget
       if [[ $u == $master ]]; then
         :
@@ -49,14 +54,8 @@ function _install {
         secureport=$(shuf -i 6000-7000 -n 1)
         sed -i "s/ControlPort=6789/ControlPort=${port}/g" /home/$u/nzbget/nzbget.conf
         sed -i "s/SecurePort=6791/SecurePort=${secureport}/g" /home/$u/nzbget/nzbget.conf
-
-        #ControlUsername=seedit4me
-        #ControlPassword=jpop99
-        #RestrictedUsername=seedit4me
-        #RestrictedPassword=jpop99
-        #FormAuth=yes
-
       fi
+      echo_progress_done "Nzbget installed for $u"
     done
 
   if [[ ! -d /home/$u/.ssl/ ]]; then
@@ -73,25 +72,24 @@ function _install {
 
   
   if [[ -f /install/.nginx.lock ]]; then
+    echo_progress_start "Configuring nginx"
     bash /usr/local/bin/swizzin/nginx/nzbget.sh
     systemctl reload nginx
+    echo_progress_done
   fi
 
+  echo_progress_start "Enabling nzbget for all users"
   for u in "${users[@]}"; do
-    systemctl enable nzbget@$u >>  "${log}"  2>&1
+    systemctl enable -q nzbget@$u 2>&1  | tee -a $log
     systemctl start nzbget@$u
   done
+  echo_progress_done
 }
 
 function _cleanup {
   cd /tmp
   rm -rf nzbget-latest-bin-linux.run
 }
-#if [[ -f /tmp/.install.lock ]]; then
-#  log="/root/logs/install.log"
-#else
-#  log="/root/logs/swizzin.log"
-#fi
 
 users=($(cut -d: -f1 < /etc/htpasswd))
 master=$(cut -d: -f1 < /root/.master.info)
@@ -114,6 +112,7 @@ _download
 _service
 _install
 _cleanup
+echo_success "Nzbget installed"
 touch /install/.nzbget.lock
 
 if [[ -n $noexec ]]; then
