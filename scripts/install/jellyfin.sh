@@ -63,6 +63,8 @@ cat >/etc/jellyfin/system.xml <<-CONFIG
   <IsStartupWizardCompleted>false</IsStartupWizardCompleted>
   <EnableUPnP>false</EnableUPnP>
   <EnableHttps>true</EnableHttps>
+  <PublicPort>8097</PublicPort>
+  <HttpServerPortNumber>8097</HttpServerPortNumber>
   <CertificatePath>/home/${username}/.ssl/${username}-self-signed.pfx</CertificatePath>
   <IsPortAuthorized>true</IsPortAuthorized>
   <EnableRemoteAccess>true</EnableRemoteAccess>
@@ -73,6 +75,7 @@ cat >/etc/jellyfin/system.xml <<-CONFIG
   <RequireHttps>true</RequireHttps>
 </ServerConfiguration>
 CONFIG
+
 #
 # Add the jellyfin official repository and key to our installation so we can use apt-get to install it jellyfin and jellyfin-ffmepg.
 wget -q -O - "https://repo.jellyfin.org/$DIST_ID/jellyfin_team.gpg.key" | apt-key add - >>"${log}" 2>&1
