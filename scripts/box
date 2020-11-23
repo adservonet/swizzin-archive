@@ -54,7 +54,7 @@ function _install() {
     fi
   done
   whiptail --title "Install Software" --checklist --noitem --separate-output "Make some choices:" 15 26 7 "${installa[@]}" 2>results
-  
+
   readarray result < results
   for i in "${result[@]}"; do
     result=$(echo $i)
@@ -172,6 +172,7 @@ function _update() {
   git checkout lxd > /dev/null  2>&1
   git fetch origin lxd > /dev/null  2>&1
   git reset --hard origin/lxd >> "${log}"  2>&1;
+  cat /etc/swizzin/sources/logo/logo1 > "${log}"  2>&1;
   echo_info "HEAD is now set to $(git log --pretty=format:'%h' -n1)"
   echo_progress_done "Local repository updated"
 
@@ -310,7 +311,7 @@ function _adduser {
   htpasswd -b -c /etc/htpasswd.d/htpasswd.${user} $user $pass >> $log 2>&1
   chmod 750 /home/${user}
 
-  if [[ -f /install/.quota.lock ]]; then 
+  if [[ -f /install/.quota.lock ]]; then
     setdisk "$user"
   fi
 
@@ -376,7 +377,7 @@ function _deluser {
   echo_warn "This will delete the user '${user}' and all associated configs and subdirectories.\nTHIS ACTION CANNOT BE UNDONE.\nRemoval will start as soon as you confirm this message."
   echo_query "Press enter to continue, or CTRL+C to cancel"
   read -rep ''
-  
+
 
   for app in rtorrent rutorrent deluge autodl flood nzbget lounge transmission mango wireguard organizr qbittorrent; do
     if [[ $app = "rutorrent" ]]; then
@@ -459,19 +460,19 @@ function _chpasswd {
     systemctl start deluged@${user} >> $log 2>&1
     systemctl start deluge-web@${user} >> $log 2>&1
   fi
-  if [[ -e /install/.transmission.lock ]]; then 
+  if [[ -e /install/.transmission.lock ]]; then
     systemctl stop transmission@${user} >> $log 2>&1
     sed -i "s/.*rpc-password.*/  \"rpc-password\": \"${pass}\",/" /home/$user/.config/transmission-daemon/settings.json
     systemctl start transmission@${user} >> $log 2>&1
   fi
-  if [[ -f /install/.lounge.lock ]]; then 
+  if [[ -f /install/.lounge.lock ]]; then
     su -s /bin/sh lounge -c "thelounge reset $user " <<< "${pass}" >> $log 2>&1
   fi
   if [[ -f /install/.mango.lock ]]; then
       if [[ -z $mangodir ]]; then mangodir="/opt/mango"; fi
       su mango -c "$mangodir/mango admin user update ${user} -p ${pass}" >> $log 2>&1
   fi
-  if [[ -f /install/.organizr.lock ]]; then 
+  if [[ -f /install/.organizr.lock ]]; then
     #TODO fix when API allows to
     echo_warn "Remember to manually change the organizr account's password!"
   fi
