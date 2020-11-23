@@ -126,7 +126,7 @@ function colorprint () {
         else # otherwise append it
             #Wrapped for the user
 #            printf '%b' "${heading}"
-            printf '%b\n' "${body}"
+            printf '%b\n' "${body}${nc}" | strip_ansi
             #Unwrapped for the log
             printf '%b\n' "${heading}${body}${nc}" | strip_ansi >> "$log"
         fi
