@@ -106,6 +106,7 @@ function _remove() {
 }
 
 function _cli() {
+  print_logo
   arg=("$@")
   packages=("${arg[@]:1}")
   repo=($(find /usr/local/bin/swizzin/install -type f -printf "%f\n" | cut -d "." -f 1))
