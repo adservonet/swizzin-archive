@@ -8,7 +8,7 @@ $iface = $interface;//INETFACE;
 $iface_list = array($interface);
 $iface_title[$interface] = 'External';
 $vnstat_bin = '/usr/bin/vnstat';
-$data_dir = './dumps';
+$data_dir = '/srv/tools/vnstat_dumps';
 $byte_notation = null;
 
 function get_vnstat_data($use_label=true) {
