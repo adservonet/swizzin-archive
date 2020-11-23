@@ -172,6 +172,7 @@ function _update() {
   git checkout lxd > /dev/null  2>&1
   git fetch origin lxd > /dev/null  2>&1
   git reset --hard origin/lxd >> "${log}"  2>&1;
+  cat /etc/swizzin/sources/logo/logo1
   cat /etc/swizzin/sources/logo/logo1 > "${log}"  2>&1;
   echo_info "HEAD is now set to $(git log --pretty=format:'%h' -n1)"
   echo_progress_done "Local repository updated"
