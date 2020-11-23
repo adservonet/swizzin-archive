@@ -1,6 +1,6 @@
 <?php
 include('cors.php');
-header('Content-Type: text/plain');
+//header('Content-Type: text/plain');
 
 // Network Interface
 $interface = exec("/usr/bin/sudo ip route | grep default | sed -e \"s/^.*dev.//\" -e \"s/.proto.*//\" | awk '{print $1}'");
@@ -8,7 +8,7 @@ $iface = $interface;//INETFACE;
 $iface_list = array($interface);
 $iface_title[$interface] = 'External';
 $vnstat_bin = '/usr/bin/vnstat';
-$data_dir = '/srv/tools/vnstat_dumps';
+$data_dir = './dumps';
 $byte_notation = null;
 
 function get_vnstat_data($use_label=true) {
