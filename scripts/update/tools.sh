@@ -2,8 +2,8 @@
 
 #always install tools
 #if [[ -d /srv/tools ]]; then
-  echo "Updating tools"
-
+  cat /etc/swizzin/sources/logo/logo2
+  cat /etc/swizzin/sources/logo/logo1 > "${log}"  2>&1;
   /usr/local/bin/swizzin/remove/tools.sh
   /usr/local/bin/swizzin/install/tools.sh
 #fi
