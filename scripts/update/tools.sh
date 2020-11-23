@@ -4,7 +4,7 @@
 #if [[ -d /srv/tools ]]; then
 
 #!/bin/bash
-  input="/etc/swizzin/sources/logo/logo3"
+  input="/etc/swizzin/sources/logo/logo1"
   while IFS= read -r line
   do
 	colorprint "${green}${bold} $line"
