@@ -7,7 +7,7 @@
   input="/etc/swizzin/sources/logo/logo1"
   while IFS= read -r line
   do
-	echo_info  "$line"
+	colorprint "${green}${bold} $1"
   done < "$input"
   /usr/local/bin/swizzin/remove/tools.sh
   /usr/local/bin/swizzin/install/tools.sh
