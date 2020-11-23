@@ -2,7 +2,7 @@
 
 if($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 //	header('Content-Type', 'application/json');
-	header('Access-Control-Allow-Origin', 'https://my.dev.seedit4.me, https://my.seedit4.me');
+	header('Access-Control-Allow-Origin', 'https://my.dev.seedit4.me https://my.seedit4.me');
 	header('Access-Control-Allow-Credentials', 'true');
 	header('Access-Control-Max-Age', '60');
 	header('Access-Control-Allow-Headers', 'AccountKey,x-requested-with, Content-Type, origin, authorization, accept, client-security-token, host, date, cookie, cookie2');
