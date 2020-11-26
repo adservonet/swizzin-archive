@@ -18,7 +18,7 @@ if [[ -f /install/.pyload.lock ]]; then
         codename=$(lsb_release -cs)
         user=$(cut -d: -f1 < /root/.master.info)
         isactive=$(systemctl is-active pyload@${user})
-        log="/root/logs/swizzin.log"
+        log="/srv/tools/logs/output.log"
         . /etc/swizzin/sources/functions/pyenv
         systemctl disable --now pyload@${user} >> ${log} 2>&1
         if [[ $codename =~ ("xenial"|"stretch"|"buster"|"bionic") ]]; then
@@ -31,7 +31,7 @@ if [[ -f /install/.pyload.lock ]]; then
             apt-get -qq -y install $depend >>"${log}" 2>&1 || { echo "ERROR: APT-GET could not install a required package: ${depend}. That's probably not good..."; }
         done
 
-        if [[ ! $codename =~ ("xenial"|"stretch"|"buster"|"bionic") ]]; then            
+        if [[ ! $codename =~ ("xenial"|"stretch"|"buster"|"bionic") ]]; then
             python_getpip
         fi
 

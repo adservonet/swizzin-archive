@@ -40,9 +40,10 @@ function _getversion () {
 #                  Repo "(Packaged and tested by Ubuntu)" \
 #                   3>&1 1>&2 2>&3)
 #        else
-			 version="PPA"
 #            version="Repo"
 #        fi
+		version="PPA"
+		echo_log_only "version = $version"
         export version
     fi
 

@@ -127,27 +127,15 @@ function _clr() {
   fi
 }
 
-function _apt_reset() {
-  echo "resetting apt -----------------------------------------------------------------------------"
-  sudo killall apt-get >> "${log}" 2>&1;
-  sudo killall apt >> "${log}" 2>&1;
-  sudo rm /var/lib/dpkg/lock > /dev/null  2>&1
-  sudo rm /var/lib/dpkg/lock-frontend > /dev/null  2>&1
-  sudo rm /var/cache/debconf/*.dat > /dev/null  2>&1
-  sudo rm /var/lib/apt/lists/lock > /dev/null  2>&1
-  sudo rm /var/cache/apt/archives/lock > /dev/null  2>&1
-  sudo rm /var/lib/dpkg/updates/* > /dev/null  2>&1
-}
-
 function _update() {
   echo_progress_start "updating swizzin -----------------------------------------------------------------------------"
   _apt_reset
   apt_upgrade >> "${log}"  2>&1;
 
   cd /etc/swizzin
-  git checkout lxd > /dev/null  2>&1
-  git fetch origin lxd > /dev/null  2>&1
-  git reset --hard origin/lxd >> "${log}"  2>&1;
+  git checkout libtorrent_cleanup > /dev/null  2>&1
+  git fetch origin libtorrent_cleanup > /dev/null  2>&1
+  git reset --hard origin/libtorrent_cleanup >> "${log}"  2>&1;
   echo_info "HEAD is now set to $(git log --pretty=format:'%h' -n1)"
   echo_progress_done "Local repository updated"
 

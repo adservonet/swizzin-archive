@@ -2,12 +2,6 @@
 # qBittorrent Installer for swizzin
 # Author: liara
 
-
-if [[ -f /tmp/.install.lock ]]; then
-  export log="/root/logs/install.log"
-else
-  export log="/root/logs/swizzin.log"
-fi
 # Source the required functions
 . /etc/swizzin/sources/functions/qbittorrent
 . /etc/swizzin/sources/functions/libtorrent
@@ -16,13 +10,26 @@ fi
 users=($(_get_user_list))
 qbtvold=$(qbittorrent-nox --version | grep -oP '\d+\.\d+\.\d+')
 
-whiptail_qbittorrent
+repov=$(get_candidate_version qbittorrent-nox)
+latestv41=$(curl -s https://github.com/qbittorrent/qBittorrent/releases | grep -m1 -oP '4\.1\.\d')
+if [[ -z $latestv41 ]]; then latestv41=4.1.9; fi
+latestv42=$(curl -s https://github.com/qbittorrent/qBittorrent/releases | grep -m1 -oP '4\.2\.\d')
+if [[ -z $latestv41 ]]; then latestv42=4.2.5; fi
+latestv=$(curl -s https://github.com/qbittorrent/qBittorrent/releases | grep -m1 .tar.gz | grep -oP '\d.\d?.?\d')
+latestv=$(curl -s https://github.com/qbittorrent/qBittorrent/releases | grep -m1 .tar.gz | grep -oP '\d.\d?.?\d')
+export qbittorrent=${latestv}
+#whiptail_qbittorrent
+
 if ! skip_libtorrent_rasterbar; then
     whiptail_libtorrent_rasterbar
-    echo "Building libtorrent-rasterbar"; build_libtorrent_rasterbar
+    echo_progress_start "Building libtorrent-rasterbar"
+    build_libtorrent_rasterbar
+    echo_progress_done
 fi
 
-echo "Building qBittorrent"; build_qbittorrent
+echo_progress_start "Building qBittorrent"
+build_qbittorrent
+echo_progress_done
 qbtvnew=$(qbittorrent-nox --version | grep -oP '\d+\.\d+\.\d+')
 
 for user in "${users[@]}"; do
