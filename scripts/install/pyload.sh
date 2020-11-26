@@ -185,8 +185,9 @@ After=network.target
 
 [Service]
 User=${user}
+ExecStartPre=/usr/bin/killall pyload
 ExecStart=/opt/.venv/pyload/bin/python2 /opt/pyload/pyLoadCore.py --config=/opt/pyload
-ExecStop=-/bin/kill -HUP
+ExecStop=-/usr/bin/killall pyload
 WorkingDirectory=/opt/pyload
 Restart=on-failure
 
