@@ -121,7 +121,7 @@ webinterface - "Webinterface":
         ip host : "IP" = 0.0.0.0
         bool https : "Use HTTPS" = False
         int port : "Port" = 8712
-        str prefix : "Path Prefix" = 
+        str prefix : "Path Prefix" =
         builtin;threaded;fastcgi;lightweight server : "Server" = builtin
         modern;pyplex;classic template : "Template" = modern
 PYCONF
@@ -186,7 +186,9 @@ After=network.target
 [Service]
 User=${user}
 ExecStart=/opt/.venv/pyload/bin/python2 /opt/pyload/pyLoadCore.py --config=/opt/pyload
+ExecStop=-/bin/kill -HUP
 WorkingDirectory=/opt/pyload
+Restart=on-failure
 
 [Install]
 WantedBy=multi-user.target
