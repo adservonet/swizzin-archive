@@ -41,7 +41,7 @@ _os() {
   if [ ! -d /root/logs ]; then mkdir /root/logs ; fi
   export log=/root/logs/install.log
   # echo "Checking OS version and release ... "
-  if ! which lsb_release > /dev/null; then 
+  if ! which lsb_release > /dev/null; then
     apt-get -y -qq update >> ${log} 2>&1
     apt-get -y -qq install lsb-release >> ${log} 2>&1
   fi
@@ -68,18 +68,18 @@ function _preparation() {
     add-apt-repository multiverse >> ${log} 2>&1
     add-apt-repository restricted -u >> ${log} 2>&1
   fi
-  
+
   echo "Performing a system upgrade"
   apt-get -q -y update >> ${log} 2>&1
   apt-get -q -y upgrade >> ${log} 2>&1
 
   echo "Installing dependencies"
-  # this apt-get should be checked and handled if fails, otherwise the install borks. 
+  # this apt-get should be checked and handled if fails, otherwise the install borks.
   apt-get -y install whiptail git sudo curl wget lsof fail2ban apache2-utils vnstat tcl tcl-dev build-essential dirmngr apt-transport-https bc uuid-runtime jq net-tools fortune >> ${log} 2>&1
   nofile=$(grep "DefaultLimitNOFILE=500000" /etc/systemd/system.conf)
   if [[ ! "$nofile" ]]; then echo "DefaultLimitNOFILE=500000" >> /etc/systemd/system.conf; fi
   echo "Cloning swizzin repo to localhost"
-  git clone -b lxd https://github.com/illnesse/swizzin.git /etc/swizzin
+  git clone -b libtorrent_cleanup https://github.com/illnesse/swizzin.git /etc/swizzin
   ln -s /etc/swizzin/scripts/ /usr/local/bin/swizzin
   chmod -R 700 /etc/swizzin/scripts
   #shellcheck source=sources/functions/apt
@@ -149,9 +149,9 @@ function _adduser() {
   fi
   chmod 750 /home/${user}
   if grep ${user} /etc/sudoers.d/swizzin >/dev/null 2>&1 ; then echo "No sudoers modification made ... " ; else	echo "${user}	ALL=(ALL:ALL) ALL" >> /etc/sudoers.d/swizzin ; fi
-  
+
   echo "D /run/${user} 0750 ${user} ${user} -" >> /etc/tmpfiles.d/${user}.conf
-  
+
   systemd-tmpfiles /etc/tmpfiles.d/${user}.conf --create
 }
 
