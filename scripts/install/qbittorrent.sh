@@ -37,7 +37,7 @@ export qbittorrent=${latestv}
 #whiptail_qbittorrent
 check_client_compatibility
 if ! skip_libtorrent_rasterbar; then
-    #whiptail_libtorrent_rasterbar
+    whiptail_libtorrent_rasterbar
     echo_progress_start "Building libtorrent-rasterbar"
     build_libtorrent_rasterbar
     echo_progress_done "Build completed"
@@ -82,7 +82,7 @@ if [[ -f /install/.nginx.lock ]]; then
     echo_progress_start "Configuring nginx"
     bash /etc/swizzin/scripts/nginx/qbittorrent.sh
     systemctl reload nginx >> $log 2>&1
-    echo_progress_done
+    echo_progress_done 
 fi
 
 touch /install/.qbittorrent.lock
