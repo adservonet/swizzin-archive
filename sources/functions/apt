@@ -17,6 +17,19 @@ if [[ -z $log ]]; then export log="/srv/tools/logs/output.log"; fi
 ##############################################################################
 
 
+_apt_reset() {
+  echo "resetting apt -----------------------------------------------------------------------------"
+  sudo killall apt-get >> "${log}" 2>&1;
+  sudo killall apt >> "${log}" 2>&1;
+  sudo rm /var/lib/dpkg/lock > /dev/null  2>&1
+  sudo rm /var/lib/dpkg/lock-frontend > /dev/null  2>&1
+  sudo rm /var/cache/debconf/*.dat > /dev/null  2>&1
+  sudo rm /var/lib/apt/lists/lock > /dev/null  2>&1
+  sudo rm /var/cache/apt/archives/lock > /dev/null  2>&1
+  sudo rm /var/lib/dpkg/updates/* > /dev/null  2>&1
+}
+export -f _apt_reset
+
 # Checks arguments and exports variables to add functionality to rest of packages
 _process_apt_args() {
     # idiomatic parameter and option handling in sh
@@ -109,16 +122,15 @@ _check_dpkg_lock (){
         if lsof /var/lib/dpkg/lock >> $log 2>&1; then
             offender=$(lsof /var/lib/dpkg/lock | grep dpkg | awk '{ print $1 }')
             if [[ $_apt_ignore_errors != "true" ]]; then
-                echo_error "dpkg database is locked by $offender. Please try again later"
-                exit 1
+                echo_error "dpkg database is locked by $offender. Trying to reset"
+                _apt_reset
+                #exit 1
             else
                 echo_warn "dpkg database is locked by $offender."
-
             fi
         else
             echo_log_only "No dpkg locks found"
         fi
-
     fi
 }
 export -f _check_dpkg_lock

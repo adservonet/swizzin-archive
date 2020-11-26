@@ -127,18 +127,6 @@ function _clr() {
   fi
 }
 
-function _apt_reset() {
-  echo "resetting apt -----------------------------------------------------------------------------"
-  sudo killall apt-get >> "${log}" 2>&1;
-  sudo killall apt >> "${log}" 2>&1;
-  sudo rm /var/lib/dpkg/lock > /dev/null  2>&1
-  sudo rm /var/lib/dpkg/lock-frontend > /dev/null  2>&1
-  sudo rm /var/cache/debconf/*.dat > /dev/null  2>&1
-  sudo rm /var/lib/apt/lists/lock > /dev/null  2>&1
-  sudo rm /var/cache/apt/archives/lock > /dev/null  2>&1
-  sudo rm /var/lib/dpkg/updates/* > /dev/null  2>&1
-}
-
 function _update() {
   echo_progress_start "updating swizzin -----------------------------------------------------------------------------"
   _apt_reset
