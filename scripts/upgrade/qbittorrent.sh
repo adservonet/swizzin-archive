@@ -2,12 +2,6 @@
 # qBittorrent Installer for swizzin
 # Author: liara
 
-
-if [[ -f /tmp/.install.lock ]]; then
-  export log="/root/logs/install.log"
-else
-  export log="/root/logs/swizzin.log"
-fi
 # Source the required functions
 . /etc/swizzin/sources/functions/qbittorrent
 . /etc/swizzin/sources/functions/libtorrent

@@ -65,11 +65,6 @@ touch /install/.nzbhydra.lock
 echo "nzbhydra installation complete. " >> "${log}"  2>&1;
 }
 
-#if [[ -f /tmp/.install.lock ]]; then
-#  OUTTO="/root/logs/install.log"
-#else
-#  OUTTO="/root/logs/swizzin.log"
-#fi
 MASTER=$(cut -d: -f1 < /root/.master.info)
 _install
 _services
