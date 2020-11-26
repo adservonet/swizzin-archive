@@ -13,8 +13,8 @@
 #
 users=($(cut -d: -f1 < /etc/htpasswd))
 for u in ${users}; do
-  systemctl disable --now deluged@$u > /dev/null 2>&1
-  systemctl disable --now deluge-web@$u > /dev/null 2>&1
+  systemctl disable --now -q deluged@$u
+  systemctl disable --now -q deluge-web@$u
   rm -rf /home/${u}/.config/deluge
   rm -rf /home/${u}/dwatch
 done
@@ -25,15 +25,20 @@ apt_remove --purge deluge*
 
 if [[ -f /install/.nginx.lock ]]; then
   rm -f /etc/nginx/apps/deluge2.conf > /dev/null 2>&1
-  rm -f /etc/nginx/apps/dindex.conf > /dev/null 2>&1
-  rm -f /etc/nginx/conf.d/*.deluge.conf > /dev/null 2>&1
+  if [[ ! -f /install/.deluge.lock ]]; then
+	rm -f /etc/nginx/apps/dindex.conf > /dev/null 2>&1
+  	rm -f /etc/nginx/conf.d/*.deluge.conf > /dev/null 2>&1
+  fi
 fi
 
 rm -rf /usr/lib/python2.7/dist-packages/deluge*
 
 rm /install/.deluge2.lock
-rm /install/.delugeweb.lock
 
-if [[ ! -f /install/.qbittorrent.lock ]]; then
-    bash /etc/swizzin/scripts/remove/libtorrent.sh
+if [[ ! -f /install/.deluge.lock ]]; then
+	rm /install/.delugeweb.lock
+
+	if [[ ! -f /install/.qbittorrent.lock ]]; then
+	    bash /etc/swizzin/scripts/remove/libtorrent.sh
+	fi
 fi

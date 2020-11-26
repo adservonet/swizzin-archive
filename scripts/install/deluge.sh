@@ -30,8 +30,8 @@ function _dconf {
   elif $(command -v python3 > /dev/null 2>&1); then
     pythonversion=python3
   fi
-  DWP=$(python2 ${local_packages}/deluge.Userpass.py ${pass} ${DWSALT})
-  DUDID=$(python2 ${local_packages}/deluge.addHost.py)
+  DWP=$(${pythonversion} ${local_packages}/deluge.Userpass.py ${pass} ${DWSALT})
+  DUDID=$(${pythonversion} ${local_packages}/deluge.addHost.py)
   port=$(cat /home/seedit4me/.deluge_port)
   # -- Secondary awk command -- #
   #DPORT=$(awk -v min=59000 -v max=69024 'BEGIN{srand(); print int(min+rand()*(max-min+1))}')
@@ -313,7 +313,18 @@ if [[ -n $1 ]]; then
   exit 0
 fi
 
+#whiptail_deluge
+check_client_compatibility
+
+#export deluge=repo
+#export deluge=1.3-stable
+#export deluge=master
 export deluge=1.3-stable
+
+#export libtorrent=repo
+#export libtorrent=RC_1_0
+#export libtorrent=RC_1_1
+#export libtorrent=RC_1_2
 export libtorrent=RC_1_1
 
 if ! skip_libtorrent_rasterbar; then
