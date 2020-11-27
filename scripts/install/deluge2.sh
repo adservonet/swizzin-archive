@@ -326,7 +326,7 @@ export deluge=master
 #export libtorrent=RC_1_0
 #export libtorrent=RC_1_1
 #export libtorrent=RC_1_2
-export libtorrent=repo
+export libtorrent=RC_1_2
 
 if ! skip_libtorrent_rasterbar; then
     #whiptail_libtorrent_rasterbar

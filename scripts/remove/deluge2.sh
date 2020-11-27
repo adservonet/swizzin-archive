@@ -25,8 +25,8 @@ apt_remove --purge deluge*
 
 if [[ -f /install/.nginx.lock ]]; then
   rm -f /etc/nginx/apps/deluge.conf > /dev/null 2>&1
-	rm -f /etc/nginx/apps/dindex.conf > /dev/null 2>&1
-  	rm -f /etc/nginx/conf.d/*.deluge.conf > /dev/null 2>&1
+  rm -f /etc/nginx/apps/dindex.conf > /dev/null 2>&1
+  rm -f /etc/nginx/conf.d/*.deluge.conf > /dev/null 2>&1
 fi
 
 rm -rf /usr/lib/python2.7/dist-packages/deluge*
@@ -36,5 +36,5 @@ rm /install/.deluge2.lock
 rm /install/.delugeweb.lock
 
 if [[ ! -f /install/.qbittorrent.lock ]]; then
-	    bash /etc/swizzin/scripts/remove/libtorrent.sh
+	bash /etc/swizzin/scripts/remove/libtorrent.sh
 fi
