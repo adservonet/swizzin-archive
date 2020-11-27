@@ -105,7 +105,7 @@ fi
   export qbittorrent=${repov}
 
 #whiptail_qbittorrent
-check_client_compatibility
+#check_client_compatibility
 if ! skip_libtorrent_rasterbar; then
   	export libtorrent=RC_1_2
     #whiptail_libtorrent_rasterbar

@@ -315,7 +315,7 @@ if [[ -n $1 ]]; then
 fi
 
 #whiptail_deluge
-check_client_compatibility
+#check_client_compatibility
 
 #export deluge=repo
 #export deluge=1.3-stable
