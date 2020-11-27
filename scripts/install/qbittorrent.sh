@@ -56,12 +56,9 @@ for user in ${users[@]}; do
     echo_progress_start "Enabling qbittorrent for $user"
     qbittorrent_user_config ${user}
     systemctl enable -q --now qbittorrent@${user} 2>&1  | tee -a $log
+    systemctl start -q --now qbittorrent@${user} 2>&1  | tee -a $log
     echo_progress_done "Started qbt for $user"
 done
-
-
-systemctl enable qbittorrent >>  "${log}"  2>&1
-systemctl start qbittorrent >>  "${log}"  2>&1
 
 sleep 10
 
@@ -76,7 +73,10 @@ for user in ${users[@]}; do
 
 done
 
-systemctl restart qbittorrent >>  "${log}"  2>&1
+for user in ${users[@]}; do
+    systemctl restart -q --now qbittorrent@${user} 2>&1  | tee -a $log
+done
+
 
 if [[ -f /install/.nginx.lock ]]; then
     echo_progress_start "Configuring nginx"
