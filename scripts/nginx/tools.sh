@@ -64,6 +64,10 @@ location /log {
   if (\$request_method = OPTIONS ) {
 	add_header Content-Length 0;
 	add_header Content-Type text/plain;
+	add_header 'Access-Control-Allow-Origin' '*';
+	add_header 'Access-Control-Max-Age' '600';
+	add_header 'Access-Control-Allow-Headers' '*';
+	add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
 	return 200;
   }
 
