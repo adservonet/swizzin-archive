@@ -44,17 +44,17 @@ for u in "${users[@]}"; do
     systemctl start deluge-web@$u
   fi
   
-  if [[ ! -f /etc/nginx/conf.d/${u}.deluge2.conf ]]; then
+  if [[ ! -f /etc/nginx/conf.d/${u}.deluge.conf ]]; then
     #DWPORT=$(grep port /home/$u/.config/deluge/web.conf | cut -d: -f2| sed 's/ //g' | sed 's/,//g')
-    cat > /etc/nginx/conf.d/${u}.deluge2.conf <<DUPS
+    cat > /etc/nginx/conf.d/${u}.deluge.conf <<DUPS
 upstream $u.deluge {
-  server 127.0.0.1:10034;
+  server 127.0.0.1:10033;
 }
 DUPS
   fi
 
-  if [[ ! -f /etc/nginx/apps/deluge2.conf ]]; then
-    cat > /etc/nginx/apps/deluge2.conf <<'DRP'
+  if [[ ! -f /etc/nginx/apps/deluge.conf ]]; then
+    cat > /etc/nginx/apps/deluge.conf <<'DRP'
 location /deluge {
   return 301 /deluge/;
 }

@@ -154,7 +154,7 @@ cat > /home/${u}/.config/deluge/web.conf <<DWC
   "file": 1,
   "format": 1
 }{
-  "port": 10034,
+  "port": 10033,
   "enabled_plugins": [],
   "pwd_sha1": "${DWP}",
   "theme": "gray",
@@ -289,7 +289,7 @@ if [[ -f /install/.nginx.lock ]]; then
   echo_progress_done "nginx configured"
 fi
 
-  touch /install/.deluge2.lock
+  touch /install/.deluge.lock
   touch /install/.delugeweb.lock
 }
 
