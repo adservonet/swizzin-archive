@@ -43,7 +43,7 @@ fi
 systemctl reload nginx
 
 
-return 0;
+exit 0;
 #-------------------------------------
 
 
@@ -61,7 +61,7 @@ location /qbittorrent.downloads {
 
   location ~* \.php\$ {
 
-  } 
+  }
 }
 DIN
 fi

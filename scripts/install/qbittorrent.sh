@@ -58,13 +58,13 @@ if [[ -f /install/.nginx.lock ]]; then
     echo_progress_start "Configuring nginx"
     bash /etc/swizzin/scripts/nginx/qbittorrent.sh
     systemctl reload nginx >> $log 2>&1
-    echo_progress_done 
+    echo_progress_done
 fi
 
 touch /install/.qbittorrent.lock
 
 
-return 0;
+exit 0;
 #-------------------------------------
 
 
