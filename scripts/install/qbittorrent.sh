@@ -24,7 +24,6 @@ if [[ -n $1 ]]; then
 fi
 
   . /etc/swizzin/sources/functions/apt
-  codename=$(lsb_release -cs)
   repov=$(get_candidate_version qbittorrent-nox)
   releases=$(git ls-remote -t --refs https://github.com/qbittorrent/qBittorrent.git | awk '{sub("refs/tags/release-", ""); print $2 }' | sort -r)
 
@@ -32,7 +31,7 @@ fi
   latestv42=$(echo "$releases" | grep -m1 -oP '4\.2\.\d?.?\d')
   latestv=$(echo "$releases" | grep -m1 -oP '\d.\d?.?\d?.?\d')
 
-  export qbittorrent=${latestv}
+  export qbittorrent=${repov}
 
 #whiptail_qbittorrent
 check_client_compatibility
