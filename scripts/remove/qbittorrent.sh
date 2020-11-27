@@ -10,7 +10,7 @@ userdel -r qbittorrent-nox
 rm -rf /etc/nginx/apps/qbittorrent.conf
 rm -rf /install/.qbittorrent.lock
 
-return
+return 0;
 #-------------------------------------
 
 . /etc/swizzin/sources/functions/utils

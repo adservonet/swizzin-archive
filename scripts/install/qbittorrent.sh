@@ -64,7 +64,7 @@ fi
 touch /install/.qbittorrent.lock
 
 
-return
+return 0;
 #-------------------------------------
 
 

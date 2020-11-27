@@ -43,7 +43,7 @@ fi
 systemctl reload nginx
 
 
-return
+return 0;
 #-------------------------------------
 
 
