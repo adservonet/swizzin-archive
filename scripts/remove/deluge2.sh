@@ -32,6 +32,7 @@ fi
 rm -rf /usr/lib/python2.7/dist-packages/deluge*
 
 rm /install/.deluge.lock
+rm /install/.deluge2.lock
 rm /install/.delugeweb.lock
 
 if [[ ! -f /install/.qbittorrent.lock ]]; then

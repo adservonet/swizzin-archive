@@ -290,6 +290,7 @@ if [[ -f /install/.nginx.lock ]]; then
 fi
 
   touch /install/.deluge.lock
+  touch /install/.deluge2.lock
   touch /install/.delugeweb.lock
 }
 
