@@ -1,17 +1,18 @@
 #!/bin/bash
 
-function whiptail_qbittorrent () {
+function whiptail_qbittorrent() {
   if [[ -z $qbittorrent ]]; then
     . /etc/swizzin/sources/functions/apt
     codename=$(lsb_release -cs)
     repov=$(get_candidate_version qbittorrent-nox)
-    latestv41=$(curl -s https://github.com/qbittorrent/qBittorrent/releases | grep -m1 -oP '4\.1\.\d')
-    if [[ -z $latestv41 ]]; then latestv41=4.1.9; fi
-    latestv42=$(curl -s https://github.com/qbittorrent/qBittorrent/releases | grep -m1 -oP '4\.2\.\d')
-    if [[ -z $latestv41 ]]; then latestv42=4.2.5; fi
-    latestv=$(curl -s https://github.com/qbittorrent/qBittorrent/releases | grep -m1 .tar.gz | grep -oP '\d.\d?.?\d')
+		releases=$(git ls-remote -t --refs https://github.com/qbittorrent/qBittorrent.git | awk '{sub("refs/tags/release-", ""); print $2 }' | sort -r)
+
+		latestv41=$(echo "$releases" | grep -m1 -oP '4\.1\.\d?.?\d')
+		latestv42=$(echo "$releases" | grep -m1 -oP '4\.2\.\d?.?\d')
+		latestv=$(echo "$releases" | grep -m1 -oP '\d.\d?.?\d?.?\d')
+
     case ${codename} in
-    "xenial"|"stretch")
+			"xenial" | "stretch")
         function=$(whiptail --title "Install Software" --menu "Choose a qBittorrent version:" --ok-button "Continue" --nocancel 12 50 3 \
                 "Repo" "(${repov})" \
                 "4.1" "(${latestv41})" 3>&1 1>&2 2>&3)
@@ -83,7 +84,7 @@ function build_qbittorrent() {
 
 function qbittorrent_service() {
     if [[ ! -f /etc/systemd/system/qbittorent@.service ]]; then
-    cat > /etc/systemd/system/qbittorrent@.service <<EOQBS
+		cat > /etc/systemd/system/qbittorrent@.service << EOQBS
 [Unit]
 Description=qBittorrent noX for %i
 After=network.target
@@ -122,7 +123,7 @@ function qbittorrent_user_config() {
     chown ${user}: /home/${user}/torrents/qbittorrent
     chown $user: /home/${user}/.config
     chown $user: /home/${user}/.config/qBittorrent
-    cat > /home/${user}/.config/qBittorrent/qBittorrent.conf<<QBTCONF
+	cat > /home/${user}/.config/qBittorrent/qBittorrent.conf << QBTCONF
 [BitTorrent]
 Session\DisableAutoTMMByDefault=false 
 
