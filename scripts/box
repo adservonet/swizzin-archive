@@ -480,7 +480,7 @@ function _nukeovh() {
 normal=$(tput sgr0)
 git_hash=$(git --git-dir=/etc/swizzin/.git rev-parse --short HEAD)
 
-if [[ $2 == "chpasswd" ]]; then
+if [[ $1 == "chpasswd" ]]; then
   echo_log_only ">>>> \`box chpasswd\`, \tGIT HEAD @ $git_hash"
 else
   echo_log_only ">>>> \`box $*\`, \tGIT HEAD @ $git_hash"
