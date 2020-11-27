@@ -55,6 +55,17 @@ location ~ \.php$
   }
 }
 
+
+add_header 'Access-Control-Allow-Origin' '*';
+add_header 'Access-Control-Max-Age' '600';
+add_header 'Access-Control-Allow-Headers' '*';
+add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+
+#add_header 'Access-Control-Allow-Credentials: true');
+#add_header 'Access-Control-Allow-Headers' 'AccountKey,x-requested-with, x-csrf-token, Content-Type, origin, authorization, accept, client-security-token, host, date, cookie, cookie2, X-CSRF-TOKEN, X-Requested-With, Sec-Fetch-Site, Sec-Fetch-Mode, Sec-Fetch-Dest, DNT';
+#add_header 'Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+
+
 PAN
 
 cat > /etc/sudoers.d/tools <<SUD
