@@ -65,12 +65,15 @@ systemctl start qbittorrent >>  "${log}"  2>&1
 
 sleep 10
 
-sed -i -e 's/Connection\\PortRangeMin=.*/Connection\\PortRangeMin='$port' /g' /home/qbittorrent-nox/.config/qBittorrent/qBittorrent.conf
-echo "Bittorrent\DHT=false" >> /home/qbittorrent-nox/.config/qBittorrent/qBittorrent.conf
-echo "Bittorrent\LSD=false" >> /home/qbittorrent-nox/.config/qBittorrent/qBittorrent.conf
-echo "Bittorrent\PeX=false" >> /home/qbittorrent-nox/.config/qBittorrent/qBittorrent.conf
-echo "WebUI\LocalHostAuth=false" >> /home/qbittorrent-nox/.config/qBittorrent/qBittorrent.conf
-echo "Downloads\SavePath=/home/seedit4me/torrents/qbittorrent/" >> /home/qbittorrent-nox/.config/qBittorrent/qBittorrent.conf
+for user in ${users[@]}; do
+  sed -i -e 's/Connection\\PortRangeMin=.*/Connection\\PortRangeMin='$port' /g' /etc/nginx/conf.d/${user}.qbittorrent.conf
+  echo "Bittorrent\DHT=false" >> /etc/nginx/conf.d/${user}.qbittorrent.conf
+  echo "Bittorrent\LSD=false" >> /etc/nginx/conf.d/${user}.qbittorrent.conf
+  echo "Bittorrent\PeX=false" >> /etc/nginx/conf.d/${user}.qbittorrent.conf
+  echo "WebUI\LocalHostAuth=false" >> /etc/nginx/conf.d/${user}.qbittorrent.conf
+  echo "Downloads\SavePath=/home/seedit4me/torrents/qbittorrent/" >> /etc/nginx/conf.d/${user}.qbittorrent.conf
+done
+
 systemctl restart qbittorrent >>  "${log}"  2>&1
 
 if [[ -f /install/.nginx.lock ]]; then
