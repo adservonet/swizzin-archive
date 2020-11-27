@@ -128,7 +128,7 @@ function _clr() {
 }
 
 function _update() {
-  echo_progress_start "updating swizzin -----------------------------------------------------------------------------"
+  echo_progress_start "Updating swizzin"
   _apt_reset
   apt_upgrade >> "${log}"  2>&1;
 
@@ -146,7 +146,7 @@ function _update() {
   for f in /etc/swizzin/scripts/update/*; do
     bash "$f";
   done
-  echo_progress_done "update done -----------------------------------------------------------------------------"
+  echo_progress_done "Update done"
 }
 
 function _upgrade() {
