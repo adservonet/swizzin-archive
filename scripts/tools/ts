@@ -1,12 +1,12 @@
 #!/bin/bash
 
-IFACE=`/usr/bin/sudo ip route | grep default | sed -e "s/^.*dev.//" -e "s/.proto.*//" | awk '{print $1}'`
+IFACE=$(/usr/bin/sudo ip route | grep default | sed -e "s/^.*dev.//" -e "s/.proto.*//" | awk '{print $1}')
 
 
 function _tc() {
   vnstat -u
-  TOTALSRX=`vnstat --dumpdb -i $IFACE | grep 'totalrx;' | cut -d';' -f2`
-  TOTALSTX=`vnstat --dumpdb -i $IFACE | grep 'totaltx;' | cut -d';' -f2`
+  TOTALSRX=$(vnstat --dumpdb -i $IFACE | grep 'totalrx;' | cut -d';' -f2)
+  TOTALSTX=$(vnstat --dumpdb -i $IFACE | grep 'totaltx;' | cut -d';' -f2)
 
   TOTALSRXMB=0
   TOTALSTXMB=0
