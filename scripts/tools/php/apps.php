@@ -5,6 +5,7 @@ include('cors.php');
 require 'vendor/autoload.php';
 
 $systemCtl = new SystemCtl\SystemCtl();
+$systemCtl::setTimeout(10);
 //$systemCtl->setBinary('/bin/systemctl');
 //$systemCtl->setTimeout(10);
 
