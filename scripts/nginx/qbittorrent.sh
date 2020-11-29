@@ -3,7 +3,7 @@
 MASTER=$(cut -d: -f1 < /root/.master.info)
 
 if [[ ! -f /etc/nginx/apps/qbittorrent.conf ]]; then
-  cat > /etc/nginx/apps/qbittorrent.conf <<CFG
+	cat > /etc/nginx/apps/qbittorrent.conf << CFG
 
 location ^~ /qbittorrent/api {
     auth_request off;
@@ -42,10 +42,8 @@ fi
 
 systemctl reload nginx
 
-
-exit 0;
+exit 0
 #-------------------------------------
-
 
 # nginx setup for qbittorrent
 . /etc/swizzin/sources/functions/utils

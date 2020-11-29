@@ -10,13 +10,12 @@ log="/install/.proftpd.log"
 
 apt_remove vsftpd
 
-apt_install debconf-utils  >>  "${log}"  2>&1
-echo "proftpd-basic shared/proftpd/inetd_or_standalone select standalone" | debconf-set-selections  >>  "${log}"  2>&1
+apt_install debconf-utils >> "${log}" 2>&1
+echo "proftpd-basic shared/proftpd/inetd_or_standalone select standalone" | debconf-set-selections >> "${log}" 2>&1
 
-apt_install proftpd-basic  >>  "${log}"  2>&1
+apt_install proftpd-basic >> "${log}" 2>&1
 
-
-cat > /etc/proftpd/proftpd.conf <<PFC
+cat > /etc/proftpd/proftpd.conf << PFC
 
 Include /etc/proftpd/modules.conf
 

@@ -5,7 +5,7 @@
 users=($(cut -d: -f1 < /etc/htpasswd))
 
 if [[ ! -f /etc/nginx/apps/nzbget.conf ]]; then
-  cat > /etc/nginx/apps/nzbget.conf <<'NRP'
+	cat > /etc/nginx/apps/nzbget.conf << 'NRP'
 location /nzbget {
   return 301 /nzbget/;
 }
@@ -24,25 +24,25 @@ master=$(cut -d: -f1 < /root/.master.info)
 pass=$(cut -d: -f2 < /root/.master.info)
 
 for u in "${users[@]}"; do
-  isactive=$(systemctl is-active nzbget@$u)
-  sed -i "s/SecureControl=yes/SecureControl=no/g" /home/$u/nzbget/nzbget.conf
-  sed -i "s/ControlIP=0.0.0.0/ControlIP=127.0.0.1/g" /home/$u/nzbget/nzbget.conf
-  sed -i "s/ControlUsername=nzbget/ControlUsername="$master"/g" /home/$u/nzbget/nzbget.conf
-  sed -i "s/ControlPassword=tegbzn6789/ControlPassword="$pass"/g" /home/$u/nzbget/nzbget.conf
-  sed -i "s/RestrictedUsername=/RestrictedUsername="$master"/g" /home/$u/nzbget/nzbget.conf
-  sed -i "s/RestrictedPassword=/RestrictedPassword="$pass"/g" /home/$u/nzbget/nzbget.conf
-#  sed -i "s/FormAuth=no/FormAuth=yes/g" /home/$u/nzbget/nzbget.conf
+	isactive=$(systemctl is-active nzbget@$u)
+	sed -i "s/SecureControl=yes/SecureControl=no/g" /home/$u/nzbget/nzbget.conf
+	sed -i "s/ControlIP=0.0.0.0/ControlIP=127.0.0.1/g" /home/$u/nzbget/nzbget.conf
+	sed -i "s/ControlUsername=nzbget/ControlUsername="$master"/g" /home/$u/nzbget/nzbget.conf
+	sed -i "s/ControlPassword=tegbzn6789/ControlPassword="$pass"/g" /home/$u/nzbget/nzbget.conf
+	sed -i "s/RestrictedUsername=/RestrictedUsername="$master"/g" /home/$u/nzbget/nzbget.conf
+	sed -i "s/RestrictedPassword=/RestrictedPassword="$pass"/g" /home/$u/nzbget/nzbget.conf
+	#  sed -i "s/FormAuth=no/FormAuth=yes/g" /home/$u/nzbget/nzbget.conf
 
-  if [[ ! -f /etc/nginx/conf.d/${u}.nzbget.conf ]]; then
-    NZBPORT=$(grep ControlPort /home/$u/nzbget/nzbget.conf | cut -d= -f2)
-    cat > /etc/nginx/conf.d/${u}.nzbget.conf <<NZBUPS
+	if [[ ! -f /etc/nginx/conf.d/${u}.nzbget.conf ]]; then
+		NZBPORT=$(grep ControlPort /home/$u/nzbget/nzbget.conf | cut -d= -f2)
+		cat > /etc/nginx/conf.d/${u}.nzbget.conf << NZBUPS
 upstream $u.nzbget {
   server 127.0.0.1:$NZBPORT;
 }
 NZBUPS
-  fi
+	fi
 
- if [[ $isactive == "active" ]]; then
-    systemctl restart nzbget@$u
-  fi
+	if [[ $isactive == "active" ]]; then
+		systemctl restart nzbget@$u
+	fi
 done

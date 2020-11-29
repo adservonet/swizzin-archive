@@ -3,19 +3,19 @@
 # Secure OpenVPN server installer for Debian, Ubuntu, CentOS, Fedora and Arch Linux
 # https://github.com/angristan/openvpn-install
 
-function isRoot () {
+function isRoot() {
 	if [ "$EUID" -ne 0 ]; then
 		return 1
 	fi
 }
 
-function tunAvailable () {
+function tunAvailable() {
 	if [ ! -e /dev/net/tun ]; then
 		return 1
 	fi
 }
 
-function checkOS () {
+function checkOS() {
 	if [[ -e /etc/debian_version ]]; then
 		OS="debian"
 		source /etc/os-release
@@ -34,7 +34,7 @@ function checkOS () {
 					exit 1
 				fi
 			fi
-		elif [[ "$ID" == "ubuntu" ]];then
+		elif [[ "$ID" == "ubuntu" ]]; then
 			OS="ubuntu"
 			if [[ ! $VERSION_ID =~ (16.04|18.04) ]]; then
 				echo "⚠️ Your version of Ubuntu is not supported."
@@ -75,7 +75,7 @@ function checkOS () {
 	fi
 }
 
-function initialCheck () {
+function initialCheck() {
 	if ! isRoot; then
 		echo "Sorry, you need to run this as root"
 		exit 1
@@ -87,11 +87,11 @@ function initialCheck () {
 	checkOS
 }
 
-function installUnbound () {
+function installUnbound() {
 	if [[ ! -e /etc/unbound/unbound.conf ]]; then
 
 		if [[ "$OS" =~ (debian|ubuntu) ]]; then
-		  apt_install unbound
+			apt_install unbound
 
 			# Configuration
 			echo 'interface: 10.8.0.1
@@ -148,7 +148,7 @@ prefetch: yes' >> /etc/unbound/unbound.conf
 	prefetch: yes' > /etc/unbound/unbound.conf
 		fi
 
-		if [[ ! "$OS" =~ (fedora|centos) ]];then
+		if [[ ! "$OS" =~ (fedora|centos) ]]; then
 			# DNS Rebinding fix
 			echo "private-address: 10.0.0.0/8
 private-address: 172.16.0.0/12
@@ -180,29 +180,29 @@ private-address: 127.0.0.0/8
 private-address: ::ffff:0:0/96' > /etc/unbound/openvpn.conf
 	fi
 
-		systemctl enable unbound
-		systemctl restart unbound
+	systemctl enable unbound
+	systemctl restart unbound
 }
 
-function installQuestions () {
+function installQuestions() {
 	# Detect public IPv4 address and pre-fill for the user
 	IP=$(ip addr | grep 'inet' | grep -v inet6 | grep -vE '127\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | grep -oE '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -1)
 	PUBLICIP=$(curl -s http://ipv4.icanhazip.com)
-  IPV6_SUPPORT="n"
-  PORT="1194"
+	IPV6_SUPPORT="n"
+	PORT="1194"
 	PROTOCOL="tcp"
-  DNS="3"
-  CIPHER="AES-128-GCM"
-  CERT_TYPE="1" # ECDSA
-  CERT_CURVE="prime256v1"
-  CC_CIPHER="TLS-ECDHE-ECDSA-WITH-AES-128-GCM-SHA256"
-  DH_TYPE="1" # ECDH
-  DH_CURVE="prime256v1"
-  HMAC_ALG="SHA256"
-  TLS_SIG="1" # tls-crypt
+	DNS="3"
+	CIPHER="AES-128-GCM"
+	CERT_TYPE="1" # ECDSA
+	CERT_CURVE="prime256v1"
+	CC_CIPHER="TLS-ECDHE-ECDSA-WITH-AES-128-GCM-SHA256"
+	DH_TYPE="1" # ECDH
+	DH_CURVE="prime256v1"
+	HMAC_ALG="SHA256"
+	TLS_SIG="1" # tls-crypt
 }
 
-function installOpenVPN () {
+function installOpenVPN() {
 	# Run setup questions first
 	installQuestions
 
@@ -267,17 +267,23 @@ function installOpenVPN () {
 		1)
 			echo "set_var EASYRSA_ALGO ec" > vars
 			echo "set_var EASYRSA_CURVE $CERT_CURVE" >> vars
-		;;
+			;;
 		2)
 			echo "set_var EASYRSA_KEY_SIZE $RSA_KEY_SIZE" > vars
-		;;
+			;;
 	esac
 
 	# Generate a random, alphanumeric identifier of 16 characters for CN and one for server name
-	SERVER_CN="cn_$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 16; echo "")"
-#	SERVER_CN="cn_$(head /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)"
-	SERVER_NAME="server_$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 16; echo "")"
-#	SERVER_NAME="server_$(head /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)"
+	SERVER_CN="cn_$(
+		head /dev/urandom | tr -dc A-Za-z0-9 | head -c 16
+		echo ""
+	)"
+	#	SERVER_CN="cn_$(head /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)"
+	SERVER_NAME="server_$(
+		head /dev/urandom | tr -dc A-Za-z0-9 | head -c 16
+		echo ""
+	)"
+	#	SERVER_NAME="server_$(head /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)"
 	echo "set_var EASYRSA_REQ_CN $SERVER_CN" >> vars
 	# Create the PKI, set up the CA, the DH params and the server certificate
 	./easyrsa init-pki
@@ -295,11 +301,11 @@ function installOpenVPN () {
 		1)
 			# Generate tls-crypt key
 			openvpn --genkey --secret /etc/openvpn/tls-crypt.key
-		;;
+			;;
 		2)
 			# Generate tls-auth key
 			openvpn --genkey --secret /etc/openvpn/tls-auth.key
-		;;
+			;;
 	esac
 
 	# Move all the generated files
@@ -343,46 +349,46 @@ ifconfig-pool-persist ipp.txt" >> /etc/openvpn/server.conf
 			grep -v '#' $RESOLVCONF | grep 'nameserver' | grep -E -o '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | while read -r line; do
 				echo "push \"dhcp-option DNS $line\"" >> /etc/openvpn/server.conf
 			done
-		;;
+			;;
 		2)
 			echo 'push "dhcp-option DNS 10.8.0.1"' >> /etc/openvpn/server.conf
-		;;
+			;;
 		3) # Cloudflare
 			echo 'push "dhcp-option DNS 1.0.0.1"' >> /etc/openvpn/server.conf
 			echo 'push "dhcp-option DNS 1.1.1.1"' >> /etc/openvpn/server.conf
-		;;
+			;;
 		4) # Quad9
 			echo 'push "dhcp-option DNS 9.9.9.9"' >> /etc/openvpn/server.conf
 			echo 'push "dhcp-option DNS 149.112.112.112"' >> /etc/openvpn/server.conf
-		;;
+			;;
 		5) # Quad9 uncensored
 			echo 'push "dhcp-option DNS 9.9.9.10"' >> /etc/openvpn/server.conf
 			echo 'push "dhcp-option DNS 149.112.112.10"' >> /etc/openvpn/server.conf
-		;;
+			;;
 		6) # FDN
 			echo 'push "dhcp-option DNS 80.67.169.40"' >> /etc/openvpn/server.conf
 			echo 'push "dhcp-option DNS 80.67.169.12"' >> /etc/openvpn/server.conf
-		;;
+			;;
 		7) # DNS.WATCH
 			echo 'push "dhcp-option DNS 84.200.69.80"' >> /etc/openvpn/server.conf
 			echo 'push "dhcp-option DNS 84.200.70.40"' >> /etc/openvpn/server.conf
-		;;
+			;;
 		8) # OpenDNS
 			echo 'push "dhcp-option DNS 208.67.222.222"' >> /etc/openvpn/server.conf
 			echo 'push "dhcp-option DNS 208.67.220.220"' >> /etc/openvpn/server.conf
-		;;
+			;;
 		9) # Google
 			echo 'push "dhcp-option DNS 8.8.8.8"' >> /etc/openvpn/server.conf
 			echo 'push "dhcp-option DNS 8.8.4.4"' >> /etc/openvpn/server.conf
-		;;
+			;;
 		10) # Yandex Basic
 			echo 'push "dhcp-option DNS 77.88.8.8"' >> /etc/openvpn/server.conf
 			echo 'push "dhcp-option DNS 77.88.8.1"' >> /etc/openvpn/server.conf
-		;;
+			;;
 		11) # AdGuard DNS
 			echo 'push "dhcp-option DNS 176.103.130.130"' >> /etc/openvpn/server.conf
 			echo 'push "dhcp-option DNS 176.103.130.131"' >> /etc/openvpn/server.conf
-		;;
+			;;
 	esac
 	echo 'push "redirect-gateway def1 bypass-dhcp"' >> /etc/openvpn/server.conf
 
@@ -395,7 +401,7 @@ push "route-ipv6 2000::/3"
 push "redirect-gateway ipv6"' >> /etc/openvpn/server.conf
 	fi
 
-	if [[ $COMPRESSION_ENABLED == "y"  ]]; then
+	if [[ $COMPRESSION_ENABLED == "y" ]]; then
 		echo "compress $COMPRESSION_ALG" >> /etc/openvpn/server.conf
 	fi
 
@@ -409,10 +415,10 @@ push "redirect-gateway ipv6"' >> /etc/openvpn/server.conf
 	case $TLS_SIG in
 		1)
 			echo "tls-crypt tls-crypt.key 0" >> /etc/openvpn/server.conf
-		;;
+			;;
 		2)
 			echo "tls-auth tls-auth.key 0" >> /etc/openvpn/server.conf
-		;;
+			;;
 	esac
 
 	echo "crl-verify crl.pem
@@ -440,7 +446,7 @@ verb 3" >> /etc/openvpn/server.conf
 	sysctl --system
 
 	# If SELinux is enabled and a custom port was selected, we need this
-	if hash sestatus 2>/dev/null; then
+	if hash sestatus 2> /dev/null; then
 		if sestatus | grep "Current mode" | grep -qs "enforcing"; then
 			if [[ "$PORT" != '1194' ]]; then
 				semanage port -a -t openvpn_port_t -p "$PROTOCOL" "$PORT"
@@ -458,7 +464,7 @@ verb 3" >> /etc/openvpn/server.conf
 		# Another workaround to keep using /etc/openvpn/
 		sed -i 's|/etc/openvpn/server|/etc/openvpn|' /etc/systemd/system/openvpn-server@.service
 		# On fedora, the service hardcodes the ciphers. We want to manage the cipher ourselves, so we remove it from the service
-		if [[ "$OS" == "fedora" ]];then
+		if [[ "$OS" == "fedora" ]]; then
 			sed -i 's|--cipher AES-256-GCM --ncp-ciphers AES-256-GCM:AES-128-GCM:AES-256-CBC:AES-128-CBC:BF-CBC||' /etc/systemd/system/openvpn-server@.service
 		fi
 
@@ -484,7 +490,7 @@ verb 3" >> /etc/openvpn/server.conf
 		systemctl enable openvpn@server
 	fi
 
-	if [[ $DNS == 2 ]];then
+	if [[ $DNS == 2 ]]; then
 		installUnbound
 	fi
 
@@ -573,9 +579,9 @@ tls-cipher $CC_CIPHER
 setenv opt block-outside-dns # Prevent Windows 10 DNS leak
 verb 3" >> /etc/openvpn/client-template.txt
 
-if [[ $COMPRESSION_ENABLED == "y"  ]]; then
-	echo "compress $COMPRESSION_ALG" >> /etc/openvpn/client-template.txt
-fi
+	if [[ $COMPRESSION_ENABLED == "y" ]]; then
+		echo "compress $COMPRESSION_ALG" >> /etc/openvpn/client-template.txt
+	fi
 
 	# Generate the custom client.ovpn
 	CLIENT="seedit4me-user1"
@@ -591,30 +597,30 @@ fi
 	echo "If you want to add more clients, you simply need to run this script another time!"
 }
 
-function newClient () {
+function newClient() {
 
-  PASS="1"
+	PASS="1"
 
 	cd /etc/openvpn/easy-rsa/ || return
 	case $PASS in
 		1)
 			./easyrsa build-client-full "$CLIENT" nopass
-		;;
+			;;
 		2)
-		echo "⚠️ You will be asked for the client password below ⚠️"
+			echo "⚠️ You will be asked for the client password below ⚠️"
 			./easyrsa build-client-full "$CLIENT"
-		;;
+			;;
 	esac
 
 	# Home directory of the user, where the client configuration (.ovpn) will be written
-#	if [ -e "/home/seedit4me" ]; then  # if $1 is a user name
-#		homeDir="/home/$CLIENT"
-#	elif [ "${SUDO_USER}" ]; then   # if not, use SUDO_USER
-#		homeDir="/home/${SUDO_USER}"
-#	else  # if not SUDO_USER, use /root
-#		homeDir="/root"
-#	fi
-  homeDir="/home/seedit4me"
+	#	if [ -e "/home/seedit4me" ]; then  # if $1 is a user name
+	#		homeDir="/home/$CLIENT"
+	#	elif [ "${SUDO_USER}" ]; then   # if not, use SUDO_USER
+	#		homeDir="/home/${SUDO_USER}"
+	#	else  # if not SUDO_USER, use /root
+	#		homeDir="/root"
+	#	fi
+	homeDir="/home/seedit4me"
 
 	# Determine if we use tls-auth or tls-crypt
 	if grep -qs "^tls-crypt" /etc/openvpn/server.conf; then
@@ -643,13 +649,13 @@ function newClient () {
 				echo "<tls-crypt>"
 				cat /etc/openvpn/tls-crypt.key
 				echo "</tls-crypt>"
-			;;
+				;;
 			2)
 				echo "key-direction 1"
 				echo "<tls-auth>"
 				cat /etc/openvpn/tls-auth.key
 				echo "</tls-auth>"
-			;;
+				;;
 		esac
 	} >> "$homeDir/$CLIENT.ovpn"
 
@@ -658,7 +664,7 @@ function newClient () {
 	echo "Download the .ovpn file and import it in your OpenVPN client."
 }
 
-function revokeClient () {
+function revokeClient() {
 	NUMBEROFCLIENTS=$(tail -n +2 /etc/openvpn/easy-rsa/pki/index.txt | grep -c "^V")
 	if [[ "$NUMBEROFCLIENTS" = '0' ]]; then
 		echo ""
@@ -694,7 +700,7 @@ function revokeClient () {
 	echo "Certificate for client $CLIENT revoked."
 }
 
-function removeUnbound () {
+function removeUnbound() {
 	# Remove OpenVPN-related config
 	sed -i 's|include: \/etc\/unbound\/openvpn.conf||' /etc/unbound/unbound.conf
 	rm /etc/unbound/openvpn.conf
@@ -711,7 +717,7 @@ function removeUnbound () {
 		systemctl stop unbound
 
 		if [[ "$OS" =~ (debian|ubuntu) ]]; then
-		  apt_remove --purge unbound
+			apt_remove --purge unbound
 		elif [[ "$OS" = 'arch' ]]; then
 			pacman --noconfirm -R unbound
 		elif [[ "$OS" = 'centos' ]]; then
@@ -730,7 +736,7 @@ function removeUnbound () {
 	fi
 }
 
-function removeOpenVPN () {
+function removeOpenVPN() {
 	echo ""
 	read -rp "Do you really want to remove OpenVPN? [y/n]: " -e -i n REMOVE
 	if [[ "$REMOVE" = 'y' ]]; then
@@ -763,7 +769,7 @@ function removeOpenVPN () {
 		rm /etc/iptables/rm-openvpn-rules.sh
 
 		# SELinux
-		if hash sestatus 2>/dev/null; then
+		if hash sestatus 2> /dev/null; then
 			if sestatus | grep "Current mode" | grep -qs "enforcing"; then
 				if [[ "$PORT" != '1194' ]]; then
 					semanage port -d -t openvpn_port_t -p udp "$PORT"
@@ -772,8 +778,8 @@ function removeOpenVPN () {
 		fi
 
 		if [[ "$OS" =~ (debian|ubuntu) ]]; then
-		  apt_remove --purge openvpn
-			if [[ -e /etc/apt/sources.list.d/openvpn.list ]];then
+			apt_remove --purge openvpn
+			if [[ -e /etc/apt/sources.list.d/openvpn.list ]]; then
 				rm /etc/apt/sources.list.d/openvpn.list
 				apt_update
 			fi
@@ -805,7 +811,7 @@ function removeOpenVPN () {
 	fi
 }
 
-function manageMenu () {
+function manageMenu() {
 	clear
 	echo "Welcome to OpenVPN-install!"
 	echo "The git repository is available at: https://github.com/angristan/openvpn-install"
@@ -824,16 +830,16 @@ function manageMenu () {
 	case $MENU_OPTION in
 		1)
 			newClient
-		;;
+			;;
 		2)
 			revokeClient
-		;;
+			;;
 		3)
 			removeOpenVPN
-		;;
+			;;
 		4)
 			exit 0
-		;;
+			;;
 	esac
 }
 

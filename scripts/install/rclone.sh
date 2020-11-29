@@ -17,7 +17,6 @@
 #   including (via compiler) GPL-licensed code must also be made available
 #   under the GPL along with build & install instructions.
 
-
 # Install fuse
 apt_install fuse
 sed -i -e 's/#user_allow_other/user_allow_other/' /etc/fuse.conf
@@ -27,14 +26,14 @@ echo_progress_start "Downloading and installing rclone"
 wget -q https://rclone.org/install.sh -O /tmp/rcloneinstall.sh >> $log 2>&1
 
 # Make sure rclone downloads and installs without error before proceeding
-if ! bash /tmp/rcloneinstall.sh ; then
-  echo_error "Rclone installer failed"
-  exit 1
+if ! bash /tmp/rcloneinstall.sh; then
+	echo_error "Rclone installer failed"
+	exit 1
 fi
 
 user=$(cut -d: -f1 < /root/.master.info)
 passwd=$(cut -d: -f2 < /root/.master.info)
-cat >/etc/systemd/system/rclone@.service<<EOF
+cat > /etc/systemd/system/rclone@.service << EOF
 [Unit]
 Description=rclonemount
 After=network.target
@@ -60,11 +59,10 @@ touch /install/.rclone.lock
 echo_success "Rclone installed"
 #echo_info "Setup Rclone remote named \"gdrive\" And run sudo systemctl start rclone@username.service"
 
-  if [[ -f /install/.nginx.lock ]]; then
-    bash /usr/local/bin/swizzin/nginx/rclone.sh
-    systemctl reload nginx
-  fi
-  
+if [[ -f /install/.nginx.lock ]]; then
+	bash /usr/local/bin/swizzin/nginx/rclone.sh
+	systemctl reload nginx
+fi
 
-  systemctl enable rclone@${user}.service >/dev/null >> "${log}"  2>&1;
-  systemctl start rclone@${user}.service >/dev/null >> "${log}"  2>&1;
+systemctl enable rclone@${user}.service > /dev/null >> "${log}" 2>&1
+systemctl start rclone@${user}.service > /dev/null >> "${log}" 2>&1

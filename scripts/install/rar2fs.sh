@@ -18,7 +18,7 @@ sudo mkdir rar2fsmount
 cd rar2fsmount
 sudo mkdir torrents
 
-cat > /usr/local/bin/mountrar2fs.sh <<R2FS
+cat > /usr/local/bin/mountrar2fs.sh << R2FS
 #!/bin/bash
 # script to mount rar2fs mounts
 
@@ -29,7 +29,7 @@ R2FS
 
 sudo chmod +x /usr/local/bin/mountrar2fs.sh
 
-cat > /etc/systemd/system/mountrar2fs.service <<R2FSSVC
+cat > /etc/systemd/system/mountrar2fs.service << R2FSSVC
 [Unit]
 Description=mountrar2fs
 After=network.target

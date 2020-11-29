@@ -9,7 +9,7 @@
 #   including (via compiler) GPL-licensed code must also be made available
 #   under the GPL along with build & install instructions.
 #
-IFACE=$(/usr/bin/sudo ip route | grep default | sed -e "s/^.*dev.//" -e "s/.proto.*//" | awk '{print $1}');
+IFACE=$(/usr/bin/sudo ip route | grep default | sed -e "s/^.*dev.//" -e "s/.proto.*//" | awk '{print $1}')
 user=$(cat /root/.master.info | cut -d: -f1)
 
 printf "${IFACE}" > /srv/tools/interface.txt
@@ -19,17 +19,16 @@ LANG=lang_en
 echo "*/1 * * * * root bash /usr/local/bin/swizzin/tools/set_interface_tools >/dev/null 2>&1" > /etc/cron.d/set_interface_tools
 
 if [[ -f /lib/systemd/system/php7.3-fpm.service ]]; then
-  sock=php7.3-fpm
+	sock=php7.3-fpm
 elif [[ -f /lib/systemd/system/php7.2-fpm.service ]]; then
-  sock=php7.2-fpm
+	sock=php7.2-fpm
 elif [[ -f /lib/systemd/system/php7.1-fpm.service ]]; then
-  sock=php7.1-fpm
+	sock=php7.1-fpm
 else
-  sock=php7.0-fpm
+	sock=php7.0-fpm
 fi
 
-
-cat > /etc/nginx/apps/tools.conf <<PAN
+cat > /etc/nginx/apps/tools.conf << PAN
 
 location /tools {
   alias /srv/tools/ ;
@@ -78,7 +77,7 @@ location /log {
 }
 PAN
 
-cat > /etc/sudoers.d/tools <<SUD
+cat > /etc/sudoers.d/tools << SUD
 #secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/bin/swizzin:/usr/local/bin/swizzin/scripts:/usr/local/bin/swizzin/scripts/install:/usr/local/bin/swizzin/scripts/remove:/usr/local/bin/swizzin/tools"
 #Defaults  env_keep -="HOME"
 
@@ -95,4 +94,3 @@ www-data     ALL = (ALL) NOPASSWD: S4CLEANMEM, S4GENERALCMNDS, S4CLAIMPLEX
 
 SUD
 service nginx force-reload
-

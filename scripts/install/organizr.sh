@@ -8,7 +8,6 @@
 #fi
 MASTER=$(cut -d: -f1 < /root/.master.info)
 
-
 mkdir /srv/organizr
 chown ${MASTER}: /srv/organizr
 
@@ -21,8 +20,8 @@ chown -R www-data:www-data /srv/organizr
 touch /install/.organizr.lock
 
 if [[ -f /install/.nginx.lock ]]; then
-  bash /usr/local/bin/swizzin/nginx/organizr.sh
-  service nginx reload
+	bash /usr/local/bin/swizzin/nginx/organizr.sh
+	service nginx reload
 fi
 
-echo "organizr Install Complete!" >> "${log}"  2>&1;
+echo "organizr Install Complete!" >> "${log}" 2>&1

@@ -10,7 +10,7 @@
 #   under the GPL along with build & install instructions.
 
 if [[ ! -f /etc/nginx/apps/rclone.conf ]]; then
-cat > /etc/nginx/apps/rclone.conf <<RCLOAD
+	cat > /etc/nginx/apps/rclone.conf << RCLOAD
 location /rclone/ {
   include /etc/nginx/snippets/proxy.conf;
   proxy_pass http://127.0.0.1:5572;

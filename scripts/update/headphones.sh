@@ -2,8 +2,8 @@
 USERNAME=$(cut -d: -f1 < /root/.master.info)
 
 if [[ -f /install/.headphones.lock ]]; then
-  if grep -q PIDFile=/var/run/headphones/headphones.pid /etc/systemd/system/headphones.service; then
-    cat > /etc/systemd/system/headphones.service <<HEADP
+	if grep -q PIDFile=/var/run/headphones/headphones.pid /etc/systemd/system/headphones.service; then
+		cat > /etc/systemd/system/headphones.service << HEADP
 [Unit]
 Description=Headphones
 Wants=network.target network-online.target
@@ -19,14 +19,14 @@ Group=USER
 [Install]
 WantedBy=multi-user.target
 HEADP
-    sed -i "s/USER/${USERNAME}/g" /etc/systemd/system/$APPNAME.service
-    systemctl daemon-reload
-  fi
+		sed -i "s/USER/${USERNAME}/g" /etc/systemd/system/$APPNAME.service
+		systemctl daemon-reload
+	fi
 
-  if [[ -f /install/.nginx.lock ]]; then
-    if grep -q 'http_proxy = 1' /home/$USERNAME/.headphones/config.ini; then
-      sed -i 's/http_proxy = 1/http_proxy = 0/g' /home/$USERNAME/.headphones/config.ini
-      systemctl try-restart headphones
-    fi
-  fi
+	if [[ -f /install/.nginx.lock ]]; then
+		if grep -q 'http_proxy = 1' /home/$USERNAME/.headphones/config.ini; then
+			sed -i 's/http_proxy = 1/http_proxy = 0/g' /home/$USERNAME/.headphones/config.ini
+			systemctl try-restart headphones
+		fi
+	fi
 fi
