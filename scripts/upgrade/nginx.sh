@@ -7,7 +7,7 @@ hostname=$(grep -m1 "server_name" /etc/nginx/sites-enabled/default | awk '{print
 locks=($(find /usr/local/bin/swizzin/nginx -type f -printf "%f\n" | cut -d "." -f 1 | sort -d -r))
 
 if [[ ! -f /install/.nginx.lock ]]; then
-	echo "nginx doesn't appear to be installed. What do you hope to accomplish by running this script?"
+	echo_error "nginx doesn't appear to be installed. What do you hope to accomplish by running this script?"
 	exit 1
 fi
 
@@ -26,14 +26,13 @@ rm -f /etc/nginx/sites-enabled/default
 rm -f /etc/nginx/conf.d/*
 rm -f /etc/nginx/snippets/{ssl-params,proxy,fancyindex}.conf
 
-if [[ -f /lib/systemd/system/php7.3-fpm.service ]]; then
-	sock=php7.3-fpm
-elif [[ -f /lib/systemd/system/php7.2-fpm.service ]]; then
-	sock=php7.2-fpm
-elif [[ -f /lib/systemd/system/php7.1-fpm.service ]]; then
-	sock=php7.1-fpm
-else
-	sock=php7.0-fpm
+. /etc/swizzin/sources/functions/php
+
+phpversion=$(php_service_version)
+sock="php${phpversion}-fpm"
+
+if [[ ! -f /etc/nginx/modules-enabled/50-mod-http-fancyindex.conf ]]; then
+	ln -s /usr/share/nginx/modules-available/mod-http-fancyindex.conf /etc/nginx/modules-enabled/50-mod-http-fancyindex.conf
 fi
 
 for i in NGC SSC PROX FIC; do
@@ -50,8 +49,9 @@ fi
 for i in "${locks[@]}"; do
 	app=${i}
 	if [[ -f /install/.$app.lock ]]; then
-		echo "Reinstalling nginx config for $app" >> "${log}" 2>&1
+		echo_progress_start "Reinstalling nginx config for $app"
 		/usr/local/bin/swizzin/nginx/$app.sh
+		echo_progress_done
 	fi
 done
 
