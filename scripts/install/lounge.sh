@@ -2,7 +2,7 @@
 # Package installer for The Lounge IRC Web Client
 # Author: Liara
 
-function _install {
+function _install() {
 
 	useradd lounge -m -s /bin/bash
 	passwd lounge -l >> ${log} 2>&1
@@ -19,56 +19,56 @@ function _install {
 "use strict";
 
 module.exports = {
-        //
+	//
 	// Set the server mode.
 	// Public servers does not require authentication.
-        //
+	//
 	// Set to 'false' to enable users.
 	//
 	// @type     boolean
 	// @default  true
-        //
-        public: false,
+	//
+	public: false,
 
-        //
+	//
 	// IP address or hostname for the web server to listen on.
 	// Setting this to undefined will listen on all interfaces.
-        //
+	//
 	// @type     string
 	// @default  undefined
-        //
-        host: undefined,
+	//
+	host: undefined,
 
-        //
+	//
 	// Set the port to listen on.
 	//
 	// @type     int
 	// @default  9000
-        //
-        port: 9000,
+	//
+	port: 9000,
 
-        //
+	//
 	// Set the local IP to bind to for outgoing connections. Leave to undefined
 	// to let the operating system pick its preferred one.
 	//
 	// @type     string
 	// @default  undefined
-        //
-        bind: undefined,
+	//
+	bind: undefined,
 
-        //
+	//
 	// Sets whether the server is behind a reverse proxy and should honor the
 	// X-Forwarded-For header or not.
 	//
 	// @type     boolean
 	// @default  false
-        //
-        reverseProxy: false,
+	//
+	reverseProxy: false,
 
-        //
+	//
 	// Set the default theme.
 	// Find out how to add new themes at https://thelounge.github.io/docs/packages/themes
-        //
+	//
 	// @type     string
 	// @default  "example"
 	//
@@ -85,29 +85,29 @@ module.exports = {
 	//
 	prefetch: false,
 
-        //
+	//
 	// Store and proxy prefetched images and thumbnails.
 	// This improves security and privacy by not exposing client IP address,
 	// and always loading images from The Lounge instance and making all assets secure,
 	// which in result fixes mixed content warnings.
-        //
+	//
 	// If storage is enabled, The Lounge will fetch and store images and thumbnails
 	// in ~/.lounge/storage folder, or %HOME%/storage if --home is used.
-        //
+	//
 	// Images are deleted when they are no longer referenced by any message (controlled by maxHistory),
 	// and the folder is cleaned up on every The Lounge restart.
-        //
+	//
 	// @type     boolean
 	// @default  false
-        //
+	//
 	prefetchStorage: false,
 
-        //
+	//
 	// Prefetch URLs Image Preview size limit
-        //
+	//
 	// If prefetch is enabled, The Lounge will only display content under the maximum size.
 	// Specified value is in kilobytes. Default value is 512 kilobytes.
-        //
+	//
 	// @type     int
 	// @default  512
 	//
@@ -115,12 +115,12 @@ module.exports = {
 
 	//
 	// Display network
-        //
+	//
 	// If set to false network settings will not be shown in the login form.
 	//
 	// @type     boolean
 	// @default  true
-        //
+	//
 	displayNetwork: true,
 
 	//
@@ -134,20 +134,20 @@ module.exports = {
 	//
 	lockNetwork: false,
 
-        //
+	//
 	// Hex IP
-        //
+	//
 	// If enabled, clients' username will be set to their IP encoded has hex.
 	// This is done to share the real user IP address with the server for host masking purposes.
-        //
+	//
 	// @type     boolean
 	// @default  false
 	//
 	useHexIp: false,
 
-        //
+	//
 	// WEBIRC support
-        //
+	//
 	// If enabled, The Lounge will pass the connecting user's host and IP to the
 	// IRC server. Note that this requires to obtain a password from the IRC network
 	// The Lounge will be connecting to and generally involves a lot of trust from the
@@ -164,9 +164,9 @@ module.exports = {
 	// @default  null
 	webirc: null,
 
-        //
+	//
 	// Maximum number of history lines per channel
-        //
+	//
 	// Defines the maximum number of history lines that will be kept in
 	// memory per channel/query, in order to reduce the memory usage of
 	// the server. Setting this to -1 will keep unlimited amount.
@@ -175,35 +175,33 @@ module.exports = {
 	// @default  10000
 	maxHistory: 10000,
 
-        //
+	//
 	// Set socket.io transports
 	//
 	// @type     array
 	// @default  ["polling", "websocket"]
-        //
-        transports: ["polling", "websocket"],
+	//
+	transports: ["polling", "websocket"],
 
-        //
+	//
 	// Run The Lounge using encrypted HTTP/2.
 	// This will fallback to regular HTTPS if HTTP/2 is not supported.
-        //
-        // @type     object
-        // default.
-        leaveMessage: "The Lounge, hosted @ https://seedit4.me",
-
-        defaults: {
-                name: "Seedit4.me",
-                host: "irc.seedit4.me",
-                port: 8010,
-                password: "",
-                tls: true,
-                rejectUnauthorized: false,
-                nick: "user%%%",
-                username: "user",
-                realname: "The Lounge User",
-                join: "#seedit4me",
-        },
-
+    //
+    // @type     object
+    // default.
+    leaveMessage: "The Lounge, hosted @ https://seedit4.me",
+    defaults: {
+            name: "Seedit4.me",
+            host: "irc.seedit4.me",
+            port: 8010,
+            password: "",
+            tls: true,
+            rejectUnauthorized: false,
+            nick: "user%%%",
+            username: "user",
+            realname: "The Lounge User",
+            join: "#seedit4me",
+    },
 	//
 	https: {
 		//
@@ -242,24 +240,24 @@ module.exports = {
 		ca: ""
 	},
 
-        //
+	//
 	// Run The Lounge with identd support.
-        //
+	//
 	// @type     object
 	// @default  {}
-        //
+	//
 	identd: {
-        //
+		//
 		// Run the identd daemon on server start.
-        //
+		//
 		// @type     boolean
 		// @default  false
-        //
+		//
 		enable: false,
 
-        //
+		//
 		// Port to listen for ident requests.
-        //
+		//
 		// @type     int
 		// @default  113
 		//
@@ -267,36 +265,36 @@ module.exports = {
 	},
 	messageStorage: ["sqlite", "text"],
 
-        //
+	//
 	// Enable oidentd support using the specified file
-        //
+	//
 	// Example: oidentd: "~/.oidentd.conf",
-        //
+	//
 	// @type     string
 	// @default  null
 	//
 	oidentd: null,
 
-        //
+	//
 	// LDAP authentication settings (only available if public=false)
 	// @type    object
 	// @default {}
-        //
-       ldap: {
+	//
+	ldap: {
 		//
 		// Enable LDAP user authentication
 		//
 		// @type     boolean
 		// @default  false
 		//
-                enable: false,
+		enable: false,
 
 		//
 		// LDAP server URL
 		//
 		// @type     string
 		//
-                url: "ldaps://example.com",
+		url: "ldaps://example.com",
 
 		//
 		// LDAP base dn
@@ -312,28 +310,28 @@ module.exports = {
 		// @default  "uid"
 		//
 		primaryKey: "uid"
-        },
+	},
 
 	// Extra debugging
 	//
 	// @type     object
 	// @default  {}
-        //
-        debug: {
+	//
+	debug: {
 		// Enables extra debugging output provided by irc-framework.
 		//
 		// @type     boolean
 		// @default  false
-                //
-                ircFramework: false,
+		//
+		ircFramework: false,
 
 		// Enables logging raw IRC messages into each server window.
 		//
 		// @type     boolean
 		// @default  false
-                //
-                raw: false,
-        },
+		//
+		raw: false,
+	},
 };
 EOF
 
@@ -392,7 +390,7 @@ EOSD
 	echo_progress_done "Lounge started"
 }
 
-function _adduser {
+function _adduser() {
 	master=$(cut -d: -f1 < /root/.master.info)
 	for u in "${users[@]}"; do
 		echo_progress_start "Adding $u to lounge"

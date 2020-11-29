@@ -59,7 +59,7 @@ location /qbittorrent.downloads {
 
   location ~* \.php\$ {
 
-  }
+  } 
 }
 DIN
 fi

@@ -18,6 +18,8 @@
 . /etc/swizzin/sources/functions/color_echo
 export log="/srv/tools/logs/output.log"
 # Sourcing functions
+#shellcheck source=sources/functions/os
+. /etc/swizzin/sources/functions/os
 #shellcheck source=sources/functions/apt
 . /etc/swizzin/sources/functions/apt
 #shellcheck source=sources/functions/ask
@@ -221,12 +223,12 @@ function _list() {
 	done
 }
 
-function _adduser {
+function _adduser() {
 	user=$2
 	if [[ $user =~ [A-Z] ]]; then
 		echo_warn "Usernames must not contain capital letters. Please try again."
 		exit 1
-	elif [[ $user =~ ("swizzin"|"admin") ]]; then
+	elif [[ $user =~ ("swizzin"|"admin"|"root") ]]; then
 		echo "$user is a reserved username -- please use something else."
 		exit 1
 	fi
@@ -326,7 +328,7 @@ SUD
 
 }
 
-function _deluser {
+function _deluser() {
 	user=$2
 	if [[ ! -f /root/${user}.info ]]; then
 		master=$(cut -d: -f1 < /root/.master.info)
@@ -399,7 +401,7 @@ function _deluser {
 	echo_success "User $user removed"
 }
 
-function _chpasswd {
+function _chpasswd() {
 	user=$2
 	pass=$3
 	master=$(cat /root/.master.info | cut -d: -f1)

@@ -53,7 +53,7 @@ ADC
 	fi
 }
 
-function _autoservice {
+function _autoservice() {
 	echo_progress_start "Creating systemd service"
 	cat > "/etc/systemd/system/irssi@.service" << ADC
 [Unit]

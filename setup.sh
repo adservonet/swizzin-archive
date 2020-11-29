@@ -270,7 +270,7 @@ function _install() {
 	echo "Package install took $((difftimelps / 60)) minutes and $((difftimelps % 60)) seconds"
 }
 
-function _post {
+function _post() {
 	ip=$(ip route get 1 | sed -n 's/^.*src \([0-9.]*\) .*$/\1/p')
 	echo "export PATH=\$PATH:/usr/local/bin/swizzin" >> /root/.bashrc
 	#echo "export PATH=\$PATH:/usr/local/bin/swizzin" >> /home/$user/.bashrc

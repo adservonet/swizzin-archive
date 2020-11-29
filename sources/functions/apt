@@ -91,8 +91,6 @@ export -f _unset_apt_args
 #Prints the last apt log
 _get_last_apt_log() {
 	# TODO replace with actual APT log instead to make this thing not reliant on logging to a file
-	echo_warn $log
-	echo_warn $_apt_logcheck_marker_text
 	tac $log | sed "/$_apt_logcheck_marker_text/q" | tac
 }
 export -f _get_last_apt_log
@@ -135,10 +133,12 @@ _check_dpkg_lock() {
 				#exit 1
 			else
 				echo_warn "dpkg database is locked by $offender."
+
 			fi
 		else
 			echo_log_only "No dpkg locks found"
 		fi
+
 	fi
 }
 export -f _check_dpkg_lock

@@ -1,11 +1,7 @@
 #!/bin/bash
-#
+# organizr installation wrapper
 
-#if [[ -f /install/.tools.lock ]]; then
-#  log="/srv/tools/logs/output.log"
-#else
-#  log="/dev/null"
-#fi
+
 MASTER=$(cut -d: -f1 < /root/.master.info)
 
 mkdir /srv/organizr

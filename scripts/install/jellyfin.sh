@@ -70,12 +70,11 @@ cat > /etc/jellyfin/system.xml <<- CONFIG
 	  <EnableRemoteAccess>true</EnableRemoteAccess>
 	  <BaseUrl />
 	  <LocalNetworkAddresses>
-	    <string>0.0.0.0</string>
+		<string>0.0.0.0</string>
 	  </LocalNetworkAddresses>
 	  <RequireHttps>true</RequireHttps>
 	</ServerConfiguration>
 CONFIG
-
 #
 # Add the jellyfin official repository and key to our installation so we can use apt-get to install it jellyfin and jellyfin-ffmepg.
 wget -q -O - "https://repo.jellyfin.org/$DIST_ID/jellyfin_team.gpg.key" | apt-key add - >> "${log}" 2>&1
