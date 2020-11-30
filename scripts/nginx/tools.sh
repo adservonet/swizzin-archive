@@ -16,37 +16,32 @@ printf "${IFACE}" > /srv/tools/interface.txt
 printf "${user}" > /srv/tools/master.txt
 LOCALE=en_GB.UTF-8
 LANG=lang_en
-echo "*/1 * * * * root bash /usr/local/bin/swizzin/tools/set_interface_tools" > /etc/cron.d/set_interface_tools
+echo "*/1 * * * * root bash /usr/local/bin/swizzin/tools/set_interface_tools >/dev/null 2>&1" > /etc/cron.d/set_interface_tools
 
 if [[ -f /lib/systemd/system/php7.3-fpm.service ]]; then
-  sock=php7.3-fpm
+	sock=php7.3-fpm
 elif [[ -f /lib/systemd/system/php7.2-fpm.service ]]; then
-  sock=php7.2-fpm
+	sock=php7.2-fpm
 elif [[ -f /lib/systemd/system/php7.1-fpm.service ]]; then
-  sock=php7.1-fpm
+	sock=php7.1-fpm
 else
-  sock=php7.0-fpm
+	sock=php7.0-fpm
 fi
 
+cat > /etc/nginx/apps/tools.conf << PAN
 
-cat > /etc/nginx/apps/tools.conf <<PAN
 location /tools {
-alias /srv/tools/ ;
-try_files \$uri \$uri/ /index.php?q=\$uri&\$args;
-index index.php;
-allow all;
+  alias /srv/tools/ ;
+  try_files \$uri \$uri/ /index.php?q=\$uri&\$args;
+  index index.php;
+  allow all;
 
-add_header 'Access-Control-Allow-Origin' '*' always;
-add_header 'Access-Control-Allow-Credentials' 'true';
-add_header 'Access-Control-Allow-Methods' '*';
-add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization,accept,origin,X-Requested-With,X-CSRF-Token' always;
-add_header 'Cache-Control' 'no-store, no-cache, must-revalidate';
-#add_header 'Access-Control-Max-Age' 1728000;
-#add_header 'Content-Length' 0;
-add_header 'Content-Type' 'text/plain';
+  add_header 'Access-Control-Allow-Origin' '*';
+  add_header 'Access-Control-Max-Age' '600';
+  add_header 'Access-Control-Allow-Headers' '*';
+  add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
 
-
-location ~ \.php$
+  location ~ \.php$
   {
     include snippets/fastcgi-php.conf;
     fastcgi_pass unix:/run/php/$sock.sock;
@@ -55,9 +50,36 @@ location ~ \.php$
   }
 }
 
+location /log {
+  sendfile on;
+  #sendfile_max_chunk 1m;
+  #autoindex on;
+  try_files \$uri \$uri/ =404;
+  alias /srv/tools/logs/output.log;
+
+  add_header 'Content-Type' 'text/plain';
+  default_type text/plain;
+
+  if (\$request_method = OPTIONS ) {
+	add_header Content-Length 0;
+	add_header Content-Type text/plain;
+	add_header 'Access-Control-Allow-Origin' '*';
+	add_header 'Access-Control-Max-Age' '600';
+	add_header 'Access-Control-Allow-Headers' '*';
+	add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+	return 200;
+  }
+
+  add_header 'Access-Control-Allow-Origin' '*';
+  add_header 'Access-Control-Max-Age' '600';
+  add_header 'Access-Control-Allow-Headers' '*';
+  add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+  add_header 'Cache-Control' 'max-age=0,no-cache,no-store,post-check=0,pre-check=0';
+  add_header 'Expires' '0';
+}
 PAN
 
-cat > /etc/sudoers.d/tools <<SUD
+cat > /etc/sudoers.d/tools << SUD
 #secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/bin/swizzin:/usr/local/bin/swizzin/scripts:/usr/local/bin/swizzin/scripts/install:/usr/local/bin/swizzin/scripts/remove:/usr/local/bin/swizzin/tools"
 #Defaults  env_keep -="HOME"
 
@@ -68,7 +90,7 @@ cat > /etc/sudoers.d/tools <<SUD
 # Cmnd alias specification
 Cmnd_Alias   S4CLEANMEM = /usr/local/bin/swizzin/tools/clean_mem
 Cmnd_Alias   S4CLAIMPLEX = /srv/tools/plexclaim.sh
-Cmnd_Alias   S4GENERALCMNDS = /usr/sbin/repquota, /bin/systemctl
+Cmnd_Alias   S4GENERALCMNDS = /usr/sbin/repquota, /bin/systemctl, /bin/ip
 
 www-data     ALL = (ALL) NOPASSWD: S4CLEANMEM, S4GENERALCMNDS, S4CLAIMPLEX
 
