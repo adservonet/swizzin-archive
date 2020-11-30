@@ -74,6 +74,8 @@ location /log {
   add_header 'Access-Control-Max-Age' '600';
   add_header 'Access-Control-Allow-Headers' '*';
   add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+  add_header 'Cache-Control' 'max-age=0,no-cache,no-store,post-check=0,pre-check=0';
+  add_header 'Expires' '0';
 }
 PAN
 
