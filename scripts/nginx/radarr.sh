@@ -16,6 +16,8 @@ location /radarr {
   proxy_http_version 1.1;
   proxy_set_header Upgrade \$http_upgrade;
   proxy_set_header Connection \$http_connection;
+  proxy_cache_bypass \$http_upgrade;
+  proxy_buffering off;
 }
 RADARR
 
@@ -63,6 +65,8 @@ curl "https://127.0.0.1/radarr/api/v3/config/host?apiKey=${apikey}" -X PUT --ins
 	--compressed -H 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' \
 	--user "${user}:$(_get_user_password "${user}")" \
 	--data-raw "$payload" -s >> "$log"
+
+curl -v -s "https://127.0.0.1/radarr/api/v3/config/host?apiKey=6eecd3ffbaa5415a8137d3e658938ef2" --user "seedit4me:jpop99" --insecure -s | jq '.certificateValidation = "disabledForLocalAddresses"'
 
 # Switch radarr back off if it was dead before
 if [[ $isactive != "active" ]]; then
