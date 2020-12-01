@@ -47,7 +47,7 @@ function _installRadarrCode() {
   echo "Installing Radar ... "
   if [[ ! -d /opt ]]; then mkdir /opt; fi
   cd /opt
-  wget $( curl -s https://api.github.com/repos/Radarr/Radarr/releases | grep linux.tar.gz | grep browser_download_url | head -1 | cut -d \" -f 4 )  >> "${SEEDIT_LOG}"  2>&1;
+  wget "https://github.com/Radarr/Radarr/releases/download/v0.2.0.1504/Radarr.develop.0.2.0.1504.linux.tar.gz"  >> "${SEEDIT_LOG}"  2>&1;
   tar -xvzf Radarr.*.linux.tar.gz  >> "${SEEDIT_LOG}"  2>&1;
   rm -rf /opt/Radarr.*.linux.tar.gz
   touch /install/.radarr.lock
