@@ -1,10 +1,18 @@
-#!/bin/sh
-MASTER=$(cut -d: -f1 < /root/.master.info)
-systemctl stop radarr
-systemctl disable radarr
-rm -rf /home/${MASTER}/.config/Radarr
-rm -rf /etc/systemd/system/radarr.service
+#!/bin/bash
+export log="/srv/tools/logs/output.log"
+systemctl disable --now -q radarr
+rm /etc/systemd/system/radarr.service
+systemctl daemon-reload -q
+
 rm -rf /opt/Radarr
-rm -rf /etc/nginx/apps/radarr.conf
-rm -rf /install/.radarr.lock
-echo "Radarr uninstalled!"
+
+if [[ -f /install/.nginx.lock ]]; then
+	rm /etc/nginx/apps/radarr.conf
+	systemctl reload nginx
+fi
+
+MASTER=$(cut -d: -f1 < /root/.master.info)
+rm -rf /home/${MASTER}/.config/Radarr
+
+
+rm /install/.radarr.lock

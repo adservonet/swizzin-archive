@@ -1,119 +1,114 @@
 #!/bin/bash
-#
-# [Quick Box :: Install Radarr package]
-#
-# GITHUB REPOS
-# GitHub _ packages  :   https://github.com/QuickBox/QB
-# LOCAL REPOS
-# Local _ packages   :   /etc/QuickBox/packages
-# Author             :   PastaGringo | KarmaPoliceT2
-# URL                :   https://quickbox.io
-#
-# QuickBox Copyright (C) 2017 QuickBox.io
-# Licensed under GNU General Public License v3.0 GPL-3 (in short)
-#
-#   You may copy, distribute and modify the software as long as you track
-#   changes/dates in source files. Any modifications to our software
-#   including (via compiler) GPL-licensed code must also be made available
-#   under the GPL along with build & install instructions.
-#################################################################################
-function _string() { perl -le 'print map {(a..z,A..Z,0..9)[rand 62] } 0..pop' 15 ; }
-#################################################################################
+export log="/srv/tools/logs/output.log"
 
-function _installRadarrIntro() {
-  echo "Radarr will now be installed." >> "${SEEDIT_LOG}"  2>&1;
-  echo "This process may take up to 2 minutes." >> "${SEEDIT_LOG}"  2>&1;
-  echo "Please wait until install is completed." >> "${SEEDIT_LOG}"  2>&1;
-  # output to box
-  echo "Radarr will now be installed."
-  echo "This process may take up to 2 minutes."
-  echo "Please wait until install is completed."
-  echo
-  sleep 5
-}
+# radarr v3 installer
+# Flying sauasges for swizzin 2020
 
-function _installRadarrDependencies() {
-  # output to box
-  echo "Installing dependencies ... "
-  mono_repo_setup
-}
+#shellcheck source=sources/functions/utils
+#. /etc/swizzin/sources/functions/utils
 
-function _installRadarrCode() {
-  # output to box
-  waitforapt
-  apt-get -y -q update > /dev/null 2>&1
-  waitforapt
-  apt-get install -y libmono-cil-dev curl mediainfo >> "${SEEDIT_LOG}"  2>&1;
-  echo "Installing Radar ... "
-  if [[ ! -d /opt ]]; then mkdir /opt; fi
-  cd /opt
-  wget "https://github.com/Radarr/Radarr/releases/download/v0.2.0.1504/Radarr.develop.0.2.0.1504.linux.tar.gz"  >> "${SEEDIT_LOG}"  2>&1;
-  tar -xvzf Radarr.*.linux.tar.gz  >> "${SEEDIT_LOG}"  2>&1;
-  rm -rf /opt/Radarr.*.linux.tar.gz
-  touch /install/.radarr.lock
-}
+master=$(cut -d: -f1 < /root/.master.info)
 
-function _installRadarrConfigure() {
-  # output to box
-  echo "Configuring Radar ... "
-cat > /etc/systemd/system/radarr.service <<EOF
+_install_radarr() {
+  apt update
+	apt install curl mediainfo sqlite3
+
+	radarrConfDir="/home/$radarrOwner/.config/Radarr"
+	mkdir -p "$radarrConfDir"
+	chown -R "$radarrOwner":"$radarrOwner" "$radarrConfDir"
+
+	echo "Downloading source files"
+	#curl https://api.github.com/repos/Radarr/Radarr/releases | jq -r '.[0].assets | .[] | select (.browser_download_url | contains ("linux-core")).browser_download_url'
+	if ! curl "https://radarr.servarr.com/v1/update/master/updatefile?os=linux&runtime=netcore&arch=x64" -L -o /tmp/Radarr.tar.gz >> "$log" 2>&1; then
+		echo "Download failed, exiting"
+		exit 1
+	fi
+	echo "Source downloaded"
+
+	echo "Extracting archive"
+	tar -xvf /tmp/Radarr.tar.gz -C /opt >> "$log" 2>&1
+	echo "Archive extracted"
+
+	touch /install/.radarr.lock
+
+	echo "Installing Systemd service"
+	cat > /etc/systemd/system/radarr.service << EOF
 [Unit]
 Description=Radarr Daemon
 After=syslog.target network.target
 
 [Service]
-User=${username}
-Group=${username}
+# Change the user and group variables here.
+User=${radarrOwner}
+Group=${radarrOwner}
+
 Type=simple
-ExecStart=/usr/bin/mono /opt/Radarr/Radarr.exe -nobrowser
+
+# Change the path to Radarr or mono here if it is in a different location for you.
+ExecStart=/opt/Radarr/Radarr -nobrowser
 TimeoutStopSec=20
 KillMode=process
 Restart=on-failure
 
+# These lines optionally isolate (sandbox) Radarr from the rest of the system.
+# Make sure to add any paths it might use to the list below (space-separated).
+#ReadWritePaths=/opt/Radarr /path/to/movies/folder
+#ProtectSystem=strict
+#PrivateDevices=true
+#ProtectHome=true
+
 [Install]
 WantedBy=multi-user.target
 EOF
+	chown -R "$radarrOwner":"$radarrOwner" /opt/Radarr
+	systemctl -q daemon-reload
+	systemctl enable --now -q radarr
+	sleep 1
+	echo "Radarr service installed and enabled"
 
+	if [[ -f $radarrConfDir/update_required ]]; then
+		echo "Radarr is installing an internal upgrade..."
+		# echo "You can track the update by running \`systemctl status Radarr\`0. in another shell."
+		# echo "In case of errors, please press CTRL+C and run \`box remove sonarrv3\` in this shell and check in with us in the Discord"
+		while [[ -f $radarrConfDir/update_required ]]; do
+			sleep 1
+			echo "Upgrade file is still here"
+		done
+		echo "Upgrade finished"
+	fi
 
-  mkdir -p /home/${username}/.config
-  chown -R ${username}:${username} /home/${username}/.config
-#  chmod 775 /home/${username}/.config
-  chown -R ${username}:${username} /opt/Radarr/
-  systemctl daemon-reload
-  systemctl enable radarr.service > /dev/null 2>&1
-  systemctl start radarr.service
-
-  if [[ -f /install/.nginx.lock ]]; then
-    sleep 10
-    bash /usr/local/bin/swizzin/nginx/radarr.sh
-    service nginx reload
-  fi
 }
 
-function _installRadarrFinish() {
-  # output to dashboard
-  echo "Radarr Install Complete!" >> "${SEEDIT_LOG}"  2>&1;
+_nginx_radarr() {
+	if [[ -f /install/.nginx.lock ]]; then
+		echo "Installing nginx configuration"
+		#TODO what is this sleep here for? See if this can be fixed by doing a check for whatever it needs to
+		sleep 10
+		bash /usr/local/bin/swizzin/nginx/radarr.sh
+		systemctl -q reload nginx
+		echo "Nginx configured"
+	else
+		echo "Radarr will be available on port 7878. Secure your installation manually through the web interface."
+	fi
 }
 
-function _installRadarrExit() {
-	exit 0
-}
+if [[ -z $radarrOwner ]]; then
+	radarrOwner=${master}
+fi
 
-#if [[ -f /install/.tools.lock ]]; then
-#  log="/srv/tools/logs/output.log"
-#else
-#  log="/dev/null"
-#fi
-username=$(cut -d: -f1 < /root/.master.info)
-distribution=$(lsb_release -is)
-version=$(lsb_release -cs)
-. /etc/swizzin/sources/functions/mono
-#. /etc/swizzin/sources/functions/waitforapt.sh
-ip=$(curl -s http://whatismyip.akamai.com)
+_install_radarr
+_nginx_radarr
 
-_installRadarrIntro
-echo "Installing dependencies ... " >> "${SEEDIT_LOG}"  2>&1;_installRadarrDependencies
-echo "Installing Radar ... " >> "${SEEDIT_LOG}"  2>&1;_installRadarrCode
-echo "Configuring Radar ... " >> "${SEEDIT_LOG}"  2>&1;_installRadarrConfigure
-_installRadarrFinish
-_installRadarrExit
+if [[ -f /install/.ombi.lock ]]; then
+	echo "Please adjust your Ombi setup accordingly"
+fi
+
+if [[ -f /install/.tautulli.lock ]]; then
+	echo "Please adjust your Tautulli setup accordingly"
+fi
+
+if [[ -f /install/.bazarr.lock ]]; then
+	echo "Please adjust your Bazarr setup accordingly"
+fi
+
+echo "Radarr v3 installed"
