@@ -10,6 +10,7 @@ export log="/srv/tools/logs/output.log"
 master=$(cut -d: -f1 < /root/.master.info)
 
 _install_radarr() {
+  waitforapt
   apt update
 	apt install curl mediainfo sqlite3
 
