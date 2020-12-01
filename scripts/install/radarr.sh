@@ -12,7 +12,7 @@ master=$(cut -d: -f1 < /root/.master.info)
 _install_radarr() {
   waitforapt
   apt update
-	apt install curl mediainfo sqlite3
+	apt install -y curl mediainfo sqlite3
 
 	radarrConfDir="/home/$radarrOwner/.config/Radarr"
 	mkdir -p "$radarrConfDir"
