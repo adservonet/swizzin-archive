@@ -58,6 +58,7 @@ fi
 
 cd /home/${user}/
 git clone https://github.com/pymedusa/Medusa.git .medusa
+git checkout v.0.4.6
 chown -R ${user}:${user} .medusa
 
 cat > /etc/systemd/system/medusa@.service <<MSD
@@ -70,7 +71,7 @@ Type=forking
 GuessMainPID=no
 User=%I
 Group=%I
-ExecStart=/usr/bin/python3 /home/%I/.medusa/SickBeard.py -q --daemon --nolaunch --datadir=/home/%I/.medusa
+ExecStart=/usr/bin/python /home/%I/.medusa/SickBeard.py -q --daemon --nolaunch --datadir=/home/%I/.medusa
 ExecStop=-/bin/kill -HUP
 
 
