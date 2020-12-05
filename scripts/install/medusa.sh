@@ -40,8 +40,11 @@ if [[ -n $active ]]; then
   fi
 fi
 
+mkdir -p /opt/.venv
+chown ${user}: /opt/.venv
+
 apt-get -y -q update >>  "${SEEDIT_LOG}"  2>&1
-apt-get -y -q install git-core openssl libssl-dev python2.7 >>  "${SEEDIT_LOG}"  2>&1
+apt-get -y -q install git-core openssl libssl-dev python3 python3-venv >>  "${SEEDIT_LOG}"  2>&1
 
 function _rar () {
   cd /tmp
@@ -55,13 +58,11 @@ function _rar () {
 if [[ -z $(which rar) ]]; then
   apt-get -y install rar unrar >> "${SEEDIT_LOG}"  2>&1 || { echo "INFO: Could not find rar/unrar in the repositories. It is likely you do not have the multiverse repo enabled. Installing directly."; _rar; }
 fi
+cd /opt/
+git clone https://github.com/pymedusa/Medusa.git medusa >> ${SEEDIT_LOG} 2>&1
+chown -R ${user}:${user} medusa
 
-cd /home/${user}/
-git clone https://github.com/pymedusa/Medusa.git .medusa
-git checkout v.0.4.6
-chown -R ${user}:${user} .medusa
-
-cat > /etc/systemd/system/medusa@.service <<MSD
+cat > /etc/systemd/system/medusa.service << MSD
 [Unit]
 Description=Medusa
 After=syslog.target network.target
@@ -69,9 +70,9 @@ After=syslog.target network.target
 [Service]
 Type=forking
 GuessMainPID=no
-User=%I
-Group=%I
-ExecStart=/usr/bin/python /home/%I/.medusa/SickBeard.py -q --daemon --nolaunch --datadir=/home/%I/.medusa
+User=${user}
+Group=${user}
+ExecStart=/opt/.venv/medusa/bin/python3 /opt/medusa/SickBeard.py -q --daemon --nolaunch --datadir=/opt/medusa
 ExecStop=-/bin/kill -HUP
 
 
@@ -79,13 +80,11 @@ ExecStop=-/bin/kill -HUP
 WantedBy=multi-user.target
 MSD
 
-systemctl enable medusa@${user} >> "${SEEDIT_LOG}"  2>&1
-systemctl start medusa@${user}
-
+systemctl enable -q --now medusa  >> "${SEEDIT_LOG}"  2>&1
 
 if [[ -f /install/.nginx.lock ]]; then
   bash /usr/local/bin/swizzin/nginx/medusa.sh
-  service nginx reload
+  systemctl reload nginx
 fi
 
 touch /install/.medusa.lock
