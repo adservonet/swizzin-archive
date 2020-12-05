@@ -7,7 +7,7 @@ systemctl disable medusa@${user}
 systemctl stop medusa@${user}
 sudo rm /etc/nginx/apps/medusa.conf > /dev/null 2>&1
 sudo rm /etc/systemd/medusa@.service > /dev/null 2>&1
-sudo rm /install/.medusa.lock
+rm -rf /etc/systemd/system/medusa@.service
 rm -rf /home/${user}/.medusa
 
 
