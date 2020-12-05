@@ -70,7 +70,7 @@ Type=forking
 GuessMainPID=no
 User=%I
 Group=%I
-ExecStart=/usr/bin/python /home/%I/.medusa/SickBeard.py -q --daemon --nolaunch --datadir=/home/%I/.medusa
+ExecStart=/usr/bin/python3 /home/%I/.medusa/SickBeard.py -q --daemon --nolaunch --datadir=/home/%I/.medusa
 ExecStop=-/bin/kill -HUP
 
 
