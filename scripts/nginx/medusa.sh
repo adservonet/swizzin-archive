@@ -9,13 +9,13 @@
 #   including (via compiler) GPL-licensed code must also be made available
 #   under the GPL along with build & install instructions.
 user=$(cut -d: -f1 < /root/.master.info)
-isactive=$(systemctl is-active medusa@$user)
+isactive=$(systemctl is-active medusa)
 if [[ $isactive == "active" ]]; then
-  systemctl stop medusa@${user}
+	systemctl stop medusa
 fi
 
 if [[ ! -f /etc/nginx/apps/medusa.conf ]]; then
-  cat > /etc/nginx/apps/medusa.conf <<SRC
+	cat > /etc/nginx/apps/medusa.conf << SRC
 location /medusa {
   proxy_pass http://127.0.0.1:8081/medusa;
   proxy_set_header Host \$host;
@@ -37,12 +37,9 @@ location /medusa {
 }
 SRC
 fi
-
-sleep 5s
-
-sed -i "s/web_root.*/web_root = \"medusa\"/g" /home/"${user}"/.medusa/config.ini
-sed -i "s/web_host.*/web_host = 127.0.0.1/g" /home/"${user}"/.medusa/config.ini
+sed -i "s/web_root.*/web_root = \"medusa\"/g" /opt/medusa/config.ini
+sed -i "s/web_host.*/web_host = 127.0.0.1/g" /opt/medusa/config.ini
 
 if [[ $isactive == "active" ]]; then
-  systemctl start medusa@${user}
+	systemctl restart medusa
 fi
