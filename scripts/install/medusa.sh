@@ -40,11 +40,11 @@ if [[ -n $active ]]; then
   fi
 fi
 
-mkdir -p /opt/.venv
-chown ${user}: /opt/.venv
+#mkdir -p /opt/.venv
+#chown ${user}: /opt/.venv
 
 apt-get -y -q update >>  "${SEEDIT_LOG}"  2>&1
-apt-get -y -q install git-core openssl libssl-dev python3 python3-venv >>  "${SEEDIT_LOG}"  2>&1
+apt-get -y -q install git-core openssl libssl-dev python3 >>  "${SEEDIT_LOG}"  2>&1
 
 function _rar () {
   cd /tmp
@@ -72,7 +72,7 @@ Type=forking
 GuessMainPID=no
 User=${user}
 Group=${user}
-ExecStart=/opt/.venv/medusa/bin/python3 /opt/medusa/SickBeard.py -q --daemon --nolaunch --datadir=/opt/medusa
+ExecStart=/usr/bin/python3 /opt/medusa/SickBeard.py -q --daemon --nolaunch --datadir=/opt/medusa
 ExecStop=-/bin/kill -HUP
 
 
