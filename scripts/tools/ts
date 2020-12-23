@@ -3,59 +3,59 @@
 IFACE=$(/usr/bin/sudo ip route | grep default | sed -e "s/^.*dev.//" -e "s/.proto.*//" | awk '{print $1}')
 
 function _tc() {
-	vnstat -u
-	TOTALSRX=$(vnstat --dumpdb -i $IFACE | grep 'totalrx;' | cut -d';' -f2)
-	TOTALSTX=$(vnstat --dumpdb -i $IFACE | grep 'totaltx;' | cut -d';' -f2)
+    vnstat -u
+    TOTALSRX=$(vnstat --dumpdb -i $IFACE | grep 'totalrx;' | cut -d';' -f2)
+    TOTALSTX=$(vnstat --dumpdb -i $IFACE | grep 'totaltx;' | cut -d';' -f2)
 
-	TOTALSRXMB=0
-	TOTALSTXMB=0
-	DL=0
-	UL=0
-	LIMIT=0
+    TOTALSRXMB=0
+    TOTALSTXMB=0
+    DL=0
+    UL=0
+    LIMIT=0
 
-	for TOTALRX in $TOTALSRX; do
-		let 'TOTALSRXMB += TOTALRX'
-	done
+    for TOTALRX in $TOTALSRX; do
+        let 'TOTALSRXMB += TOTALRX'
+    done
 
-	for TOTALTX in $TOTALSTX; do
-		let 'TOTALSTXMB += TOTALTX'
-	done
+    for TOTALTX in $TOTALSTX; do
+        let 'TOTALSTXMB += TOTALTX'
+    done
 
-	DL=$(($TOTALSRXMB * 1024))
-	UL=$(($TOTALSTXMB * 1024))
+    DL=$(($TOTALSRXMB * 1024))
+    UL=$(($TOTALSTXMB * 1024))
 
-	echo 'IFACE' $IFACE
-	echo 'DL' $DL
-	echo 'UL' $UL
+    echo 'IFACE' $IFACE
+    echo 'DL' $DL
+    echo 'UL' $UL
 
-	HOSTNAME=$(hostname -s)
-	VMID=${HOSTNAME//ct/}
-	#  echo 'VMID' $VMID
+    HOSTNAME=$(hostname -s)
+    VMID=${HOSTNAME//ct/}
+    #  echo 'VMID' $VMID
 
-	URL="https://my.dev.seedit4.me/api/vmtinfo/${VMID}/${UL}"
-	#  echo 'URL' $URL
+    URL="https://my.dev.seedit4.me/api/vmtinfo/${VMID}/${UL}"
+    #  echo 'URL' $URL
 
-	LIMIT=$(curl -s -w "\n%{http_code}" "${URL}" | {
-		read body
-		echo $body
-	})
+    LIMIT=$(curl -s -w "\n%{http_code}" "${URL}" | {
+        read body
+        echo $body
+    })
 
-	echo 'LIMIT' $LIMIT
+    echo 'LIMIT' $LIMIT
 
-	if [ $LIMIT == 'true' ]; then
-		#echo -e "\n clearing conf ------------------------------------------------\n"
-		sudo /etc/swizzin/scripts/tools/ws -c -a $IFACE
-		#echo -e "\n setting up ---------------------------------------------------\n"
-		sudo /etc/swizzin/scripts/tools/ws -a $IFACE -u 100000
-		#echo -e "\n info ---------------------------------------------------------\n"
-		sudo /etc/swizzin/scripts/tools/ws -s -a $IFACE
-	fi
+    if [ $LIMIT == 'true' ]; then
+        #echo -e "\n clearing conf ------------------------------------------------\n"
+        sudo /etc/swizzin/scripts/tools/ws -c -a $IFACE
+        #echo -e "\n setting up ---------------------------------------------------\n"
+        sudo /etc/swizzin/scripts/tools/ws -a $IFACE -u 100000
+        #echo -e "\n info ---------------------------------------------------------\n"
+        sudo /etc/swizzin/scripts/tools/ws -s -a $IFACE
+    fi
 
-	if [ $LIMIT == 'false' ]; then
-		sudo /etc/swizzin/scripts/tools/ws -c -a $IFACE
-	fi
+    if [ $LIMIT == 'false' ]; then
+        sudo /etc/swizzin/scripts/tools/ws -c -a $IFACE
+    fi
 
-	exit 0
+    exit 0
 }
 
 _tc

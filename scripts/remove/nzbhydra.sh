@@ -23,9 +23,9 @@ systemctl stop nzbhydra@${MASTER}
 systemctl disable nzbhydra@${MASTER}
 rm /etc/systemd/system/nzbhydra@.service
 if [[ -f /etc/init.d/nzbhydra ]]; then
-	service nzbhydra stop
-	rm /etc/init.d/nzbhydra
-	rm /etc/default/nzbhydra
+    service nzbhydra stop
+    rm /etc/init.d/nzbhydra
+    rm /etc/default/nzbhydra
 fi
 rm -rf /home/${MASTER}/nzbhydra
 rm -f /etc/nginx/apps/nzbhydra.conf

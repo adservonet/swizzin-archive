@@ -6,18 +6,18 @@ echo "This will remove rTorrent and all associated interfaces (ruTorrent/Flood).
 #printf "\n"
 
 for u in ${users}; do
-	systemctl disable rtorrent@${u} >> "${log}" 2>&1
-	systemctl stop rtorrent@${u}
-	rm -f /home/${u}/.rtorrent.rc
+    systemctl disable rtorrent@${u} >> "${log}" 2>&1
+    systemctl stop rtorrent@${u}
+    rm -f /home/${u}/.rtorrent.rc
 done
 
 . /etc/swizzin/sources/functions/rtorrent
 isdeb=$(dpkg -l | grep rtorrent)
 echo "Removing old rTorrent binaries and libraries ... "
 if [[ -z $isdeb ]]; then
-	remove_rtorrent_legacy
+    remove_rtorrent_legacy
 else
-	remove_rtorrent
+    remove_rtorrent
 fi
 
 #apt-get -y remove mktorrent mediainfo

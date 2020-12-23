@@ -6,8 +6,8 @@ systemctl daemon-reload -q
 rm -rf /opt/Radarr
 
 if [[ -f /install/.nginx.lock ]]; then
-	rm /etc/nginx/apps/radarr.conf
-	systemctl reload nginx
+    rm /etc/nginx/apps/radarr.conf
+    systemctl reload nginx
 fi
 
 MASTER=$(cut -d: -f1 < /root/.master.info)

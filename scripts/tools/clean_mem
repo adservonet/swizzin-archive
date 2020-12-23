@@ -21,18 +21,18 @@
 #log=/srv/panel/db/output.log
 
 function _cleanmemcache() {
-	echo "Cleaning system memory cache ... " >> "${log}" 2>&1
-	echo 1 > /proc/sys/vm/drop_caches
-	sleep 5
+    echo "Cleaning system memory cache ... " >> "${log}" 2>&1
+    echo 1 > /proc/sys/vm/drop_caches
+    sleep 5
 
-	echo "System memory cache cleared!" >> "${log}" 2>&1
-	sleep 5
+    echo "System memory cache cleared!" >> "${log}" 2>&1
+    sleep 5
 
-	echo >> "${log}" 2>&1
-	echo >> "${log}" 2>&1
-	echo "Close this dialog box to refresh your browser" >> "${log}" 2>&1
+    echo >> "${log}" 2>&1
+    echo >> "${log}" 2>&1
+    echo "Close this dialog box to refresh your browser" >> "${log}" 2>&1
 
-	exit
+    exit
 }
 
 _cleanmemcache

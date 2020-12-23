@@ -36,11 +36,11 @@ apt-get install -o Dpkg::Options::="--force-confold" -y -f plexmediaserver --all
 echo
 
 if [[ ! -d /var/lib/plexmediaserver ]]; then
-	mkdir -p /var/lib/plexmediaserver
+    mkdir -p /var/lib/plexmediaserver
 fi
 perm=$(stat -c '%U' /var/lib/plexmediaserver/)
 if [[ ! $perm == plex ]]; then
-	chown -R plex:plex /var/lib/plexmediaserver
+    chown -R plex:plex /var/lib/plexmediaserver
 fi
 usermod -a -G ${master} plex
 service plexmediaserver restart > /dev/null 2>&1
