@@ -23,15 +23,15 @@ password=$(cut -d: -f2 < /root/.master.info)
 . /etc/swizzin/sources/functions/pyenv
 
 if [[ $codename =~ ("xenial"|"stretch"|"buster"|"bionic") ]]; then
-	LIST='tesseract-ocr gocr rhino python2.7-dev python-pip python-virtualenv virtualenv libcurl4-openssl-dev sqlite3'
+    LIST='tesseract-ocr gocr rhino python2.7-dev python-pip python-virtualenv virtualenv libcurl4-openssl-dev sqlite3'
 else
-	LIST='tesseract-ocr gocr rhino libcurl4-openssl-dev python2.7-dev sqlite3'
+    LIST='tesseract-ocr gocr rhino libcurl4-openssl-dev python2.7-dev sqlite3'
 fi
 
 apt_install $LIST
 
 if [[ ! $codename =~ ("xenial"|"stretch"|"buster"|"bionic") ]]; then
-	python_getpip
+    python_getpip
 fi
 
 python2_venv ${user} pyload
@@ -130,15 +130,15 @@ echo_progress_done
 
 echo_progress_start "Initalizing database"
 read < <(
-	/opt/.venv/pyload/bin/python2 /opt/pyload/pyLoadCore.py > /dev/null 2>&1 &
-	echo $!
+    /opt/.venv/pyload/bin/python2 /opt/pyload/pyLoadCore.py > /dev/null 2>&1 &
+    echo $!
 )
 PID=$REPLY
 sleep 10
 #kill -9 $PID
 while kill -0 $PID > /dev/null 2>&1; do
-	sleep 1
-	kill $PID > /dev/null 2>&1
+    sleep 1
+    kill $PID > /dev/null 2>&1
 done
 sleep 3
 cd /opt/pyload/
@@ -163,14 +163,14 @@ saltedpasswd=$(python /opt/pyload/adduser.py)
 sleep 1
 
 if [ -f "/opt/pyload/files.db" ]; then
-	sqlite3 /opt/pyload/files.db "\
+    sqlite3 /opt/pyload/files.db "\
     INSERT INTO users('name', 'password') \
       VALUES('${user}','${saltedpasswd}');\
       "
-	echo_progress_done
+    echo_progress_done
 else
-	echo_error "Something went wrong with user setup -- you will be unable to login"
-	#TODO maybe exit then?
+    echo_error "Something went wrong with user setup -- you will be unable to login"
+    #TODO maybe exit then?
 fi
 
 chown -R ${user}: /opt/pyload
@@ -194,10 +194,10 @@ PYSD
 echo_progress_done
 
 if [[ -f /install/.nginx.lock ]]; then
-	echo_progress_start "Configuring nginx"
-	bash /usr/local/bin/swizzin/nginx/pyload.sh
-	systemctl reload nginx
-	echo_progress_done
+    echo_progress_start "Configuring nginx"
+    bash /usr/local/bin/swizzin/nginx/pyload.sh
+    systemctl reload nginx
+    echo_progress_done
 fi
 echo_progress_start "Enabling and starting pyLoad services"
 systemctl enable -q --now pyload.service 2>&1 | tee -a $log

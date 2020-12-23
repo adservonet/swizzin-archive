@@ -27,8 +27,8 @@ wget -q https://rclone.org/install.sh -O /tmp/rcloneinstall.sh >> $log 2>&1
 
 # Make sure rclone downloads and installs without error before proceeding
 if ! bash /tmp/rcloneinstall.sh; then
-	echo_error "Rclone installer failed"
-	exit 1
+    echo_error "Rclone installer failed"
+    exit 1
 fi
 
 user=$(cut -d: -f1 < /root/.master.info)
