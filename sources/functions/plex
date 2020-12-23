@@ -28,7 +28,8 @@ function claimPlex() {
 		token="$(getPref "PlexOnlineToken")"
 		if [ ! -z "${claimtoken}" ] && [ -z "${token}" ]; then
 			echo_log_only "Attempting to obtain server token from claim token"
-			loginInfo="$(curl -s -X POST \
+			loginInfo="$(
+				curl -s -X POST \
 				-H 'X-Plex-Client-Identifier: '${clientId} \
 				-H 'X-Plex-Product: Plex Media Server' \
 				-H 'X-Plex-Version: 1.1' \
@@ -37,7 +38,8 @@ function claimPlex() {
 				-H 'X-Plex-Platform-Version: 1.0' \
 				-H 'X-Plex-Device-Name: PlexMediaServer' \
 				-H 'X-Plex-Device: Linux' \
-				"https://plex.tv/api/claim/exchange?token=${claimtoken}")"
+				"https://plex.tv/api/claim/exchange?token=${claimtoken}"
+			)"
 			token="$(echo "$loginInfo" | sed -n 's/.*<authentication-token>\(.*\)<\/authentication-token>.*/\1/p')"
 
 			if [ "$token" ]; then

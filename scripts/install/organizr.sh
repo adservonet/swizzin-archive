@@ -1,7 +1,6 @@
 #!/bin/bash
 # organizr installation wrapper
 
-
 MASTER=$(cut -d: -f1 < /root/.master.info)
 
 mkdir /srv/organizr
