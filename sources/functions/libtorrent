@@ -30,11 +30,9 @@ function whiptail_libtorrent_rasterbar() {
                     echo_info "Defaulting to libtorrent branch RC_1_1 for shared compatbility"
                     ;;
                 *)
-                    function=$(
-                        whiptail --title "Install Software" --menu "Choose a libtorrent branch:" --ok-button "Continue" --nocancel 12 50 3 \
-                            Repo "(${repov})" \
-                            1.1 "libtorrent branch RC_1_1" 3>&1 1>&2 2>&3
-                    )
+                    function=$(whiptail --title "Install Software" --menu "Choose a libtorrent branch:" --ok-button "Continue" --nocancel 12 50 3 \
+                        Repo "(${repov})" \
+                        1.1 "libtorrent branch RC_1_1" 3>&1 1>&2 2>&3)
                     ;;
             esac
         elif [[ -n $qbittorrent ]] && dpkg --compare-versions $qbitversion ge 4.3.0; then
@@ -43,37 +41,29 @@ function whiptail_libtorrent_rasterbar() {
         elif [[ $delugeversion == master ]] || [[ -n $qbittorrent ]]; then
             case $(lsb_release -cs) in
                 "xenial")
-                    function=$(
-                        whiptail --title "Install Software" --menu "Choose a libtorrent branch:" --ok-button "Continue" --nocancel 12 50 3 \
-                            1.1 "compiled - branch RC_1_1" \
-                            1.2 "libtorrent branch RC_1_2" 3>&1 1>&2 2>&3
-                    )
+                    function=$(whiptail --title "Install Software" --menu "Choose a libtorrent branch:" --ok-button "Continue" --nocancel 12 50 3 \
+                        1.1 "compiled - branch RC_1_1" \
+                        1.2 "libtorrent branch RC_1_2" 3>&1 1>&2 2>&3)
                     ;;
                 *)
-                    function=$(
-                        whiptail --title "Install Software" --menu "Choose a libtorrent branch:" --ok-button "Continue" --nocancel 12 50 3 \
-                            Repo "(${repov})" \
-                            1.1 "libtorrent branch RC_1_1" \
-                            1.2 "libtorrent branch RC_1_2" 3>&1 1>&2 2>&3
-                    )
+                    function=$(whiptail --title "Install Software" --menu "Choose a libtorrent branch:" --ok-button "Continue" --nocancel 12 50 3 \
+                        Repo "(${repov})" \
+                        1.1 "libtorrent branch RC_1_1" \
+                        1.2 "libtorrent branch RC_1_2" 3>&1 1>&2 2>&3)
                     ;;
             esac
         else
             case $(lsb_release -cs) in
                 "stretch" | "xenial" | "bionic")
-                    function=$(
-                        whiptail --title "Install Software" --menu "Choose a libtorrent branch:" --ok-button "Continue" --nocancel 12 50 3 \
-                            Repo "(${repov})" \
-                            1.0 "compiled - branch RC_1_0" \
-                            1.1 "compiled - branch RC_1_1" 3>&1 1>&2 2>&3
-                    )
+                    function=$(whiptail --title "Install Software" --menu "Choose a libtorrent branch:" --ok-button "Continue" --nocancel 12 50 3 \
+                        Repo "(${repov})" \
+                        1.0 "compiled - branch RC_1_0" \
+                        1.1 "compiled - branch RC_1_1" 3>&1 1>&2 2>&3)
                     ;;
                 *)
-                    function=$(
-                        whiptail --title "Install Software" --menu "Choose a libtorrent branch:" --ok-button "Continue" --nocancel 12 50 3 \
-                            Repo "(${repov})" \
-                            1.1 "libtorrent branch RC_1_1" 3>&1 1>&2 2>&3
-                    )
+                    function=$(whiptail --title "Install Software" --menu "Choose a libtorrent branch:" --ok-button "Continue" --nocancel 12 50 3 \
+                        Repo "(${repov})" \
+                        1.1 "libtorrent branch RC_1_1" 3>&1 1>&2 2>&3)
                     ;;
             esac
         fi
@@ -94,13 +84,11 @@ function whiptail_libtorrent_rasterbar() {
 function whiptail_libtorrent_install_resolve_conflict() {
     message="Deluge 1.3 is not compatible with versions of qBittorrent greater than 4.3.0. You will be presented with options to resolve this conflict."
     whiptail --msgbox "${message}" --title "ERROR: libtorrent conflict" --scrolltext 12 78
-    function=$(
-        whiptail --title "ERROR: libtorrent conflict" --menu "Choose a resolution:" --ok-button "Continue" --nocancel 12 50 4 \
-            "Upgrade Deluge" "" \
-            "Downgrade qBittorrent" "" \
-            "Remove Deluge" "" \
-            "Remove qBittorrent" "" 3>&1 1>&2 2>&3
-    )
+    function=$(whiptail --title "ERROR: libtorrent conflict" --menu "Choose a resolution:" --ok-button "Continue" --nocancel 12 50 4 \
+        "Upgrade Deluge" "" \
+        "Downgrade qBittorrent" "" \
+        "Remove Deluge" "" \
+        "Remove qBittorrent" "" 3>&1 1>&2 2>&3)
     case $function in
         "Upgrade Deluge") export deluge=master ;;
         "Downgrade qBittorrent") export qbittorrent=4.2.5 ;;
@@ -262,7 +250,7 @@ function build_libtorrent_rasterbar() {
                 master)
                     python=python3
                     pythonbin=$python
-                    pythonapt=python3-dev
+                    pythonapt="python3-dev python3-setuptools libboost-python-dev"
                     case $release in
                         "stretch" | "xenial")
                             python_configure_args="--with-boost-python=boost_python-py35"
@@ -276,13 +264,14 @@ function build_libtorrent_rasterbar() {
                 1.3-stable)
                     python=python
                     pythonbin=python2
-                    pythonapt=python2.7-dev
+                    pythonapt="python2.7-dev python-setuptools libboost-python-dev"
                     remove=python3-libtorrent
                     case $release in
                         "focal")
                             pythonbin=python2.7
+                            pythonapt="python2.7-dev python-setuptools libboost-python1.67-dev"
                             #python_configure_args="--with-boost-python=boost_python27"
-                            LIST="libboost1.67-dev libboost-python1.67-dev libboost-system1.67-dev libboost-chrono1.67-dev libboost-random1.67-dev build-essential autoconf automake libtool libssl-dev libgeoip-dev geoip-database ${pythonapt} python-setuptools"
+                            LIST="libboost1.67-dev libboost-system1.67-dev libboost-chrono1.67-dev libboost-random1.67-dev libboost1.67-tools-dev build-essential autoconf automake libtool libssl-dev libgeoip-dev geoip-database ${pythonapt}"
                             ;;
                     esac
                     ;;
@@ -297,7 +286,7 @@ function build_libtorrent_rasterbar() {
         done
         LTRC=$libtorrent
         if [[ -z $LIST ]]; then
-            LIST="build-essential autoconf automake pkg-config libtool libboost-system-dev libboost-python-dev libssl-dev libgeoip-dev libboost-chrono-dev libboost-random-dev geoip-database ${pythonapt} python-setuptools"
+            LIST="build-essential autoconf automake pkg-config libtool libboost-system-dev libssl-dev libgeoip-dev libboost-chrono-dev libboost-random-dev libboost-tools-dev geoip-database ${pythonapt}"
         fi
         apt_install $LIST
         apt_autoremove
@@ -324,6 +313,8 @@ function build_libtorrent_rasterbar() {
             tag=" with c++14"
             #RC_1_2 requires c++14 to build for qBittorrent. In order to build we currently require this workaround otherwise.
             sed -i 's/AX_CXX_COMPILE_STDCXX_11.*/AX_CXX_COMPILE_STDCXX(14, [noext], [optional], [skip])/g' configure.ac
+            #Temporarily pin libtorrent to 1.2.11 to prevent b2 python binding issues
+            git checkout tags/v1.2.11 >> ${log} 2>&1
         fi
         ./autotool.sh >> "${log}" 2>&1
         ./configure --with-lib-geoip --with-libiconv CXXFLAGS=${configure_args} >> "${log}" 2>&1
@@ -345,7 +336,7 @@ function build_libtorrent_rasterbar() {
             patch -p1 < /root/libtorrent.patch >> ${log} 2>&1
         fi
         make -j$(nproc) >> "${log}" 2>&1
-        make DESTDIR=/tmp/dist/libtorrent install > /dev/null 2>&1
+        make DESTDIR=/tmp/dist/libtorrent install >> ${log} 2>&1
         mkdir -p /root/dist
         /usr/local/bin/fpm -f -C /tmp/dist/libtorrent -p /root/dist/libtorrent-rasterbar_VERSION.deb -s dir -t deb -n libtorrent-rasterbar --version ${VERSION} --description "Libtorrent rasterbar compiled by swizzin$tag" > /dev/null 2>&1
         dpkg -i /root/dist/libtorrent-rasterbar_${VERSION}.deb
@@ -354,7 +345,7 @@ function build_libtorrent_rasterbar() {
             PYTHON=${pythonbin} ./configure --enable-python-binding --with-libiconv ${python_configure_args} CXXFLAGS=${configure_args} >> "${log}" 2>&1
             /usr/local/bin/fpm --verbose --python-bin=${pythonbin} --python-package-name-prefix=${python} -n ${python}-libtorrent -f -p /root/dist/${python}-libtorrent_VERSION.deb --version ${VERSION} --description "Libtorrent rasterbar python bindings compiled by swizzin$tag" -s python -t deb /tmp/libtorrent/bindings/python/setup.py >> $log 2>&1
             dpkg -i /root/dist/${python}-libtorrent_${VERSION}.deb
-            echo_progress_done "Pbox ython binding built"
+            echo_progress_done "Python binding built"
         fi
         ldconfig
         cd /tmp
