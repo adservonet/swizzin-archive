@@ -33,7 +33,7 @@ eval export NOPRIOPORTSRC=$NOPRIOPORTSRC
 eval export NOPRIOPORTDST=$NOPRIOPORTDST
 
 usage() {
-	cat << EOF
+    cat << EOF
 USAGE: $0 [-hcs] [-a <adapter>] [-d <rate>] [-u <rate>]
 
 Limit the bandwidth of an adapter
@@ -71,65 +71,65 @@ IFB="ifb0"
 MODE=""
 
 while getopts hvd:u:a:pcs o; do
-	case "$o" in
-		h)
-			usage
-			exit 1
-			;;
-		v)
-			echo "Version $VERSION"
-			exit 0
-			;;
-		d) DSPEED="$OPTARG" ;;
-		u) USPEED="$OPTARG" ;;
-		a) IFACE="$OPTARG" ;;
-		p) MODE="presets" ;;
-		c) MODE="clear" ;;
-		s) MODE="status" ;;
-		[?])
-			usage
-			exit 1
-			;;
-	esac
+    case "$o" in
+        h)
+            usage
+            exit 1
+            ;;
+        v)
+            echo "Version $VERSION"
+            exit 0
+            ;;
+        d) DSPEED="$OPTARG" ;;
+        u) USPEED="$OPTARG" ;;
+        a) IFACE="$OPTARG" ;;
+        p) MODE="presets" ;;
+        c) MODE="clear" ;;
+        s) MODE="status" ;;
+        [?])
+            usage
+            exit 1
+            ;;
+    esac
 done
 
 if [ "$MODE" = "presets" ]; then
-	if [ -f "$CONF" ]; then
-		# shellcheck disable=SC1090
-		source "$CONF"
-	elif [ -f "$CONFLEGACY" ]; then
-		# shellcheck disable=SC1090
-		source "$CONFLEGACY"
-	else
-		echo "$CONF not found"
-		exit 1
-	fi
+    if [ -f "$CONF" ]; then
+        # shellcheck disable=SC1090
+        source "$CONF"
+    elif [ -f "$CONFLEGACY" ]; then
+        # shellcheck disable=SC1090
+        source "$CONFLEGACY"
+    else
+        echo "$CONF not found"
+        exit 1
+    fi
 fi
 
 if [[ -n "$MODE" ]] && [[ -z "$IFACE" ]]; then
-	echo "Please supply the adapter name for the mode."
-	echo ""
-	usage
-	exit 1
+    echo "Please supply the adapter name for the mode."
+    echo ""
+    usage
+    exit 1
 fi
 
 if [ "$MODE" = "status" ]; then
-	tc -s qdisc ls dev "$IFACE"
-	tc -s class ls dev "$IFACE"
-	exit
+    tc -s qdisc ls dev "$IFACE"
+    tc -s class ls dev "$IFACE"
+    exit
 fi
 
 if [ "$MODE" = "clear" ]; then
-	tc qdisc del dev "$IFACE" root 2> /dev/null > /dev/null
-	tc qdisc del dev "$IFACE" ingress 2> /dev/null > /dev/null
-	tc qdisc del dev "$IFB" root 2> /dev/null > /dev/null
-	tc qdisc del dev "$IFB" ingress 2> /dev/null > /dev/null
-	exit
+    tc qdisc del dev "$IFACE" root 2> /dev/null > /dev/null
+    tc qdisc del dev "$IFACE" ingress 2> /dev/null > /dev/null
+    tc qdisc del dev "$IFB" root 2> /dev/null > /dev/null
+    tc qdisc del dev "$IFB" ingress 2> /dev/null > /dev/null
+    exit
 fi
 
 if { [[ -z "$DSPEED" ]] && [[ -z "$USPEED" ]]; } || [[ -z "$IFACE" ]]; then
-	usage
-	exit 1
+    usage
+    exit 1
 fi
 
 ###### uplink
@@ -142,91 +142,91 @@ tc qdisc add dev "$IFACE" root handle 1: htb default 20
 # DSL modem which destroy latency:
 # main class
 if [[ -n "$USPEED" ]]; then
-	tc class add dev "$IFACE" parent 1: classid 1:1 htb \
-		rate "${USPEED}kbit" \
-		prio 5 ${COMMONOPTIONS[@]}
+    tc class add dev "$IFACE" parent 1: classid 1:1 htb \
+        rate "${USPEED}kbit" \
+        prio 5 ${COMMONOPTIONS[@]}
 
-	# high prio class 1:10:
+    # high prio class 1:10:
 
-	RATE=$((20 * USPEED / 100))
-	if [ "$RATE" -eq 0 ]; then RATE=1; fi
-	tc class add dev "$IFACE" parent 1:1 classid 1:10 htb \
-		rate "${RATE}kbit" ceil $((95 * USPEED / 100))kbit \
-		prio 1 ${COMMONOPTIONS[@]}
+    RATE=$((20 * USPEED / 100))
+    if [ "$RATE" -eq 0 ]; then RATE=1; fi
+    tc class add dev "$IFACE" parent 1:1 classid 1:10 htb \
+        rate "${RATE}kbit" ceil $((95 * USPEED / 100))kbit \
+        prio 1 ${COMMONOPTIONS[@]}
 
-	# bulk and default class 1:20 - gets slightly less traffic,
-	#  and a lower priority:
+    # bulk and default class 1:20 - gets slightly less traffic,
+    #  and a lower priority:
 
-	RATE=$((40 * USPEED / 100))
-	if [ "$RATE" -eq 0 ]; then RATE=1; fi
-	tc class add dev "$IFACE" parent 1:1 classid 1:20 htb \
-		rate "${USPEED}kbit" ceil $((95 * USPEED / 100))kbit \
-		prio 2 ${COMMONOPTIONS[@]}
+    RATE=$((40 * USPEED / 100))
+    if [ "$RATE" -eq 0 ]; then RATE=1; fi
+    tc class add dev "$IFACE" parent 1:1 classid 1:20 htb \
+        rate "${USPEED}kbit" ceil $((95 * USPEED / 100))kbit \
+        prio 2 ${COMMONOPTIONS[@]}
 
-	# 'traffic we hate'
+    # 'traffic we hate'
 
-	RATE=$((20 * USPEED / 100))
-	if [ "$RATE" -eq 0 ]; then RATE=1; fi
-	tc class add dev "$IFACE" parent 1:1 classid 1:30 htb \
-		rate "${USPEED}kbit" ceil $((90 * USPEED / 100))kbit \
-		prio 3 ${COMMONOPTIONS[@]}
+    RATE=$((20 * USPEED / 100))
+    if [ "$RATE" -eq 0 ]; then RATE=1; fi
+    tc class add dev "$IFACE" parent 1:1 classid 1:30 htb \
+        rate "${USPEED}kbit" ceil $((90 * USPEED / 100))kbit \
+        prio 3 ${COMMONOPTIONS[@]}
 
-	# all get Stochastic Fairness:
-	tc qdisc add dev "$IFACE" parent 1:10 handle 10: sfq perturb 10 quantum "$QUANTUM"
-	tc qdisc add dev "$IFACE" parent 1:20 handle 20: sfq perturb 10 quantum "$QUANTUM"
-	tc qdisc add dev "$IFACE" parent 1:30 handle 30: sfq perturb 10 quantum "$QUANTUM"
+    # all get Stochastic Fairness:
+    tc qdisc add dev "$IFACE" parent 1:10 handle 10: sfq perturb 10 quantum "$QUANTUM"
+    tc qdisc add dev "$IFACE" parent 1:20 handle 20: sfq perturb 10 quantum "$QUANTUM"
+    tc qdisc add dev "$IFACE" parent 1:30 handle 30: sfq perturb 10 quantum "$QUANTUM"
 
-	# start filters
-	# TOS Minimum Delay (ssh, NOT scp) in 1:10:
-	#  tc filter add dev "$IFACE" parent 1: protocol ip prio 10 u32 \
-	#    match ip tos 0x10 0xff  flowid 1:10;
-	#  for host in "${HIPRIODST[@]}"; do
-	#    tc filter add dev "$IFACE" parent 1: protocol ip prio 10 u32 \
-	#      match ip dst "$host" flowid 1:10;
-	#  done;
-	#
-	#  # ICMP (ip protocol 1) in the interactive class 1:10 so we
-	#  # can do measurements & impress our friends:
-	#  tc filter add dev "$IFACE" parent 1: protocol ip prio 11 u32 \
-	#    match ip protocol 1 0xff flowid 1:10;
-	#
-	#  # prioritize small packets (<64 bytes)
-	#
-	#  tc filter add dev "$IFACE" parent 1: protocol ip prio 12 u32 \
-	#    match ip protocol 6 0xff \
-	#    match u8 0x05 0x0f at 0 \
-	#    match u16 0x0000 0xffc0 at 2 \
-	#    flowid 1:10;
+    # start filters
+    # TOS Minimum Delay (ssh, NOT scp) in 1:10:
+    #  tc filter add dev "$IFACE" parent 1: protocol ip prio 10 u32 \
+    #    match ip tos 0x10 0xff  flowid 1:10;
+    #  for host in "${HIPRIODST[@]}"; do
+    #    tc filter add dev "$IFACE" parent 1: protocol ip prio 10 u32 \
+    #      match ip dst "$host" flowid 1:10;
+    #  done;
+    #
+    #  # ICMP (ip protocol 1) in the interactive class 1:10 so we
+    #  # can do measurements & impress our friends:
+    #  tc filter add dev "$IFACE" parent 1: protocol ip prio 11 u32 \
+    #    match ip protocol 1 0xff flowid 1:10;
+    #
+    #  # prioritize small packets (<64 bytes)
+    #
+    #  tc filter add dev "$IFACE" parent 1: protocol ip prio 12 u32 \
+    #    match ip protocol 6 0xff \
+    #    match u8 0x05 0x0f at 0 \
+    #    match u16 0x0000 0xffc0 at 2 \
+    #    flowid 1:10;
 
-	# some traffic however suffers a worse fate
-	#  for a in "${NOPRIOPORTDST[@]}"; do
-	#    echo NOPRIOPORTDST $a
-	#    tc filter add dev "$IFACE" parent 1: protocol ip prio 14 u32 \
-	#      match ip dport "$a" 0xffff flowid 1:30;
-	#  done;
-	#
-	#  for a in "${NOPRIOPORTSRC[@]}"; do
-	#    echo NOPRIOPORTSRC $a
-	#    tc filter add dev "$IFACE" parent 1: protocol ip prio 15 u32 \
-	#      match ip sport "$a" 0xffff flowid 1:30;
-	#  done;
-	#
-	#  for a in "${NOPRIOHOSTSRC[@]}"; do
-	#    echo NOPRIOHOSTSRC $a
-	#    tc filter add dev "$IFACE" parent 1: protocol ip prio 16 u32 \
-	#      match ip src "$a" flowid 1:30;
-	#  done;
-	#
-	#  for a in "${NOPRIOHOSTDST[@]}"; do
-	#    echo NOPRIOHOSTDST $a
-	#    tc filter add dev "$IFACE" parent 1: protocol ip prio 17 u32 \
-	#      match ip dst "$a"flowid 1:30;
-	#  done;
+    # some traffic however suffers a worse fate
+    #  for a in "${NOPRIOPORTDST[@]}"; do
+    #    echo NOPRIOPORTDST $a
+    #    tc filter add dev "$IFACE" parent 1: protocol ip prio 14 u32 \
+    #      match ip dport "$a" 0xffff flowid 1:30;
+    #  done;
+    #
+    #  for a in "${NOPRIOPORTSRC[@]}"; do
+    #    echo NOPRIOPORTSRC $a
+    #    tc filter add dev "$IFACE" parent 1: protocol ip prio 15 u32 \
+    #      match ip sport "$a" 0xffff flowid 1:30;
+    #  done;
+    #
+    #  for a in "${NOPRIOHOSTSRC[@]}"; do
+    #    echo NOPRIOHOSTSRC $a
+    #    tc filter add dev "$IFACE" parent 1: protocol ip prio 16 u32 \
+    #      match ip src "$a" flowid 1:30;
+    #  done;
+    #
+    #  for a in "${NOPRIOHOSTDST[@]}"; do
+    #    echo NOPRIOHOSTDST $a
+    #    tc filter add dev "$IFACE" parent 1: protocol ip prio 17 u32 \
+    #      match ip dst "$a"flowid 1:30;
+    #  done;
 
-	# rest is 'non-interactive' ie 'bulk' and ends up in 1:20
+    # rest is 'non-interactive' ie 'bulk' and ends up in 1:20
 
-	tc filter add dev "$IFACE" parent 1: protocol ip prio 18 u32 \
-		match ip dst 0.0.0.0/0 flowid 1:20
+    tc filter add dev "$IFACE" parent 1: protocol ip prio 18 u32 \
+        match ip dst 0.0.0.0/0 flowid 1:20
 
 fi
 

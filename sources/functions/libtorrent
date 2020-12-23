@@ -32,8 +32,8 @@ function whiptail_libtorrent_rasterbar() {
                 *)
                     function=$(
                         whiptail --title "Install Software" --menu "Choose a libtorrent branch:" --ok-button "Continue" --nocancel 12 50 3 \
-                        Repo "(${repov})" \
-                        1.1 "libtorrent branch RC_1_1" 3>&1 1>&2 2>&3
+                            Repo "(${repov})" \
+                            1.1 "libtorrent branch RC_1_1" 3>&1 1>&2 2>&3
                     )
                     ;;
             esac
@@ -45,16 +45,16 @@ function whiptail_libtorrent_rasterbar() {
                 "xenial")
                     function=$(
                         whiptail --title "Install Software" --menu "Choose a libtorrent branch:" --ok-button "Continue" --nocancel 12 50 3 \
-                        1.1 "compiled - branch RC_1_1" \
-                        1.2 "libtorrent branch RC_1_2" 3>&1 1>&2 2>&3
+                            1.1 "compiled - branch RC_1_1" \
+                            1.2 "libtorrent branch RC_1_2" 3>&1 1>&2 2>&3
                     )
                     ;;
                 *)
                     function=$(
                         whiptail --title "Install Software" --menu "Choose a libtorrent branch:" --ok-button "Continue" --nocancel 12 50 3 \
-                        Repo "(${repov})" \
-                        1.1 "libtorrent branch RC_1_1" \
-                        1.2 "libtorrent branch RC_1_2" 3>&1 1>&2 2>&3
+                            Repo "(${repov})" \
+                            1.1 "libtorrent branch RC_1_1" \
+                            1.2 "libtorrent branch RC_1_2" 3>&1 1>&2 2>&3
                     )
                     ;;
             esac
@@ -63,16 +63,16 @@ function whiptail_libtorrent_rasterbar() {
                 "stretch" | "xenial" | "bionic")
                     function=$(
                         whiptail --title "Install Software" --menu "Choose a libtorrent branch:" --ok-button "Continue" --nocancel 12 50 3 \
-                        Repo "(${repov})" \
-                        1.0 "compiled - branch RC_1_0" \
-                        1.1 "compiled - branch RC_1_1" 3>&1 1>&2 2>&3
+                            Repo "(${repov})" \
+                            1.0 "compiled - branch RC_1_0" \
+                            1.1 "compiled - branch RC_1_1" 3>&1 1>&2 2>&3
                     )
                     ;;
                 *)
                     function=$(
                         whiptail --title "Install Software" --menu "Choose a libtorrent branch:" --ok-button "Continue" --nocancel 12 50 3 \
-                        Repo "(${repov})" \
-                        1.1 "libtorrent branch RC_1_1" 3>&1 1>&2 2>&3
+                            Repo "(${repov})" \
+                            1.1 "libtorrent branch RC_1_1" 3>&1 1>&2 2>&3
                     )
                     ;;
             esac
@@ -96,10 +96,10 @@ function whiptail_libtorrent_install_resolve_conflict() {
     whiptail --msgbox "${message}" --title "ERROR: libtorrent conflict" --scrolltext 12 78
     function=$(
         whiptail --title "ERROR: libtorrent conflict" --menu "Choose a resolution:" --ok-button "Continue" --nocancel 12 50 4 \
-        "Upgrade Deluge" "" \
-        "Downgrade qBittorrent" "" \
-        "Remove Deluge" "" \
-        "Remove qBittorrent" "" 3>&1 1>&2 2>&3
+            "Upgrade Deluge" "" \
+            "Downgrade qBittorrent" "" \
+            "Remove Deluge" "" \
+            "Remove qBittorrent" "" 3>&1 1>&2 2>&3
     )
     case $function in
         "Upgrade Deluge") export deluge=master ;;

@@ -11,11 +11,11 @@
 MASTER=$(cut -d: -f1 < /root/.master.info)
 isactive=$(systemctl is-active nzbhydra@$MASTER)
 if [[ $isactive == "active" ]]; then
-	systemctl stop nzbhydra@${MASTER}
+    systemctl stop nzbhydra@${MASTER}
 fi
 
 if [[ ! -f /etc/nginx/apps/nzbhydra.conf ]]; then
-	cat > /etc/nginx/apps/nzbhydra.conf << RAD
+    cat > /etc/nginx/apps/nzbhydra.conf << RAD
 location /nzbhydra {
   include /etc/nginx/snippets/proxy.conf;
   proxy_pass        http://127.0.0.1:5075/nzbhydra;
@@ -27,5 +27,5 @@ fi
 sed -i "s/urlBase.*/urlBase\": \"\/nzbhydra\",/g" /home/"${MASTER}"/.nzbhydra/settings.cfg
 sed -i "s/\"host\": \"0.0.0.0\",/\"host\": \"127.0.0.1\",/g" /home/"${MASTER}"/.nzbhydra/settings.cfg
 if [[ $isactive == "active" ]]; then
-	systemctl start nzbhydra@${MASTER}
+    systemctl start nzbhydra@${MASTER}
 fi

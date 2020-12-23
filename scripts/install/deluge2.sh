@@ -14,38 +14,38 @@
 #################################################################################
 
 function _dconf {
-	for u in "${users[@]}"; do
-		echo_progress_start "Configuring Deluge for $u"
-		if [[ ${u} == ${master} ]]; then
-			pass=$(cut -d: -f2 < /root/.master.info)
-		else
-			pass=$(cut -d: -f2 < /root/${u}.info)
-		fi
-		n=$RANDOM
-		DPORT=$((n % 59000 + 10024))
-		DWSALT=$(
-			head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32
-			echo ""
-		)
-		localpass=$(
-			head /dev/urandom | tr -dc a-z0-9 | head -c 40
-			echo ""
-		)
-		if $(command -v python2.7 > /dev/null 2>&1); then
-			pythonversion=python2.7
-		elif $(command -v python3 > /dev/null 2>&1); then
-			pythonversion=python3
-		fi
-		DWP=$(${pythonversion} ${local_packages}/deluge.Userpass.py ${pass} ${DWSALT})
-		DUDID=$(${pythonversion} ${local_packages}/deluge.addHost.py)
-		port=$(cat /home/seedit4me/.deluge_port)
-		# -- Secondary awk command -- #
-		#DPORT=$(awk -v min=59000 -v max=69024 'BEGIN{srand(); print int(min+rand()*(max-min+1))}')
-		#DWPORT=$(shuf -i 10001-11000 -n 1)
-		ltconfig
-		chmod 755 /home/${u}/.config
-		chmod 755 /home/${u}/.config/deluge
-		cat > /home/${u}/.config/deluge/core.conf << DC
+    for u in "${users[@]}"; do
+        echo_progress_start "Configuring Deluge for $u"
+        if [[ ${u} == ${master} ]]; then
+            pass=$(cut -d: -f2 < /root/.master.info)
+        else
+            pass=$(cut -d: -f2 < /root/${u}.info)
+        fi
+        n=$RANDOM
+        DPORT=$((n % 59000 + 10024))
+        DWSALT=$(
+            head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32
+            echo ""
+        )
+        localpass=$(
+            head /dev/urandom | tr -dc a-z0-9 | head -c 40
+            echo ""
+        )
+        if $(command -v python2.7 > /dev/null 2>&1); then
+            pythonversion=python2.7
+        elif $(command -v python3 > /dev/null 2>&1); then
+            pythonversion=python3
+        fi
+        DWP=$(${pythonversion} ${local_packages}/deluge.Userpass.py ${pass} ${DWSALT})
+        DUDID=$(${pythonversion} ${local_packages}/deluge.addHost.py)
+        port=$(cat /home/seedit4me/.deluge_port)
+        # -- Secondary awk command -- #
+        #DPORT=$(awk -v min=59000 -v max=69024 'BEGIN{srand(); print int(min+rand()*(max-min+1))}')
+        #DWPORT=$(shuf -i 10001-11000 -n 1)
+        ltconfig
+        chmod 755 /home/${u}/.config
+        chmod 755 /home/${u}/.config/deluge
+        cat > /home/${u}/.config/deluge/core.conf << DC
   {
     "file": 1,
     "format": 1
@@ -155,7 +155,7 @@ function _dconf {
     "listen_interface": "${ip}"
   }
 DC
-		cat > /home/${u}/.config/deluge/web.conf << DWC
+        cat > /home/${u}/.config/deluge/web.conf << DWC
 {
   "file": 1,
   "format": 1
@@ -180,7 +180,7 @@ DC
   "sidebar_multiple_filters": true
 }
 DWC
-		cat > /home/${u}/.config/deluge/blocklist.conf << DBL
+        cat > /home/${u}/.config/deluge/blocklist.conf << DBL
 {
   "file": 1,
   "format": 1
@@ -197,14 +197,14 @@ DWC
 }
 DBL
 
-		dvermajor=$(deluged -v | grep deluged | grep -oP '\d+\.\d+\.\d+' | cut -d. -f1)
+        dvermajor=$(deluged -v | grep deluged | grep -oP '\d+\.\d+\.\d+' | cut -d. -f1)
 
-		case $dvermajor in
-			1)
-				SUFFIX=.1.2
-				;;
-		esac
-		cat > /home/${u}/.config/deluge/hostlist.conf${SUFFIX} << DHL
+        case $dvermajor in
+            1)
+                SUFFIX=.1.2
+                ;;
+        esac
+        cat > /home/${u}/.config/deluge/hostlist.conf${SUFFIX} << DHL
 {
   "file": 1,
   "format": 1
@@ -221,28 +221,28 @@ DBL
 }
 DHL
 
-		wget -O /home/${u}/.config/deluge/blocklist.cache https://my.seedit4.me/storage/deluge_blocklist.dat
+        wget -O /home/${u}/.config/deluge/blocklist.cache https://my.seedit4.me/storage/deluge_blocklist.dat
 
-		echo "${u}:${pass}:10" > /home/${u}/.config/deluge/auth
-		echo "localclient:${localpass}:10" >> /home/${u}/.config/deluge/auth
-		chmod 600 /home/${u}/.config/deluge/auth
-		chown -R ${u}.${u} /home/${u}/.config/
-		mkdir /home/${u}/dwatch
-		chown ${u}: /home/${u}/dwatch
-		mkdir -p /home/${u}/torrents/deluge
-		chown ${u}: /home/${u}/torrents
-		chown ${u}: /home/${u}/torrents/deluge
-		usermod -a -G ${u} www-data 2>> "$log"
-		echo_progress_done "Configured for $u"
-	done
+        echo "${u}:${pass}:10" > /home/${u}/.config/deluge/auth
+        echo "localclient:${localpass}:10" >> /home/${u}/.config/deluge/auth
+        chmod 600 /home/${u}/.config/deluge/auth
+        chown -R ${u}.${u} /home/${u}/.config/
+        mkdir /home/${u}/dwatch
+        chown ${u}: /home/${u}/dwatch
+        mkdir -p /home/${u}/torrents/deluge
+        chown ${u}: /home/${u}/torrents
+        chown ${u}: /home/${u}/torrents/deluge
+        usermod -a -G ${u} www-data 2>> "$log"
+        echo_progress_done "Configured for $u"
+    done
 }
 
 function _dservice {
-	echo_progress_start "Adding systemd service files"
-	if [[ ! -f /etc/systemd/system/deluged@.service ]]; then
-		dvermajor=$(deluged -v | grep deluged | grep -oP '\d+\.\d+\.\d+' | cut -d. -f1)
-		if [[ $dvermajor == 2 ]]; then args=" -d"; fi
-		cat > /etc/systemd/system/deluged@.service << DD
+    echo_progress_start "Adding systemd service files"
+    if [[ ! -f /etc/systemd/system/deluged@.service ]]; then
+        dvermajor=$(deluged -v | grep deluged | grep -oP '\d+\.\d+\.\d+' | cut -d. -f1)
+        if [[ $dvermajor == 2 ]]; then args=" -d"; fi
+        cat > /etc/systemd/system/deluged@.service << DD
 [Unit]
 Description=Deluge Bittorrent Client Daemon
 After=network.target
@@ -259,9 +259,9 @@ TimeoutStopSec=300
 [Install]
 WantedBy=multi-user.target
 DD
-	fi
-	if [[ ! -f /etc/systemd/system/deluge-web@.service ]]; then
-		cat > /etc/systemd/system/deluge-web@.service << DW
+    fi
+    if [[ ! -f /etc/systemd/system/deluge-web@.service ]]; then
+        cat > /etc/systemd/system/deluge-web@.service << DW
 [Unit]
 Description=Deluge Bittorrent Client Web Interface
 After=network.target
@@ -278,26 +278,26 @@ Restart=on-failure
 [Install]
 WantedBy=multi-user.target
 DW
-	fi
-	for u in "${users[@]}"; do
-		systemctl enable -q deluged@${u} 2>&1 | tee -a $log
-		systemctl enable -q deluge-web@${u} 2>&1 | tee -a $log
-		systemctl start deluged@${u}
-		systemctl start deluge-web@${u}
-	done
+    fi
+    for u in "${users[@]}"; do
+        systemctl enable -q deluged@${u} 2>&1 | tee -a $log
+        systemctl enable -q deluge-web@${u} 2>&1 | tee -a $log
+        systemctl start deluged@${u}
+        systemctl start deluge-web@${u}
+    done
 
-	echo_progress_done "Services added and started"
+    echo_progress_done "Services added and started"
 
-	if [[ -f /install/.nginx.lock ]]; then
-		echo_progress_start "Adding nginx configs"
-		bash /usr/local/bin/swizzin/nginx/deluge.sh
-		systemctl reload nginx
-		echo_progress_done "nginx configured"
-	fi
+    if [[ -f /install/.nginx.lock ]]; then
+        echo_progress_start "Adding nginx configs"
+        bash /usr/local/bin/swizzin/nginx/deluge.sh
+        systemctl reload nginx
+        echo_progress_done "nginx configured"
+    fi
 
-	touch /install/.deluge.lock
-	touch /install/.deluge2.lock
-	touch /install/.delugeweb.lock
+    touch /install/.deluge.lock
+    touch /install/.deluge2.lock
+    touch /install/.delugeweb.lock
 }
 
 . /etc/swizzin/sources/functions/deluge
@@ -311,13 +311,13 @@ codename=$(lsb_release -cs)
 ip=$(ip route get 1 | sed -n 's/^.*src \([0-9.]*\) .*$/\1/p')
 
 if [[ -n $1 ]]; then
-	users=($1)
-	_dconf
-	if [[ -f /install/.nginx.lock ]]; then
-		bash /etc/swizzin/scripts/nginx/deluge.sh $users
-		systemctl reload nginx
-	fi
-	exit 0
+    users=($1)
+    _dconf
+    if [[ -f /install/.nginx.lock ]]; then
+        bash /etc/swizzin/scripts/nginx/deluge.sh $users
+        systemctl reload nginx
+    fi
+    exit 0
 fi
 
 #whiptail_deluge
@@ -335,10 +335,10 @@ export deluge=master
 export libtorrent=RC_1_2
 
 if ! skip_libtorrent_rasterbar; then
-	#whiptail_libtorrent_rasterbar
-	echo_progress_start "Building libtorrent-rasterbar"
-	build_libtorrent_rasterbar
-	echo_progress_done "Libtorrent-rasterbar installed"
+    #whiptail_libtorrent_rasterbar
+    echo_progress_start "Building libtorrent-rasterbar"
+    build_libtorrent_rasterbar
+    echo_progress_done "Libtorrent-rasterbar installed"
 fi
 
 build_deluge

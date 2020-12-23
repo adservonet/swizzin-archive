@@ -45,8 +45,8 @@ systemctl enable lazylibrarian@${MASTER}.service > /dev/null 2>&1
 systemctl start lazylibrarian@${MASTER}.service > /dev/null 2>&1
 
 if [[ -f /install/.nginx.lock ]]; then
-	bash /usr/local/bin/swizzin/nginx/lazylibrarian.sh
-	service nginx reload
+    bash /usr/local/bin/swizzin/nginx/lazylibrarian.sh
+    service nginx reload
 fi
 
 echo "lazylibrarian Install Complete!" >> "${log}" 2>&1

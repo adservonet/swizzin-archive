@@ -6,9 +6,9 @@ user=$(cut -d: -f1 < /root/.master.info)
 port=$(cat /home/seedit4me/.qbittorrent_port)
 
 if [[ ! -d /home/seedit4me/torrents/qbittorrent ]]; then
-	mkdir -p /home/seedit4me/torrents/qbittorrent
-	chown -R seedit4me:seedit4me /home/seedit4me/torrents/qbittorrent
-	chmod -R 775 /home/seedit4me/torrents/qbittorrent
+    mkdir -p /home/seedit4me/torrents/qbittorrent
+    chown -R seedit4me:seedit4me /home/seedit4me/torrents/qbittorrent
+    chmod -R 775 /home/seedit4me/torrents/qbittorrent
 fi
 
 apt_update
@@ -54,10 +54,10 @@ echo "Downloads\SavePath=/home/seedit4me/torrents/qbittorrent/" >> /home/qbittor
 systemctl restart qbittorrent >> "${log}" 2>&1
 
 if [[ -f /install/.nginx.lock ]]; then
-	echo_progress_start "Configuring nginx"
-	bash /etc/swizzin/scripts/nginx/qbittorrent.sh
-	systemctl reload nginx >> $log 2>&1
-	echo_progress_done
+    echo_progress_start "Configuring nginx"
+    bash /etc/swizzin/scripts/nginx/qbittorrent.sh
+    systemctl reload nginx >> $log 2>&1
+    echo_progress_done
 fi
 
 touch /install/.qbittorrent.lock
@@ -79,15 +79,15 @@ port=$(cat /home/seedit4me/.qbittorrent_port)
 users=($(_get_user_list))
 
 if [[ -n $1 ]]; then
-	user=$1
-	qbittorrent_user_config ${user}
-	if [[ -f /install/.nginx.lock ]]; then
-		echo_progress_start "Configuring nginx"
-		bash /etc/swizzin/scripts/nginx/qbittorrent.sh
-		systemctl reload nginx
-		echo_progress_done
-	fi
-	exit 0
+    user=$1
+    qbittorrent_user_config ${user}
+    if [[ -f /install/.nginx.lock ]]; then
+        echo_progress_start "Configuring nginx"
+        bash /etc/swizzin/scripts/nginx/qbittorrent.sh
+        systemctl reload nginx
+        echo_progress_done
+    fi
+    exit 0
 fi
 
 . /etc/swizzin/sources/functions/apt
@@ -103,11 +103,11 @@ export qbittorrent=${repov}
 #whiptail_qbittorrent
 #check_client_compatibility
 if ! skip_libtorrent_rasterbar; then
-	export libtorrent=RC_1_2
-	#whiptail_libtorrent_rasterbar
-	echo_progress_start "Building libtorrent-rasterbar"
-	build_libtorrent_rasterbar
-	echo_progress_done "Build completed"
+    export libtorrent=RC_1_2
+    #whiptail_libtorrent_rasterbar
+    echo_progress_start "Building libtorrent-rasterbar"
+    build_libtorrent_rasterbar
+    echo_progress_done "Build completed"
 fi
 
 echo_progress_start "Building qBittorrent"
@@ -115,41 +115,41 @@ build_qbittorrent
 echo_progress_done
 
 if [[ ! -d /home/seedit4me/torrents/qbittorrent ]]; then
-	mkdir -p /home/seedit4me/torrents/qbittorrent
-	chown -R seedit4me:seedit4me /home/seedit4me/torrents/qbittorrent
-	chmod -R 775 /home/seedit4me/torrents/qbittorrent
+    mkdir -p /home/seedit4me/torrents/qbittorrent
+    chown -R seedit4me:seedit4me /home/seedit4me/torrents/qbittorrent
+    chmod -R 775 /home/seedit4me/torrents/qbittorrent
 fi
 qbittorrent_service
 for user in ${users[@]}; do
-	echo_progress_start "Enabling qbittorrent for $user"
-	qbittorrent_user_config ${user}
-	systemctl enable -q --now qbittorrent@${user} 2>&1 | tee -a $log
-	systemctl start -q --now qbittorrent@${user} 2>&1 | tee -a $log
-	echo_progress_done "Started qbt for $user"
+    echo_progress_start "Enabling qbittorrent for $user"
+    qbittorrent_user_config ${user}
+    systemctl enable -q --now qbittorrent@${user} 2>&1 | tee -a $log
+    systemctl start -q --now qbittorrent@${user} 2>&1 | tee -a $log
+    echo_progress_done "Started qbt for $user"
 done
 
 sleep 10
 
 for user in ${users[@]}; do
 
-	sed -i -e 's/Connection\\PortRangeMin=.*/Connection\\PortRangeMin='$port' /g' /home/${user}/.config/qBittorrent/qBittorrent.conf
-	echo "Bittorrent\DHT=false" >> /home/${user}/.config/qBittorrent/qBittorrent.conf
-	echo "Bittorrent\LSD=false" >> /home/${user}/.config/qBittorrent/qBittorrent.conf
-	echo "Bittorrent\PeX=false" >> /home/${user}/.config/qBittorrent/qBittorrent.conf
-	echo "WebUI\LocalHostAuth=false" >> /home/${user}/.config/qBittorrent/qBittorrent.conf
-	echo "Downloads\SavePath=/home/seedit4me/torrents/qbittorrent/" >> /home/${user}/.config/qBittorrent/qBittorrent.conf
+    sed -i -e 's/Connection\\PortRangeMin=.*/Connection\\PortRangeMin='$port' /g' /home/${user}/.config/qBittorrent/qBittorrent.conf
+    echo "Bittorrent\DHT=false" >> /home/${user}/.config/qBittorrent/qBittorrent.conf
+    echo "Bittorrent\LSD=false" >> /home/${user}/.config/qBittorrent/qBittorrent.conf
+    echo "Bittorrent\PeX=false" >> /home/${user}/.config/qBittorrent/qBittorrent.conf
+    echo "WebUI\LocalHostAuth=false" >> /home/${user}/.config/qBittorrent/qBittorrent.conf
+    echo "Downloads\SavePath=/home/seedit4me/torrents/qbittorrent/" >> /home/${user}/.config/qBittorrent/qBittorrent.conf
 
 done
 
 for user in ${users[@]}; do
-	systemctl restart -q --now qbittorrent@${user} 2>&1 | tee -a $log
+    systemctl restart -q --now qbittorrent@${user} 2>&1 | tee -a $log
 done
 
 if [[ -f /install/.nginx.lock ]]; then
-	echo_progress_start "Configuring nginx"
-	bash /etc/swizzin/scripts/nginx/qbittorrent.sh
-	systemctl reload nginx >> $log 2>&1
-	echo_progress_done
+    echo_progress_start "Configuring nginx"
+    bash /etc/swizzin/scripts/nginx/qbittorrent.sh
+    systemctl reload nginx >> $log 2>&1
+    echo_progress_done
 fi
 
 touch /install/.qbittorrent.lock

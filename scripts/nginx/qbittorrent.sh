@@ -3,7 +3,7 @@
 MASTER=$(cut -d: -f1 < /root/.master.info)
 
 if [[ ! -f /etc/nginx/apps/qbittorrent.conf ]]; then
-	cat > /etc/nginx/apps/qbittorrent.conf << CFG
+    cat > /etc/nginx/apps/qbittorrent.conf << CFG
 
 location ^~ /qbittorrent/api {
     auth_request off;

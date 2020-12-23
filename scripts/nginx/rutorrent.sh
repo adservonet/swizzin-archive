@@ -10,8 +10,8 @@
 #   under the GPL along with build & install instructions.
 
 if [[ ! -f /install/.nginx.lock ]]; then
-	echo "nginx does not appear to be installed, ruTorrent requires a webserver to function. Please install nginx first before installing this package."
-	exit 1
+    echo "nginx does not appear to be installed, ruTorrent requires a webserver to function. Please install nginx first before installing this package."
+    exit 1
 fi
 
 users=($(cut -d: -f1 < /etc/htpasswd))
@@ -22,12 +22,12 @@ pip install cloudscraper >> /dev/null 2>&1
 
 cd /srv
 if [[ ! -d /srv/rutorrent ]]; then
-	git clone --recurse-submodules https://github.com/Novik/ruTorrent.git rutorrent >> "${log}" 2>&1
-	chown -R www-data:www-data rutorrent
-	#rm -rf /srv/rutorrent/plugins/throttle
-	#rm -rf /srv/rutorrent/plugins/extratio
-	#rm -rf /srv/rutorrent/plugins/rpc
-	rm -rf /srv/rutorrent/conf/config.php
+    git clone --recurse-submodules https://github.com/Novik/ruTorrent.git rutorrent >> "${log}" 2>&1
+    chown -R www-data:www-data rutorrent
+    #rm -rf /srv/rutorrent/plugins/throttle
+    #rm -rf /srv/rutorrent/plugins/extratio
+    #rm -rf /srv/rutorrent/plugins/rpc
+    rm -rf /srv/rutorrent/conf/config.php
 fi
 
 #rm -rf /srv/rutorrent/plugins/*
@@ -196,17 +196,17 @@ sleep 3s
 php /srv/rutorrent/php/initplugins.php ${user}
 
 if [[ -f /lib/systemd/system/php7.3-fpm.service ]]; then
-	sock=php7.3-fpm
+    sock=php7.3-fpm
 elif [[ -f /lib/systemd/system/php7.2-fpm.service ]]; then
-	sock=php7.2-fpm
+    sock=php7.2-fpm
 elif [[ -f /lib/systemd/system/php7.1-fpm.service ]]; then
-	sock=php7.1-fpm
+    sock=php7.1-fpm
 else
-	sock=php7.0-fpm
+    sock=php7.0-fpm
 fi
 
 if [[ ! -f /etc/nginx/apps/rutorrent.conf ]]; then
-	cat > /etc/nginx/apps/rutorrent.conf << RUM
+    cat > /etc/nginx/apps/rutorrent.conf << RUM
 location /rutorrent {
   alias /srv/rutorrent;
   auth_basic "What's the password?";
@@ -222,7 +222,7 @@ RUM
 fi
 
 if [[ ! -f /etc/nginx/apps/rindex.conf ]]; then
-	cat > /etc/nginx/apps/rindex.conf << RIN
+    cat > /etc/nginx/apps/rindex.conf << RIN
 location /rtorrent.downloads {
   alias /home/\$remote_user/torrents/rtorrent;
   include /etc/nginx/snippets/fancyindex.conf;
@@ -237,10 +237,10 @@ RIN
 fi
 
 for u in "${users[@]}"; do
-	if [[ ! -f /srv/rutorrent/conf/users/${u}/config.php ]]; then
-		mkdir -p /srv/rutorrent/conf/users/${u}/
+    if [[ ! -f /srv/rutorrent/conf/users/${u}/config.php ]]; then
+        mkdir -p /srv/rutorrent/conf/users/${u}/
 
-		cat > /srv/rutorrent/conf/users/${u}/config.php << RUU
+        cat > /srv/rutorrent/conf/users/${u}/config.php << RUU
 <?php
 \$topDirectory = '/home/${u}';
 \$scgi_port = 0;
@@ -249,11 +249,11 @@ for u in "${users[@]}"; do
 \$quotaUser = "${u}";
 ?>
 RUU
-	fi
-	if [[ ! -f /etc/nginx/apps/${u}.rindex.conf ]]; then rm -f /etc/nginx/apps/${u}.rindex.conf; fi
+    fi
+    if [[ ! -f /etc/nginx/apps/${u}.rindex.conf ]]; then rm -f /etc/nginx/apps/${u}.rindex.conf; fi
 
-	if [[ ! -f /etc/nginx/apps/${u}.scgi.conf ]]; then
-		cat > /etc/nginx/apps/${u}.scgi.conf << RUC
+    if [[ ! -f /etc/nginx/apps/${u}.scgi.conf ]]; then
+        cat > /etc/nginx/apps/${u}.scgi.conf << RUC
 location /${u} {
 include scgi_params;
 scgi_pass unix:/var/run/${u}/.rtorrent.sock;
@@ -261,7 +261,7 @@ auth_basic "What's the password?";
 auth_basic_user_file /etc/htpasswd.d/htpasswd.${u};
 }
 RUC
-	fi
+    fi
 done
 
 . /etc/swizzin/sources/functions/php

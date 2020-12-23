@@ -3,17 +3,17 @@
 MASTER=$(cut -d: -f1 < /root/.master.info)
 
 if [[ -f /lib/systemd/system/php7.3-fpm.service ]]; then
-	sock=php7.3-fpm
+    sock=php7.3-fpm
 elif [[ -f /lib/systemd/system/php7.2-fpm.service ]]; then
-	sock=php7.2-fpm
+    sock=php7.2-fpm
 elif [[ -f /lib/systemd/system/php7.1-fpm.service ]]; then
-	sock=php7.1-fpm
+    sock=php7.1-fpm
 else
-	sock=php7.0-fpm
+    sock=php7.0-fpm
 fi
 
 if [[ ! -f /etc/nginx/apps/organizr.conf ]]; then
-	cat > /etc/nginx/apps/organizr.conf << RAP
+    cat > /etc/nginx/apps/organizr.conf << RAP
 location /organizr/ {
 alias /srv/organizr/ ;
 #auth_basic "What's the password?";

@@ -19,13 +19,13 @@ LANG=lang_en
 echo "*/1 * * * * root bash /usr/local/bin/swizzin/tools/set_interface_tools >/dev/null 2>&1" > /etc/cron.d/set_interface_tools
 
 if [[ -f /lib/systemd/system/php7.3-fpm.service ]]; then
-	sock=php7.3-fpm
+    sock=php7.3-fpm
 elif [[ -f /lib/systemd/system/php7.2-fpm.service ]]; then
-	sock=php7.2-fpm
+    sock=php7.2-fpm
 elif [[ -f /lib/systemd/system/php7.1-fpm.service ]]; then
-	sock=php7.1-fpm
+    sock=php7.1-fpm
 else
-	sock=php7.0-fpm
+    sock=php7.0-fpm
 fi
 
 cat > /etc/nginx/apps/tools.conf << PAN

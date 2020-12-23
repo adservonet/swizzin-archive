@@ -60,8 +60,8 @@ echo_success "Rclone installed"
 #echo_info "Setup Rclone remote named \"gdrive\" And run sudo systemctl start rclone@username.service"
 
 if [[ -f /install/.nginx.lock ]]; then
-	bash /usr/local/bin/swizzin/nginx/rclone.sh
-	systemctl reload nginx
+    bash /usr/local/bin/swizzin/nginx/rclone.sh
+    systemctl reload nginx
 fi
 
 systemctl enable rclone@${user}.service > /dev/null >> "${log}" 2>&1

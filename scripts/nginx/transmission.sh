@@ -9,7 +9,7 @@ MASTER=$(cut -d: -f1 < /root/.master.info)
 apt_install jq
 
 if [[ ! -f /etc/nginx/apps/transmission.conf ]]; then
-	cat > /etc/nginx/apps/transmission.conf << TCONF
+    cat > /etc/nginx/apps/transmission.conf << TCONF
 location /transmission {
     return 301 /transmission/web/;
 }
