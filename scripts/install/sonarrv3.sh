@@ -24,9 +24,9 @@ usermod -a -G seedit4me sonarr
 
 systemctl stop sonarr
 
-touch /install/.sonarr3.lock
+touch /install/.sonarrv3.lock
 
 if [[ -f /install/.nginx.lock ]]; then
-  bash /usr/local/bin/swizzin/nginx/sonarr3.sh
+  bash /usr/local/bin/swizzin/nginx/sonarrv3.sh
   service nginx reload
 fi
