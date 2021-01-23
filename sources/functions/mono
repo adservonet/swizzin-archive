@@ -24,7 +24,7 @@ function mono_repo_update() {
     distribution=$(lsb_release -is)
     codename=$(lsb_release -cs)
     if [[ -f /etc/apt/sources.list.d/mono-xamarin.list ]]; then
-        if grep -q "5.18" /etc/apt/sources.list.d/mono-xamarin.list; then
+        if grep -q "repo/${distribution,,}/dists/${codename}/snapshots/5.18" /etc/apt/sources.list.d/mono-xamarin.list; then
             :
         else
             echo "deb https://download.mono-project.com/repo/${distribution,,}/dists/${codename}/snapshots/5.18/. main" > /etc/apt/sources.list.d/mono-xamarin.list
