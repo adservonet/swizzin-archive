@@ -14,7 +14,7 @@ function mono_repo_setup() {
             fi
         fi
         if [[ ! $codename =~ ("buster"|"focal") ]]; then
-            echo "deb https://download.mono-project.com/repo/${distribution,,} ${codename}/snapshots/5.18/. main" > /etc/apt/sources.list.d/mono-xamarin.list
+            echo "deb https://download.mono-project.com/repo/${distribution,,}/dists/${codename}/snapshots/5.18/. main" > /etc/apt/sources.list.d/mono-xamarin.list
         fi
         apt_update
     fi
@@ -27,7 +27,7 @@ function mono_repo_update() {
         if grep -q "5.18" /etc/apt/sources.list.d/mono-xamarin.list; then
             :
         else
-            echo "deb https://download.mono-project.com/repo/${distribution,,} ${codename}/snapshots/5.18/. main" > /etc/apt/sources.list.d/mono-xamarin.list
+            echo "deb https://download.mono-project.com/repo/${distribution,,}/dists/${codename}/snapshots/5.18/. main" > /etc/apt/sources.list.d/mono-xamarin.list
             echo_log_only "Upgrading to mono 5.18 snapshot"
             apt_upgrade
             apt_autoremove
