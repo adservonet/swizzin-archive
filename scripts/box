@@ -126,7 +126,7 @@ function _clr() {
 #shellcheck disable=SC2120
 function _update() {
     echo_progress_start "Updating swizzin"
-    _apt_reset
+    #_apt_reset
     apt_upgrade >> "${log}" 2>&1
 
     cd /etc/swizzin
