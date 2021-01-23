@@ -125,12 +125,13 @@ export -f _apt_logcheck
 
 # Check if apt is locked, says by what, and kills top script if the lock is present
 _check_dpkg_lock() {
+    _apt_reset
     if [[ $_apt_skip_checks != "true" ]]; then
         if lsof /var/lib/dpkg/lock >> $log 2>&1; then
             offender=$(lsof /var/lib/dpkg/lock | grep dpkg | awk '{ print $1 }')
             if [[ $_apt_ignore_errors != "true" ]]; then
                 echo_error "dpkg database is locked by $offender. Trying to reset"
-                _apt_reset
+                #_apt_reset
                 #exit 1
             else
                 echo_warn "dpkg database is locked by $offender."
