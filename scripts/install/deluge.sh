@@ -14,6 +14,8 @@
 #################################################################################
 
 function _dconf() {
+    pt_config=$(cat /home/seedit4me/.pt_config)
+
     for u in "${users[@]}"; do
         echo_progress_start "Configuring Deluge for $u"
         if [[ ${u} == ${master} ]]; then
@@ -180,7 +182,10 @@ DC
   "sidebar_multiple_filters": true
 }
 DWC
-        cat > /home/${u}/.config/deluge/blocklist.conf << DBL
+
+if [[ ! $pt_config == 1 ]]; then
+  wget -O /home/${u}/.config/deluge/blocklist.cache https://my.seedit4.me/storage/deluge_blocklist.dat
+  cat > /home/${u}/.config/deluge/blocklist.conf << DBL
 {
   "file": 1,
   "format": 1
@@ -196,6 +201,7 @@ DWC
   "load_on_start": true
 }
 DBL
+fi
 
         dvermajor=$(deluged -v | grep deluged | grep -oP '\d+\.\d+\.\d+' | cut -d. -f1)
 
@@ -220,8 +226,6 @@ DBL
   ]
 }
 DHL
-
-        wget -O /home/${u}/.config/deluge/blocklist.cache https://my.seedit4.me/storage/deluge_blocklist.dat
 
         echo "${u}:${pass}:10" > /home/${u}/.config/deluge/auth
         echo "localclient:${localpass}:10" >> /home/${u}/.config/deluge/auth

@@ -38,6 +38,11 @@ rm -rf plugins.tar.gz
 
 rm -rf /srv/rutorrent/plugins/_cloudflare
 
+pt_config=$(cat /home/seedit4me/.pt_config)
+if [[ $pt_config == 1 ]]; then
+  rm -rf /srv/rutorrent/plugins/plimits;
+fi
+
 #sed -i 's/useExternal = false;/useExternal = "mktorrent";/' /srv/rutorrent/plugins/create/conf.php
 #sed -i 's/pathToCreatetorrent = '\'\''/pathToCreatetorrent = '\''\/usr\/bin\/mktorrent'\''/' /srv/rutorrent/plugins/create/conf.php
 #sed -i "s/\$pathToExternals\['sox'\] = ''/\$pathToExternals\['sox'\] = '\/usr\/bin\/sox'/g" /srv/rutorrent/plugins/spectrogram/conf.php
@@ -228,10 +233,10 @@ location /rtorrent.downloads {
   include /etc/nginx/snippets/fancyindex.conf;
   auth_basic "What's the password?";
   auth_basic_user_file /etc/htpasswd;
-  
+
   location ~* \.php$ {
 
-  } 
+  }
 }
 RIN
 fi
