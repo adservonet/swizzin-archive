@@ -23,16 +23,9 @@ function mono_repo_setup() {
 function mono_repo_update() {
     distribution=$(lsb_release -is)
     codename=$(lsb_release -cs)
-
     if [[ -f /etc/apt/sources.list.d/mono-xamarin.list ]]; then
         if grep -q "5.18" /etc/apt/sources.list.d/mono-xamarin.list; then
-          if ! command -v mono > /dev/null 2>&1; then
-            apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF > /dev/null 2>&1
-            echo "deb https://download.mono-project.com/repo/${distribution,,} ${codename}/snapshots/5.18/. main" > /etc/apt/sources.list.d/mono-xamarin.list
-            echo_log_only "Upgrading to mono 5.18 snapshot"
-            apt_upgrade
-            apt_autoremove
-          fi
+            :
         else
             echo "deb https://download.mono-project.com/repo/${distribution,,} ${codename}/snapshots/5.18/. main" > /etc/apt/sources.list.d/mono-xamarin.list
             echo_log_only "Upgrading to mono 5.18 snapshot"
