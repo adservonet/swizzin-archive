@@ -137,7 +137,7 @@ _install_sonarrv3() {
     mkdir -p "$sonarrv3confdir"
     chown -R "$sonarrv3owner":"$sonarrv3owner" /home/$sonarrv3owner/.config
 
-    echo_log_only "Setting sonarr v3 owner to $sonarrv3owner"
+    echo_log_only "Setting sonarr v3 owner to $sonarrv3owner dir $sonarrv3confdir"
     # settings relevant from https://github.com/Sonarr/Sonarr/blob/phantom-develop/distribution/debian/config
     echo "sonarr sonarr/owning_user string ${sonarrv3owner}" | debconf-set-selections
     echo "sonarr sonarr/owning_group string ${sonarrv3owner}" | debconf-set-selections
