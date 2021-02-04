@@ -65,8 +65,6 @@ echo_log_only "Payload = \n${payload}"
 echo_log_only "Return from radarr after PUT ="
 curl -s "http://127.0.0.1:7878${urlbase}/api/v3/config/host?apikey=${apikey}" -X PUT -H 'Accept: application/json, text/javascript, */*; q=0.01' --compressed -H 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' --data-raw "${payload}" >> "$log"
 
-curl -v -s "https://127.0.0.1/radarr/api/v3/config/host?apiKey=6eecd3ffbaa5415a8137d3e658938ef2" --user "seedit4me:jpop99" --insecure -s | jq '.certificateValidation = "disabledForLocalAddresses"'
-
 # Switch radarr back off if it was dead before
 if [[ $isactive != "active" ]]; then
     systemctl stop radarr

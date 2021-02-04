@@ -32,7 +32,7 @@ function _tc() {
     VMID=${HOSTNAME//ct/}
     #  echo 'VMID' $VMID
 
-    URL="https://my.dev.seedit4.me/api/vmtinfo/${VMID}/${UL}"
+    URL="https://my.seedit4.me/api/vmtinfo/${VMID}/${UL}"
     #  echo 'URL' $URL
 
     LIMIT=$(curl -s -w "\n%{http_code}" "${URL}" | {
