@@ -59,7 +59,7 @@ if [[ -z $(which rar) ]]; then
   apt-get -y install rar unrar >> "${SEEDIT_LOG}"  2>&1 || { echo "INFO: Could not find rar/unrar in the repositories. It is likely you do not have the multiverse repo enabled. Installing directly."; _rar; }
 fi
 cd /opt/
-git clone https://github.com/pymedusa/Medusa.git medusa >> ${SEEDIT_LOG} 2>&1
+git clone  --branch v0.4.3 https://github.com/pymedusa/Medusa.git medusa >> ${SEEDIT_LOG} 2>&1
 chown -R ${user}:${user} medusa
 
 cat > /etc/systemd/system/medusa.service << MSD
