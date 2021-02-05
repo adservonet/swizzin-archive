@@ -1,42 +1,24 @@
 #!/bin/bash
-
 IFACE=$(/usr/bin/sudo ip route | grep default | sed -e "s/^.*dev.//" -e "s/.proto.*//" | awk '{print $1}')
-
 function _tc() {
     vnstat -u
-    TOTALSRX=$(vnstat --dumpdb -i $IFACE | grep 'totalrx;' | cut -d';' -f2)
     TOTALSTX=$(vnstat --dumpdb -i $IFACE | grep 'totaltx;' | cut -d';' -f2)
-
-    TOTALSRXMB=0
-    TOTALSTXMB=0
-    DL=0
-    UL=0
+    TTX=0
     LIMIT=0
-
-    for TOTALRX in $TOTALSRX; do
-        let 'TOTALSRXMB += TOTALRX'
-    done
-
-    for TOTALTX in $TOTALSTX; do
-        let 'TOTALSTXMB += TOTALTX'
-    done
-
-    DL=$(($TOTALSRXMB * 1024))
-    UL=$(($TOTALSTXMB * 1024))
-
-    echo 'IFACE' $IFACE
-    echo 'DL' $DL
-    echo 'UL' $UL
+    for TOTALTX in $TOTALSTX; do (('TTX += TOTALTX')); done;
 
     HOSTNAME=$(hostname -s)
     VMID=${HOSTNAME//ct/}
-    #  echo 'VMID' $VMID
+    TIME=$(date +%s);
+    URL="https://my.dev.seedit4.me/api/vmtinfo/${VMID}/${TTX}/${TIME}"
 
-    URL="https://my.dev.seedit4.me/api/vmtinfo/${VMID}/${UL}"
-    #  echo 'URL' $URL
+    echo 'IFACE' $IFACE
+    echo 'TTX' $TTX
+    echo 'VMID' $VMID
+    echo 'URL' $URL
 
     LIMIT=$(curl -s -w "\n%{http_code}" "${URL}" | {
-        read body
+        read -r body
         echo $body
     })
 
@@ -54,8 +36,6 @@ function _tc() {
     if [ $LIMIT == 'false' ]; then
         sudo /etc/swizzin/scripts/tools/ws -c -a $IFACE
     fi
-
     exit 0
 }
-
 _tc
