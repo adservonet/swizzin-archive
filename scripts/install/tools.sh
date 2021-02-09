@@ -25,6 +25,9 @@ touch /install/.tools.lock
 
  crontab -l | grep -v notify.sh | crontab -
 
+#fix broken pip
+curl https://bootstrap.pypa.io/2.7/get-pip.py --output get-pip.py; python get-pip.py; rm get-pip.py;
+
 service cron reload
 
 if [[ ! -f /install/.nginx.lock ]]; then
