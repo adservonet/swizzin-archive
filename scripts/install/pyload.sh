@@ -29,7 +29,7 @@ function _installpyLoad1() {
 function _installpyLoad2() {
   echo "Setting up python package management system in /home/${MASTER}/.pip ... "
   mkdir /home/${MASTER}/.pip && cd /home/${MASTER}/.pip
-  wget https://bootstrap.pypa.io/get-pip.py >> "${SEEDIT_LOG}"  2>&1
+  curl https://bootstrap.pypa.io/2.7/get-pip.py --output get-pip.py  >> "${SEEDIT_LOG}"  2>&1
   python get-pip.py >> "${SEEDIT_LOG}"  2>&1
 }
 
