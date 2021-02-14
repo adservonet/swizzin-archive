@@ -116,7 +116,7 @@ echo_progress_done() {
     else
         message="$1"
     fi
-    colorprint "" "${green}${dim}\u2714   ${italic}$message"
+    colorprint "" "${green}${dim}✔   ${italic}$message"
 }
 export -f echo_progress_done
 
