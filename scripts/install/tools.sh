@@ -29,10 +29,6 @@ fi
 
 touch /install/.tools.lock
 
-#fix broken pip
-curl https://bootstrap.pypa.io/2.7/get-pip.py --output get-pip.py; python get-pip.py; rm get-pip.py;
-
-
 crontab -l | grep -v notify.sh | crontab -
 service cron reload
 
