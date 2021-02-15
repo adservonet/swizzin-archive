@@ -29,13 +29,11 @@ if dpkg --compare-versions ${systempy3_ver} lt 3.6.0 && dpkg --compare-versions 
     LIST='par2 p7zip-full libffi-dev libssl-dev libglib2.0-dev libdbus-1-dev'
     PYENV=True
 else
-    LIST='par2 p7zip-full python3-dev python3-setuptools python3-venv libffi-dev libssl-dev libglib2.0-dev libdbus-1-dev'
+    LIST='par2 p7zip-full python3-dev python3-setuptools python3-pip python3-venv libffi-dev libssl-dev libglib2.0-dev libdbus-1-dev'
 fi
 
 apt_install $LIST
 install_rar
-
-curl https://bootstrap.pypa.io/3.5/get-pip.py --output get-pip.py; python3 get-pip.py; rm get-pip.py;
 
 case ${PYENV} in
     True)
@@ -64,7 +62,7 @@ if [[ $latestversion =~ ^3\.0\.[1-2] ]]; then
     sed -i "s/feedparser.*/feedparser<6.0.0/g" /opt/sabnzbd/requirements.txt
 fi
 
-#/opt/.venv/sabnzbd/bin/pip install --upgrade pip wheel >> "${log}" 2>&1
+/opt/.venv/sabnzbd/bin/pip install --upgrade pip wheel >> "${log}" 2>&1
 /opt/.venv/sabnzbd/bin/pip install -r /opt/sabnzbd/requirements.txt >> "${log}" 2>&1
 echo_progress_done
 
