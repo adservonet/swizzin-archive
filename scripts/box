@@ -136,12 +136,8 @@ function _update() {
   chown -R seedit4me:seedit4me /home/seedit4me/torrents
   chmod -R 775 /home/seedit4me/torrents
 
-  # waitforapt
-  # apt-get -y -q update > /dev/null  2>&1
-  # apt-get -y -q dist-upgrade
-
   for f in /etc/swizzin/scripts/update/*; do . $f; done
-  # apt -y -q autoremove
+
   echo "update done -----------------------------------------------------------------------------"
 }
 
