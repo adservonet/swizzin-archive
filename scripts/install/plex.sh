@@ -49,9 +49,9 @@ sleep 5
 systemctl stop plexmediaserver >> $log 2>&1
 killall -u plex
 sleep 5
-mv /var/lib/plexmediaserver /home/${master}/plex
-ln -s '/home/${master}/plex/plexmediaserver' '/var/lib/plexmediaserver'
-chown -R plex:plex /var/lib/plexmediaserver
+mv "/var/lib/plexmediaserver/Library/Application Support" /home/${master}/plex
+ln -s '/home/${master}/plex/Application Support' '/var/lib/plexmediaserver/Library/Application Support'
+chown -R plex:plex '/var/lib/plexmediaserver/Library/Application Support'
 sleep 5
 
 systemctl start plexmediaserver >> $log 2>&1
