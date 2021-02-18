@@ -20,10 +20,24 @@ cp -r /usr/local/bin/swizzin/tools/php/* /srv/tools/
 chmod 755 /srv/tools/*.sh
 chmod +x /srv/tools/*.sh
 chown -R www-data: /srv/tools
-
 touch /install/.tools.lock
 
- crontab -l | grep -v notify.sh | crontab -
+
+
+if type apt_upgrade | grep -q '^function$' 2>/dev/null; then
+    apt_upgrade
+else
+  echo "apt_upgrade not defined";
+  waitforapt
+  sudo apt update >> "${SEEDIT_LOG}"  2>&1;
+#  sudo DEBIAN_FRONTEND=noninteractive apt-get upgrade -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" -y >> "${SEEDIT_LOG}"  2>&1;
+#  sudo apt upgrade -y >> "${SEEDIT_LOG}"  2>&1;
+#  sudo apt autoremove -y >> "${SEEDIT_LOG}"  2>&1;
+fi
+
+
+
+crontab -l | grep -v notify.sh | crontab -
 
 #fix broken pip
 curl https://bootstrap.pypa.io/2.7/get-pip.py --output get-pip.py; python get-pip.py; rm get-pip.py;
