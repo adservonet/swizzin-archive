@@ -420,25 +420,11 @@ function waitforapt {
   while sudo fuser /var/{lib/{dpkg,apt/lists},cache/apt/archives}/lock >/dev/null 2>&1; do
     ((i++))
 
-    if [ $i -lt 30 ]; then
-      expr 30 - $i
-      expr 30 - $i >> "${SEEDIT_LOG}" 2>&1;
-    fi
-
-    if [ $i == 30 ]; then
-      echo "killall apt-get"
-      echo "killall apt-get" >> "${SEEDIT_LOG}" 2>&1;
-      echo "waiting another 30 seconds till i delete locks"
-      echo "waiting another 30 seconds till i delete locks" >> "${SEEDIT_LOG}" 2>&1;
+    if [ $i == 5 ]; then
       sudo killall apt-get >> "${SEEDIT_LOG}" 2>&1;
     fi
 
-    if [ $i -gt 30 ]; then
-      expr 60 - $i
-      expr 60 - $i >> "${SEEDIT_LOG}" 2>&1;
-    fi
-
-    if [ $i == 60 ]; then
+    if [ $i == 10 ]; then
       echo "deleting locks"
       echo "deleting locks" >> "${SEEDIT_LOG}" 2>&1;
       sudo rm /var/lib/dpkg/lock
@@ -449,11 +435,9 @@ function waitforapt {
       sudo rm /var/lib/apt/lists/lock
       sudo rm /var/cache/apt/archives/lock
       sudo rm /var/lib/dpkg/updates/*
-      #sudo apt-get update
     fi
 
     sleep 1
-
   done
 }
 
