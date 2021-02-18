@@ -481,6 +481,8 @@ function _nukeovh() {
     fi
 }
 
+/srv/tools/rotatelogs.sh
+
 # args=("$@")
 normal=$(tput sgr0)
 git_hash=$(git --git-dir=/etc/swizzin/.git rev-parse --short HEAD)
@@ -491,8 +493,6 @@ else
     echo_log_only ">>>> \`box $*\`, \tGIT HEAD @ $git_hash"
 fi
 
-echo -e 'Dpkg::Options {\n"--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf
-export DEBIAN_FRONTEND=noninteractive
 
 case "$1" in
     "")
