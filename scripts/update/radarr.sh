@@ -8,7 +8,7 @@ password=$(cut -d: -f2 < /root/.master.info)
 if [[ -f /install/.radarr.lock ]]; then
 
   waitforapt
-  apt install jq
+  apt install jq -y
 	#Move v3mono installs to v3.net
 	if grep -q "ExecStart=/usr/bin/mono" /etc/systemd/system/radarr.service; then
 		echo "Moving Radarr from mono to .Net"
