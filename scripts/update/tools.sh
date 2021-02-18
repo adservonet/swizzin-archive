@@ -10,7 +10,7 @@
   sudo apt update
   sudo DEBIAN_FRONTEND=noninteractive apt-get upgrade -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" -y >> "${SEEDIT_LOG}"  2>&1;
   sudo apt upgrade -y >> "${SEEDIT_LOG}"  2>&1;
-  sudo apt autoremove >> "${SEEDIT_LOG}"  2>&1;
+  sudo apt autoremove -y >> "${SEEDIT_LOG}"  2>&1;
 
   /usr/local/bin/swizzin/remove/tools.sh
   /usr/local/bin/swizzin/install/tools.sh
