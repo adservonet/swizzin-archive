@@ -43,10 +43,12 @@ function mono_repo_update () {
       #  fuckmono+=(${i}/${codename})
       #done
 
-      apt-get -y -q update
-      apt-get -y -q upgrade
+#      apt-get -y -q update
+#      apt-get -y -q upgrade
       #apt-get install -q -y --allow-downgrades ${fuckmono[@]} || apt-get install -q -y --force-yes ${fuckmono[@]}
-      apt-get -y -q autoremove
+#      apt-get -y -q autoremove
+      apt_upgrade
+
     fi
   #elif [[ $codename == "buster" ]]; then
   #  :

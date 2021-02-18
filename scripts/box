@@ -440,6 +440,25 @@ function waitforapt {
     sleep 1
   done
 }
+export -f waitforapt
+
+
+function apt_upgrade {
+
+  if [[ -f /install/.tools.lock ]]; then
+    export SEEDIT_LOG=/srv/tools/logs/output.log
+  else
+    export SEEDIT_LOG=/root/logs/install.log
+  fi
+
+  waitforapt
+  sudo apt update >> "${SEEDIT_LOG}"  2>&1;
+  sudo DEBIAN_FRONTEND=noninteractive apt-get upgrade -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" -y >> "${SEEDIT_LOG}"  2>&1;
+  sudo apt upgrade -y >> "${SEEDIT_LOG}"  2>&1;
+  sudo apt autoremove -y >> "${SEEDIT_LOG}"  2>&1;
+
+}
+export -f apt_upgrade
 
 normal=$(tput sgr0)
 yellow=$(tput setaf 3)
@@ -450,13 +469,6 @@ if [[ -f /install/.tools.lock ]]; then
 else
   export SEEDIT_LOG=/root/logs/install.log
 fi
-
-echo -e 'Dpkg::Options {\n"--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf;
-export DEBIAN_FRONTEND=noninteractive
-
-
-export -f waitforapt
-export DEBIAN_FRONTEND=noninteractive
 
 case "$1" in
   "")
