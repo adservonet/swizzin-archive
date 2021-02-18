@@ -470,7 +470,7 @@ else
   export SEEDIT_LOG=/root/logs/install.log
 fi
 
-/srv/tools/rotatelogs.sh
+#/srv/tools/rotatelogs.sh
 
 case "$1" in
   "")
