@@ -18,6 +18,7 @@
 
 master=$(cut -d: -f1 < /root/.master.info)
 
+
 #versions=https://plex.tv/api/downloads/1.json
 #wgetresults="$(wget "${versions}" -O -)"
 #releases=$(grep -ioe '"label"[^}]*' <<<"${wgetresults}" | grep -i "\"distro\":\"ubuntu\"" | grep -m1 -i "\"build\":\"linux-ubuntu-x86_64\"")
@@ -31,9 +32,8 @@ echo
 
 apt_update
 echo_progress_done "Sources and keys retrieved and installed"
+
 apt-get install -o Dpkg::Options::="--force-confold" -y -f plexmediaserver --allow-unauthenticated >> "${log}" 2>&1
-#DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical apt-get -q -y -o -f "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" install plexmediaserver >/dev/null 2>&1
-echo
 
 if [[ ! -d /var/lib/plexmediaserver ]]; then
     mkdir -p /var/lib/plexmediaserver
@@ -43,7 +43,21 @@ if [[ ! $perm == plex ]]; then
     chown -R plex:plex /var/lib/plexmediaserver
 fi
 usermod -a -G ${master} plex
-service plexmediaserver restart > /dev/null 2>&1
+
+sleep 5
+
+systemctl stop plexmediaserver >> $log 2>&1
+killall -u plex
+sleep 5
+mkdir '/home/'${master}'/plex/';
+chown -R plex:plex  '/home/'${master}'/plex/';
+mv "/var/lib/plexmediaserver/Library/Application Support" /home/${master}/plex
+ln -s '/home/'${master}'/plex/Application Support' '/var/lib/plexmediaserver/Library/Application Support'
+chown -R plex:plex '/var/lib/plexmediaserver/Library/Application Support'
+sleep 5
+
+systemctl start plexmediaserver >> $log 2>&1
+
 touch /install/.plex.lock
 
 echo_success "Plex installed"

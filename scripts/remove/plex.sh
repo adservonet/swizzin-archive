@@ -17,6 +17,7 @@
 #   including (via compiler) GPL-licensed code must also be made available
 #   under the GPL along with build & install instructions.
 #
+master=$(cut -d: -f1 < /root/.master.info)
 
 function _removePlex() {
     dpkg -r plexmediaserver > /dev/null 2>&1
@@ -24,6 +25,7 @@ function _removePlex() {
     rm -f /etc/systemd/system/plexmediaserver.service
     systemctl daemon-reload -q
     rm -rf /var/lib/plexmediaserver
+    rm -rf /home/${master}/plex
     rm -rf /usr/lib/plexmediaserver
     rm /etc/init/plexmediaserver.conf > /dev/null 2>&1
     rm /etc/default/plexmediaserver > /dev/null 2>&1
