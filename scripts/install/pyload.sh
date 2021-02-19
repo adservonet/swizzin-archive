@@ -50,7 +50,7 @@ echo_progress_start "Configuring pyLoad"
 echo "/opt/pyload" > /opt/pyload/module/config/configdir
 
 cat > /opt/pyload/pyload.conf << PYCONF
-version: 1
+version: 1 
 
 download - "Download":
         int chunks : "Max connections for one download" = 3
