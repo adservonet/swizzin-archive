@@ -83,7 +83,7 @@ module.exports = {
 	// @type     boolean
 	// @default  false
 	//
-	prefetch: false,
+	prefetch: true,
 
 	//
 	// Store and proxy prefetched images and thumbnails.
@@ -186,22 +186,9 @@ module.exports = {
 	//
 	// Run The Lounge using encrypted HTTP/2.
 	// This will fallback to regular HTTPS if HTTP/2 is not supported.
-    //
-    // @type     object
-    // default.
-    leaveMessage: "The Lounge, hosted @ https://seedit4.me",
-    defaults: {
-            name: "Seedit4.me",
-            host: "irc.seedit4.me",
-            port: 8010,
-            password: "",
-            tls: true,
-            rejectUnauthorized: false,
-            nick: "user%%%",
-            username: "user",
-            realname: "The Lounge User",
-            join: "#seedit4me",
-    },
+	//
+	// @type     object
+	// @default  {}
 	//
 	https: {
 		//
@@ -263,7 +250,6 @@ module.exports = {
 		//
 		port: 113
 	},
-	messageStorage: ["sqlite", "text"],
 
 	//
 	// Enable oidentd support using the specified file
