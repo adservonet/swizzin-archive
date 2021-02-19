@@ -2,66 +2,50 @@
 
 function update_nginx() {
     codename=$(lsb_release -cs)
-    #if [[ -f /tmp/.install.lock ]]; then
-    #  log="/root/logs/install.log"
-    #else
-    #  log="/dev/null"
-    #fi
-    #
-    #if [[ $codename == "jessie" ]]; then
-    #  geoip=php7.0-geoip
-    #else
-    #  geoip=php-geoip
-    #fi
-    #
-    #
-    #if [[ $codename == "bionic" ]]; then
-    #  mcrypt=
-    #else
-    #  mcrypt=php-mcrypt
-    #fi
 
-    #  #LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php
-    #  #sudo dpkg --configure -a
-    #  #apt-get -y -f install
-    #apt-get -y -qq update > /dev/null  2>&1
-    APT='php7.3-fpm php7.3-common php7.3-cli php7.3-dev php7.3-xml php7.3-curl php7.3-xmlrpc php7.3-json php7.3-mbstring php7.3-opcache php-geoip php7.3-xml php7.3-gd php7.3-sqlite3 php7.3-zip'
-    #for depends in $APT; do
-    #    apt-get -y install "$depends" >>  "${log}"  2>&1
-    #done
+    if [[ $codename =~ ("xenial"|"stretch") ]]; then
+        mcrypt=php-mcrypt
+    else
+        mcrypt=
+    fi
+
+    #Deprecate nginx-extras in favour of installing fancyindex alone
+    # (unless you use xenial)
+    if [[ ! $codename == "xenial" ]]; then
+        if dpkg -s nginx-extras > /dev/null 2>&1; then
+            apt_remove nginx-extras
+            apt_install nginx libnginx-mod-http-fancyindex
+            apt_autoremove
+            rm $(ls -d /etc/nginx/modules-enabled/*.removed)
+            systemctl reload nginx
+        fi
+    fi
+
+    LIST="php-fpm php-cli php-dev php-xml php-curl php-xmlrpc php-json ${mcrypt} php-mbstring php-opcache php-geoip php-xml"
+
+    missing=()
+    for dep in $LIST; do
+        if ! check_installed "$dep"; then
+            missing+=("$dep")
+        fi
+    done
+
+    if [[ ${missing[1]} != "" ]]; then
+        # echo_inf "Installing the following dependencies: ${missing[*]}" | tee -a $log
+        apt_install "${missing[@]}"
+    fi
 
     cd /etc/php
     phpv=$(ls -d */ | cut -d/ -f1)
-
-    #  sudo apt-get -y -q  purge php7.0.*
-    #  sudo apt-get -y -q  purge php7.1.*
-    #  sudo apt-get -y -q  purge php7.2.*
-    #  sudo apt-get -y -q  purge php7.4.*
-    #  sudo dpkg --remove --force-remove-reinstreq php-mcrypt
-    #  apt-get -y -q install libmcrypt-dev
-    #  #pear config-set php_dir /usr/bin/php
-    #  pear config-set ext_dir /usr/lib/php/20180731
-    #  pear config-set php_bin /usr/bin/php7.3
-    #  pear config-set php_suffix 7.3
-    #  pear config-set php_ini /etc/php/7.3/fpm/php.ini
-    #  printf "\n" | pecl install mcrypt-1.0.2
-    #  echo extension=mcrypt.so > /etc/php/7.3/mods-available/mcrypt.ini
-    #  echo extension=mcrypt.so > /etc/php/7.3/fpm/conf.d/20-mcrypt.ini
-    #  echo extension=mcrypt.so > /etc/php/7.3/cli/conf.d/20-mcrypt.ini
-    #  #systemctl restart php7.3-fpm
-    #  sudo update-alternatives --set php /usr/bin/php7.3
-    #
-    #  sed -i "s/php7.0-fpm/php7.3-fpm/g" /etc/nginx/apps/*.conf
-
-    if [[ -f /lib/systemd/system/php7.3-fpm.service ]]; then
-        sock=php7.3-fpm
-    elif [[ -f /lib/systemd/system/php7.2-fpm.service ]]; then
-        sock=php7.2-fpm
-    elif [[ -f /lib/systemd/system/php7.1-fpm.service ]]; then
-        sock=php7.1-fpm
-    else
-        sock=php7.0-fpm
+    if [[ $phpv =~ 7\\.1 ]]; then
+        if [[ $phpv =~ 7\\.0 ]]; then
+            apt_remove purge php7.0-fpm
+        fi
     fi
+
+    . /etc/swizzin/sources/functions/php
+    phpversion=$(php_service_version)
+    sock="php${phpversion}-fpm"
 
     for version in $phpv; do
         if [[ -f /etc/php/$version/fpm/php.ini ]]; then
@@ -78,31 +62,21 @@ function update_nginx() {
         fi
     done
 
-    if [[ -f /lib/systemd/system/php7.3-fpm.service ]]; then
-        v=$(find /etc/nginx -type f -exec grep -l "fastcgi_pass unix:/run/php/php7.3-fpm.sock" {} \;)
-        if [[ -z $v ]]; then
-            oldv=$(find /etc/nginx -type f -exec grep -l "fastcgi_pass unix:/run/php/" {} \;)
-            for upgrade in $oldv; do
-                sed -i 's/fastcgi_pass .*/fastcgi_pass unix:\/run\/php\/php7.3-fpm.sock;/g' $upgrade
-            done
-        fi
-    elif [[ -f /lib/systemd/system/php7.2-fpm.service ]]; then
-        v=$(find /etc/nginx -type f -exec grep -l "fastcgi_pass unix:/run/php/php7.2-fpm.sock" {} \;)
-        if [[ -z $v ]]; then
-            oldv=$(find /etc/nginx -type f -exec grep -l "fastcgi_pass unix:/run/php/" {} \;)
-            for upgrade in $oldv; do
-                sed -i 's/fastcgi_pass .*/fastcgi_pass unix:\/run\/php\/php7.2-fpm.sock;/g' $upgrade
-            done
-        fi
-    elif [[ -f /lib/systemd/system/php7.1-fpm.service ]]; then
-        v=$(find /etc/nginx -type f -exec grep -l "fastcgi_pass unix:/run/php/php7.1-fpm.sock" {} \;)
-        if [[ -z $v ]]; then
-            oldv=$(find /etc/nginx -type f -exec grep -l "fastcgi_pass unix:/run/php/" {} \;)
-            for upgrade in $oldv; do
-                sed -i 's/fastcgi_pass .*/fastcgi_pass unix:\/run\/php\/php7.1-fpm.sock;/g' $upgrade
-            done
-        fi
+    if [[ ! -f /etc/nginx/modules-enabled/50-mod-http-fancyindex.conf ]]; then
+        mkdir -p /etc/nginx/modules-enabled/
+        ln -s /usr/share/nginx/modules-available/mod-http-fancyindex.conf /etc/nginx/modules-enabled/50-mod-http-fancyindex.conf
     fi
+
+    phpversion=$(php_service_version)
+
+    fcgis=($(find /etc/nginx -type f -exec grep -l "fastcgi_pass unix:/run/php/" {} \;))
+    err=()
+    for f in ${fcgis[@]}; do
+        err+=($(grep -L "fastcgi_pass unix:/run/php/php${phpversion}-fpm.sock" $f))
+    done
+    for fix in ${err[@]}; do
+        sed -i "s/fastcgi_pass .*/fastcgi_pass unix:\/run\/php\/php${phpversion}-fpm.sock;/g" $fix
+    done
 
     if grep -q -e "-dark" -e "Nginx-Fancyindex" /srv/fancyindex/header.html; then
         sed -i 's/href="\/[^\/]*/href="\/fancyindex/g' /srv/fancyindex/header.html
@@ -112,10 +86,11 @@ function update_nginx() {
         sed -i 's/src="\/[^\/]*/src="\/fancyindex/g' /srv/fancyindex/footer.html
     fi
 
-    if grep -q "php" /etc/nginx/apps/rindex.conf; then
-        :
-    else
-        cat > /etc/nginx/apps/rindex.conf << EOR
+    if [[ -f /install/.rutorrent.lock ]]; then
+        if grep -q "php" /etc/nginx/apps/rindex.conf; then
+            :
+        else
+            cat > /etc/nginx/apps/rindex.conf << EOR
 location /rtorrent.downloads {
   alias /home/\$remote_user/torrents/rtorrent;
   include /etc/nginx/snippets/fancyindex.conf;
@@ -127,40 +102,14 @@ location /rtorrent.downloads {
   } 
 }
 EOR
+        fi
     fi
 
-    echo "UPDATING client_max_body_size"
-
-    cat > /etc/nginx/snippets/proxy.conf << PROX
-client_max_body_size 512M;
-client_body_buffer_size 128k;
-
-#Timeout if the real server is dead
-proxy_next_upstream error timeout invalid_header http_500 http_502 http_503;
-
-# Advanced Proxy Config
-send_timeout 5m;
-proxy_read_timeout 240;
-proxy_send_timeout 240;
-proxy_connect_timeout 240;
-
-# Basic Proxy Config
-proxy_set_header Host \$host;
-proxy_set_header X-Real-IP \$remote_addr;
-proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-proxy_set_header X-Forwarded-Proto https;
-#proxy_redirect  http://  \$scheme://;
-proxy_http_version 1.1;
-proxy_set_header Connection "";
-proxy_cache_bypass \$cookie_session;
-proxy_no_cache \$cookie_session;
-proxy_buffers 32 4k;
-PROX
-
-    if grep -q "php" /etc/nginx/apps/dindex.conf; then
-        :
-    else
-        cat > /etc/nginx/apps/dindex.conf << DIN
+    if [[ -f /install/.deluge.lock ]]; then
+        if grep -q "php" /etc/nginx/apps/dindex.conf; then
+            :
+        else
+            cat > /etc/nginx/apps/dindex.conf << DIN
 location /deluge.downloads {
   alias /home/\$remote_user/torrents/deluge;
   include /etc/nginx/snippets/fancyindex.conf;
@@ -172,6 +121,17 @@ location /deluge.downloads {
   } 
 }
 DIN
+        fi
+    fi
+
+    # Remove php directive at the root level since we no longer use php
+    # on root and we define php manually for nested locations
+    if grep -q '\.php\$' /etc/nginx/sites-enabled/default; then
+        sed -i -e '/location ~ \\.php$ {/,/}/d' /etc/nginx/sites-enabled/default
+    fi
+
+    if grep -q 'index.html' /etc/nginx/sites-enabled/default; then
+        sed -i '/index.html/d' /etc/nginx/sites-enabled/default
     fi
 
     . /etc/swizzin/sources/functions/php

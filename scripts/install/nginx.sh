@@ -36,15 +36,19 @@ if [[ -n $(pidof apache2) ]]; then
     fi
 fi
 
-LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php
-apt_update
-sudo dpkg --configure -a
-apt-get -y -f install
-apt-get -y -qq update
-APT='nginx-extras subversion ssl-cert php7.3-fpm php7.3-common libfcgi0ldbl php7.3-cli php7.3-dev php7.3-xml php7.3-curl php7.3-xmlrpc php7.3-json php7.3-mbstring php7.3-opcache php-geoip php7.3-xml php7.3-gd php7.3-sqlite3 php7.3-zip'
-for depends in $APT; do
-    apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install "$depends" >> "${log}" 2>&1 || { echo "ERROR: APT-GET could not install a required package: ${depends}. That's probably not good..."; }
-done
+if [[ $codename =~ ("xenial"|"stretch") ]]; then
+    mcrypt=php-mcrypt
+else
+    mcrypt=
+fi
+
+if [[ $codename == "xenial" ]]; then
+    APT="nginx-extras subversion ssl-cert php-fpm libfcgi0ldbl php-cli php-dev php-xml php-curl php-xmlrpc php-json ${mcrypt} php-mbstring php-opcache php-geoip php-xml"
+else
+    APT="nginx libnginx-mod-http-fancyindex subversion ssl-cert php-fpm libfcgi0ldbl php-cli php-dev php-xml php-curl php-xmlrpc php-json ${mcrypt} php-mbstring php-opcache php-geoip php-xml"
+fi
+
+apt_install $APT
 
 cd /etc/php
 phpv=$(ls -d */ | cut -d/ -f1)
@@ -63,34 +67,15 @@ for version in $phpv; do
 done
 echo_progress_done "PHP config modified"
 
-sudo apt-get -y -q purge php7.0.*
-sudo apt-get -y -q purge php7.1.*
-sudo apt-get -y -q purge php7.2.*
-sudo apt-get -y -q purge php7.4.*
-apt-get -y -q install libmcrypt-dev
-pear config-set php_dir /usr/bin/php
-pear config-set ext_dir /usr/lib/php/20180731
-pear config-set php_bin /usr/bin/php7.3
-pear config-set php_suffix 7.3
-pear config-set php_ini /etc/php/7.3/fpm/php.ini
-printf "\n" | pecl install mcrypt-1.0.2
-echo extension=mcrypt.so > /etc/php/7.3/mods-available/mcrypt.ini
-echo extension=mcrypt.so > /etc/php/7.3/fpm/conf.d/20-mcrypt.ini
-echo extension=mcrypt.so > /etc/php/7.3/cli/conf.d/20-mcrypt.ini
-systemctl restart php7.3-fpm
-sudo update-alternatives --set php /usr/bin/php7.3
-
-sed -i "s/php7.0-fpm/php7.3-fpm/g" /etc/nginx/apps/*.conf
-
-if [[ -f /lib/systemd/system/php7.3-fpm.service ]]; then
-    sock=php7.3-fpm
-elif [[ -f /lib/systemd/system/php7.2-fpm.service ]]; then
-    sock=php7.2-fpm
-elif [[ -f /lib/systemd/system/php7.1-fpm.service ]]; then
-    sock=php7.1-fpm
-else
-    sock=php7.0-fpm
+if [[ ! -f /etc/nginx/modules-enabled/50-mod-http-fancyindex.conf ]]; then
+    mkdir -p /etc/nginx/modules-enabled/
+    ln -s /usr/share/nginx/modules-available/mod-http-fancyindex.conf /etc/nginx/modules-enabled/50-mod-http-fancyindex.conf
 fi
+
+. /etc/swizzin/sources/functions/php
+phpversion=$(php_service_version)
+sock="php${phpversion}-fpm"
+echo_info "Using ${sock} in the nginx config"
 
 rm -rf /etc/nginx/sites-enabled/default
 
@@ -124,14 +109,6 @@ server {
   client_max_body_size 512M;
   server_tokens off;
   root /srv/;
-
-  index index.html index.php index.htm;
-
-  location ~ \.php$ {
-    include snippets/fastcgi-php.conf;
-    fastcgi_pass unix:/run/php/$sock.sock;
-    fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
-  }
 
   include /etc/nginx/apps/*;
 
