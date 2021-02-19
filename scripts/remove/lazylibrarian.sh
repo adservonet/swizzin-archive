@@ -1,12 +1,15 @@
 #!/bin/bash
 
-MASTER=$(cut -d: -f1 < /root/.master.info)
+#!/bin/bash
+user=$(cut -d: -f1 < /root/.master.info)
+systemctl disable --now -q lazylibrarian
 
-systemctl stop lazylibrarian@${MASTER}.service > /dev/null 2>&1
-systemctl disable lazylibrarian@${MASTER}.service > /dev/null 2>&1
-
-rm /etc/systemd/system/lazylibrarian.service
-
-rm -rf /srv/lazylibrarian
+rm -rf /opt/lazylibrarian
+rm -rf /opt/.venv/lazylibrarian
+if [ -z "$(ls -A /home/$user/.venv)" ]; then
+    rm -rf /opt/.venv
+fi
 rm -rf /etc/nginx/apps/lazylibrarian.conf
-rm /install/.lazylibrarian.lock
+rm -rf /install/.lazylibrarian.lock
+rm -rf /etc/systemd/system/lazylibrarian.service
+systemctl reload nginx
