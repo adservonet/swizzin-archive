@@ -50,7 +50,7 @@ After=syslog.target network.target
 Type=forking
 User=${user}
 Group=${user}
-ExecStart=/opt/.venv/couchpotato/bin/python2 /opt/couchpotato/CouchPotato.py --daemon --data_dir /opt/couchpotato/
+ExecStart=/opt/.venv/couchpotato/bin/python2 /opt/couchpotato/CouchPotato.py --daemon --data_dir /home/${user}/.config/couchpotato
 GuessMainPID=no
 
 [Install]
@@ -60,7 +60,6 @@ CPSD
 systemctl enable -q --now couchpotato 2>&1 | tee -a $log
 echo_progress_done "Service enabled and running"
 
-sleep 3
 if [[ -f /install/.nginx.lock ]]; then
     echo_progress_start "Installing nginx config"
     bash /usr/local/bin/swizzin/nginx/couchpotato.sh
