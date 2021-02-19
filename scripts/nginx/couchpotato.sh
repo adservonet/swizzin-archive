@@ -23,8 +23,10 @@ location /couchpotato {
 }
 RAD
 fi
-#sed -i "s/url_base.*/url_base = couchpotato\nhost = 127.0.0.1/g" /home/${user}/.config/couchpotato/settings.conf
+sleep 5
+
+#sed -i "s/url_base.*/url_base = couchpotato\nhost = 127.0.0.1/g" /opt/couchpotato/settings.conf
 sed -i 's/url_base.*/url_base = \/couchpotato/g' /home/${user}/.config/couchpotato/settings.conf >> "${log}" 2>&1
-if [[ $isactive == "active" ]]; then
-    systemctl start couchpotato
-fi
+#if [[ $isactive == "active" ]]; then
+systemctl restart couchpotato
+#fi

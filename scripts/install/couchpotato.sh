@@ -60,6 +60,7 @@ CPSD
 systemctl enable -q --now couchpotato 2>&1 | tee -a $log
 echo_progress_done "Service enabled and running"
 
+sleep 3
 if [[ -f /install/.nginx.lock ]]; then
     echo_progress_start "Installing nginx config"
     bash /usr/local/bin/swizzin/nginx/couchpotato.sh
