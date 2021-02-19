@@ -76,7 +76,7 @@ $apps = array(
     array("name" => "flood",          "service" => "flood",             "user" => $username),
     array("name" => "headphones",     "service" => "headphones",        "user" => ""),
     array("name" => "autodl",         "service" => "irssi",             "user" => $username),
-    array("name" => "lazylibrarian",  "service" => "lazylibrarian",     "user" => $username),
+    array("name" => "lazylibrarian",  "service" => "lazylibrarian",     "user" => ""),
     array("name" => "lidarr",         "service" => "lidarr",            "user" => ""),
     array("name" => "lounge",         "service" => "lounge",            "user" => ""),
     array("name" => "nzbget",         "service" => "nzbget",            "user" => $username),
