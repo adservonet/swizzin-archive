@@ -42,7 +42,7 @@ echo_progress_done "lazylibrarian package installed"
 
 
 echo_progress_start "Enabling lazylibrarian Systemd configuration"
-cat > /etc/systemd/system/lazylibrarian@.service << SUBSD
+cat > /etc/systemd/system/lazylibrarian.service << SUBSD
 [Unit]
 Description=lazylibrarian for ${user}
 After=syslog.target network.target
@@ -73,4 +73,5 @@ systemctl reload nginx
 echo_progress_done
 
 touch /install/.lazylibrarian.lock
-echo_success "lazylibrarian"
+
+echo_success "lazylibrarian installed"
