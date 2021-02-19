@@ -6,7 +6,7 @@ systemctl disable --now -q lazylibrarian
 
 rm -rf /opt/lazylibrarian
 rm -rf /opt/.venv/lazylibrarian
-if [ -z "$(ls -A /home/$user/.venv)" ]; then
+if [ -z "$(ls -A /opt/.venv)" ]; then
     rm -rf /opt/.venv
 fi
 rm -rf /etc/nginx/apps/lazylibrarian.conf
