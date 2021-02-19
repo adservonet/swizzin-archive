@@ -9,7 +9,6 @@
 user=$(cut -d: -f1 < /root/.master.info)
 
 echo_progress_start "Adding dependencies"
-
 if [[ $codename =~ ("bionic"|"stretch"|"xenial") ]]; then
     #shellcheck source=sources/functions/pyenv
     . /etc/swizzin/sources/functions/pyenv
@@ -25,20 +24,18 @@ else
 fi
 echo_progress_done "dependencies set up"
 
-
-
-echo_progress_start "Downloading lazylibrarian installing ... "
-
 cd /opt
+
 echo_progress_start "Cloning into '/opt/lazylibrarian'"
 git clone https://gitlab.com/LazyLibrarian/LazyLibrarian.git lazylibrarian >> $log 2>&1
 chown -R ${user}: lazylibrarian
 echo_progress_done "cloned"
 cd lazylibrarian
-#echo_progress_start "Checking python depends"
-#sudo -u ${user} bash -c "/opt/.venv/lazylibrarian/bin/pip3 install -r requirements.txt" >> $log 2>&1
-#echo_progress_done "Dependencies installed"
-echo_progress_done "lazylibrarian package installed"
+
+echo_progress_start "Checking python depends"
+sudo -u ${user} bash -c "/opt/.venv/lazylibrarian/bin/pip3 install --upgrade pip" >> $log 2>&1
+sudo -u ${user} bash -c "/opt/.venv/lazylibrarian/bin/pip3 install -r urllib3 apprise cryptography pyopenssl pillow" >> $log 2>&1
+echo_progress_done "Dependencies installed"
 
 
 echo_progress_start "Enabling lazylibrarian Systemd configuration"
