@@ -8,45 +8,70 @@
 #fi
 MASTER=$(cut -d: -f1 < /root/.master.info)
 
-echo "Creating lazylibrarian-tmp install directory ... " >> "${log}" 2>&1
+echo_progress_start "Adding dependencies"
 
-mkdir /srv/lazylibrarian
-chown ${MASTER}: /srv/lazylibrarian
+if [[ $codename =~ ("bionic"|"stretch"|"xenial") ]]; then
+    #shellcheck source=sources/functions/pyenv
+    . /etc/swizzin/sources/functions/pyenv
+    pyenv_install
+    pyenv_install_version 3.7.7
+    pyenv_create_venv 3.7.7 /opt/.venv/lazylibrarian
+    chown -R ${MASTER}: /opt/.venv/lazylibrarian
+else
+    apt_install python3-pip python3-dev python3-venv
+    mkdir -p /opt/.venv/lazylibrarian
+    python3 -m venv /opt/.venv/lazylibrarian
+    chown -R ${MASTER}: /opt/.venv/lazylibrarian
+fi
+echo_progress_done "dependencies set up"
 
-echo "Downloading lazylibrarian installing ... " >> "${log}" 2>&1
 
-apt-get update -y -q >> "${log}" 2>&1
-apt-get install -y -q python python-setuptools python-pip
-git clone https://gitlab.com/LazyLibrarian/LazyLibrarian.git /srv/lazylibrarian
 
-touch /install/.lazylibrarian.lock
+echo_progress_start "Downloading lazylibrarian installing ... "
 
-echo "Enabling lazylibrarian Systemd configuration" >> "${log}" 2>&1
-service stop lazylibrarian > /dev/null 2>&1
+cd /opt
+echo_progress_start "Cloning into '/opt/lazylibrarian'"
+git clone https://gitlab.com/LazyLibrarian/LazyLibrarian.git lazylibrarian >> $log 2>&1
+chown -R ${MASTER}: lazylibrarian
+echo_progress_done "cloned"
+cd lazylibrarian
+#echo_progress_start "Checking python depends"
+#sudo -u ${MASTER} bash -c "/opt/.venv/lazylibrarian/bin/pip3 install -r requirements.txt" >> $log 2>&1
+#echo_progress_done "Dependencies installed"
+echo_progress_done "lazylibrarian package installed"
+
+
+echo_progress_start "Enabling lazylibrarian Systemd configuration"
 cat > /etc/systemd/system/lazylibrarian@.service << SUBSD
 [Unit]
-Description=lazylibrarian
-After=network.target
+Description=lazylibrarian for ${MASTER}
+After=syslog.target network.target
 
 [Service]
-Type=forking
-KillMode=process
-User=%I
-ExecStart=/usr/bin/python /srv/lazylibrarian/LazyLibrarian.py -d
-ExecStop=-/bin/kill -HUP
-WorkingDirectory=/srv/lazylibrarian/
+WorkingDirectory=/opt/lazylibrarian
+User=${MASTER}
+Group=${MASTER}
+UMask=0002
+Restart=on-failure
+RestartSec=5
+Type=simple
+ExecStart=/opt/.venv/lazylibrarian/bin/python3 /opt/lazylibrarian/LazyLibrarian.py --daemon
+KillSignal=SIGINT
+TimeoutStopSec=20
+SyslogIdentifier=lazylibrarian.${MASTER}
 
 [Install]
 WantedBy=multi-user.target
-
 SUBSD
 
 systemctl enable lazylibrarian@${MASTER}.service > /dev/null 2>&1
 systemctl start lazylibrarian@${MASTER}.service > /dev/null 2>&1
+echo_progress_done "service installed"
 
-if [[ -f /install/.nginx.lock ]]; then
-    bash /usr/local/bin/swizzin/nginx/lazylibrarian.sh
-    service nginx reload
-fi
+echo_progress_start "Setting up lazylibrarian nginx configuration"
+bash /usr/local/bin/swizzin/nginx/lazylibrarian.sh
+systemctl reload nginx
+echo_progress_done
 
-echo "lazylibrarian Install Complete!" >> "${log}" 2>&1
+touch /install/.lazylibrarian.lock
+echo_success "lazylibrarian"
