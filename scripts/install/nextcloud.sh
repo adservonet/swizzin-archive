@@ -33,23 +33,19 @@ else
         #read -s 'password'
         #echo
     else
-        echo -n -e "No mysql server found! Setup will install. \n"
-        #  echo -n -e "Please enter a mysql root password \n"
-        #  while [ -z "$password" ]; do
-        #    read -s -p "Password: " 'pass1'
-        #    echo
-        #    read -s -p "Re-enter password to verify: " 'pass2'
+        #while [ -z "$password" ]; do
+        #    echo_query "Please enter a mysql root password" "hidden"
+        #    read -s 'pass1'
+        #    echo_query "Re-enter password to verify" "hidden"
+        #    read -s 'pass2'
         #    if [ $pass1 = $pass2 ]; then
-        #       password=$pass1
+        #        password=$pass1
         #    else
-        #       echo
-        #       echo "Passwords do not match"
+        #        echo_warn "Passwords do not match"
         #    fi
-        #  done
-        #  echo -e "Please wait while nextcloud is installed ... "
-
-        echo -e "Please wait while nextcloud is installed ... "
-        DEBIAN_FRONTEND=noninteractive apt-get -y install mariadb-server > /dev/null 2>&1
+        #done
+        echo_progress_start "Installing database"
+        apt_install mariadb-server
         if [[ $(systemctl is-active mysql) != "active" ]]; then
             systemctl start mysql
         fi

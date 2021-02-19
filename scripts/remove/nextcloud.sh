@@ -1,8 +1,8 @@
 #!/bin/bash
 # nextcloud uninstaller
+#echo_query "Please enter mysql root password so that nextcloud database and user can be dropped." "hidden"
+#read -s 'password'
 password=$(cut -d: -f2 < /root/.master.info)
-#echo -n -e "Please enter mysql root password so that nextcloud database and user can be dropped.\n"
-#read -s -p "Password: " 'password'
 rm -rf /srv/nextcloud
 rm /etc/nginx/apps/nextcloud.conf
 systemctl reload nginx
