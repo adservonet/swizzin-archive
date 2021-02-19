@@ -116,9 +116,22 @@ if [[ -f /install/.nginx.lock ]]; then
     bash /usr/local/bin/swizzin/nginx/jellyfin.sh
     systemctl -q restart nginx.service
 fi
+
+sleep 4
+
+systemctl stop jellyfin >> $log 2>&1
+killall -u jellyfin
+sleep 5
+mkdir '/home/'${username}'/jellyfin/';
+chown -R jellyfin:jellyfin  '/home/'${username}'/jellyfin/';
+mv "/var/lib/jellyfin/" /home/${username}/
+ln -s '/home/'${username}'/jellyfin' '/var/lib/jellyfin'
+chown -R jellyfin:jellyfin '/var/lib/jellyfin'
+sleep 5
+
 #
 # Restart the jellyfin service to make sure our changes take effect
-systemctl -q restart "jellyfin.service"
+systemctl -q restart jellyfin
 #
 # This file is created after installation to prevent reinstalling. You will need to remove the app first which deletes this file.
 touch /install/.jellyfin.lock
