@@ -4,6 +4,7 @@
 if [[ -f /install/.jackett.lock ]]; then
     username=$(cut -d: -f1 < /root/.master.info)
     active=$(systemctl is-active jackett@$username)
+
     if grep -q "ExecStart=/usr/bin/mono" /etc/systemd/system/jackett@.service; then
         jackettver=$(wget -q https://github.com/Jackett/Jackett/releases/latest -O - | grep -E \/tag\/ | grep -v repository | awk -F "[><]" '{print $3}')
         sed -i 's|ExecStart.*|ExecStart=/bin/sh -c "/home/%I/Jackett/jackett_launcher.sh"|g' /etc/systemd/system/jackett@.service
@@ -24,7 +25,7 @@ if [[ -f /install/.jackett.lock ]]; then
         :
     fi
 
-    if ! grep -q "jacket_launcher" /etc/systemd/system/jackett@.service; then
+    if ! grep -q "jackett_launcher" /etc/systemd/system/jackett@.service; then
         cat > /etc/systemd/system/jackett@.service << JAK
 [Unit]
 Description=jackett for %I
@@ -72,10 +73,12 @@ JL
         fi
     fi
 
-    if grep -q "proxy_set_header" /etc/nginx/apps/jackett.conf; then
-        sed -i "/proxy_set_header/d" /etc/nginx/apps/jackett.conf
-        systemctl reload nginx
-    fi
+    #if [[ -f /install/.nginx.lock ]]; then
+        if grep -q "proxy_set_header" /etc/nginx/apps/jackett.conf; then
+            sed -i "/proxy_set_header/d" /etc/nginx/apps/jackett.conf
+            systemctl reload nginx
+        fi
+    #fi
 
     if [[ $(stat -c %U /home/${username}/.config/Jackett/ServerConfig.json) == "root" ]]; then
         chown -R ${username}: /home/${username}/.config/Jackett
