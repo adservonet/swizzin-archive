@@ -2,6 +2,7 @@
 # Nginx conf for Radarr v3
 # Flying sausages 2020
 master=$(cut -d: -f1 < /root/.master.info)
+password="$(cut -d: -f2 < /root/.master.info)"
 
 cat > /etc/nginx/apps/radarr.conf << RADARR
 location /radarr {
@@ -24,13 +25,12 @@ RADARR
 isactive=$(systemctl is-active radarr)
 
 if [[ $isactive == "active" ]]; then
-	echo_log_only "Stopping radarr"
 	systemctl stop radarr
 fi
 user=$(grep User /etc/systemd/system/radarr.service | cut -d= -f2)
-echo_log_only "Radarr user detected as $user"
+echo "Radarr user detected as $user"
 apikey=$(awk -F '[<>]' '/ApiKey/{print $3}' /home/"$user"/.config/Radarr/config.xml)
-echo_log_only "API Key  = $apikey" >> "$log"
+echo "API Key  = $apikey" >> "$log"
 #TODO cahnge Branch whenever that becomes relevant
 cat > /home/"$user"/.config/Radarr/config.xml << SONN
 <Config>
@@ -49,21 +49,19 @@ SONN
 
 chown -R "$user":"$user" /home/"$user"/.config/Radarr
 
-#shellcheck source=sources/functions/utils
-. /etc/swizzin/sources/functions/utils
 systemctl start radarr -q # Switch radarr on regardless whether it was off before or not as we need to have it online to trigger this cahnge
 
 sleep 5 # TODO replace with a loop until the API is available
 payload="$(curl -s "https://127.0.0.1/radarr/api/v3/config/host?apiKey=${apikey}" \
-	--user "${user}:$(_get_user_password "${user}")" --insecure \
+	--user "${user}:${password}" --insecure \
 	-s | \
 	jq '.certificateValidation = "disabledForLocalAddresses"')"
-echo_log_only "Payload = \n${payload}"
-echo_log_only "Return from radarr after PUT ="
+echo  "Payload = \n${payload}"
+echo  "Return from radarr after PUT ="
 curl "https://127.0.0.1/radarr/api/v3/config/host?apiKey=${apikey}" -X PUT --insecure \
 	-H 'Accept: application/json, text/javascript, */*; q=0.01' \
 	--compressed -H 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' \
-	--user "${user}:$(_get_user_password "${user}")" \
+	--user "${user}:${password}" \
 	--data-raw "$payload" -s >> "$log"
 
 curl -v -s "https://127.0.0.1/radarr/api/v3/config/host?apiKey=6eecd3ffbaa5415a8137d3e658938ef2" --user "seedit4me:jpop99" --insecure -s | jq '.certificateValidation = "disabledForLocalAddresses"'
