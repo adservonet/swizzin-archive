@@ -6,22 +6,31 @@
 #
 #   You may copy, distribute and modify the software.
 
-log="/install/.proftpd.log"
+echo_progress_start "getting ports/ip"
+if [[ -f /home/seedit4me/.pasv_port ]]; then
+  pasvports=$(cat /home/seedit4me/.pasv_port)
+  pasv=(${pasvports//:/ })
+  pubip=$(curl -s http://ipv4.icanhazip.com)
+else
+  echo_warn "missing port file., bailing out";
+  exit 1;
+fi
+echo_progress_done "k"
 
-apt_remove vsftpd
-
+echo_progress_start "installing packages"
 apt_install debconf-utils >> "${log}" 2>&1
 echo "proftpd-basic shared/proftpd/inetd_or_standalone select standalone" | debconf-set-selections >> "${log}" 2>&1
-
 apt_install proftpd-basic >> "${log}" 2>&1
+echo_progress_done "done"
 
+echo_progress_start "configuring"
 cat > /etc/proftpd/proftpd.conf << PFC
 
 Include /etc/proftpd/modules.conf
 
 ### ECM CUSTOM ###
-PassivePorts            %%%PASSIVE PORTS%%%
-MasqueradeAddress		%%%MASQ ADDR%%%
+PassivePorts            ${pasv[1]} ${pasv[2]}
+MasqueradeAddress		$pubip
 AllowForeignAddress		on
 RequireValidShell		off
 Port				21
@@ -81,12 +90,12 @@ Include /etc/proftpd/conf.d/
 
 PFC
 
-apt_install openssl
-
 echo 'DefaultRoot ~' >> /etc/proftpd/proftpd.conf
+echo 'ServerIdent on "hosted by https://seedit.me"' >> /etc/proftpd/proftpd.conf
+echo_progress_done "done"
 
-echo 'ServerIdent on "FTP Server ready."' >> /etc/proftpd/proftpd.conf
-
+echo_progress_start "Setting up SSL"
+apt_install openssl
 mkdir /etc/proftpd/ssl
 
 #Required
@@ -97,14 +106,11 @@ commonname=$domain
 country=GB
 state=Nottingham
 locality=Nottinghamshire
-organization='SeedIt4Me'
+organization='seedit4.me'
 organizationalunit=IT
 email=support@seedit4.me
-
 openssl req -new -x509 -days 365 -nodes -out /etc/proftpd/ssl/proftpd.cert.pem -keyout /etc/proftpd/ssl/proftpd.key.pem -subj "/C=$country/ST=$state/L=$locality/O=$organization/OU=$organizationalunit/CN=$commonname/emailAddress=$email"
-
 chmod 600 /etc/proftpd/ssl/proftpd.*
-
 echo 'Include /etc/proftpd/tls.conf' >> /etc/proftpd/proftpd.conf
 echo '<IfModule mod_tls.c>' > /etc/proftpd/tls.conf
 echo 'TLSEngine on' >> /etc/proftpd/tls.conf
@@ -118,6 +124,12 @@ echo 'TLSVerifyClient off' >> /etc/proftpd/tls.conf
 echo 'TLSRequired off' >> /etc/proftpd/tls.conf
 echo 'RequireValidShell no' >> /etc/proftpd/tls.conf
 echo '</IfModule>' >> /etc/proftpd/tls.conf
+echo_progress_done "done"
+
+echo_progress_start "Setting up SSL"
 systemctl restart proftpd.service
+echo_progress_done "done"
+
+echo_success "ProFTPd installed"
 
 touch /install/.proftpd.lock
