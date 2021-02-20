@@ -10,8 +10,20 @@
 #   under the GPL along with build & install instructions.
 #
 
-apt_install vsftpd ssl-cert
 
+echo_progress_start "getting ports/ip"
+if [[ -f /home/seedit4me/.pasv_port ]]; then
+  pasvports=$(cat /home/seedit4me/.pasv_port)
+  pasv=(${pasvports//:/ })
+else
+  echo_warn "missing port file., bailing out";
+  exit 1;
+fi
+echo_progress_done "k"
+
+echo_progress_start "installing packages"
+apt_install vsftpd ssl-cert
+echo_progress_done "done"
 
 
 echo_progress_start "Configuring vsftpd"
@@ -44,21 +56,15 @@ listen_port=21
 pasv_enable=YES
 pasv_promiscuous=YES
 port_promiscuous=YES
-pasv_min_port=60600
-pasv_max_port=60609
+pasv_min_port=${pasv[0]}
+pasv_max_port=${pasv[1]}
 
 force_local_data_ssl=NO
 force_local_logins_ssl=NO
 
-#pasv_address=185.132.178.148
-
-#guest_enable=YES
-#guest_username=
-
 debug_ssl=YES
 xferlog_enable=YES
 
-#cmds_allowed=PASV,RETR,QUIT,PASS,SYST,FEAT,PWD,PROT,OPTS,LIST,PORT,TYPE,CWD,STOR,DELE,RNFR,RNTO,MKD,RMD,APPE,SITE.
 ftpd_banner=/etc/swizzin/sources/logo/logo1
 banner_file=/etc/swizzin/sources/logo/logo1
 VSC
