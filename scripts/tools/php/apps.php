@@ -101,6 +101,7 @@ $apps = array(
     array("name" => "jackett",        "service" => "jackett",           "user" => $username),
     array("name" => "couchpotato",    "service" => "couchpotato",       "user" => $username),
     array("name" => "quassel",        "service" => "quasselcore",       "user" => ""),
+    array("name" => "vsftpd",         "service" => "vsftpd",            "user" => ""),
     array("name" => "shellinabox",    "service" => "shellinabox",       "user" => ""),
     array("name" => "csf",            "service" => "csf",               "user" => ""),
     array("name" => "sickgear",       "service" => "sickgear",          "user" => $username),
