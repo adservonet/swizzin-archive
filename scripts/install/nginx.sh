@@ -43,9 +43,9 @@ else
 fi
 
 if [[ $codename == "xenial" ]]; then
-    APT="nginx-extras subversion ssl-cert php-fpm libfcgi0ldbl php-cli php-dev php-xml php-curl php-xmlrpc php-json ${mcrypt} php-mbstring php-geoip php-xml"
+    APT="nginx-extras subversion ssl-cert php-fpm libfcgi0ldbl php-cli php-dev php-xml php-curl php-xmlrpc php-json ${mcrypt} php-mbstring php-opcache php-geoip php-xml"
 else
-    APT="nginx libnginx-mod-http-fancyindex subversion ssl-cert php-fpm libfcgi0ldbl php-cli php-dev php-xml php-curl php-xmlrpc php-json ${mcrypt} php-mbstring php-geoip php-xml"
+    APT="nginx libnginx-mod-http-fancyindex subversion ssl-cert php-fpm libfcgi0ldbl php-cli php-dev php-xml php-curl php-xmlrpc php-json ${mcrypt} php-mbstring php-opcache php-geoip php-xml"
 fi
 
 apt_install $APT
@@ -189,8 +189,8 @@ fancyindex_localtime on;
 fancyindex_exact_size off;
 fancyindex_header "/fancyindex/header.html";
 fancyindex_footer "/fancyindex/footer.html";
-#fancyindex_ignore "examplefile.html"; # Ignored files will not show up in the directory listing, but will still be public.
-#fancyindex_ignore "Nginx-Fancyindex-Theme"; # Making sure folder where files are don't show up in the listing.
+#fancyindex_ignore "examplefile.html"; # Ignored files will not show up in the directory listing, but will still be public. 
+#fancyindex_ignore "Nginx-Fancyindex-Theme"; # Making sure folder where files are don't show up in the listing. 
 fancyindex_name_length 255; # Maximum file name length in bytes, change as you like.
 FIC
 sed -i 's/href="\/[^\/]*/href="\/fancyindex/g' /srv/fancyindex/header.html
