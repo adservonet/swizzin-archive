@@ -12,6 +12,8 @@
 
 apt_install vsftpd ssl-cert
 
+
+
 echo_progress_start "Configuring vsftpd"
 cat > /etc/vsftpd.conf << VSC
 listen=NO
@@ -33,20 +35,32 @@ ssl_enable=YES
 pam_service_name=vsftpd
 secure_chroot_dir=/var/run/vsftpd/empty
 
-#ascii_upload_enable=YES
-#ascii_download_enable=YES
-#ftpd_banner=Welcome to blah FTP service.
+ascii_upload_enable=YES
+ascii_download_enable=YES
+ftpd_banner=Welcome to blah FTP service.
 
-#############################################
-#Uncomment these lines to enable FXP support#
-#############################################
-#pasv_promiscuous=YES
-#port_promiscuous=YES
+listen_port=21
+#pasv_addr_resolve=YES
+pasv_enable=YES
+pasv_promiscuous=YES
+port_promiscuous=YES
+pasv_min_port=60600
+pasv_max_port=60609
 
-###################
-#Set a custom port#
-###################
-#listen_port=
+force_local_data_ssl=NO
+force_local_logins_ssl=NO
+
+#pasv_address=185.132.178.148
+
+#guest_enable=YES
+#guest_username=
+
+debug_ssl=YES
+xferlog_enable=YES
+
+#cmds_allowed=PASV,RETR,QUIT,PASS,SYST,FEAT,PWD,PROT,OPTS,LIST,PORT,TYPE,CWD,STOR,DELE,RNFR,RNTO,MKD,RMD,APPE,SITE.
+ftpd_banner=/etc/swizzin/sources/logo/logo1
+banner_file=/etc/swizzin/sources/logo/logo1
 VSC
 
 # Check for LE cert, and copy it if available.
