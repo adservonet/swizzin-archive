@@ -29,7 +29,7 @@ cat > /etc/proftpd/proftpd.conf << PFC
 Include /etc/proftpd/modules.conf
 
 ### ECM CUSTOM ###
-PassivePorts            ${pasv[1]} ${pasv[2]}
+PassivePorts            ${pasv[0]} ${pasv[1]}
 MasqueradeAddress		$pubip
 AllowForeignAddress		on
 RequireValidShell		off
