@@ -28,6 +28,10 @@ else
     sock=php7.0-fpm
 fi
 
+. /etc/swizzin/sources/functions/php
+phpversion=$(php_service_version)
+sock="php${phpversion}-fpm"
+
 cat > /etc/nginx/apps/tools.conf << PAN
 
 location /tools {
@@ -43,8 +47,8 @@ location /tools {
 
   location ~ \.php$
   {
-	include snippets/fastcgi-php.conf;
-	fastcgi_pass unix:/run/php/php7.3-fpm.sock;
+    include snippets/fastcgi-php.conf;
+    fastcgi_pass unix:/run/php/$sock.sock;
 	#fastcgi_index index.php;
 	fastcgi_param SCRIPT_FILENAME /srv\$fastcgi_script_name;
   }

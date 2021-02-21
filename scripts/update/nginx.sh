@@ -47,6 +47,18 @@ function update_nginx() {
     phpversion=$(php_service_version)
     sock="php${phpversion}-fpm"
 
+    if [[ $phpversion != "8.0" ]]; then
+      echo "wrong php version: $phpversion cleaning up";
+      sudo update-alternatives --set php /usr/bin/php8.0;
+
+      PURGE="7.0 7.1 7.2 7.3 7.4";
+      for ver in $PURGE; do
+          apt_remove --purge "php$ver-fpm";
+          rm -rf "/etc/php/$ver";
+      done;
+    fi
+
+
     for version in $phpv; do
         if [[ -f /etc/php/$version/fpm/php.ini ]]; then
             sed -i -e "s/post_max_size = 8M/post_max_size = 64M/" \
