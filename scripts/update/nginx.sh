@@ -50,13 +50,16 @@ function update_nginx() {
     if [[ $phpversion != "8.0" ]]; then
       echo "wrong php version: $phpversion cleaning up";
       sudo update-alternatives --set php /usr/bin/php8.0;
+    fi
 
-      PURGE="7.0 7.1 7.2 7.3 7.4";
-      for ver in $PURGE; do
+    PURGE="7.0 7.1 7.2 7.3 7.4";
+    for ver in $PURGE; do
+        if check_installed "php$ver-fpm"; then
+          echo "purging php$ver-fpm";
           apt_remove --purge "php$ver-fpm";
           rm -rf "/etc/php/$ver";
-      done;
-    fi
+        fi
+    done;
 
 
     for version in $phpv; do
