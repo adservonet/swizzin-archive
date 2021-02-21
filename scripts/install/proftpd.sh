@@ -23,6 +23,8 @@ echo "proftpd-basic shared/proftpd/inetd_or_standalone select standalone" | debc
 waitforapt
 apt install proftpd-basic -y  >>  "${SEEDIT_LOG}"  2>&1
 
+mkdir -p /etc/proftpd
+
 cat > /etc/proftpd/proftpd.conf << PFC
 
 Include /etc/proftpd/modules.conf
