@@ -396,51 +396,30 @@ function _deluser() {
     echo_success "User $user removed"
 }
 
-function _chpasswd() {
-    user=$2
-    pass=$3
-    master=$(cat /root/.master.info | cut -d: -f1)
-    if [[ $user = $master ]]; then
-        echo "$user:$pass" > /root/.master.info
-    fi
-    echo "$user:$pass" > /root/${user}.info
-    chpasswd <<< "${user}:${pass}" >> $log 2>&1
-    htpasswd -b /etc/htpasswd $user $pass >> $log 2>&1
-    mkdir -p /etc/htpasswd.d/
-    htpasswd -b -c /etc/htpasswd.d/htpasswd.${user} $user $pass >> $log 2>&1
-    if [[ -e /install/.deluge.lock ]]; then
-        systemctl stop deluged@${user} >> $log 2>&1
-        systemctl stop deluge-web@${user} >> $log 2>&1
-        DWSALT=$(tr -dc 'a-zA-Z0-9' < /dev/urandom | fold -w 32 | head -n 1)
-        DWP=$(python2 /usr/local/bin/swizzin/deluge.Userpass.py ${pass} ${DWSALT})
-        sed -i "s/.*${user}.*/${user}:${pass}:10/" /home/$user/.config/deluge/auth
-        sed -i "s/.*pwd_salt.*/  \"pwd_salt\": \"${DWSALT}\",/" /home/$user/.config/deluge/web.conf
-        sed -i "s/.*pwd_sha1.*/  \"pwd_sha1\": \"${DWP}\",/" /home/$user/.config/deluge/web.conf
-        sed -i "/$user/{n;s/.*/      \"${pass}\"/}" /home/${user}/.config/deluge/hostlist.conf.1.2
-        systemctl start deluged@${user} >> $log 2>&1
-        systemctl start deluge-web@${user} >> $log 2>&1
-    fi
-    if [[ -e /install/.transmission.lock ]]; then
-        systemctl stop transmission@${user} >> $log 2>&1
-        sed -i "s/.*rpc-password.*/  \"rpc-password\": \"${pass}\",/" /home/$user/.config/transmission-daemon/settings.json
-        systemctl start transmission@${user} >> $log 2>&1
-    fi
-    if [[ -f /install/.lounge.lock ]]; then
-        su -s /bin/sh lounge -c "thelounge reset $user " <<< "${pass}" >> $log 2>&1
-    fi
-    if [[ -f /install/.mango.lock ]]; then
-        if [[ -z $mangodir ]]; then mangodir="/opt/mango"; fi
-        su mango -c "$mangodir/mango admin user update ${user} -p ${pass}" >> $log 2>&1
-    fi
-    if [[ -f /install/.organizr.lock ]]; then
-        #TODO fix when API allows to
-        echo_warn "Remember to manually change the organizr account's password!"
-    fi
-    if [[ -f /install/.qbittorrent.lock ]]; then
-        . /etc/swizzin/sources/functions/qbittorrent
-        qbittorrent_chpasswd ${user} ${pass}
-    fi
-    echo_success "Password for $user changed"
+function _chpasswd {
+  user=$2
+  pass=$3
+  master=$(cat /root/.master.info | cut -d: -f1)
+  if [[ $user = $master ]]; then
+    echo "$user:$pass" > /root/.master.info
+  fi
+  echo "$user:$pass" > /root/${user}.info
+  chpasswd<<<"${user}:${pass}"
+  htpasswd -b /etc/htpasswd $user $pass
+  mkdir -p /etc/htpasswd.d/
+  htpasswd -b -c /etc/htpasswd.d/htpasswd.${user} $user $pass
+  if [[ -e /install/.deluge.lock ]]; then
+    systemctl stop deluged@${user}
+    systemctl stop deluge-web@${user}
+    DWSALT=$(tr -dc 'a-zA-Z0-9' < /dev/urandom | fold -w 32 | head -n 1)
+    DWP=$(python /usr/local/bin/swizzin/deluge.Userpass.py ${pass} ${DWSALT})
+    sed -i "s/.*${user}.*/${user}:${pass}:10/" /home/$user/.config/deluge/auth
+    sed -i "s/.*pwd_salt.*/  \"pwd_salt\": \"${DWSALT}\",/" /home/$user/.config/deluge/web.conf
+    sed -i "s/.*pwd_sha1.*/  \"pwd_sha1\": \"${DWP}\",/" /home/$user/.config/deluge/web.conf
+    sed -i "/$user/{n;s/.*/      \"${pass}\"/}" /home/${user}/.config/deluge/hostlist.conf.1.2
+    systemctl start deluged@${user}
+    systemctl start deluge-web@${user}
+  fi
 
 }
 
