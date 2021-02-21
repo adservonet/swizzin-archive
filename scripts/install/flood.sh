@@ -36,10 +36,7 @@ users=($(cut -d: -f1 < /etc/htpasswd))
 for u in "${users[@]}"; do
     if [[ ! -d /home/$u/.flood ]]; then
         echo_progress_start "Configuring flood for $u"
-        salt=$(
-            head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32
-            echo ""
-        )
+        salt=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32; echo "")
         #salt=$(tr -dc 'a-zA-Z0-9' < /dev/urandom | fold -w 32 | head -n 1)
         port=$(shuf -i 3501-4500 -n 1)
         cd /home/$u
