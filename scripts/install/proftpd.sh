@@ -12,7 +12,7 @@ if [[ -f /home/seedit4me/.pasv_port ]]; then
   pubip=$(curl -s http://ipv4.icanhazip.com)
 else
   declare -a pasv=("%%%PASSIVE PORTS%%%" "")
-  pubip="%%%PASSIVE PORTS%%%"
+  pubip="%%%MASQ ADDR%%%"
 fi
 
 waitforapt
