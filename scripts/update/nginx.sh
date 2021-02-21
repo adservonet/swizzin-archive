@@ -54,11 +54,17 @@ function update_nginx() {
 
     PURGE="7.0 7.1 7.2 7.3 7.4";
     for ver in $PURGE; do
-        if [[ $(check_installed "php$ver-fpm") ]] || [[ $(check_installed "php$ver-cli") ]]; then
+        if check_installed "php$ver-fpm"; then
           echo "purging php$ver*";
           apt_remove --purge "php$ver*";
           rm -rf "/etc/php/$ver";
         fi
+        if check_installed "php$ver-cli"; then
+          echo "purging php$ver*";
+          apt_remove --purge "php$ver*";
+          rm -rf "/etc/php/$ver";
+        fi
+
     done;
 
 
