@@ -155,9 +155,10 @@ DIN
         sed -i '/index.html/d' /etc/nginx/sites-enabled/default
     fi
 
-    . /etc/swizzin/sources/functions/php
-    restart_php_fpm
-    systemctl reload nginx
+# we will do this in tools update
+#    . /etc/swizzin/sources/functions/php
+#    restart_php_fpm
+#    systemctl reload nginx
 }
 
 if [[ -f /install/.nginx.lock ]]; then update_nginx; fi
