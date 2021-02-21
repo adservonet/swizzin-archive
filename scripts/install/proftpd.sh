@@ -11,7 +11,7 @@ if [[ -f /home/seedit4me/.pasv_port ]]; then
   pasv=(${pasvports//:/ })
   pubip=$(curl -s http://ipv4.icanhazip.com)
 else
-  declare -a pasv=("%%%PASSIVE PORTS%%%" "")
+  pasv=("%%%PASSIVE PORTS%%%" "")
   pubip="%%%MASQ ADDR%%%"
 fi
 
