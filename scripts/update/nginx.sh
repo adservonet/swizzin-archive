@@ -35,13 +35,12 @@ function update_nginx() {
         apt_install "${missing[@]}"
     fi
 
-    cd /etc/php
-    phpv=$(ls -d */ | cut -d/ -f1)
-    if [[ $phpv =~ 7\\.1 ]]; then
-        if [[ $phpv =~ 7\\.0 ]]; then
-            apt_remove purge php7.0-fpm
-        fi
-    fi
+    sudo update-alternatives --set php /usr/bin/php8.0
+    apt_remove purge php7.0-fpm
+    apt_remove purge php7.1-fpm
+    apt_remove purge php7.2-fpm
+    apt_remove purge php7.3-fpm
+    apt_remove purge php7.4-fpm
 
     . /etc/swizzin/sources/functions/php
     phpversion=$(php_service_version)
