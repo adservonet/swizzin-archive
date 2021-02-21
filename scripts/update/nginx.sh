@@ -39,7 +39,9 @@ function update_nginx() {
 
     PURGE="7.0 7.1 7.2 7.3 7.4"
     for ver in $PURGE; do
+        echo "php$ver-fpm";
         if check_installed "php$ver-fpm"; then
+            echo "purging php$ver-fpm";
             apt_remove --purge "php$ver-fpm";
             rm -rf "/etc/php/$ver";
         fi
