@@ -6,12 +6,14 @@
 #
 #   You may copy, distribute and modify the software.
 
-log="/install/.proftpd.log"
-
-#. /etc/swizzin/sources/functions/waitforapt.sh
-waitforapt
-
-apt remove vsftpd -y
+if [[ -f /home/seedit4me/.pasv_port ]]; then
+  pasvports=$(cat /home/seedit4me/.pasv_port)
+  pasv=(${pasvports//:/ })
+  pubip=$(curl -s http://ipv4.icanhazip.com)
+else
+  pasv=arr=("%%%PASSIVE PORTS%%%" "")
+  pubip=%%%PASSIVE PORTS%%%
+fi
 
 waitforapt
 
@@ -21,14 +23,13 @@ echo "proftpd-basic shared/proftpd/inetd_or_standalone select standalone" | debc
 waitforapt
 apt install proftpd-basic -y  >>  "${SEEDIT_LOG}"  2>&1
 
-
-cat > /etc/proftpd/proftpd.conf <<PFC
+cat > /etc/proftpd/proftpd.conf << PFC
 
 Include /etc/proftpd/modules.conf
 
 ### ECM CUSTOM ###
-PassivePorts            %%%PASSIVE PORTS%%%
-MasqueradeAddress		%%%MASQ ADDR%%%
+PassivePorts            ${pasv[1]} ${pasv[2]}
+MasqueradeAddress		$pubip
 AllowForeignAddress		on
 RequireValidShell		off
 Port				21
@@ -88,13 +89,11 @@ Include /etc/proftpd/conf.d/
 
 PFC
 
+echo 'DefaultRoot ~' >> /etc/proftpd/proftpd.conf
+echo 'ServerIdent on "hosted by https://seedit.me"' >> /etc/proftpd/proftpd.conf
+
 waitforapt
 apt install -y openssl
-
-echo 'DefaultRoot ~' >> /etc/proftpd/proftpd.conf
-
-echo 'ServerIdent on "FTP Server ready."' >> /etc/proftpd/proftpd.conf
-
 mkdir /etc/proftpd/ssl
 
 #Required
@@ -105,14 +104,11 @@ commonname=$domain
 country=GB
 state=Nottingham
 locality=Nottinghamshire
-organization='SeedIt4Me'
+organization='seedit4.me'
 organizationalunit=IT
 email=support@seedit4.me
-
 openssl req -new -x509 -days 365 -nodes -out /etc/proftpd/ssl/proftpd.cert.pem -keyout /etc/proftpd/ssl/proftpd.key.pem -subj "/C=$country/ST=$state/L=$locality/O=$organization/OU=$organizationalunit/CN=$commonname/emailAddress=$email"
-
 chmod 600 /etc/proftpd/ssl/proftpd.*
-
 echo 'Include /etc/proftpd/tls.conf' >> /etc/proftpd/proftpd.conf
 echo '<IfModule mod_tls.c>' > /etc/proftpd/tls.conf
 echo 'TLSEngine on' >> /etc/proftpd/tls.conf
