@@ -21,7 +21,7 @@ function update_nginx() {
         fi
     fi
 
-    LIST="php-fpm php-cli php-dev php-xml php-curl php-xmlrpc php-json ${mcrypt} php-mbstring php-opcache php-geoip php-xml"
+    LIST="php-fpm php-cli php-dev php-xml php-curl php-xmlrpc php-json ${mcrypt} php-mbstring php7.3-opcache php-geoip php-xml"
 
     missing=()
     for dep in $LIST; do
@@ -96,10 +96,10 @@ location /rtorrent.downloads {
   include /etc/nginx/snippets/fancyindex.conf;
   auth_basic "What's the password?";
   auth_basic_user_file /etc/htpasswd;
-  
+
   location ~* \.php$ {
 
-  } 
+  }
 }
 EOR
         fi
@@ -118,7 +118,7 @@ location /deluge.downloads {
 
   location ~* \.php$ {
 
-  } 
+  }
 }
 DIN
         fi
