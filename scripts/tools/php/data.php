@@ -33,7 +33,7 @@ if (count($_SESSION['rx'])>60)
 // # json_encode didnt work, if you found a workarround pls write m
 //echo json_encode($data, JSON_FORCE_OBJECT);
 
-echo '[ { "data":['.implode($_SESSION['rx'], ",").'],"label": "Download"}, ';
-echo '{ "data":['.implode($_SESSION['tx'], ",").'],"label": "Upload"} ';
+echo '[ { "data":['.implode( ",",$_SESSION['rx']).'],"label": "Download"}, ';
+echo '{ "data":['.implode( ",",$_SESSION['tx']).'],"label": "Upload"} ';
 echo ']';
 ?>
