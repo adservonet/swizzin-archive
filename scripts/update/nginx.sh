@@ -36,11 +36,14 @@ function update_nginx() {
     fi
 
     sudo update-alternatives --set php /usr/bin/php8.0
-    apt_remove --purge php7.0-fpm
-    apt_remove --purge php7.1-fpm
-    apt_remove --purge php7.2-fpm
-    apt_remove --purge php7.3-fpm
-    apt_remove --purge php7.4-fpm
+
+    PURGE="7.0 7.1 7.2 7.3 7.4"
+    for ver in $PURGE; do
+        if check_installed "php$ver-fpm"; then
+            apt_remove --purge "php$ver-fpm";
+            rm -rf "/etc/php/$ver";
+        fi
+    done
 
     . /etc/swizzin/sources/functions/php
     phpversion=$(php_service_version)
