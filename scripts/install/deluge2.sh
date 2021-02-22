@@ -13,7 +13,10 @@
 #
 #################################################################################
 
-function _dconf {
+function _dconf() {
+    pt_config=$(cat /home/seedit4me/.pt_config)
+    port=$(cat /home/seedit4me/.deluge_port)
+        
     for u in "${users[@]}"; do
         echo_progress_start "Configuring Deluge for $u"
         if [[ ${u} == ${master} ]]; then
@@ -23,14 +26,8 @@ function _dconf {
         fi
         n=$RANDOM
         DPORT=$((n % 59000 + 10024))
-        DWSALT=$(
-            head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32
-            echo ""
-        )
-        localpass=$(
-            head /dev/urandom | tr -dc a-z0-9 | head -c 40
-            echo ""
-        )
+        DWSALT=$( head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32; echo "" )
+        localpass=$( head /dev/urandom | tr -dc a-z0-9 | head -c 40; echo "" )
         if $(command -v python2.7 > /dev/null 2>&1); then
             pythonversion=python2.7
         elif $(command -v python3 > /dev/null 2>&1); then
@@ -38,7 +35,6 @@ function _dconf {
         fi
         DWP=$(${pythonversion} ${local_packages}/deluge.Userpass.py ${pass} ${DWSALT})
         DUDID=$(${pythonversion} ${local_packages}/deluge.addHost.py)
-        port=$(cat /home/seedit4me/.deluge_port)
         # -- Secondary awk command -- #
         #DPORT=$(awk -v min=59000 -v max=69024 'BEGIN{srand(); print int(min+rand()*(max-min+1))}')
         #DWPORT=$(shuf -i 10001-11000 -n 1)
@@ -180,7 +176,10 @@ DC
   "sidebar_multiple_filters": true
 }
 DWC
-        cat > /home/${u}/.config/deluge/blocklist.conf << DBL
+
+if [[ ! $pt_config == 1 ]]; then
+  wget -O /home/${u}/.config/deluge/blocklist.cache https://my.seedit4.me/storage/deluge_blocklist.dat
+  cat > /home/${u}/.config/deluge/blocklist.conf << DBL
 {
   "file": 1,
   "format": 1
@@ -196,6 +195,7 @@ DWC
   "load_on_start": true
 }
 DBL
+fi
 
         dvermajor=$(deluged -v | grep deluged | grep -oP '\d+\.\d+\.\d+' | cut -d. -f1)
 
@@ -221,8 +221,6 @@ DBL
 }
 DHL
 
-        wget -O /home/${u}/.config/deluge/blocklist.cache https://my.seedit4.me/storage/deluge_blocklist.dat
-
         echo "${u}:${pass}:10" > /home/${u}/.config/deluge/auth
         echo "localclient:${localpass}:10" >> /home/${u}/.config/deluge/auth
         chmod 600 /home/${u}/.config/deluge/auth
@@ -237,7 +235,7 @@ DHL
     done
 }
 
-function _dservice {
+function _dservice() {
     echo_progress_start "Adding systemd service files"
     if [[ ! -f /etc/systemd/system/deluged@.service ]]; then
         dvermajor=$(deluged -v | grep deluged | grep -oP '\d+\.\d+\.\d+' | cut -d. -f1)
@@ -323,15 +321,7 @@ fi
 #whiptail_deluge
 #check_client_compatibility
 
-#export deluge=repo
-#export deluge=1.3-stable
-#export deluge=master
 export deluge=master
-
-#export libtorrent=repo
-#export libtorrent=RC_1_0
-#export libtorrent=RC_1_1
-#export libtorrent=RC_1_2
 export libtorrent=RC_1_2
 
 if ! skip_libtorrent_rasterbar; then
