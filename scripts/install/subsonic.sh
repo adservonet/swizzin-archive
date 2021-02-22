@@ -20,14 +20,6 @@
 MASTER=$(cut -d: -f1 < /root/.master.info)
 codename=$(lsb_release -cs)
 
-#sudo add-apt-repository -y ppa:linuxuprising/java
-#apt_update
-
-#echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections
-#echo debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-selections
-#echo oracle-java15-installer shared/accepted-oracle-license-v1-2 boolean true | sudo debconf-set-selections
-#apt_install oracle-java15-installer python3-pip
-
 mkdir /root/subsonic-tmp
 
 case $codename in
@@ -49,7 +41,7 @@ echo_progress_start "Downloading and installing subsonic"
 current=$(wget -qO- http://www.subsonic.org/pages/download.jsp | grep -m1 .deb | cut -d'"' -f2)
 latest=$(wget -qO- http://www.subsonic.org/pages/$current | grep -m1 .deb | cut -d'"' -f2)
 wget -qO /root/subsonic-tmp/subsonic.deb $latest || {
-    echo "Could not download Subsonic. Exiting."
+    echo_error "Could not download Subsonic. Exiting."
     exit 1
 }
 cd /root/subsonic-tmp

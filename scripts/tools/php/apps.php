@@ -107,7 +107,7 @@ $apps = array(
     array("name" => "vsftpd",         "service" => "vsftpd",            "user" => ""),
     array("name" => "shellinabox",    "service" => "shellinabox",       "user" => ""),
     array("name" => "csf",            "service" => "csf",               "user" => ""),
-    array("name" => "sickgear",       "service" => "sickgear",          "user" => $username),
+    array("name" => "sickgear",       "service" => "sickgear",          "user" => ""),
     array("name" => "znc",            "service" => "znc",               "user" => "")
 );
 
