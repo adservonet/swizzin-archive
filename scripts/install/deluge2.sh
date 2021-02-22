@@ -16,7 +16,7 @@
 function _dconf() {
     pt_config=$(cat /home/seedit4me/.pt_config)
     port=$(cat /home/seedit4me/.deluge_port)
-        
+
     for u in "${users[@]}"; do
         echo_progress_start "Configuring Deluge for $u"
         if [[ ${u} == ${master} ]]; then
@@ -322,7 +322,7 @@ fi
 #check_client_compatibility
 
 export deluge=master
-export libtorrent=RC_1_2
+export libtorrent=RC_1_1
 
 if ! skip_libtorrent_rasterbar; then
     #whiptail_libtorrent_rasterbar
