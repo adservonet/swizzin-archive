@@ -31,6 +31,7 @@ if ! bash /tmp/rcloneinstall.sh; then
     exit 1
 fi
 
+echo_progress_start "Adding rclone multi-user mount service"
 user=$(cut -d: -f1 < /root/.master.info)
 passwd=$(cut -d: -f2 < /root/.master.info)
 cat > /etc/systemd/system/rclone@.service << EOF
@@ -42,7 +43,14 @@ After=network.target
 Type=simple
 User=%i
 Group=%i
-ExecStart=/usr/bin/rclone  rcd --rc-web-gui --rc-web-gui-no-open-browser --rc-user=${user} --rc-pass=${passwd} --rc-addr 127.0.0.1:5572 --rc-baseurl /rclone
+ExecStart=/usr/bin/rclone  \
+	rcd \
+	--rc-web-gui \
+	--rc-web-gui-no-open-browser \
+	--rc-user=${user} \
+	--rc-pass=${passwd} \
+	--rc-addr 127.0.0.1:5572 \
+	--rc-baseurl /rclone
 ExecStop=/bin/fusermount -u /home/%i/cloud
 Restart=on-failure
 RestartSec=30
@@ -64,5 +72,5 @@ if [[ -f /install/.nginx.lock ]]; then
     systemctl reload nginx
 fi
 
-systemctl enable rclone@${user}.service > /dev/null >> "${log}" 2>&1
-systemctl start rclone@${user}.service > /dev/null >> "${log}" 2>&1
+systemctl enable rclone@${user}.service >> "${log}" 2>&1
+systemctl start rclone@${user}.service >> "${log}" 2>&1
