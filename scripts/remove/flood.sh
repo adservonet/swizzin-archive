@@ -18,4 +18,12 @@ rm -rf /etc/systemd/system/flood@.service
 systemctl reload nginx
 rm -rf /install/.flood.lock
 
+if [[ ! -f /install/.rutorrent.lock ]]; then
+    rm -rf /etc/nginx/apps/rindex.conf
+    for u in "${users[@]}"; do
+        rm -f /etc/nginx/apps/${u}.scgi.conf
+    done
+    /usr/local/bin/swizzin/remove/rtorrent.sh
+fi
+
 users=($(cut -d: -f1 < /etc/htpasswd))
