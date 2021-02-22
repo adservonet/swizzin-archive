@@ -73,12 +73,12 @@ JL
         fi
     fi
 
-    #if [[ -f /install/.nginx.lock ]]; then
+    if [[ -f /install/.nginx.lock ]]; then
         if grep -q "proxy_set_header" /etc/nginx/apps/jackett.conf; then
             sed -i "/proxy_set_header/d" /etc/nginx/apps/jackett.conf
             systemctl reload nginx
         fi
-    #fi
+    fi
 
     if [[ $(stat -c %U /home/${username}/.config/Jackett/ServerConfig.json) == "root" ]]; then
         chown -R ${username}: /home/${username}/.config/Jackett
