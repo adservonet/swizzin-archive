@@ -45,7 +45,7 @@ for u in "${users[@]}"; do
     fi
 
     if [[ ! -f /etc/nginx/conf.d/${u}.deluge.conf ]]; then
-        DWPORT=$(grep port /home/$u/.config/deluge/web.conf | cut -d: -f2 | sed 's/ //g' | sed 's/,//g')
+        #DWPORT=$(grep port /home/$u/.config/deluge/web.conf | cut -d: -f2 | sed 's/ //g' | sed 's/,//g')
         cat > /etc/nginx/conf.d/${u}.deluge.conf << DUPS
 upstream $u.deluge {
   server 127.0.0.1:10033;
