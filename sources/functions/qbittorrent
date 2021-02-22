@@ -126,7 +126,8 @@ function qbittorrent_user_config() {
     fi
 
     usermod -a -G ${user} www-data 2>> $log
-    port=$(port 10000 11000)
+    #port=$(port 10000 11000)
+    port=9148
     mkdir -p /home/${user}/.config/qBittorrent/
     mkdir -p /home/${user}/torrents/qbittorrent
     chown ${user}: /home/${user}/torrents

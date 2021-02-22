@@ -3,7 +3,7 @@
 # Author: liara
 
 user=$(cut -d: -f1 < /root/.master.info)
-port=$(cat /home/seedit4me/.qbittorrent_port)
+port=$(cat /home/${user}/.qbittorrent_port)
 # Source the required functions
 . /etc/swizzin/sources/functions/qbittorrent
 . /etc/swizzin/sources/functions/libtorrent
