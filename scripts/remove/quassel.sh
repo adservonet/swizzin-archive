@@ -22,6 +22,8 @@
 distribution=$(lsb_release -is)
 release=$(lsb_release -cs)
 
+killall quasselcore
+
 if [[ $distribution == "Ubuntu" ]]; then
     apt_remove --purge quassel-core
     rm /etc/apt/sources.list.d/mamarley-ubuntu-quassel*.list
