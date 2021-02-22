@@ -21,8 +21,8 @@ location /plexpy {
 
 
 location /tautulli {
-  #include /etc/nginx/snippets/proxy.conf;
-  proxy_pass        http://127.0.0.1:8181;
+  include /etc/nginx/snippets/proxy.conf;
+  proxy_pass        http://127.0.0.1:8181/tautulli;
 }
 RAD
 fi

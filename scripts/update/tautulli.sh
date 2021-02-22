@@ -10,6 +10,15 @@ if [[ -f /install/.tautulli.lock ]]; then
         git reset --hard origin/master
         systemctl start tautulli
     fi
+
+    if ! grep -q python3 /etc/systemd/system/tautulli.service; then
+        sed -i 's|ExecStart=.*|ExecStart=/usr/bin/python3 /opt/tautulli/Tautulli.py --quiet --daemon --nolaunch --config /opt/tautulli/config.ini --datadir /opt/tautulli|g' /etc/systemd/system/tautulli.service
+        cd /opt/tautulli
+        git pull
+        chown -R tautulli:nogroup /opt/tautulli
+        systemctl daemon-reload
+        systemctl try-restart tautulli
+    fi
 fi
 
 if [[ -f /install/.plexpy.lock ]]; then
@@ -25,11 +34,11 @@ if [[ -f /install/.plexpy.lock ]]; then
     cp -a /opt/plexpy/tautulli.db /tmp/tautulli.db.tautulli_bak &> /dev/null
 
     systemctl stop plexpy
-    systemctl disable plexpy
+    systemctl disable -q plexpy
     rm -rf /opt/plexpy
     rm /install/.plexpy.lock
     rm -f /etc/nginx/apps/plexpy.conf
-    service nginx reload
+    systemctl reload nginx
     rm /etc/systemd/system/plexpy.service
 
     # install tautulli instead
@@ -44,6 +53,6 @@ if [[ -f /install/.plexpy.lock ]]; then
     sed -i "s/http_root.*/http_root = \"tautulli\"/g" /opt/tautulli/config.ini
     chown -R tautulli:nogroup /opt/tautulli
     if [[ $active == "active" ]]; then
-        systemctl enable --now tautulli
+        systemctl enable -q --now tautulli
     fi
 fi
