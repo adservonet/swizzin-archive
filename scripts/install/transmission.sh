@@ -151,7 +151,7 @@ _mkconf_transmission() {
     "ratio-limit": 2,
     "ratio-limit-enabled": false,
     "rename-partial-files": true,
-    "rpc-authentication-required": false,
+    "rpc-authentication-required": true,
     "rpc-bind-address": "0.0.0.0",
     "rpc-enabled": true,
     "rpc-host-whitelist": "",
