@@ -331,6 +331,7 @@ function build_libtorrent_rasterbar() {
                 #sed -i 's|static constexpr reannounce_flags_t ignore_min_interval = 0_bit|static constexpr reannounce_flags_t ignore_min_interval = 1_bit|g' include/libtorrent/torrent_handle.hpp
                 ;;
         esac
+        cp /etc/swizzin/scripts/tools/misc/aio.patch /root/libtorrent.patch
         #If you wish to patch libtorrent with custom values (i.e. settings pack), simply ensure the patch exists at /root/libtorrent.patch) before starting the install and the patch will be applied to the branch selected.
         if [[ -f /root/libtorrent.patch ]]; then
             patch -p1 < /root/libtorrent.patch >> ${log} 2>&1
