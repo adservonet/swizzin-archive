@@ -3,8 +3,8 @@
 # Author: liara
 
 if [[ ! -f /install/.rtorrent.lock ]]; then
-    echo_error "Flood is a GUI for rTorrent, which doesn't appear to be installed. Exiting."
-    exit 1
+    echo_error "Flood is a GUI for rTorrent, which doesn't appear to be installed. Installing now.." >> "${log}" 2>&1
+    bash /usr/local/bin/swizzin/install/rtorrent.sh >> "${log}" 2>&1
 fi
 #shellcheck source=sources/functions/npm
 . /etc/swizzin/sources/functions/npm
