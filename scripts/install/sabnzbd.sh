@@ -10,7 +10,6 @@
 #   including (via compiler) GPL-licensed code must also be made available
 #   under the GPL along with build & install instructions.
 
-
 . /etc/swizzin/sources/functions/pyenv
 . /etc/swizzin/sources/functions/utils
 
@@ -85,7 +84,6 @@ Restart=on-failure
 
 [Install]
 WantedBy=multi-user.target
-
 SABSD
 
 echo_progress_start "Configuring SABnzbd"
