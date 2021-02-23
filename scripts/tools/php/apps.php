@@ -133,13 +133,9 @@ else if (isset($_GET['servicestart']))
     {
         if ($process == $app["name"])
         {
-            $username = ($app["user"] != "") ? "@".$app["user"] : "";
-            shell_exec("sudo systemctl restart ".$app["service"].$username);
+            $username = "";
+            if ($app["user"] != "") $username = "@".$app["user"];
             //shell_exec("sudo systemctl enable ".$app["service"].$username);
-        }
-        if ($process == "rutorrent" && $app["name"] == "rtorrent")
-        {
-            $username = ($app["user"] != "") ? "@".$app["user"] : "";
             shell_exec("sudo systemctl restart ".$app["service"].$username);
         }
     }
