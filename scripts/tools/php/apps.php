@@ -90,7 +90,7 @@ $apps = array(
     array("name" => "radarr",         "service" => "radarr",            "user" => ""),
     array("name" => "rclone",         "service" => "rclone",            "user" => $username),
     array("name" => "rutorrent",      "service" => "rtorrent",          "user" => $username),
-    array("name" => "qbittorrent",    "service" => "qbittorrent",       "user" => ""),
+    array("name" => "qbittorrent",    "service" => "qbittorrent",       "user" => $username),
     array("name" => "sabnzbd",        "service" => "sabnzbd",           "user" => ""),
     array("name" => "sickchill",      "service" => "sickchill",         "user" => ""),
     array("name" => "medusa",         "service" => "medusa",            "user" => $username),
@@ -133,9 +133,13 @@ else if (isset($_GET['servicestart']))
     {
         if ($process == $app["name"])
         {
-            $username = "";
-            if ($app["user"] != "") $username = "@".$app["user"];
+            $username = ($app["user"] != "") ? "@".$app["user"] : "";
+            shell_exec("sudo systemctl restart ".$app["service"].$username);
             //shell_exec("sudo systemctl enable ".$app["service"].$username);
+        }
+        if ($process == "rutorrent" && $app["name"] == "rtorrent")
+        {
+            $username = ($app["user"] != "") ? "@".$app["user"] : "";
             shell_exec("sudo systemctl restart ".$app["service"].$username);
         }
     }
