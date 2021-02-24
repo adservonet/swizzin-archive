@@ -26,7 +26,8 @@ _apt_reset() {
     sudo rm /var/lib/apt/lists/lock > /dev/null 2>&1
     sudo rm /var/cache/apt/archives/lock > /dev/null 2>&1
     sudo rm /var/lib/dpkg/updates/* > /dev/null 2>&1
-    sleep 3;
+    #sleep 2;
+    apt clean >> "${log}" 2>&1
 }
 export -f _apt_reset
 
