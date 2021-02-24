@@ -38,7 +38,7 @@ _start_transmission() {
 
 _setenv_transmission() {
     echo_log_only "Setting environment variables"
-    [[ -z $download_dir ]] && export download_dir='torrents/transmission'
+    [[ -z $download_dir ]] && export download_dir='torrents/transmission/downloads'
     echo_log_only "download_dir = $download_dir"
 
     [[ -z $incomplete_dir ]] && export incomplete_dir='torrents/transmission/incomplete'
@@ -151,17 +151,17 @@ _mkconf_transmission() {
     "ratio-limit": 2,
     "ratio-limit-enabled": false,
     "rename-partial-files": true,
-    "rpc-authentication-required": false,
+    "rpc-authentication-required": true,
     "rpc-bind-address": "0.0.0.0",
     "rpc-enabled": true,
     "rpc-host-whitelist": "",
-    "rpc-host-whitelist-enabled": false,
+    "rpc-host-whitelist-enabled": true,
     "rpc-password": "${rpc_password}",
     "rpc-port": ${rpc_port},
     "rpc-url": "/transmission/",
     "rpc-username": "${user}",
-    "rpc-whitelist": "",
-    "rpc-whitelist-enabled": false,
+    "rpc-whitelist": "${rpc_whitelist}",
+    "rpc-whitelist-enabled": ${rpc_whitelist_enabled},
     "scrape-paused-torrents-enabled": true,
     "script-torrent-done-enabled": false,
     "script-torrent-done-filename": "",
@@ -189,8 +189,11 @@ EOF
 }
 
 _nginx_transmission() {
-    bash /usr/local/bin/swizzin/nginx/transmission.sh
-    systemctl reload nginx
+    echo_progress_start "Creating nginx config"
+    if [[ -f /install/.nginx.lock ]]; then
+        bash /usr/local/bin/swizzin/nginx/transmission.sh
+        systemctl reload nginx
+    fi
 }
 
 ##########################################################################

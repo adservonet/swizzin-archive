@@ -4,9 +4,6 @@
 # copyright 2020 swizzin.ltd
 
 users=($(cut -d: -f1 < /etc/htpasswd))
-MASTER=$(cut -d: -f1 < /root/.master.info)
-
-apt_install jq
 
 if [[ ! -f /etc/nginx/apps/transmission.conf ]]; then
     cat > /etc/nginx/apps/transmission.conf << TCONF
@@ -15,67 +12,51 @@ location /transmission {
 }
 
 location /transmission/ {
-    include /etc/nginx/snippets/proxy.conf;
-
-    proxy_pass_header  X-Transmission-Session-Id;
-    proxy_set_header   X-Forwarded-Host   \$host;
-    proxy_set_header   X-Forwarded-Server \$host;
-    proxy_set_header   X-Forwarded-For    \$proxy_add_x_forwarded_for;
-
+    proxy_set_header X-Real-IP \$remote_addr;
+    proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
     proxy_set_header Host \$http_host;
     proxy_set_header X-NginX-Proxy true;
-
+    proxy_http_version 1.1;
+    proxy_set_header Connection "";
+    proxy_pass_header X-Transmission-Session-Id;
     add_header   Front-End-Https   on;
-
-    proxy_pass        http://127.0.0.1:9091/transmission/web/;
     auth_basic "What's the password?";
-    auth_basic_user_file /etc/htpasswd.d/htpasswd.${MASTER};
+    auth_basic_user_file /etc/htpasswd;
+    proxy_pass http://\$remote_user.transmission;
 }
-
-location /rpc {
-    proxy_pass_header  X-Transmission-Session-Id;
-    proxy_pass         http://127.0.0.1:9091/transmission/rpc;
-}
-
-location /upload {
-    proxy_pass_header  X-Transmission-Session-Id;
-    proxy_pass         http://127.0.0.1:9091/transmission/upload;
-}
-
 TCONF
 fi
 
-systemctl reload nginx
+for u in ${users[@]}; do
+    active=$(systemctl is-active transmission@$u)
+    echo_log_only "Service for $u was $active"
+    if [[ $active == "active" ]]; then
+        systemctl stop transmission@${u}
+    fi
 
-#for u in ${users[@]}; do
-#    active=$(systemctl is-active transmission@$u)
-#    if [[ $active == "active" ]]; then
-#        systemctl stop transmission@${u}
-#    fi
-#
-#    timeout=0
-#    while systemctl is-active transmission@"$u" > /dev/null ;do
-#        # echo "is active"
-#        timeout+=0.3
-#        if [[ $timeout -ge 20 ]]; then
-#            echo "The service transmission@$u took too long to shut down. Aborting."
-#            exit 1
-#        fi
-#        sleep 0.3
-#    done
-#
-#    confpath="/home/${u}/.config/transmission-daemon/settings.json"
-#    jq '.["rpc-bind-address"] = "127.0.0.1"' "$confpath" >> /root/logs/swizzin.log
-#    RPCPORT=$(jq -r '.["rpc-port"]' < "$confpath")
-#    echo "RPC-port = $RPCPORT"
-#    if [[ ! -f /etc/nginx/conf.d/${u}.transmission.conf ]]; then
-#        cat > /etc/nginx/conf.d/${u}.transmission.conf <<TDCONF
-#upstream ${u}.transmission {
-#    server 127.0.0.1:${RPCPORT};
-#}
-#TDCONF
-#    fi
-#    if [[ $active == "active" ]]; then
-#        systemctl start transmission@${u}
-#fi
-#done
+    timeout=0
+    while systemctl is-active transmission@"$u" > /dev/null; do
+        # echo "is active"
+        timeout+=0.3
+        if [[ $timeout -ge 20 ]]; then
+            echo_error "The service transmission@$u took too long to shut down. Aborting."
+            exit 1
+        fi
+        sleep 0.3
+    done
+
+    confpath="/home/${u}/.config/transmission-daemon/settings.json"
+    jq '.["rpc-bind-address"] = "127.0.0.1"' "$confpath" >> /root/logs/swizzin.log
+    RPCPORT=$(jq -r '.["rpc-port"]' < "$confpath")
+    if [[ ! -f /etc/nginx/conf.d/${u}.transmission.conf ]]; then
+        cat > /etc/nginx/conf.d/${u}.transmission.conf << TDCONF
+upstream ${u}.transmission {
+    server 127.0.0.1:${RPCPORT};
+}
+TDCONF
+    fi
+    if [[ $active == "active" ]]; then
+        systemctl start transmission@${u}
+        echo_log_only "Activating service"
+    fi
+done

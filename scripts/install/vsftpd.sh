@@ -10,7 +10,21 @@
 #   under the GPL along with build & install instructions.
 #
 
+
+echo_progress_start "getting ports/ip"
+if [[ -f /home/seedit4me/.pasv_port ]]; then
+  pasvports=$(cat /home/seedit4me/.pasv_port)
+  pasv=(${pasvports//:/ })
+else
+  echo_warn "missing port file., bailing out";
+  exit 1;
+fi
+echo_progress_done "k"
+
+echo_progress_start "installing packages"
 apt_install vsftpd ssl-cert
+echo_progress_done "done"
+
 
 echo_progress_start "Configuring vsftpd"
 cat > /etc/vsftpd.conf << VSC
@@ -33,20 +47,26 @@ ssl_enable=YES
 pam_service_name=vsftpd
 secure_chroot_dir=/var/run/vsftpd/empty
 
-#ascii_upload_enable=YES
-#ascii_download_enable=YES
-#ftpd_banner=Welcome to blah FTP service.
+ascii_upload_enable=YES
+ascii_download_enable=YES
+ftpd_banner=Welcome to blah FTP service.
 
-#############################################
-#Uncomment these lines to enable FXP support#
-#############################################
-#pasv_promiscuous=YES
-#port_promiscuous=YES
+listen_port=21
+#pasv_addr_resolve=YES
+pasv_enable=YES
+pasv_promiscuous=YES
+port_promiscuous=YES
+pasv_min_port=${pasv[0]}
+pasv_max_port=${pasv[1]}
 
-###################
-#Set a custom port#
-###################
-#listen_port=
+force_local_data_ssl=NO
+force_local_logins_ssl=NO
+
+debug_ssl=YES
+xferlog_enable=YES
+
+ftpd_banner=/etc/swizzin/sources/logo/logo1
+banner_file=/etc/swizzin/sources/logo/logo1
 VSC
 
 # Check for LE cert, and copy it if available.

@@ -1,12 +1,12 @@
 #!/bin/bash
 
-MASTER=$(cut -d: -f1 < /root/.master.info)
-
-systemctl stop rclone@${MASTER}.service > /dev/null 2>&1
-systemctl disable rclone@${MASTER}.service > /dev/null 2>&1
-
-rm /etc/systemd/system/rclone@.service
-
-rm -f /usr/sbin/rclone
-rm -f /usr/bin/rclone
+. /etc/swizzin/sources/functions/utils
+active=$(systemctl status rclone@* | grep -m1 .service | awk '{print $2}')
+if [[ -n $active ]]; then
+    systemctl disable --now $active
+fi
+rm_if_exists /usr/bin/rclone
+rm_if_exists /usr/sbin/rclone
+rm_if_exists /etc/systemd/system/rclone@.service
+rm_if_exists /usr/local/share/man/man1/rclone.1
 rm -f /install/.rclone.lock

@@ -12,6 +12,7 @@ if [[ ! -f /install/.flood.lock ]]; then
     for u in "${users[@]}"; do
         rm -f /etc/nginx/apps/${u}.scgi.conf
     done
+    /usr/local/bin/swizzin/remove/rtorrent.sh
 fi
 rm -rf /install/.rutorrent.lock
 systemctl reload nginx

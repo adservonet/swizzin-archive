@@ -14,14 +14,9 @@
 
 user=$(cut -d: -f1 < /root/.master.info)
 passwd=$(cut -d: -f2 < /root/.master.info)
-salt=$(
-    head /dev/urandom | tr -dc A-Za-z0-9 | head -c 20
-    echo ""
-)
-#salt=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 20 ; echo '')
+salt=$( head /dev/urandom | tr -dc A-Za-z0-9 | head -c 20; echo "")
 shapass=$(echo -n $passwd$salt | sha256sum | awk '{print $1}')
 port=$(cat /home/seedit4me/.znc_port)
-
 DISTRO=$(lsb_release -is)
 CODENAME=$(lsb_release -cs)
 #shellcheck source=sources/functions/letsencrypt
@@ -58,7 +53,6 @@ Restart=always
 [Install]
 WantedBy=multi-user.target
 ZNC
-echo_progress_done
 
 mkdir /home/znc/.znc
 mkdir /home/znc/.znc/configs
@@ -103,14 +97,20 @@ ZNCONF
 chown -R znc:znc /home/znc/.znc/configs
 chmod -R 777 /home/znc/.znc/configs
 
-systemctl enable znc
-#echo "#### ZNC configuration will now run. Please answer the following prompts ####"
+systemctl enable -q znc
+echo_progress_done
+
+#echo_warn "ZNC configuration will now run. Please answer the following prompts"
 sleep 5
 #sudo -H -u znc znc --makeconf
 killall -u znc znc > /dev/null 2>&1
 sleep 1
 
 # Check for LE cert, and copy it if available.
+if [[ -f /install/nginx.lock ]]; then
+    le_znc_hook
+fi
+
 systemctl start znc
 echo "$(grep Port /home/znc/.znc/configs/znc.conf | sed -e 's/^[ \t]*//')" > /install/.znc.lock
 echo "$(grep SSL /home/znc/.znc/configs/znc.conf | sed -e 's/^[ \t]*//')" >> /install/.znc.lock

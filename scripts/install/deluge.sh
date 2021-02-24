@@ -15,7 +15,8 @@
 
 function _dconf() {
     pt_config=$(cat /home/seedit4me/.pt_config)
-
+    port=$(cat /home/seedit4me/.deluge_port)
+        
     for u in "${users[@]}"; do
         echo_progress_start "Configuring Deluge for $u"
         if [[ ${u} == ${master} ]]; then
@@ -25,14 +26,8 @@ function _dconf() {
         fi
         n=$RANDOM
         DPORT=$((n % 59000 + 10024))
-        DWSALT=$(
-            head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32
-            echo ""
-        )
-        localpass=$(
-            head /dev/urandom | tr -dc a-z0-9 | head -c 40
-            echo ""
-        )
+        DWSALT=$( head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32; echo "" )
+        localpass=$( head /dev/urandom | tr -dc a-z0-9 | head -c 40; echo "" )
         if $(command -v python2.7 > /dev/null 2>&1); then
             pythonversion=python2.7
         elif $(command -v python3 > /dev/null 2>&1); then
@@ -40,7 +35,6 @@ function _dconf() {
         fi
         DWP=$(${pythonversion} ${local_packages}/deluge.Userpass.py ${pass} ${DWSALT})
         DUDID=$(${pythonversion} ${local_packages}/deluge.addHost.py)
-        port=$(cat /home/seedit4me/.deluge_port)
         # -- Secondary awk command -- #
         #DPORT=$(awk -v min=59000 -v max=69024 'BEGIN{srand(); print int(min+rand()*(max-min+1))}')
         #DWPORT=$(shuf -i 10001-11000 -n 1)
@@ -327,15 +321,7 @@ fi
 #whiptail_deluge
 #check_client_compatibility
 
-#export deluge=repo
-#export deluge=1.3-stable
-#export deluge=master
 export deluge=1.3-stable
-
-#export libtorrent=repo
-#export libtorrent=RC_1_0
-#export libtorrent=RC_1_1
-#export libtorrent=RC_1_2
 export libtorrent=RC_1_1
 
 if ! skip_libtorrent_rasterbar; then

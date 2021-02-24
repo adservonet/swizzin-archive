@@ -1,8 +1,5 @@
 #! /bin/bash
 
-#always install tools
-#if [[ -d /srv/tools ]]; then
-
 #!/bin/bash
 input="/etc/swizzin/sources/logo/logo1"
 while IFS= read -r line; do
@@ -10,4 +7,7 @@ while IFS= read -r line; do
 done < "$input"
 /usr/local/bin/swizzin/remove/tools.sh
 /usr/local/bin/swizzin/install/tools.sh
-#fi
+
+. /etc/swizzin/sources/functions/php
+restart_php_fpm
+systemctl reload nginx

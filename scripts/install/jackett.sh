@@ -94,7 +94,7 @@ JSC
 
 sleep 2
 chmod 777 /home/${username}/.config/Jackett/ServerConfig.json
-chown ${username}.${username} -R /home/${username}/.config/Jackett
+chown ${username}.${username} -R /home/${username}/.config
 
 echo_progress_done "Jackett configured"
 

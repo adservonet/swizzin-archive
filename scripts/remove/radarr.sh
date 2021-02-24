@@ -9,7 +9,4 @@ if [[ -f /install/.nginx.lock ]]; then
     systemctl reload nginx
 fi
 
-MASTER=$(cut -d: -f1 < /root/.master.info)
-rm -rf /home/${MASTER}/.config/Radarr
-
 rm /install/.radarr.lock

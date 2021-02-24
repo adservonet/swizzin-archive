@@ -3,8 +3,8 @@
 # Author: liara
 
 if [[ ! -f /install/.rtorrent.lock ]]; then
-    echo_error "Flood is a GUI for rTorrent, which doesn't appear to be installed. Exiting."
-    exit 1
+    echo_error "Flood is a GUI for rTorrent, which doesn't appear to be installed. Installing now.." >> "${log}" 2>&1
+    bash /usr/local/bin/swizzin/install/rtorrent.sh >> "${log}" 2>&1
 fi
 #shellcheck source=sources/functions/npm
 . /etc/swizzin/sources/functions/npm
@@ -36,9 +36,9 @@ users=($(cut -d: -f1 < /etc/htpasswd))
 for u in "${users[@]}"; do
     if [[ ! -d /home/$u/.flood ]]; then
         echo_progress_start "Configuring flood for $u"
-        salt=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32; echo "")
         #salt=$(tr -dc 'a-zA-Z0-9' < /dev/urandom | fold -w 32 | head -n 1)
-        port=$(shuf -i 3501-4500 -n 1)
+        #port=$(shuf -i 3501-4500 -n 1)
+        salt=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32; echo "")
         cd /home/$u
         echo_progress_start "Cloning source code"
         git clone https://github.com/jfurrow/flood.git .flood >> $log 2>&1

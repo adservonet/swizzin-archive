@@ -105,6 +105,17 @@ apt_install jellyfin jellyfin-ffmpeg
 #
 # Add the jellyfin user to the master user's group.
 usermod -a -G "${username}" jellyfin
+
+#systemctl stop jellyfin >> $log 2>&1
+#killall -u jellyfin
+#sleep 5
+mkdir '/home/'${username}'/jellyfin/';
+chown -R jellyfin:jellyfin  '/home/'${username}'/jellyfin/';
+mv "/var/lib/jellyfin/" /home/${username}/
+ln -s '/home/'${username}'/jellyfin' '/var/lib/jellyfin'
+#chown jellyfin:adm '/var/lib/jellyfin'
+#sleep 5
+
 #
 chown jellyfin:jellyfin /etc/jellyfin/dlna.xml
 chown jellyfin:jellyfin /etc/jellyfin/system.xml
@@ -118,7 +129,7 @@ if [[ -f /install/.nginx.lock ]]; then
 fi
 #
 # Restart the jellyfin service to make sure our changes take effect
-systemctl -q restart "jellyfin.service"
+systemctl -q restart jellyfin
 #
 # This file is created after installation to prevent reinstalling. You will need to remove the app first which deletes this file.
 touch /install/.jellyfin.lock

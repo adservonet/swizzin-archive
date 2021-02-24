@@ -15,11 +15,20 @@ function _rconf() {
     cat > /home/${user}/.rtorrent.rc << EOF
 # -- START HERE --
 directory.default.set = /home/${user}/torrents/rtorrent
+encoding.add = UTF-8
+encryption = allow_incoming,try_outgoing,enable_retry
+execute.nothrow = chmod,777,/home/${user}/.config/rpc.socket
+execute.nothrow = chmod,777,/home/${user}/.sessions
+network.port_random.set = no
+network.port_range.set = $port-$portend
+network.scgi.open_local = /var/run/${user}/.rtorrent.sock
 schedule2 = chmod_scgi_socket, 0, 0, "execute2=chmod,\"g+w,o=\",/var/run/${user}/.rtorrent.sock"
+network.tos.set = throughput
+pieces.hash.on_completion.set = no
+protocol.pex.set = no
 schedule = watch_directory,5,5,load.start=/home/${user}/rwatch/*.torrent
 session.path.set = /home/${user}/.sessions/
 network.xmlrpc.size_limit.set = 2097152
-protocol.pex.set = no
 throttle.global_down.max_rate.set = 0
 throttle.global_up.max_rate.set = 0
 throttle.max_peers.normal.set = 100
@@ -28,18 +37,6 @@ throttle.max_uploads.global.set = 100
 throttle.min_peers.normal.set = 1
 throttle.min_peers.seed.set = 2
 trackers.use_udp.set = yes
-
-encoding.add = UTF-8
-encryption = allow_incoming,try_outgoing,enable_retry
-execute.nothrow = chmod,777,/home/${user}/.config/rpc.socket
-execute.nothrow = chmod,777,/home/${user}/.sessions
-network.port_random.set = no
-network.port_range.set = $port-$portend
-network.scgi.open_local = /var/run/${user}/.rtorrent.sock
-
-network.tos.set = throughput
-pieces.hash.on_completion.set = no
-
 schedule = low_diskspace,5,60,close_low_diskspace=5120M
 execute = {sh,-c,/usr/bin/php /srv/rutorrent/php/initplugins.php ${user} &}
 
@@ -80,9 +77,6 @@ EOF
 
 export DEBIAN_FRONTEND=noninteractive
 
-export rtorrentver='repo'
-export libtorrentver=RC_1_2
-
 . /etc/swizzin/sources/functions/rtorrent
 noexec=$(grep "/tmp" /etc/fstab | grep noexec)
 user=$(cut -d: -f1 < /root/.master.info)
@@ -96,6 +90,9 @@ if [[ -n $1 ]]; then
     _rconf
     exit 0
 fi
+
+export rtorrentver='0.9.8'
+export libtorrentver='0.13.8'
 
 if [[ -n $noexec ]]; then
     mount -o remount,exec /tmp

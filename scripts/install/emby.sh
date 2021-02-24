@@ -58,11 +58,24 @@ if [[ -f /install/.nginx.lock ]]; then
     echo_progress_done
 fi
 
-echo_progress_start "Starting Emby"
 usermod -a -G ${username} emby
 chown -R emby:emby /opt/emby-server
 chown -R emby:emby /var/lib/emby
-systemctl restart emby-server > /dev/null 2>&1
+
+systemctl stop emby-server >> $log 2>&1
+killall -u emby-server
+sleep 5
+mkdir '/home/'${username}'/emby/';
+chown -R emby:emby  '/home/'${username}'/emby/';
+mv "/var/lib/emby/" /home/${username}/
+ln -s '/home/'${username}'/emby' '/var/lib/emby'
+chown -R emby:emby '/var/lib/emby'
+sleep 5
+
+
+echo_progress_start "Starting Emby"
+systemctl start emby-server > /dev/null 2>&1
+
 echo_progress_done
 touch /install/.emby.lock
 echo_success "Emby installed"
