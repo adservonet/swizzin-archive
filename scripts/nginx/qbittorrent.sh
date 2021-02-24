@@ -20,7 +20,7 @@ DIN
 fi
 
 if [[ ! -f /etc/nginx/apps/qbittorrent.conf ]]; then
-    cat > /etc/nginx/apps/qbittorrent.conf << 'QBTN'
+    cat > /etc/nginx/apps/qbittorrent.conf << QBTN
 location /qbittorrent {
     rewrite ^(.*[^/])$ $1/ redirect;
 }
