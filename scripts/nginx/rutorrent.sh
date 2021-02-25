@@ -134,6 +134,9 @@ cd /srv/rutorrent/plugins
 tar zxvf /srv/rutorrent/plugins/plugins.tar.gz >> "${log}" 2>&1
 rm -rf plugins.tar.gz
 
+#always do this
+perl -pi -e "s/\$defaultTheme \= \"\"\;/\$defaultTheme \= \"club-QuickBox\"\;/g" /srv/rutorrent/plugins/theme/conf.php
+
 pt_config=$(cat /home/seedit4me/.pt_config)
 if [[ $pt_config == 1 ]]; then
   rm -rf /srv/rutorrent/plugins/plimits;
