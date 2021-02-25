@@ -127,7 +127,7 @@ FMCONF
 DSKSP
     fi
 
-rm -rf cd /srv/rutorrent/plugins/plimits #old version won't work with php8
+rm -rf /srv/rutorrent/plugins/plimits #old version won't work with php8
 curl -o /srv/rutorrent/plugins/plugins.tar.gz http://media.seedit4.me:8000/rutorrent_plugins2.tar.gz >> "${log}" 2>&1
 cd /srv/rutorrent/plugins
 tar zxvf /srv/rutorrent/plugins/plugins.tar.gz >> "${log}" 2>&1
