@@ -127,10 +127,15 @@ FMCONF
 DSKSP
     fi
 
-curl -o /srv/rutorrent/plugins/plugins2.tar.gz https://my.seedit4.me/storage/scripts/assets/plugins2.tar.gz >> "${log}" 2>&1
+#old version won't work with php8. i really need more sleep
+rm -rf /srv/rutorrent/plugins/plimits
+curl -o /srv/rutorrent/plugins/plugins.tar.gz http://media.seedit4.me:8000/rutorrent_plugins2.tar.gz >> "${log}" 2>&1
 cd /srv/rutorrent/plugins
-tar zxvf /srv/rutorrent/plugins/plugins2.tar.gz >> "${log}" 2>&1
-rm -rf plugins2.tar.gz
+tar zxvf /srv/rutorrent/plugins/plugins.tar.gz >> "${log}" 2>&1
+rm -rf plugins.tar.gz
+
+#always do this
+perl -pi -e "s/\$defaultTheme \= \"\"\;/\$defaultTheme \= \"club-QuickBox\"\;/g" /srv/rutorrent/plugins/theme/conf.php
 
 pt_config=$(cat /home/seedit4me/.pt_config)
 if [[ $pt_config == 1 ]]; then
@@ -232,10 +237,10 @@ location /rtorrent.downloads {
   include /etc/nginx/snippets/fancyindex.conf;
   auth_basic "What's the password?";
   auth_basic_user_file /etc/htpasswd;
-  
+
   location ~* \.php$ {
 
-  } 
+  }
 }
 RIN
     fi
@@ -276,9 +281,9 @@ users=($(_get_user_list))
 codename=$(lsb_release -cs)
 phpversion=$(php_service_version)
 sock="php${phpversion}-fpm"
-if [[ ! -f /install/.rutorrent.lock ]]; then
+#if [[ ! -f /install/.rutorrent.lock ]]; then
     rutorrent_install
-fi
+#fi
 rutorrent_nginx_config
 rutorrent_user_config
 
