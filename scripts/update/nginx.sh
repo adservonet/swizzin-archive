@@ -80,6 +80,8 @@ for version in $phpv; do
 done
 
 if [[ -f /lib/systemd/system/php7.3-fpm.service ]]; then
+  #make sure this fucker is installed
+  apt install -y php7.3-mbstring;
   v=$(find /etc/nginx -type f -exec grep -l "fastcgi_pass unix:/run/php/php7.3-fpm.sock" {} \;)
   if [[ -z $v ]]; then
     oldv=$(find /etc/nginx -type f -exec grep -l "fastcgi_pass unix:/run/php/" {} \;)
