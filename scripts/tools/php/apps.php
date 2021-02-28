@@ -70,7 +70,7 @@ $apps = array(
     array("name" => "transmission",   "service" => "transmission-daemon","user" => ""),
     array("name" => "emby",           "service" => "emby-server",       "user" => ""),
     array("name" => "filebrowser",    "service" => "filebrowser",       "user" => ""),
-    array("name" => "flood",          "service" => "flood",             "user" => $username),
+    array("name" => "flood",          "service" => "flood",             "user" => ""),
     array("name" => "headphones",     "service" => "headphones",        "user" => ""),
     array("name" => "autodl",         "service" => "irssi",             "user" => $username),
     array("name" => "lazylibrarian",  "service" => "lazylibrarian",     "user" => $username),
