@@ -13,10 +13,10 @@ user=$(cut -d: -f1 < /root/.master.info)
 isactive=$(systemctl is-active lidarr)
 
 if [[ $isactive == "active" ]]; then
-  systemctl stop lidarr
+    systemctl stop lidarr
 fi
 
-cat > /etc/nginx/apps/lidarr.conf <<LIDN
+cat > /etc/nginx/apps/lidarr.conf << LIDN
 location /lidarr {
   proxy_pass        http://127.0.0.1:8686/lidarr;
   proxy_set_header Host \$proxy_host;
@@ -25,18 +25,12 @@ location /lidarr {
   proxy_redirect off;
   auth_basic "What's the password?";
   auth_basic_user_file /etc/htpasswd.d/htpasswd.${user};
-
-  proxy_http_version 1.1;
-  proxy_set_header Upgrade \$http_upgrade;
-  proxy_set_header Connection \$http_connection;
-  proxy_cache_bypass \$http_upgrade;
-  proxy_buffering off;
 }
 LIDN
 
 if [[ ! -d /home/${user}/.config/Lidarr/ ]]; then mkdir -p /home/${user}/.config/Lidarr/; fi
 
-cat > /home/${user}/.config/Lidarr/config.xml <<LID
+cat > /home/${user}/.config/Lidarr/config.xml << LID
 <Config>
   <Port>8686</Port>
   <UrlBase>lidarr</UrlBase>
@@ -50,5 +44,5 @@ LID
 chown -R ${user}: /home/${user}/.config
 
 if [[ $isactive == "active" ]]; then
-  systemctl start lidarr >>  "${SEEDIT_LOG}"  2>&1
+    systemctl start lidarr
 fi
