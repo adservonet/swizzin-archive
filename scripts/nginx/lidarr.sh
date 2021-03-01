@@ -52,18 +52,18 @@ chown -R "$user":"$user" /home/"$user"/.config/Lidarr
 #shellcheck source=sources/functions/utils
 . /etc/swizzin/sources/functions/utils
 systemctl start lidarr -q # Switch lidarr on regardless whether it was off before or not as we need to have it online to trigger this cahnge
-if ! timeout 15 bash -c -- "while ! curl -fL \"http://127.0.0.1:7878/api/v3/system/status?apiKey=${apikey}\" >> \"$log\" 2>&1; do sleep 5; done"; then
-    echo_error "Lidarr API did not respond as expected. Please make sure Lidarr is on v3 and running."
+if ! timeout 15 bash -c -- "while ! curl -fL \"http://127.0.0.1:7878/api/v1/system/status?apiKey=${apikey}\" >> \"$log\" 2>&1; do sleep 5; done"; then
+    echo_error "Lidarr API did not respond as expected. Please make sure Lidarr is on v1 and running."
     exit 1
 else
-    urlbase="$(curl -sL "http://127.0.0.1:7878/api/v3/config/host?apikey=${apikey}" | jq '.urlBase' | cut -d '"' -f 2)"
+    urlbase="$(curl -sL "http://127.0.0.1:7878/api/v1/config/host?apikey=${apikey}" | jq '.urlBase' | cut -d '"' -f 2)"
     echo_log_only "Lidarr API tested and reachable"
 fi
 
-payload=$(curl -sL "http://127.0.0.1:7878/api/v3/config/host?apikey=${apikey}" | jq ".certificateValidation = \"disabledForLocalAddresses\"")
+payload=$(curl -sL "http://127.0.0.1:7878/api/v1/config/host?apikey=${apikey}" | jq ".certificateValidation = \"disabledForLocalAddresses\"")
 echo_log_only "Payload = \n${payload}"
 echo_log_only "Return from lidarr after PUT ="
-curl -s "http://127.0.0.1:7878${urlbase}/api/v3/config/host?apikey=${apikey}" -X PUT -H 'Accept: application/json, text/javascript, */*; q=0.01' --compressed -H 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' --data-raw "${payload}" >> "$log"
+curl -s "http://127.0.0.1:7878${urlbase}/api/v1/config/host?apikey=${apikey}" -X PUT -H 'Accept: application/json, text/javascript, */*; q=0.01' --compressed -H 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' --data-raw "${payload}" >> "$log"
 
 # Switch lidarr back off if it was dead before
 if [[ $isactive != "active" ]]; then
