@@ -19,7 +19,7 @@ apt_install libmono-cil-dev libchromaprint-tools
 
 echo_progress_start "Downloading Lidarr release and extracting"
 cd /home/${user}/
-wget -O lidarr.tar.gz --content-disposition 'http://lidarr.servarr.com/v1/update/develop/updatefile?os=linux&runtime=netcore&arch=x64'
+wget -O lidarr.tar.gz -q $(curl -s http://lidarr.servarr.com/v1/update/develop/updatefile?os=linux&runtime=netcore&arch=x64)
 tar xf lidarr.tar.gz
 rm -rf lidarr.tar.gz
 chown -R ${user}: /home/${user}/Lidarr
