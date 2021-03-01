@@ -52,6 +52,11 @@ function update_nginx() {
       sudo update-alternatives --set php /usr/bin/php8.0;
     fi
 
+    #also purge this guy
+    if check_installed "php8.0-xmlrpc"; then
+      apt_remove --purge "php8.0-xmlrpc";
+    fi
+
     PURGE="7.0 7.1 7.2 7.3 7.4";
     for ver in $PURGE; do
         if check_installed "php$ver-fpm"; then

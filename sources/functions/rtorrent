@@ -158,7 +158,7 @@ function build_rtorrent() {
     rm_if_exists "/tmp/dist/rtorrent"
     make DESTDIR=/tmp/dist/rtorrent install >> $log 2>&1
     mkdir -p /root/dist
-    /usr/local/bin/fpm -f -C /tmp/dist/rtorrent -p /root/dist/rtorrent_VERSION.deb -s dir -t deb -n rtorrent --version ${VERSION} --description "rtorrent compiled by swizzin" > /dev/null 2>&1
+    /usr/local/bin/fpm -f -C /tmp/dist/rtorrent -p /root/dist/rtorrent_VERSION.deb -s dir -t deb -n rtorrent --version ${VERSION} --description "rtorrent compiled by seedit4.me" > /dev/null 2>&1
     dpkg -i /root/dist/rtorrent_${VERSION}.deb
     cd "/tmp"
     ldconfig >> $log 2>&1
