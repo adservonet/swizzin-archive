@@ -128,7 +128,7 @@ DSKSP
     fi
 
 #install missing php stuff
-apt_install php7.4-mbstring php7.4-zip
+apt_install php-mbstring php-zip
 
 #old version won't work with php8. i really need more sleep
 rm -rf /srv/rutorrent/plugins/plimits

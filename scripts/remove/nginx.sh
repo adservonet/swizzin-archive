@@ -2,10 +2,10 @@
 
 systemctl stop -q nginx
 
-APT='nginx-extras nginx libnginx-mod-http-fancyindex ssl-cert php php-cli php-fpm php-dev php-xml php-curl php-xmlrpc php-json php-mcrypt php7.4-opcache php-geoip php-xml php php-cli php-fpm php-dev php-xml php-curl php-xmlrpc php-json php-mcrypt php7.4-opcache'
+APT='nginx-extras nginx libnginx-mod-http-fancyindex ssl-cert php php-cli php-fpm php-dev php-xml php-curl php-xmlrpc php-json php-mcrypt php7.3-opcache php-geoip php-xml php php-cli php-fpm php-dev php-xml php-curl php-xmlrpc php-json php-mcrypt php7.3-opcache'
 apt_remove $APT
 
-LIST='nginx-* php7* php8* php-*'
+LIST='nginx-* php7.0-* php-*'
 apt_remove --purge $LIST
 
 rm -rf /etc/nginx
