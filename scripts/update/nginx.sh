@@ -21,7 +21,7 @@ function update_nginx() {
         fi
     fi
 
-    LIST="php-fpm php-cli php-dev php-xml php-curl php-xmlrpc php-json ${mcrypt} php-mbstring php7.3-opcache php-geoip php-xml"
+    LIST="php7.4-fpm php7.4-cli php7.4-dev php7.4-xml php7.4-curl php7.4-xmlrpc php7.4-json php7.4-mcrypt php7.4-mbstring php7.4-opcache php7.4-geoip php7.4-xml php7.4-zip"
 
     missing=()
     for dep in $LIST; do
@@ -43,16 +43,7 @@ function update_nginx() {
         fi
     fi
 
-    . /etc/swizzin/sources/functions/php
-    phpversion=$(php_service_version)
-    sock="php${phpversion}-fpm"
-
-    if [[ $phpversion != "8.0" ]]; then
-      echo "wrong php version: $phpversion cleaning up";
-      sudo update-alternatives --set php /usr/bin/php8.0;
-    fi
-
-    PURGE="7.0 7.1 7.2 7.3 7.4";
+    PURGE="7.0 7.1 7.2 7.3 8.0";
     for ver in $PURGE; do
         if check_installed "php$ver-fpm"; then
           echo "purging php$ver*";
@@ -64,8 +55,17 @@ function update_nginx() {
           apt_remove --purge "php$ver*";
           rm -rf "/etc/php/$ver";
         fi
-
     done;
+
+
+    if [[ $phpversion != "7.4" ]]; then
+      echo "wrong php version: $phpversion cleaning up";
+      sudo update-alternatives --set php /usr/bin/php7.4;
+    fi
+
+    . /etc/swizzin/sources/functions/php
+    phpversion=$(php_service_version)
+    sock="php${phpversion}-fpm"
 
 
     for version in $phpv; do
