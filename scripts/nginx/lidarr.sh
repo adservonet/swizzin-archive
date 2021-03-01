@@ -25,6 +25,12 @@ location /lidarr {
   proxy_redirect off;
   auth_basic "What's the password?";
   auth_basic_user_file /etc/htpasswd.d/htpasswd.${user};
+
+  proxy_http_version 1.1;
+  proxy_set_header Upgrade \$http_upgrade;
+  proxy_set_header Connection \$http_connection;
+  proxy_cache_bypass \$http_upgrade;
+  proxy_buffering off;
 }
 LIDN
 
