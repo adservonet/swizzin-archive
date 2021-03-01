@@ -58,13 +58,6 @@ WantedBy=multi-user.target
 LID
 echo_progress_done "Lidarr configured"
 
-chown -R seedit4me:seedit4me /home/${user}/Lidarr
-systemctl -q daemon-reload
-systemctl enable --now -q lidarr
-sleep 1
-echo_progress_done "Lidarr service installed and enabled"
-
-
 if [[ -f /install/.nginx.lock ]]; then
     echo_progress_start "Configuring nginx"
     sleep 10
