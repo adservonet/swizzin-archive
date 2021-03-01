@@ -21,47 +21,27 @@ function update_nginx() {
         fi
     fi
 
-#    LIST="php7.4-fpm php7.4-cli php7.4-dev php7.4-xml php7.4-curl php7.4-xmlrpc php7.4-json php7.4-mcrypt php7.4-mbstring php7.4-opcache php7.4-geoip php7.4-xml php7.4-zip"
-#
-#    missing=()
-#    for dep in $LIST; do
-#        if ! check_installed "$dep"; then
-#            missing+=("$dep")
-#        fi
-#    done
-#
-#    if [[ ${missing[1]} != "" ]]; then
-#        # echo_inf "Installing the following dependencies: ${missing[*]}" | tee -a $log
-#        apt_install "${missing[@]}"
-#    fi
-#
-#    cd /etc/php
-#    phpv=$(ls -d */ | cut -d/ -f1)
-#    if [[ $phpv =~ 7\\.1 ]]; then
-#        if [[ $phpv =~ 7\\.0 ]]; then
-#            apt_remove purge php7.0-fpm
-#        fi
-#    fi
+    LIST="php7.4-fpm php7.4-cli php7.4-dev php7.4-xml php7.4-curl php7.4-xmlrpc php7.4-json php7.4-mcrypt php7.4-mbstring php7.4-opcache php7.4-geoip php7.4-xml php7.4-zip"
 
-    INSTALL="fpm cli dev xml curl xmlrpc json mcrypt mbstring opcache geoip zip";
-    for x in $INSTALL; do
-      if ! check_installed "php7.4-$x"; then
-        echo "installing php7.4-$x";
-        apt_install "php7.4-$x";
-      fi
+    missing=()
+    for dep in $LIST; do
+        if ! check_installed "$dep"; then
+            missing+=("$dep")
+        fi
     done
 
-    OPT="common gd mysql sqlite3"
-    for x in $OPT; do
-      if check_installed "php-$x"; then
-        echo "installing php7.4-$x";
-        apt_install "php7.4-$x";
-      fi
-      if check_installed "php8.0-$x"; then
-        echo "installing php7.4-$x";
-        apt_install "php7.4-$x";
-      fi
-    done
+    if [[ ${missing[1]} != "" ]]; then
+        # echo_inf "Installing the following dependencies: ${missing[*]}" | tee -a $log
+        apt_install "${missing[@]}"
+    fi
+
+    cd /etc/php
+    phpv=$(ls -d */ | cut -d/ -f1)
+    if [[ $phpv =~ 7\\.1 ]]; then
+        if [[ $phpv =~ 7\\.0 ]]; then
+            apt_remove purge php7.0-fpm
+        fi
+    fi
 
     PURGE="7.0 7.1 7.2 7.3 8.0";
     for ver in $PURGE; do
