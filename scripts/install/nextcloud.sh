@@ -53,7 +53,7 @@ else
         echo_progress_done "Database installed"
     fi
     #Depends
-    apt_install unzip php-mysql libxml2-dev php-common php-gd php-json php-curl php-zip php-xml php-mbstring
+    apt_install unzip php7.3-mysql libxml2-dev php7.3-common php7.3-gd php7.3-json php7.3-curl php7.3-zip php7.3-xml php7.3-mbstring php7.3-fpm php7.3-cli
     #a2enmod rewrite > /dev/null 2>&1
     cd /tmp
 
@@ -105,10 +105,10 @@ else
     fi
     echo_progress_done "Permissions set"
 
-    echo_progress_start "Configuring nginx and php"
-    . /etc/swizzin/sources/functions/php
-    phpversion=$(php_service_version)
-    sock="php${phpversion}-fpm"
+#    echo_progress_start "Configuring nginx and php"
+#    . /etc/swizzin/sources/functions/php
+#    phpversion=$(php_service_version)
+    sock="php7.3-fpm"
 
     cat > /etc/nginx/apps/nextcloud.conf << EOF
 # The following 2 rules are only needed for the user_webfinger app.
