@@ -57,7 +57,7 @@ function update_nginx() {
       apt_remove --purge "php8.0-xmlrpc";
     fi
 
-    PURGE="7.0 7.1 7.2 7.3 7.4";
+    PURGE="7.0 7.1 7.2 7.4";
     for ver in $PURGE; do
         if check_installed "php$ver-fpm"; then
           echo "purging php$ver*";
