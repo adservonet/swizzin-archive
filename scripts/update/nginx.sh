@@ -57,21 +57,16 @@ function update_nginx() {
       apt_remove --purge "php8.0-xmlrpc";
     fi
 
-    PURGE="7.0 7.1 7.2 7.4";
+    PURGE="5.6 7.0 7.1 7.2 7.4";
     for ver in $PURGE; do
-        if check_installed "php$ver-fpm"; then
-          echo "purging php$ver*";
-          apt_remove --purge "php$ver*";
-          rm -rf "/etc/php/$ver";
-        fi
-        if check_installed "php$ver-cli"; then
-          echo "purging php$ver*";
-          apt_remove --purge "php$ver*";
-          rm -rf "/etc/php/$ver";
-        fi
-
+        apt_remove --purge "php$ver*";
+        rm -rf "/etc/php/$ver";
     done;
 
+    if [[ ! -f /install/.nextcloud.lock ]]; then
+        apt_remove --purge "php7.3*";
+        rm -rf "/etc/php/7.3";
+    fi
 
     for version in $phpv; do
         if [[ -f /etc/php/$version/fpm/php.ini ]]; then
