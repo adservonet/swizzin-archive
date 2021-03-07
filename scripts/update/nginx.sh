@@ -56,12 +56,12 @@ function update_nginx() {
 
     #also purge this guy
     if check_installed "php8.0-xmlrpc"; then
-      apt purge "php8.0-xmlrpc" > /dev/null 2>&1;
+      apt purge -y "php8.0-xmlrpc" > /dev/null 2>&1;
     fi
 
     PURGE="5.6 7.0 7.1 7.2 7.4";
     for ver in $PURGE; do
-        apt purge "php$ver*" > /dev/null 2>&1;
+        apt purge -y "php$ver*" > /dev/null 2>&1;
         rm -rf "/etc/php/$ver";
     done;
 
