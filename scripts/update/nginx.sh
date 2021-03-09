@@ -21,7 +21,7 @@ function update_nginx() {
         fi
     fi
 
-    LIST="php-fpm php-cli php-dev php-xml php-curl php-xmlrpc php-json ${mcrypt} php-mbstring php-opcache php-geoip php-xml"
+    LIST="php-fpm php-cli php-dev php-xml php-curl php-xmlrpc php-json ${mcrypt} php-mbstring php-geoip php-xml"
 
     missing=()
     for dep in $LIST; do
