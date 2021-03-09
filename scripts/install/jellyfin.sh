@@ -82,8 +82,6 @@ cat > /etc/jellyfin/system.xml <<- CONFIG
 	  <IsStartupWizardCompleted>false</IsStartupWizardCompleted>
 	  <EnableUPnP>false</EnableUPnP>
 	  <EnableHttps>true</EnableHttps>
-	  <PublicPort>8097</PublicPort>
-	  <HttpServerPortNumber>8097</HttpServerPortNumber>
 	  <CertificatePath>/home/${username}/.ssl/${username}-self-signed.pfx</CertificatePath>
 	  <IsPortAuthorized>true</IsPortAuthorized>
 	  <EnableRemoteAccess>true</EnableRemoteAccess>
