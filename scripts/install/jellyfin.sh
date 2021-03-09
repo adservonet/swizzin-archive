@@ -82,8 +82,6 @@ cat > /etc/jellyfin/system.xml <<- CONFIG
 	  <IsStartupWizardCompleted>false</IsStartupWizardCompleted>
 	  <EnableUPnP>false</EnableUPnP>
 	  <EnableHttps>true</EnableHttps>
-	  <PublicPort>8097</PublicPort>
-	  <HttpServerPortNumber>8097</HttpServerPortNumber>
 	  <CertificatePath>/home/${username}/.ssl/${username}-self-signed.pfx</CertificatePath>
 	  <IsPortAuthorized>true</IsPortAuthorized>
 	  <EnableRemoteAccess>true</EnableRemoteAccess>
@@ -100,8 +98,14 @@ wget -q -O - "https://repo.jellyfin.org/$DIST_ID/jellyfin_team.gpg.key" | apt-ke
 echo "deb [arch=$(dpkg --print-architecture)] https://repo.jellyfin.org/$DIST_ID $DIST_CODENAME main" > /etc/apt/sources.list.d/jellyfin.list
 #
 # install jellyfin and jellyfin-ffmepg using apt functions.
+
+cd /tmp
+wget -q -O jellyfin.deb https://repo.jellyfin.org/archive/ubuntu/stable/10.6.3/server/jellyfin-server_10.6.3-1_amd64.deb
+dpkg -i jellyfin.deb
+rm jellyfin.deb
+
 apt_update #forces apt refresh
-apt_install jellyfin jellyfin-ffmpeg
+apt_install jellyfin-ffmpeg #jellyfin
 #
 # Add the jellyfin user to the master user's group.
 usermod -a -G "${username}" jellyfin
