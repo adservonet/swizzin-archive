@@ -106,13 +106,16 @@ apt_install jellyfin jellyfin-ffmpeg
 # Add the jellyfin user to the master user's group.
 usermod -a -G "${username}" jellyfin
 
-#systemctl stop jellyfin >> $log 2>&1
-#killall -u jellyfin
-#sleep 5
+sleep 5
+systemctl stop jellyfin >> $log 2>&1
+killall -u jellyfin
+sleep 5
 mkdir '/home/'${username}'/jellyfin/';
 chown -R jellyfin:jellyfin  '/home/'${username}'/jellyfin/';
-mv "/var/lib/jellyfin/" /home/${username}/
-ln -s '/home/'${username}'/jellyfin' '/var/lib/jellyfin'
+mv "/var/lib/jellyfin/data" /home/${username}/jellyfin/
+mv "/var/lib/jellyfin/metadata" /home/${username}/jellyfin/
+ln -s '/home/'${username}'/jellyfin/data' '/var/lib/jellyfin/data'
+ln -s '/home/'${username}'/jellyfin/metadata' '/var/lib/jellyfin/metadata'
 #chown jellyfin:adm '/var/lib/jellyfin'
 #sleep 5
 
