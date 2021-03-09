@@ -82,6 +82,8 @@ cat > /etc/jellyfin/system.xml <<- CONFIG
 	  <IsStartupWizardCompleted>false</IsStartupWizardCompleted>
 	  <EnableUPnP>false</EnableUPnP>
 	  <EnableHttps>true</EnableHttps>
+	  <PublicPort>8097</PublicPort>
+	  <HttpServerPortNumber>8097</HttpServerPortNumber>
 	  <CertificatePath>/home/${username}/.ssl/${username}-self-signed.pfx</CertificatePath>
 	  <IsPortAuthorized>true</IsPortAuthorized>
 	  <EnableRemoteAccess>true</EnableRemoteAccess>
@@ -103,6 +105,20 @@ apt_install jellyfin jellyfin-ffmpeg
 #
 # Add the jellyfin user to the master user's group.
 usermod -a -G "${username}" jellyfin
+
+sleep 5
+systemctl stop jellyfin >> $log 2>&1
+killall -u jellyfin
+sleep 5
+mkdir '/home/'${username}'/jellyfin/';
+chown -R jellyfin:jellyfin  '/home/'${username}'/jellyfin/';
+mv "/var/lib/jellyfin/data" /home/${username}/jellyfin/
+mv "/var/lib/jellyfin/metadata" /home/${username}/jellyfin/
+ln -s '/home/'${username}'/jellyfin/data' '/var/lib/jellyfin/data'
+ln -s '/home/'${username}'/jellyfin/metadata' '/var/lib/jellyfin/metadata'
+#chown jellyfin:adm '/var/lib/jellyfin'
+#sleep 5
+
 #
 chown jellyfin:jellyfin /etc/jellyfin/dlna.xml
 chown jellyfin:jellyfin /etc/jellyfin/system.xml
@@ -116,7 +132,7 @@ if [[ -f /install/.nginx.lock ]]; then
 fi
 #
 # Restart the jellyfin service to make sure our changes take effect
-systemctl -q restart "jellyfin.service"
+systemctl -q restart jellyfin
 #
 # This file is created after installation to prevent reinstalling. You will need to remove the app first which deletes this file.
 touch /install/.jellyfin.lock
