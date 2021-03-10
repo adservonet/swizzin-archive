@@ -5,8 +5,8 @@ if [[ ! -f /install/.sonarrv3.lock ]]; then
     exit 1
 else
     rm /install/.sonarrv3.lock
-    box install sonarrv3
-    box remove sonarrv3
-    box install sonarrv3
+    /usr/local/bin/swizzin/install/sonarrv3.sh
+    /usr/local/bin/swizzin/remove/sonarrv3.sh
+    /usr/local/bin/swizzin/install/sonarrv3.sh
 fi
 
