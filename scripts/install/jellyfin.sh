@@ -85,10 +85,6 @@ cat > /etc/jellyfin/system.xml <<- CONFIG
 	  <CertificatePath>/home/${username}/.ssl/${username}-self-signed.pfx</CertificatePath>
 	  <IsPortAuthorized>true</IsPortAuthorized>
 	  <EnableRemoteAccess>true</EnableRemoteAccess>
-	  <BaseUrl />
-	  <LocalNetworkAddresses>
-		<string>0.0.0.0</string>
-	  </LocalNetworkAddresses>
 	  <RequireHttps>true</RequireHttps>
 	</ServerConfiguration>
 CONFIG
@@ -99,27 +95,7 @@ echo "deb [arch=$(dpkg --print-architecture)] https://repo.jellyfin.org/$DIST_ID
 #
 # install jellyfin and jellyfin-ffmepg using apt functions.
 apt_update #forces apt refresh
-apt_install at libsqlite3-0 libfontconfig1 libfreetype6 libssl1.0.0 jellyfin-ffmpeg jellyfin
-
-
-cd /tmp
-wget -q -O jellyfin.deb https://repo.jellyfin.org/archive/ubuntu/stable/10.6.3/server/jellyfin-server_10.5.5-1_amd64.deb
-wget -q -O jellyweb.deb https://repo.jellyfin.org/archive/ubuntu/stable/10.6.3/web/jellyfin-web_10.5.5-1_all.deb
-wget -q -O jellymeta.deb https://repo.jellyfin.org/archive/ubuntu/stable/10.6.3/meta/jellyfin_10.5.5-1_all.deb
-dpkg -i jelly*.deb
-rm *.deb
-
-wget -q -O jellyfin.deb https://repo.jellyfin.org/archive/ubuntu/stable/10.6.3/server/jellyfin-server_10.6.0-1_amd64.deb
-wget -q -O jellyweb.deb https://repo.jellyfin.org/archive/ubuntu/stable/10.6.3/web/jellyfin-web_10.6.0-1_all.deb
-wget -q -O jellymeta.deb https://repo.jellyfin.org/archive/ubuntu/stable/10.6.3/meta/jellyfin_10.6.0-1_all.deb
-dpkg -i jelly*.deb
-rm *.deb
-
-wget -q -O jellyfin.deb https://repo.jellyfin.org/archive/ubuntu/stable/10.6.3/server/jellyfin-server_10.6.3-1_amd64.deb
-wget -q -O jellyweb.deb https://repo.jellyfin.org/archive/ubuntu/stable/10.6.3/web/jellyfin-web_10.6.3-1_all.deb
-wget -q -O jellymeta.deb https://repo.jellyfin.org/archive/ubuntu/stable/10.6.3/meta/jellyfin_10.6.3-1_all.deb
-dpkg -i jelly*.deb
-rm *.deb
+apt_install jellyfin jellyfin-ffmpeg
 #
 # Add the jellyfin user to the master user's group.
 usermod -a -G "${username}" jellyfin
@@ -147,7 +123,7 @@ if [[ -f /install/.nginx.lock ]]; then
 fi
 #
 # Restart the jellyfin service to make sure our changes take effect
-systemctl -q restart jellyfin
+systemctl -q restart "jellyfin.service"
 #
 # This file is created after installation to prevent reinstalling. You will need to remove the app first which deletes this file.
 touch /install/.jellyfin.lock
