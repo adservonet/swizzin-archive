@@ -99,19 +99,27 @@ echo "deb [arch=$(dpkg --print-architecture)] https://repo.jellyfin.org/$DIST_ID
 #
 # install jellyfin and jellyfin-ffmepg using apt functions.
 apt_update #forces apt refresh
-apt_install jellyfin-ffmpeg jellyfin
+apt_install at libsqlite3-0 libfontconfig1 libfreetype6 libssl1.0.0 jellyfin-ffmpeg jellyfin
 
 
 cd /tmp
+wget -q -O jellyfin.deb https://repo.jellyfin.org/archive/ubuntu/stable/10.6.3/server/jellyfin-server_10.5.5-1_amd64.deb
+wget -q -O jellyweb.deb https://repo.jellyfin.org/archive/ubuntu/stable/10.6.3/web/jellyfin-web_10.5.5-1_all.deb
+wget -q -O jellymeta.deb https://repo.jellyfin.org/archive/ubuntu/stable/10.6.3/meta/jellyfin_10.5.5-1_all.deb
+dpkg -i jelly*.deb
+rm *.deb
+
+wget -q -O jellyfin.deb https://repo.jellyfin.org/archive/ubuntu/stable/10.6.3/server/jellyfin-server_10.6.0-1_amd64.deb
+wget -q -O jellyweb.deb https://repo.jellyfin.org/archive/ubuntu/stable/10.6.3/web/jellyfin-web_10.6.0-1_all.deb
+wget -q -O jellymeta.deb https://repo.jellyfin.org/archive/ubuntu/stable/10.6.3/meta/jellyfin_10.6.0-1_all.deb
+dpkg -i jelly*.deb
+rm *.deb
+
 wget -q -O jellyfin.deb https://repo.jellyfin.org/archive/ubuntu/stable/10.6.3/server/jellyfin-server_10.6.3-1_amd64.deb
-wget -q -O web.deb https://repo.jellyfin.org/archive/ubuntu/stable/10.6.3/web/jellyfin-web_10.6.3-1_all.deb
-wget -q -O meta.deb https://repo.jellyfin.org/archive/ubuntu/stable/10.6.3/meta/jellyfin_10.6.3-1_all.deb
-dpkg -i jellyfin.deb
-dpkg -i web.deb
-dpkg -i meta.deb
-rm jellyfin.deb
-rm web.deb
-rm meta.deb
+wget -q -O jellyweb.deb https://repo.jellyfin.org/archive/ubuntu/stable/10.6.3/web/jellyfin-web_10.6.3-1_all.deb
+wget -q -O jellymeta.deb https://repo.jellyfin.org/archive/ubuntu/stable/10.6.3/meta/jellyfin_10.6.3-1_all.deb
+dpkg -i jelly*.deb
+rm *.deb
 #
 # Add the jellyfin user to the master user's group.
 usermod -a -G "${username}" jellyfin
