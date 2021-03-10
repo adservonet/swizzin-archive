@@ -8,8 +8,9 @@ systemctl -q stop jellyfin.service
 #
 apt_remove --purge jellyfin jellyfin-ffmpeg
 #
-rm_if_exists /home/${master}/jellyfin
-rm_if_exists /var/lib/jellyfin
+rm -rf /home/${master}/jellyfin
+rm /var/lib/jellyfin
+rm -rf /var/lib/jellyfin
 rm_if_exists /var/log/jellyfin
 rm_if_exists /var/cache/jellyfin
 rm_if_exists /usr/share/jellyfin/web
