@@ -22,6 +22,11 @@ function dist_info() {
 username="$(_get_master_username)"
 dist_info # get our distribution ID, set to DIST_ID, and VERSION_CODENAME, set to DIST_CODENAME, from /etc/os-release
 
+#clean up leftovers from bad install
+rm -rf /home/${username}/jellyfin
+rm /var/lib/jellyfin
+rm -rf /var/lib/jellyfin
+
 if [[ $(systemctl is-active emby) == "active" ]]; then
     active=emby
 fi
