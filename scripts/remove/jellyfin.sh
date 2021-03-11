@@ -6,7 +6,7 @@ master=$(cut -d: -f1 < /root/.master.info)
 #
 systemctl -q stop jellyfin.service
 #
-apt_remove --purge jellyfin jellyfin-ffmpeg
+apt purge -y jellyfin*
 #
 rm -rf /home/${master}/jellyfin
 rm /var/lib/jellyfin
