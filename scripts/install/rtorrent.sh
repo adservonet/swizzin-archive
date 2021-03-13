@@ -91,8 +91,8 @@ if [[ -n $1 ]]; then
     exit 0
 fi
 
-export rtorrentver='0.9.8'
-export libtorrentver='0.13.8'
+export rtorrentver='repo'
+export libtorrentver='repo'
 
 if [[ -n $noexec ]]; then
     mount -o remount,exec /tmp
