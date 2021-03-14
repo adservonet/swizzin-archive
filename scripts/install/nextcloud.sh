@@ -13,107 +13,107 @@
 #   including (via compiler) GPL-licensed code must also be made available
 #   under the GPL along with build & install instructions.
 
-user=$(cut -d: -f1 < /root/.master.info)
-nextpass=$(cut -d: -f2 < /root/.master.info)
-password=$(cut -d: -f2 < /root/.master.info)
+user=$(cut -d: -f1 </root/.master.info)
+nextpass=$(cut -d: -f2 </root/.master.info)
+password=$(cut -d: -f2 </root/.master.info)
 
 inst=$(which mysql)
 ip=$(ip route get 1 | sed -n 's/^.*src \([0-9.]*\) .*$/\1/p')
 if [[ ! -f /install/.nginx.lock ]]; then
-    echo_error "Web server not detected. Please install nginx and restart panel install."
-    exit 1
+  echo_error "Web server not detected. Please install nginx and restart panel install."
+  exit 1
 else
-    #echo_query "Please choose a password for the nextcloud mysql user." "hidden"
-    #read -s 'nextpass'
+  #echo_query "Please choose a password for the nextcloud mysql user." "hidden"
+  #read -s 'nextpass'
+  #echo
+  #Check for existing mysql and install if not found
+  if [[ -n $inst ]]; then
+    echo_warn "Existing mysql server detected!"
+    #echo_query "Please enter mysql root password so that installation may continue." "hidden"
+    #read -s 'password'
     #echo
-    #Check for existing mysql and install if not found
-    if [[ -n $inst ]]; then
-        echo_warn "Existing mysql server detected!"
-        #echo_query "Please enter mysql root password so that installation may continue." "hidden"
-        #read -s 'password'
-        #echo
-    else
-        #while [ -z "$password" ]; do
-        #    echo_query "Please enter a mysql root password" "hidden"
-        #    read -s 'pass1'
-        #    echo_query "Re-enter password to verify" "hidden"
-        #    read -s 'pass2'
-        #    if [ $pass1 = $pass2 ]; then
-        #        password=$pass1
-        #    else
-        #        echo_warn "Passwords do not match"
-        #    fi
-        #done
-        echo_progress_start "Installing database"
-        apt_install mariadb-server
-        if [[ $(systemctl is-active mysql) != "active" ]]; then
-            systemctl start mysql
-        fi
-        mysqladmin -u root password ${password}
-        echo_progress_done "Database installed"
+  else
+    #while [ -z "$password" ]; do
+    #    echo_query "Please enter a mysql root password" "hidden"
+    #    read -s 'pass1'
+    #    echo_query "Re-enter password to verify" "hidden"
+    #    read -s 'pass2'
+    #    if [ $pass1 = $pass2 ]; then
+    #        password=$pass1
+    #    else
+    #        echo_warn "Passwords do not match"
+    #    fi
+    #done
+    echo_progress_start "Installing database"
+    apt_install mariadb-server
+    if [[ $(systemctl is-active mysql) != "active" ]]; then
+      systemctl start mysql
     fi
-    #Depends
-    apt_install unzip php8.0-mysql libxml2-dev php8.0-common php8.0-gd php8.0-curl php8.0-zip php8.0-xml php8.0-mbstring php8.0-fpm php8.0-cli
-    #a2enmod rewrite > /dev/null 2>&1
-    cd /tmp
+    mysqladmin -u root password ${password}
+    echo_progress_done "Database installed"
+  fi
+  #Depends
+  apt_install unzip php8.0-mysql libxml2-dev php8.0-common php8.0-gd php8.0-curl php8.0-zip php8.0-xml php8.0-mbstring php8.0-fpm php8.0-cli
+  #a2enmod rewrite > /dev/null 2>&1
+  cd /tmp
 
-    #Nextcloud 16 no longer supports php7.0, so 15 is the last supported release for Debian 9/Xenial
-    #Nextcloud 21 no longer supports php7.2 so 20 is the latest supported release for Bionic
-    echo_progress_start "Downloading and extracting Nextcloud"
-    codename=$(lsb_release -cs)
-    if [[ $codename =~ ("stretch"|"xenial") ]]; then
-        version="nextcloud-$(curl -s https://nextcloud.com/changelog/ | grep -A5 '"latest15"' | grep 'id=' | cut -d'"' -f2 | sed 's/-/./g')"
-    #elif [[ $codename = "bionic" ]]; then
-    #    version="nextcloud-$(curl -s https://nextcloud.com/changelog/ | grep -A5 '"latest20"' | grep 'id=' | cut -d'"' -f2 | sed 's/-/./g')"
-    else
-        version=latest
-    fi
-    wget -q https://download.nextcloud.com/server/releases/${version}.zip > /dev/null 2>&1
-    unzip ${version}.zip > /dev/null 2>&1
-    mv nextcloud /srv
-    rm -rf /tmp/${version}.zip
-    echo_progress_done "Nextcloud extracted"
+  #Nextcloud 16 no longer supports php7.0, so 15 is the last supported release for Debian 9/Xenial
+  #Nextcloud 21 no longer supports php7.2 so 20 is the latest supported release for Bionic
+  echo_progress_start "Downloading and extracting Nextcloud"
+  codename=$(lsb_release -cs)
+  if [[ $codename =~ ("stretch"|"xenial") ]]; then
+    version="nextcloud-$(curl -s https://nextcloud.com/changelog/ | grep -A5 '"latest15"' | grep 'id=' | cut -d'"' -f2 | sed 's/-/./g')"
+  #elif [[ $codename = "bionic" ]]; then
+  #    version="nextcloud-$(curl -s https://nextcloud.com/changelog/ | grep -A5 '"latest20"' | grep 'id=' | cut -d'"' -f2 | sed 's/-/./g')"
+  else
+    version=latest
+  fi
+  wget -q https://download.nextcloud.com/server/releases/${version}.zip >/dev/null 2>&1
+  unzip ${version}.zip >/dev/null 2>&1
+  mv nextcloud /srv
+  rm -rf /tmp/${version}.zip
+  echo_progress_done "Nextcloud extracted"
 
-    #Set permissions as per nextcloud
-    echo_progress_start "Configuring permissions"
-    mkdir -p /home/seedit4me/nextcloud
-    chown www-data:www-data /home/seedit4me/nextcloud
-    chmod 770 /home/seedit4me/nextcloud
+  #Set permissions as per nextcloud
+  echo_progress_start "Configuring permissions"
+  mkdir -p /home/seedit4me/nextcloud
+  chown www-data:www-data /home/seedit4me/nextcloud
+  chmod 770 /home/seedit4me/nextcloud
 
-    ocpath='/srv/nextcloud'
-    htuser='www-data'
-    htgroup='www-data'
-    rootuser='root'
+  ocpath='/home/seedit4me/nextcloud'
+  htuser='www-data'
+  htgroup='www-data'
+  rootuser='root'
 
-    mkdir -p $ocpath/data
-    mkdir -p $ocpath/assets
-    mkdir -p $ocpath/updater
-    find ${ocpath}/ -type f -print0 | xargs -0 chmod 0640
-    find ${ocpath}/ -type d -print0 | xargs -0 chmod 0750
-    chown -R ${rootuser}:${htgroup} ${ocpath}/
-    chown -R ${htuser}:${htgroup} ${ocpath}/apps/
-    chown -R ${htuser}:${htgroup} ${ocpath}/assets/
-    chown -R ${htuser}:${htgroup} ${ocpath}/config/
-    chown -R ${htuser}:${htgroup} ${ocpath}/data/
-    chown -R ${htuser}:${htgroup} ${ocpath}/themes/
-    chown -R ${htuser}:${htgroup} ${ocpath}/updater/
-    chmod +x ${ocpath}/occ
-    if [ -f ${ocpath}/.htaccess ]; then
-        chmod 0644 ${ocpath}/.htaccess
-        chown ${rootuser}:${htgroup} ${ocpath}/.htaccess
-    fi
-    if [ -f ${ocpath}/data/.htaccess ]; then
-        chmod 0644 ${ocpath}/data/.htaccess
-        chown ${rootuser}:${htgroup} ${ocpath}/data/.htaccess
-    fi
-    echo_progress_done "Permissions set"
+  mkdir -p $ocpath/data
+  mkdir -p $ocpath/assets
+  mkdir -p $ocpath/updater
+  find ${ocpath}/ -type f -print0 | xargs -0 chmod 0640
+  find ${ocpath}/ -type d -print0 | xargs -0 chmod 0750
+  chown -R ${rootuser}:${htgroup} ${ocpath}/
+  chown -R ${htuser}:${htgroup} ${ocpath}/apps/
+  chown -R ${htuser}:${htgroup} ${ocpath}/assets/
+  chown -R ${htuser}:${htgroup} ${ocpath}/config/
+  chown -R ${htuser}:${htgroup} ${ocpath}/data/
+  chown -R ${htuser}:${htgroup} ${ocpath}/themes/
+  chown -R ${htuser}:${htgroup} ${ocpath}/updater/
+  chmod +x ${ocpath}/occ
+  if [ -f ${ocpath}/.htaccess ]; then
+    chmod 0644 ${ocpath}/.htaccess
+    chown ${rootuser}:${htgroup} ${ocpath}/.htaccess
+  fi
+  if [ -f ${ocpath}/data/.htaccess ]; then
+    chmod 0644 ${ocpath}/data/.htaccess
+    chown ${rootuser}:${htgroup} ${ocpath}/data/.htaccess
+  fi
+  echo_progress_done "Permissions set"
 
-    echo_progress_start "Configuring nginx and php"
-    . /etc/swizzin/sources/functions/php
-#    phpversion=$(php_service_version)
-    sock="php8.0-fpm"
+  echo_progress_start "Configuring nginx and php"
+  . /etc/swizzin/sources/functions/php
+  #    phpversion=$(php_service_version)
+  sock="php8.0-fpm"
 
-    cat > /etc/nginx/apps/nextcloud.conf << EOF
+  cat >/etc/nginx/apps/nextcloud.conf <<EOF
 # The following 2 rules are only needed for the user_webfinger app.
 # Uncomment it if you're planning to use this app.
 #rewrite ^/.well-known/host-meta /nextcloud/public.php?service=host-meta last;
@@ -218,21 +218,24 @@ location ^~ /nextcloud {
     }
 }
 EOF
-    echo_progress_done
+  echo_progress_done
 
-    echo_progress_start "Configuring database"
-    mysql --user="root" --password="$password" --execute="CREATE DATABASE nextcloud;"
-    mysql --user="root" --password="$password" --execute="CREATE USER nextcloud@localhost IDENTIFIED BY '$nextpass';"
-    mysql --user="root" --password="$password" --execute="GRANT ALL PRIVILEGES ON nextcloud.* TO nextcloud@localhost;"
-    mysql --user="root" --password="$password" --execute="FLUSH PRIVILEGES;"
-    echo_progress_done "Database configured"
+  echo_progress_start "Configuring database"
+  mysql --user="root" --password="$password" --execute="CREATE DATABASE nextcloud;"
+  mysql --user="root" --password="$password" --execute="CREATE USER nextcloud@localhost IDENTIFIED BY '$nextpass';"
+  mysql --user="root" --password="$password" --execute="GRANT ALL PRIVILEGES ON nextcloud.* TO nextcloud@localhost;"
+  mysql --user="root" --password="$password" --execute="FLUSH PRIVILEGES;"
+  echo_progress_done "Database configured"
 
-    echo_progress_start "Restarting nginx"
-    systemctl reload nginx
-    echo_progress_start "nginx restarted"
+  cd $ocpath
+  sudo -u www-data php occ maintenance:install --database "mysql" --database-name "nextcloud" --database-user "{$user}" --database-pass "{$nextpass}" --admin-user "{$user}" --admin-pass "{$nextpass}"
 
-    touch /install/.nextcloud.lock
-    echo_success "Nextcloud installed"
+  echo_progress_start "Restarting nginx"
+  systemctl reload nginx
+  echo_progress_start "nginx restarted"
+
+  touch /install/.nextcloud.lock
+  echo_success "Nextcloud installed"
 
 #echo_info "Visit https://${ip}/nextcloud to finish installation."
 #echo_info "Database user: nextcloud"
