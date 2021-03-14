@@ -80,8 +80,7 @@ else
   chown www-data:www-data /home/seedit4me/nextcloud
   chmod 770 /home/seedit4me/nextcloud
 
-  ocpath='/home/seedit4me/nextcloud'
-#  ocpath='/srv/nextcloud'
+  ocpath='/srv/nextcloud'
   htuser='www-data'
   htgroup='www-data'
   rootuser='root'
@@ -229,8 +228,7 @@ EOF
   echo_progress_done "Database configured"
 
   cd $ocpath
-  sudo -u www-data php occ maintenance:install --database "mysql" --database-name "nextcloud" --database-user "$user" --database-pass "$nextpass" --admin-user "$user" --admin-pass "$nextpass"
-  #--data-dir "srv/nextcloud"
+  sudo -u www-data php occ maintenance:install --data-dir "/home/seedit4me/nextcloud" --database "mysql" --database-name "nextcloud" --database-user "$user" --database-pass "$nextpass" --admin-user "$user" --admin-pass "$nextpass"
 
   echo_progress_start "Restarting nginx"
   systemctl reload nginx
