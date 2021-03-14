@@ -109,13 +109,17 @@ export -f _apt_logcheck_mark
 # ATTENTION !!! REQUIRES THAT _apt_loghceck_mark is ran at the beggining of the function and that $log is set
 _apt_logcheck() {
     if _get_last_apt_log | grep -q 'E:'; then
-        echo_info "Dumping apt log errors"
-        _get_last_apt_log | grep 'E:'
-        if [[ $_apt_ignore_errors != "true" ]]; then
-            echo_error "Apt failed."
-            exit 1
+        if _get_last_apt_log | grep -q '--allow-downgrades'; then
+          echo_warn "Ignoring Apt error."
         else
-            echo_warn "Apt failed. Please consult errors above and/or in the log."
+          echo_info "Dumping apt log errors"
+          _get_last_apt_log | grep 'E:'
+          if [[ $_apt_ignore_errors != "true" ]]; then
+              echo_error "Apt failed."
+              exit 1
+          else
+              echo_warn "Apt failed. Please consult errors above and/or in the log."
+          fi
         fi
     else
         echo_log_only "No failures in apt log found"
