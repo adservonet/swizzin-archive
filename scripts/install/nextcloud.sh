@@ -228,7 +228,10 @@ EOF
   echo_progress_done "Database configured"
 
   cd $ocpath
-  sudo -u www-data php occ maintenance:install --data-dir "/home/seedit4me/nextcloud" --database "mysql" --database-name "nextcloud" --database-user "$user" --database-pass "$nextpass" --admin-user "$user" --admin-pass "$nextpass"
+  sudo -u www-data php occ maintenance:install --no-interaction --data-dir "/home/seedit4me/nextcloud" --database "mysql" --database-name "nextcloud" --database-user "nextcloud" --database-pass "${nextpass}" --admin-user "${user}" --admin-pass "${nextpass}"
+  sudo -u www-data php occ config:system:set trusted_domains 1 --value=*.seedit4.me
+  . /etc/swizzin/sources/functions/php
+  restart_php_fpm
 
   echo_progress_start "Restarting nginx"
   systemctl reload nginx

@@ -4,6 +4,7 @@
 #read -s 'password'
 password=$(cut -d: -f2 < /root/.master.info)
 rm -rf /srv/nextcloud
+rm -rf /home/seedit4me/nextcloud
 rm /etc/nginx/apps/nextcloud.conf
 apt_remove --purge php7.3*
 systemctl reload nginx
