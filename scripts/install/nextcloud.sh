@@ -53,7 +53,7 @@ else
         echo_progress_done "Database installed"
     fi
     #Depends
-    apt_install unzip php7.3-mysql libxml2-dev php7.3-common php7.3-gd php7.3-json php7.3-curl php7.3-zip php7.3-xml php7.3-mbstring php7.3-fpm php7.3-cli
+    apt_install unzip php8.0-mysql libxml2-dev php8.0-common php8.0-gd php8.0-json php8.0-curl php8.0-zip php8.0-xml php8.0-mbstring php8.0-fpm php8.0-cli
     #a2enmod rewrite > /dev/null 2>&1
     cd /tmp
 
@@ -63,8 +63,8 @@ else
     codename=$(lsb_release -cs)
     if [[ $codename =~ ("stretch"|"xenial") ]]; then
         version="nextcloud-$(curl -s https://nextcloud.com/changelog/ | grep -A5 '"latest15"' | grep 'id=' | cut -d'"' -f2 | sed 's/-/./g')"
-    elif [[ $codename = "bionic" ]]; then
-        version="nextcloud-$(curl -s https://nextcloud.com/changelog/ | grep -A5 '"latest20"' | grep 'id=' | cut -d'"' -f2 | sed 's/-/./g')"
+    #elif [[ $codename = "bionic" ]]; then
+    #    version="nextcloud-$(curl -s https://nextcloud.com/changelog/ | grep -A5 '"latest20"' | grep 'id=' | cut -d'"' -f2 | sed 's/-/./g')"
     else
         version=latest
     fi
@@ -108,10 +108,10 @@ else
     fi
     echo_progress_done "Permissions set"
 
-#    echo_progress_start "Configuring nginx and php"
-#    . /etc/swizzin/sources/functions/php
+    echo_progress_start "Configuring nginx and php"
+    . /etc/swizzin/sources/functions/php
 #    phpversion=$(php_service_version)
-    sock="php7.3-fpm"
+    sock="php8.0-fpm"
 
     cat > /etc/nginx/apps/nextcloud.conf << EOF
 # The following 2 rules are only needed for the user_webfinger app.
