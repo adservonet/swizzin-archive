@@ -28,7 +28,12 @@ if [[ ! -f /usr/local/bin/rar2fs ]]; then
   sudo ln -s /usr/local/bin/rar2fs /bin/rar2fs
   echo_progress_done
 
+  rm -rf /tmp/rar2fs
+
   mkdir -p /home/seedit4me/rar2fsmount/torrents
+else
+  echo_progress_start "rar2fs already installed"
+  echo_progress_done
 fi
 
 echo_progress_start "Configuring systemd service"
@@ -58,8 +63,13 @@ RemainAfterExit=yes
 [Install]
 WantedBy=default.target
 R2FSSVC
+echo_progress_done
 
+echo_progress_start "starting rar2fs service"
 systemctl enable -q --now mountrar2fs 2>&1 | tee -a $log
+echo_progress_done
+
+echo_progress_done "mounting /home/seedit4me/torrents /home/seedit4me/rar2fsmount/torrents"
 
 echo_success "rar2fs installed"
 touch /install/.rar2fs.lock
