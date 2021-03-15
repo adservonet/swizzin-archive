@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo_progress_done "removing rar2fs service & cleaning up"
+echo_progress_start "removing rar2fs service & cleaning up"
 systemctl disable --now -q mountrar2fs
 rm /etc/systemd/system/mountrar2fs.service
 systemctl daemon-reload -q

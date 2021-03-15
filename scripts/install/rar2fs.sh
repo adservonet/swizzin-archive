@@ -32,7 +32,7 @@ if [[ ! -f /usr/local/bin/rar2fs ]]; then
 
   mkdir -p /home/seedit4me/rar2fsmount/torrents
 else
-  echo_progress_start "rar2fs already installed"
+  echo_progress_start "rar2fs binary already exists"
   echo_progress_done
 fi
 
@@ -69,7 +69,8 @@ echo_progress_start "starting rar2fs service"
 systemctl enable -q --now mountrar2fs 2>&1 | tee -a $log
 echo_progress_done
 
-echo_progress_done "mounting /home/seedit4me/torrents /home/seedit4me/rar2fsmount/torrents"
+echo_info "mounting /home/seedit4me/torrents to"
+echo_info "/home/seedit4me/rar2fsmount/torrents"
 
 echo_success "rar2fs installed"
 touch /install/.rar2fs.lock
