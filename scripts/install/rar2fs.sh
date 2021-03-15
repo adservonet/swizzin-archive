@@ -32,8 +32,7 @@ if [[ ! -f /usr/local/bin/rar2fs ]]; then
 
   mkdir -p /home/seedit4me/rar2fsmount/torrents
 else
-  echo_progress_start "rar2fs binary already exists"
-  echo_progress_done
+  echo_log_only "rar2fs binary already exists"
 fi
 
 echo_progress_start "Configuring systemd service"
@@ -65,9 +64,8 @@ WantedBy=default.target
 R2FSSVC
 echo_progress_done
 
-echo_progress_start "starting rar2fs service"
 systemctl enable -q --now mountrar2fs 2>&1 | tee -a $log
-echo_progress_done
+echo_progress_done "started rar2fs service"
 
 echo_info "mounting /home/seedit4me/torrents to"
 echo_info "/home/seedit4me/rar2fsmount/torrents"
