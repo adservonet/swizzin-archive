@@ -78,6 +78,7 @@ $apps = array(
     array("name" => "autodl",         "service" => "irssi",             "user" => $username),
     array("name" => "lazylibrarian",  "service" => "lazylibrarian",     "user" => ""),
     array("name" => "lidarr",         "service" => "lidarr",            "user" => ""),
+    array("name" => "glances",        "service" => "glancesweb",        "user" => ""),
     array("name" => "lounge",         "service" => "lounge",            "user" => ""),
     array("name" => "nzbget",         "service" => "nzbget",            "user" => $username),
     array("name" => "nzbhydra",       "service" => "nzbhydra",          "user" => $username),
