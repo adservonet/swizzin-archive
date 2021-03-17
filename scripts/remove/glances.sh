@@ -2,7 +2,7 @@
 # Remove glances from swizzin
 #
 
-systemctl disable --now -q glances
+systemctl disable --now -q glancesweb
 
 if [[ -f /install/.nginx.lock ]]; then
     rm -f /etc/nginx/apps/glances.conf
