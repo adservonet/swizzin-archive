@@ -22,11 +22,7 @@ if [[ -n $1 ]]; then
     exit 0
 fi
 
-releases=$(git ls-remote -t --refs https://github.com/qbittorrent/qBittorrent.git | awk '{sub("refs/tags/release-", ""); print $2 }' | sort -r)
-latestv41=$(echo "$releases" | grep -m1 -oP '4\.1\.\d?.?\d')
-latestv42=$(echo "$releases" | grep -m1 -oP '4\.2\.\d?.?\d')
-latestv=$(echo "$releases" | grep -m1 -oP '\d.\d?.?\d?.?\d')
-export qbittorrent=${latestv42}
+QBITTORRENT_VERSION=repo
 
 #whiptail_qbittorrent
 
