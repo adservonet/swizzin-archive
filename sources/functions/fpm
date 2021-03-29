@@ -2,6 +2,7 @@
 
 function install_fpm() {
     /usr/local/bin/fpm -h > /dev/null 2>&1
+    ln -s /usr/local/bin/fpm /bin/fp
     exit=$?
     if [[ ! $exit == '0' ]]; then
         apt_install ruby ruby-dev libffi-dev
