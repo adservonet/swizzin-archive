@@ -37,8 +37,7 @@ fi
 
 #whiptail_deluge
 
-export deluge=1.3-stable
-export libtorrent=RC_1_1
+export DELUGE_VERSION=1.3-stable
 
 case $DELUGE_VERSION in
     [Rr][Ee][Pp][Oo])
