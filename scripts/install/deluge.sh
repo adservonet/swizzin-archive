@@ -35,8 +35,10 @@ if [[ -n $1 ]]; then
     exit 0
 fi
 
-#to do 
 #whiptail_deluge
+
+export deluge=1.3-stable
+export libtorrent=RC_1_1
 
 case $DELUGE_VERSION in
     [Rr][Ee][Pp][Oo])
