@@ -22,7 +22,7 @@ if [[ -n $1 ]]; then
     exit 0
 fi
 
-QBITTORRENT_VERSION=repo
+QBITTORRENT_VERSION=4.3.1
 
 #whiptail_qbittorrent
 
