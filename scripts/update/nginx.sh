@@ -21,7 +21,7 @@ function update_nginx() {
         fi
     fi
 
-    LIST="php8.0-fpm php8.0-cli php8.0-dev php8.0-xml php8.0-curl php8.0-xmlrpc php8.0-mcrypt php8.0-mbstring php8.0-xml"
+    LIST="php8.0-fpm php8.0-cli php8.0-dev php8.0-xml php8.0-curl php8.0-mcrypt php8.0-mbstring php8.0-xml"
     #php-geoip php-json
 
     missing=()
@@ -53,23 +53,22 @@ function update_nginx() {
       sudo update-alternatives --set php /usr/bin/php8.0;
     fi
 
-    _apt_reset
-
-    #also purge this guy
-    if check_installed "php8.0-xmlrpc"; then
-      apt purge -y "php8.0-xmlrpc" > /dev/null 2>&1;
-    fi
-
-    PURGE="5.6 7.0 7.1 7.2 7.4";
-    for ver in $PURGE; do
-        apt purge -y "php$ver*" > /dev/null 2>&1;
-        rm -rf "/etc/php/$ver";
-    done;
-
-    if [[ ! -f /install/.nextcloud.lock ]]; then
-        apt_remove --purge "php7.3*" > /dev/null 2>&1;
-        rm -rf "/etc/php/7.3";
-    fi
+#    _apt_reset
+#    #also purge this guy
+#    if check_installed "php8.0-xmlrpc"; then
+#      apt purge -y "php8.0-xmlrpc" > /dev/null 2>&1;
+#    fi
+#
+#    PURGE="5.6 7.0 7.1 7.2 7.4";
+#    for ver in $PURGE; do
+#        apt purge -y "php$ver*" > /dev/null 2>&1;
+#        rm -rf "/etc/php/$ver";
+#    done;
+#
+#    if [[ ! -f /install/.nextcloud.lock ]]; then
+#        apt_remove --purge "php7.3*" > /dev/null 2>&1;
+#        rm -rf "/etc/php/7.3";
+#    fi
 
     for version in $phpv; do
         if [[ -f /etc/php/$version/fpm/php.ini ]]; then
