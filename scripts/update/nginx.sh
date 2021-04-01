@@ -120,7 +120,16 @@ location /rtorrent.downloads {
   auth_basic "What's the password?";
   auth_basic_user_file /etc/htpasswd;
 
-  location ~* \.php$ {
+  location ~* \.php\$ {
+
+  }
+}
+location /rtorrent.downloads.plain {
+  alias /home/\$remote_user/torrents/rtorrent;
+  auth_basic "What's the password?";
+  auth_basic_user_file /etc/htpasswd;
+  autoindex on;
+  location ~* \.php\$ {
 
   }
 }
@@ -139,7 +148,44 @@ location /deluge.downloads {
   auth_basic "What's the password?";
   auth_basic_user_file /etc/htpasswd;
 
-  location ~* \.php$ {
+  location ~* \.php\$ {
+
+  }
+}
+location /deluge.downloads.plain {
+  alias /home/\$remote_user/torrents/deluge;
+  auth_basic "What's the password?";
+  auth_basic_user_file /etc/htpasswd;
+  autoindex on;
+  location ~* \.php\$ {
+
+  }
+}
+DIN
+        fi
+    fi
+
+    if [[ -f /install/.qbittorrent.lock ]]; then
+        if grep -q "php" /etc/nginx/apps/qbtindex.conf; then
+            :
+        else
+            cat > /etc/nginx/apps/qbtindex.conf << DIN
+location /qbittorrent.downloads {
+  alias /home/\$remote_user/torrents/qbittorrent;
+  include /etc/nginx/snippets/fancyindex.conf;
+  auth_basic "What's the password?";
+  auth_basic_user_file /etc/htpasswd;
+
+  location ~* \.php\$ {
+
+  }
+}
+location /qbittorrent.downloads.plain {
+  alias /home/\$remote_user/torrents/qbittorrent;
+  auth_basic "What's the password?";
+  auth_basic_user_file /etc/htpasswd;
+  autoindex on;
+  location ~* \.php\$ {
 
   }
 }

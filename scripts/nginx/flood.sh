@@ -31,6 +31,15 @@ location /rtorrent.downloads {
   auth_basic "What's the password?";
   auth_basic_user_file /etc/htpasswd;
 }
+location /rtorrent.downloads.plain {
+  alias /home/\$remote_user/torrents/rtorrent;
+  auth_basic "What's the password?";
+  auth_basic_user_file /etc/htpasswd;
+  autoindex on;
+  location ~* \.php\$ {
+
+  }
+}
 RIN
 fi
 

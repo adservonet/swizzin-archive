@@ -15,6 +15,15 @@ location /qbittorrent.downloads {
 
   }
 }
+location /qbittorrent.downloads.plain {
+  alias /home/\$remote_user/torrents/qbittorrent;
+  auth_basic "What's the password?";
+  auth_basic_user_file /etc/htpasswd;
+  autoindex on;
+  location ~* \.php\$ {
+
+  }
+}
 DIN
 fi
 
