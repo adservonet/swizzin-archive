@@ -157,6 +157,30 @@ location /deluge.downloads.plain {
 DIN
     fi
 
+    if [[ -f /install/.transmission.lock ]]; then
+        cat > /etc/nginx/apps/tindex.conf << DIN
+location /transmission.downloads {
+  alias /home/\$remote_user/torrents/transmission;
+  include /etc/nginx/snippets/fancyindex.conf;
+  auth_basic "What's the password?";
+  auth_basic_user_file /etc/htpasswd;
+
+  location ~* \.php\$ {
+
+  }
+}
+location /transmission.downloads.plain {
+  alias /home/\$remote_user/torrents/transmission;
+  auth_basic "What's the password?";
+  auth_basic_user_file /etc/htpasswd;
+  autoindex on;
+  location ~* \.php\$ {
+
+  }
+}
+DIN
+    fi
+
     if [[ -f /install/.qbittorrent.lock ]]; then
         cat > /etc/nginx/apps/qbtindex.conf << DIN
 location /qbittorrent.downloads {
