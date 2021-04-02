@@ -110,10 +110,7 @@ function update_nginx() {
     fi
 
     if [[ -f /install/.rutorrent.lock ]]; then
-        if grep -q "php" /etc/nginx/apps/rindex.conf; then
-            :
-        else
-            cat > /etc/nginx/apps/rindex.conf << EOR
+        cat > /etc/nginx/apps/rindex.conf << EOR
 location /rtorrent.downloads {
   alias /home/\$remote_user/torrents/rtorrent;
   include /etc/nginx/snippets/fancyindex.conf;
@@ -134,14 +131,10 @@ location /rtorrent.downloads.plain {
   }
 }
 EOR
-        fi
     fi
 
     if [[ -f /install/.deluge.lock ]]; then
-        if grep -q "php" /etc/nginx/apps/dindex.conf; then
-            :
-        else
-            cat > /etc/nginx/apps/dindex.conf << DIN
+        cat > /etc/nginx/apps/dindex.conf << DIN
 location /deluge.downloads {
   alias /home/\$remote_user/torrents/deluge;
   include /etc/nginx/snippets/fancyindex.conf;
@@ -162,14 +155,10 @@ location /deluge.downloads.plain {
   }
 }
 DIN
-        fi
     fi
 
     if [[ -f /install/.qbittorrent.lock ]]; then
-        if grep -q "php" /etc/nginx/apps/qbtindex.conf; then
-            :
-        else
-            cat > /etc/nginx/apps/qbtindex.conf << DIN
+        cat > /etc/nginx/apps/qbtindex.conf << DIN
 location /qbittorrent.downloads {
   alias /home/\$remote_user/torrents/qbittorrent;
   include /etc/nginx/snippets/fancyindex.conf;
@@ -190,7 +179,6 @@ location /qbittorrent.downloads.plain {
   }
 }
 DIN
-        fi
     fi
 
     # Remove php directive at the root level since we no longer use php
