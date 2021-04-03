@@ -22,9 +22,18 @@ location /deluge.downloads {
   auth_basic "What's the password?";
   auth_basic_user_file /etc/htpasswd;
 
-  location ~* \.php$ {
+  location ~* \.php\$ {
 
-  } 
+  }
+}
+location /deluge.downloads.plain {
+  alias /home/\$remote_user/torrents/deluge;
+  auth_basic "What's the password?";
+  auth_basic_user_file /etc/htpasswd;
+  autoindex on;
+  location ~* \.php\$ {
+
+  }
 }
 DIN
 fi

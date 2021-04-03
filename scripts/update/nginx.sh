@@ -110,41 +110,99 @@ function update_nginx() {
     fi
 
     if [[ -f /install/.rutorrent.lock ]]; then
-        if grep -q "php" /etc/nginx/apps/rindex.conf; then
-            :
-        else
-            cat > /etc/nginx/apps/rindex.conf << EOR
+        cat > /etc/nginx/apps/rindex.conf << EOR
 location /rtorrent.downloads {
   alias /home/\$remote_user/torrents/rtorrent;
   include /etc/nginx/snippets/fancyindex.conf;
   auth_basic "What's the password?";
   auth_basic_user_file /etc/htpasswd;
 
-  location ~* \.php$ {
+  location ~* \.php\$ {
+
+  }
+}
+location /rtorrent.downloads.plain {
+  alias /home/\$remote_user/torrents/rtorrent;
+  auth_basic "What's the password?";
+  auth_basic_user_file /etc/htpasswd;
+  autoindex on;
+  location ~* \.php\$ {
 
   }
 }
 EOR
-        fi
     fi
 
     if [[ -f /install/.deluge.lock ]]; then
-        if grep -q "php" /etc/nginx/apps/dindex.conf; then
-            :
-        else
-            cat > /etc/nginx/apps/dindex.conf << DIN
+        cat > /etc/nginx/apps/dindex.conf << DIN
 location /deluge.downloads {
   alias /home/\$remote_user/torrents/deluge;
   include /etc/nginx/snippets/fancyindex.conf;
   auth_basic "What's the password?";
   auth_basic_user_file /etc/htpasswd;
 
-  location ~* \.php$ {
+  location ~* \.php\$ {
+
+  }
+}
+location /deluge.downloads.plain {
+  alias /home/\$remote_user/torrents/deluge;
+  auth_basic "What's the password?";
+  auth_basic_user_file /etc/htpasswd;
+  autoindex on;
+  location ~* \.php\$ {
 
   }
 }
 DIN
-        fi
+    fi
+
+    if [[ -f /install/.transmission.lock ]]; then
+        cat > /etc/nginx/apps/tindex.conf << DIN
+location /transmission.downloads {
+  alias /home/\$remote_user/torrents/transmission;
+  include /etc/nginx/snippets/fancyindex.conf;
+  auth_basic "What's the password?";
+  auth_basic_user_file /etc/htpasswd;
+
+  location ~* \.php\$ {
+
+  }
+}
+location /transmission.downloads.plain {
+  alias /home/\$remote_user/torrents/transmission;
+  auth_basic "What's the password?";
+  auth_basic_user_file /etc/htpasswd;
+  autoindex on;
+  location ~* \.php\$ {
+
+  }
+}
+DIN
+    fi
+
+    if [[ -f /install/.qbittorrent.lock ]]; then
+        cat > /etc/nginx/apps/qbtindex.conf << DIN
+location /qbittorrent.downloads {
+  alias /home/\$remote_user/torrents/qbittorrent;
+  include /etc/nginx/snippets/fancyindex.conf;
+  auth_basic "What's the password?";
+  auth_basic_user_file /etc/htpasswd;
+
+  location ~* \.php\$ {
+
+  }
+}
+location /qbittorrent.downloads.plain {
+  alias /home/\$remote_user/torrents/qbittorrent;
+  auth_basic "What's the password?";
+  auth_basic_user_file /etc/htpasswd;
+  autoindex on;
+  location ~* \.php\$ {
+
+  }
+}
+DIN
     fi
 
     # Remove php directive at the root level since we no longer use php

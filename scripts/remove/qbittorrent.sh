@@ -24,6 +24,10 @@ if dpkg -s qttools5-swizzin > /dev/null 2>&1; then
     dpkg -r qttools5-swizzin > /dev/null 2>&1
 fi
 
+if [[ -f /etc/nginx/apps/qbtindex.conf ]]; then
+  rm -f /etc/nginx/apps/qbtindex.conf > /dev/null 2>&1
+fi
+
 if [[ -f /install/.nginx.lock ]]; then
     systemctl reload nginx
     rm -f /etc/nginx/apps/qbittorrent.conf
