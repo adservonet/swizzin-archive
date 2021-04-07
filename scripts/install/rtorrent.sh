@@ -68,6 +68,8 @@ ExecStartPre=-/bin/rm -f /home/%i/.sessions/rtorrent.lock
 ExecStart=/usr/bin/screen -d -m -fa -S rtorrent /usr/bin/rtorrent
 ExecStop=/usr/bin/screen -X -S rtorrent quit
 WorkingDirectory=/home/%i/
+Restart=on-failure
+RestartSec=5s
 
 [Install]
 WantedBy=multi-user.target

@@ -90,6 +90,8 @@ User=%i
 ExecStart=/usr/bin/screen -f -a -d -m -S nzbdrone mono /opt/NzbDrone/NzbDrone.exe
 ExecStop=-/bin/kill -HUP
 WorkingDirectory=/home/%i/
+Restart=on-failure
+RestartSec=5s
 
 [Install]
 WantedBy=multi-user.target

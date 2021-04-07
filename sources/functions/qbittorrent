@@ -334,6 +334,8 @@ Type=$type
 User=%i
 Group=%i
 ExecStart=/usr/bin/qbittorrent-nox
+Restart=on-failure
+RestartSec=5s
 
 [Install]
 WantedBy=multi-user.target
@@ -366,7 +368,7 @@ function qbittorrent_user_config() {
     chown $user: /home/${user}/.config/qBittorrent
     cat > /home/${user}/.config/qBittorrent/qBittorrent.conf << QBTCONF
 [BitTorrent]
-Session\DisableAutoTMMByDefault=false 
+Session\DisableAutoTMMByDefault=false
 
 [Preferences]
 Bittorrent\DHT=false
