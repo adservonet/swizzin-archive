@@ -52,9 +52,13 @@ echo_progress_done "Tautulli started"
 
 if [[ -f /install/.nginx.lock ]]; then
     echo_progress_start "Configuring nginx"
-    while [ ! -f /opt/tautulli/config.ini ]; do
+    i=0
+    #some migration got stuck here
+    while [[ ! -f /opt/tautulli/config.ini ]] && [[ $i -lt 20 ]]; do
         sleep 2
+        ((i++))
     done
+    unset i
     bash /usr/local/bin/swizzin/nginx/tautulli.sh
     systemctl reload nginx
     echo_progress_done
