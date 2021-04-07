@@ -68,6 +68,8 @@ User=%i
 ExecStart=/usr/bin/screen -d -m -fa -S irssi /usr/bin/irssi
 ExecStop=/usr/bin/screen -S irssi -X stuff '/quit\n'
 WorkingDirectory=/home/%i/
+Restart=on-failure
+RestartSec=5s
 
 [Install]
 WantedBy=multi-user.target
