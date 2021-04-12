@@ -30,8 +30,8 @@ function rutorrent_install() {
     if [[ ! -d /srv/rutorrent ]]; then
         git clone --recurse-submodules https://github.com/Novik/ruTorrent.git rutorrent >> /dev/null 2>&1
         chown -R www-data:www-data rutorrent
-        rm -rf /srv/rutorrent/plugins/throttle
-        rm -rf /srv/rutorrent/plugins/extratio
+#        rm -rf /srv/rutorrent/plugins/throttle
+#        rm -rf /srv/rutorrent/plugins/extratio
         rm -rf /srv/rutorrent/plugins/rpc
         rm -rf /srv/rutorrent/conf/config.php
     fi
