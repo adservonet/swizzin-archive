@@ -79,4 +79,3 @@ location /deluge/ {
 DRP
     fi
 done
-systemctl reload nginx
