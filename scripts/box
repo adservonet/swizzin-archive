@@ -213,9 +213,15 @@ function _help() {
     printf "${sgformat}" "list"
     echo -e "The list command will list packages available to be managed by box" | fmt --goal=50 | sed -e "2,\$s/^/$spacing/"
 }
+
 #shellcheck disable=SC2059
 function _log() {
     cat $log
+}
+
+#shellcheck disable=SC2059
+function _updateports() {
+    bash /usr/local/bin/swizzin/tools/updateports.sh
 }
 
 function _list() {
@@ -481,6 +487,10 @@ case "$1" in
         ;;
     "log")
         _log
+        exit 0
+        ;;
+    "updateports")
+        _updateports
         exit 0
         ;;
     "install" | "it")
