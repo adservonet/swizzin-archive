@@ -213,6 +213,10 @@ function _help() {
     printf "${sgformat}" "list"
     echo -e "The list command will list packages available to be managed by box" | fmt --goal=50 | sed -e "2,\$s/^/$spacing/"
 }
+#shellcheck disable=SC2059
+function _log() {
+    cat $log
+}
 
 function _list() {
     repo=($(find /usr/local/bin/swizzin/install -type f -printf "%f\n" | cut -d. -f 1 | sort -d))
@@ -473,6 +477,10 @@ case "$1" in
         ;;
     "help" | "-h")
         _help "$0"
+        exit 0
+        ;;
+    "log")
+        _log
         exit 0
         ;;
     "install" | "it")
