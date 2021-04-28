@@ -89,9 +89,18 @@ app="quassel"
 if [[ -f /install/.$app.lock ]]; then
   echo_info "updating ports for ${app}."
   port=$(cat /home/seedit4me/.quassel_port)
-  sed -i -e 's/4242/'$port'/g' /lib/systemd/system/quasselcore.service
-  sed -i -e 's/4242/'$port'/g' /etc/default/quasselcore
+  sed -i -e 's/\"PORT=.*\" \"/\"PORT='${port}'"/g' /lib/systemd/system/quasselcore.service
+  sed -i -e 's/\"PORT=.*\" \"/\"PORT='${port}'"/g' /etc/default/quasselcore
   systemctl daemon-reload
   systemctl restart quasselcore
+  echo_success "${app} ports updated."
+fi
+
+app="znc"
+if [[ -f /install/.$app.lock ]]; then
+  echo_info "updating ports for ${app}."
+  port=$(cat /home/seedit4me/.znc_port)
+  sed -i 's/Port =.*/Port = '${port}'/g' /home/znc/.znc/configs/znc.conf
+  systemctl restart znc
   echo_success "${app} ports updated."
 fi
