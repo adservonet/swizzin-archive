@@ -45,3 +45,13 @@ if [[ -f /install/.$app.lock ]]; then
   systemctl restart resilio-sync
   echo_success "${app} ports updated."
 fi
+
+app="deluge"
+if [[ -f /install/.$app.lock ]]; then
+  echo_info "updating ports for ${app}."
+  port=$(cat /home/seedit4me/.deluge_port)
+  sed -e '1h;2,$H;$!d;g' -e 's/\"port\":.*\],.*\"listen_ports\":.*\],/\"port\": \[\n${port},\n${port}\n\],\n\"listen_ports\": \[\n${port},\n${port}\n\],\n/' /home/${user}/.config/deluge/core.conf #thats some cryptic shit right there
+  systemctl start deluged@${user}
+  systemctl start deluge-web@${user}
+  echo_success "${app} ports updated."
+fi
