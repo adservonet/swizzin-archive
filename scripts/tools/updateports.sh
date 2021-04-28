@@ -51,7 +51,43 @@ if [[ -f /install/.$app.lock ]]; then
   echo_info "updating ports for ${app}."
   port=$(cat /home/seedit4me/.deluge_port)
   sed -e '1h;2,$H;$!d;g' -e 's/\"port\":.*\],.*\"listen_ports\":.*\],/\"port\": \[\n${port},\n${port}\n\],\n\"listen_ports\": \[\n${port},\n${port}\n\],\n/' /home/${user}/.config/deluge/core.conf #thats some cryptic shit right there
-  systemctl start deluged@${user}
-  systemctl start deluge-web@${user}
+  systemctl restart deluged@${user}
+  systemctl restart deluge-web@${user}
+  echo_success "${app} ports updated."
+fi
+
+# plex just needs plexclaim.sh
+
+app="plex"
+if [[ -f /install/.$app.lock ]]; then
+  echo_info "updating ports for ${app}."
+  port=$(cat /home/seedit4me/.plex_port)
+
+  home="$(echo ~plex)"
+  pmsApplicationSupportDir="${PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR:-${home}/Library/Application Support}"
+  prefFile="${pmsApplicationSupportDir}/Plex Media Server/Preferences.xml"
+
+  key="ManualPortMappingPort"
+  value="${port}"
+
+  count="$(grep -c "${key}" "${prefFile}")"
+  count=$(($count + 0))
+  if [[ $count > 0 ]]; then
+    sed -i -E "s/${key}=\"([^\"]*)\"/${key}=\"$value\"/" "${prefFile}"
+  else
+    sed -i -E "s/\/>/ ${key}=\"$value\"\/>/" "${prefFile}"
+  fi
+
+  systemctl restart plexmediaserver
+  echo_success "${app} ports updated."
+fi
+
+app="quassel"
+if [[ -f /install/.$app.lock ]]; then
+  echo_info "updating ports for ${app}."
+  port=$(cat /home/seedit4me/.quassel_port)
+  sed -i -e 's/4242/'$port'/g' /lib/systemd/system/quasselcore.service
+  sed -i -e 's/4242/'$port'/g' /etc/default/quasselcore
+  systemctl restart quasselcore
   echo_success "${app} ports updated."
 fi
