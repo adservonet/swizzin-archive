@@ -49,10 +49,13 @@ fi
 app="deluge"
 if [[ -f /install/.$app.lock ]]; then
   echo_info "updating ports for ${app}."
+  systemctl stop deluged@${user}
+  systemctl stop deluge-web@${user}
+  sleep 6
   port=$(cat /home/seedit4me/.deluge_port)
-  sed -e '1h;2,$H;$!d;g' -e 's/\"port\":.*\],.*\"listen_ports\":.*\],/\"port\": \[\n${port},\n${port}\n\],\n\"listen_ports\": \[\n${port},\n${port}\n\],\n/' /home/${user}/.config/deluge/core.conf #thats some cryptic shit right there
-  systemctl restart deluged@${user}
-  systemctl restart deluge-web@${user}
+  sed -i -e '1h;2,$H;$!d;g' -e 's/\"port\":.*\],.*\"listen_ports\":.*\],/\"port\": \[\n'${port}',\n'${port}'\n\],\n\"listen_ports\": \[\n'${port}',\n'${port}'\n\],\n/' /home/${user}/.config/deluge/core.conf #thats some cryptic shit right there
+  systemctl start deluged@${user}
+  systemctl start deluge-web@${user}
   echo_success "${app} ports updated."
 fi
 
@@ -88,6 +91,7 @@ if [[ -f /install/.$app.lock ]]; then
   port=$(cat /home/seedit4me/.quassel_port)
   sed -i -e 's/4242/'$port'/g' /lib/systemd/system/quasselcore.service
   sed -i -e 's/4242/'$port'/g' /etc/default/quasselcore
+  systemctl daemon-reload
   systemctl restart quasselcore
   echo_success "${app} ports updated."
 fi
