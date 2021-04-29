@@ -32,7 +32,7 @@ if [[ -f /install/.$app.lock ]]; then
   systemctl stop qbittorrent@${user}
   sleep 3
   port=$(cat /home/seedit4me/.qbittorrent_port)
-  sed -i "s/Connection\\PortRangeMin.*/Connection\\PortRangeMin=${port}/g" /home/${user}/.config/qBittorrent/qBittorrent.conf
+  sed -i "s/Connection\\\PortRangeMin.*/Connection\\\PortRangeMin=${port}/g" /home/${user}/.config/qBittorrent/qBittorrent.conf
   systemctl start qbittorrent@${user}
   echo_success "${app} ports updated."
 fi
