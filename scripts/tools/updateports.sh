@@ -14,6 +14,7 @@ fi
 app="transmission"
 if [[ -f /install/.$app.lock ]]; then
   echo_info "updating ports for ${app}."
+  systemctl stop transmission@${user}
   port=$(cat /home/seedit4me/.transmission_port)
 
   . /etc/swizzin/sources/functions/transmission
@@ -22,7 +23,7 @@ if [[ -f /install/.$app.lock ]]; then
   sed -i "s/\"peer-port\":.*/\"peer-port\": ${peer_port},/g" /home/${user}/.config/transmission-daemon/settings.json
   sed -i "s/\"peer-port-random-high\":.*/\"peer-port-random-high\": ${peer_port},/g" /home/${user}/.config/transmission-daemon/settings.json
   sed -i "s/\"peer-port-random-low\":.*/\"peer-port-random-low\": ${peer_port},/g" /home/${user}/.config/transmission-daemon/settings.json
-  systemctl restart transmission@${user}
+  systemctl start transmission@${user}
   echo_success "${app} ports updated."
 fi
 
