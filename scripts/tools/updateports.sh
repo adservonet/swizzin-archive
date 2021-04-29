@@ -5,6 +5,7 @@ app="rtorrent"
 if [[ -f /install/.$app.lock ]]; then
   echo_info "updating ports for ${app}."
   systemctl stop rtorrent@${user}
+  sleep 3
   port=$(cat /home/seedit4me/.rtorrent_port)
   portend=$(cat /home/seedit4me/.rtorrent_port)
   sed -i "s/network.port_range.set.*/network.port_range.set = ${port}-${portend}/g" /home/${user}/.rtorrent.rc
@@ -16,14 +17,11 @@ app="transmission"
 if [[ -f /install/.$app.lock ]]; then
   echo_info "updating ports for ${app}."
   systemctl stop transmission@${user}
+  sleep 3
   port=$(cat /home/seedit4me/.transmission_port)
-
-  . /etc/swizzin/sources/functions/transmission
-  [[ -z $peer_port ]] && export peer_port=$(_get_next_port_from_json 'peer-port' $port)
-  echo_info "peer_port = $peer_port"
-  sed -i "s/\"peer-port\":.*/\"peer-port\": ${peer_port},/g" /home/${user}/.config/transmission-daemon/settings.json
-  sed -i "s/\"peer-port-random-high\":.*/\"peer-port-random-high\": ${peer_port},/g" /home/${user}/.config/transmission-daemon/settings.json
-  sed -i "s/\"peer-port-random-low\":.*/\"peer-port-random-low\": ${peer_port},/g" /home/${user}/.config/transmission-daemon/settings.json
+  sed -i "s/\"peer-port\":.*/\"peer-port\": ${port},/g" /home/${user}/.config/transmission-daemon/settings.json
+  sed -i "s/\"peer-port-random-high\":.*/\"peer-port-random-high\": ${port},/g" /home/${user}/.config/transmission-daemon/settings.json
+  sed -i "s/\"peer-port-random-low\":.*/\"peer-port-random-low\": ${port},/g" /home/${user}/.config/transmission-daemon/settings.json
   systemctl start transmission@${user}
   echo_success "${app} ports updated."
 fi
@@ -32,6 +30,7 @@ app="qbittorrent"
 if [[ -f /install/.$app.lock ]]; then
   echo_info "updating ports for ${app}."
   systemctl stop qbittorrent@${user}
+  sleep 3
   xport=$(cat /home/seedit4me/.qbittorrent_port)
   sed -i "s/Connection\PortRangeMin.*/Connection\PortRangeMin=${xport}/g" /home/${user}/.config/qBittorrent/qBittorrent.conf
   systemctl start qbittorrent@${user}
@@ -42,6 +41,7 @@ app="btsync"
 if [[ -f /install/.$app.lock ]]; then
   echo_info "updating ports for ${app}."
   systemctl stop resilio-sync
+  sleep 3
   port=$(cat /home/seedit4me/.btsync_port)
   port2=$(cat /home/seedit4me/.btsync2_port)
   sed -i "s/\"listen\" : \"0.0.0.0:.*/\"listen\" : \"0.0.0.0:${port}\"/g" /etc/resilio-sync/config.json
@@ -55,7 +55,7 @@ if [[ -f /install/.$app.lock ]]; then
   echo_info "updating ports for ${app}."
   systemctl stop deluged@${user}
   systemctl stop deluge-web@${user}
-  sleep 6
+  sleep 3
   port=$(cat /home/seedit4me/.deluge_port)
   sed -i -e '1h;2,$H;$!d;g' -e 's/\"port\":.*\],.*\"listen_ports\":.*\],/\"port\": \[\n'${port}',\n'${port}'\n\],\n\"listen_ports\": \[\n'${port}',\n'${port}'\n\],\n/' /home/${user}/.config/deluge/core.conf #thats some cryptic shit right there
   systemctl start deluged@${user}
@@ -69,15 +69,13 @@ app="plex"
 if [[ -f /install/.$app.lock ]]; then
   echo_info "updating ports for ${app}."
   systemctl stop plexmediaserver
+  sleep 3
   port=$(cat /home/seedit4me/.plex_port)
-
   home="$(echo ~plex)"
   pmsApplicationSupportDir="${PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR:-${home}/Library/Application Support}"
   prefFile="${pmsApplicationSupportDir}/Plex Media Server/Preferences.xml"
-
   key="ManualPortMappingPort"
   value="${port}"
-
   count="$(grep -c "${key}" "${prefFile}")"
   count=$(($count + 0))
   if [[ $count > 0 ]]; then
@@ -85,7 +83,6 @@ if [[ -f /install/.$app.lock ]]; then
   else
     sed -i -E "s/\/>/ ${key}=\"$value\"\/>/" "${prefFile}"
   fi
-
   systemctl restart plexmediaserver
   echo_success "${app} ports updated."
 fi
@@ -94,6 +91,7 @@ app="quassel"
 if [[ -f /install/.$app.lock ]]; then
   echo_info "updating ports for ${app}."
   systemctl stop quasselcore
+  sleep 3
   port=$(cat /home/seedit4me/.quassel_port)
   sed -i -e 's/\"PORT=.*\" \"/\"PORT='${port}'"/g' /lib/systemd/system/quasselcore.service
   sed -i -e 's/\"PORT=.*\" \"/\"PORT='${port}'"/g' /etc/default/quasselcore
@@ -106,6 +104,7 @@ app="znc"
 if [[ -f /install/.$app.lock ]]; then
   echo_info "updating ports for ${app}."
   systemctl stop znc
+  sleep 3
   port=$(cat /home/seedit4me/.znc_port)
   sed -i 's/Port =.*/Port = '${port}'/g' /home/znc/.znc/configs/znc.conf
   systemctl restart znc
