@@ -4,6 +4,7 @@ user=$(cut -d: -f1 < /root/.master.info)
 app="rtorrent"
 if [[ -f /install/.$app.lock ]]; then
   echo_info "updating ports for ${app}."
+  systemctl stop rtorrent@${user}
   port=$(cat /home/seedit4me/.rtorrent_port)
   portend=$(cat /home/seedit4me/.rtorrent_port)
   sed -i "s/network.port_range.set.*/network.port_range.set = ${port}-${portend}/g" /home/${user}/.rtorrent.rc
@@ -30,15 +31,17 @@ fi
 app="qbittorrent"
 if [[ -f /install/.$app.lock ]]; then
   echo_info "updating ports for ${app}."
+  systemctl stop qbittorrent@${user}
   xport=$(cat /home/seedit4me/.qbittorrent_port)
   sed -i "s/Connection\PortRangeMin.*/Connection\PortRangeMin=${xport}/g" /home/${user}/.config/qBittorrent/qBittorrent.conf
-  systemctl restart qbittorrent@${user}
+  systemctl start qbittorrent@${user}
   echo_success "${app} ports updated."
 fi
 
 app="btsync"
 if [[ -f /install/.$app.lock ]]; then
   echo_info "updating ports for ${app}."
+  systemctl stop resilio-sync
   port=$(cat /home/seedit4me/.btsync_port)
   port2=$(cat /home/seedit4me/.btsync2_port)
   sed -i "s/\"listen\" : \"0.0.0.0:.*/\"listen\" : \"0.0.0.0:${port}\"/g" /etc/resilio-sync/config.json
@@ -65,6 +68,7 @@ fi
 app="plex"
 if [[ -f /install/.$app.lock ]]; then
   echo_info "updating ports for ${app}."
+  systemctl stop plexmediaserver
   port=$(cat /home/seedit4me/.plex_port)
 
   home="$(echo ~plex)"
@@ -89,6 +93,7 @@ fi
 app="quassel"
 if [[ -f /install/.$app.lock ]]; then
   echo_info "updating ports for ${app}."
+  systemctl stop quasselcore
   port=$(cat /home/seedit4me/.quassel_port)
   sed -i -e 's/\"PORT=.*\" \"/\"PORT='${port}'"/g' /lib/systemd/system/quasselcore.service
   sed -i -e 's/\"PORT=.*\" \"/\"PORT='${port}'"/g' /etc/default/quasselcore
@@ -100,6 +105,7 @@ fi
 app="znc"
 if [[ -f /install/.$app.lock ]]; then
   echo_info "updating ports for ${app}."
+  systemctl stop znc
   port=$(cat /home/seedit4me/.znc_port)
   sed -i 's/Port =.*/Port = '${port}'/g' /home/znc/.znc/configs/znc.conf
   systemctl restart znc
