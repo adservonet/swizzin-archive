@@ -44,7 +44,7 @@ if [[ -f /install/.$app.lock ]]; then
   sleep 3
   port=$(cat /home/seedit4me/.btsync_port)
   port2=$(cat /home/seedit4me/.btsync2_port)
-  sed -i "s/\"listen\" : \"0.0.0.0:.*/\"listen\" : \"0.0.0.0:${port}\"/g" /etc/resilio-sync/config.json
+  sed -i "s/\"listen\" : \"0.0.0.0:.*/\"listen\" : \"0.0.0.0:${port}\",/g" /etc/resilio-sync/config.json
   sed -i "s/\"listening_port\" : .*/\"listening_port\" : ${port2},/g" /etc/resilio-sync/config.json
   systemctl restart resilio-sync
   echo_success "${app} ports updated."
