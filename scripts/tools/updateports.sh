@@ -113,14 +113,18 @@ fi
 
 app="proftpd"
 if [[ -f /install/.$app.lock ]]; then
-  echo_info "updating ports for ${app}."
-  systemctl stop proftpd
+  echo_info "reinstalling ${app}."
+  box remove ${app}
   sleep 3
-  pasvports=$(cat /home/seedit4me/.pasv_port)
-  pasv=(${pasvports//:/ })
-  pubip=$(curl -s http://ipv4.icanhazip.com)
-  sed -i 's/PassivePorts .*/PassivePorts            '${pasv[0]}' '${pasv[1]}'/g' /etc/proftpd/proftpd.conf
-  sed -i 's/MasqueradeAddress .*/MasqueradeAddress		 '${pubip}'/g' /etc/proftpd/proftpd.conf
-  systemctl restart proftpd
-  echo_success "${app} ports updated."
+  box install ${app}
+  echo_success "${app} reinstalled."
+fi
+
+app="vsftpd"
+if [[ -f /install/.$app.lock ]]; then
+  echo_info "reinstalling ${app}."
+  box remove ${app}
+  sleep 3
+  box install ${app}
+  echo_success "${app} reinstalled."
 fi
