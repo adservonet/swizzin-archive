@@ -57,7 +57,9 @@ if [[ -f /install/.$app.lock ]]; then
   systemctl stop deluge-web@${user}
   sleep 3
   port=$(cat /home/seedit4me/.deluge_port)
-  sed -i -e '1h;2,$H;$!d;g' -e 's/\"port\":.*\],.*\"listen_ports\":.*\],/\"port\": \[\n'${port}',\n'${port}'\n\],\n\"listen_ports\": \[\n'${port}',\n'${port}'\n\],\n/' /home/${user}/.config/deluge/core.conf #thats some cryptic shit right there
+  #thats some cryptic shit right there
+  sed -i -e '1h;2,$H;$!d;g' -e 's/\"port\": \[[^][]*\],/\"port\": \[\n'${port}',\n'${port}'\n\],\n/' /home/${user}/.config/deluge/core.conf
+  sed -i -e '1h;2,$H;$!d;g' -e 's/\"listen_ports\": \[[^][]*\],/\"listen_ports\": \[\n'${port}',\n'${port}'\n\],\n/' /home/${user}/.config/deluge/core.conf
   systemctl start deluged@${user}
   systemctl start deluge-web@${user}
   echo_success "${app} ports updated."
