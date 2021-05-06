@@ -1,5 +1,6 @@
 #!/bin/bash
 user=$(cut -d: -f1 < /root/.master.info)
+internalip=$(ip route get 1 | sed -n 's/^.*src \([0-9.]*\) .*$/\1/p')
 
 app="rtorrent"
 if [[ -f /install/.$app.lock ]]; then
@@ -58,6 +59,7 @@ if [[ -f /install/.$app.lock ]]; then
   sleep 3
   port=$(cat /home/seedit4me/.deluge_port)
   #thats some cryptic shit right there
+  sed -i "s/\"listen_interface\": \"[^][]*\"/\"listen_interface\": \"${internalip}\"/g" /home/${user}/.config/deluge/core.conf
   sed -i -e '1h;2,$H;$!d;g' -e 's/\"port\": \[[^][]*\],/\"port\": \[\n'${port}',\n'${port}'\n\],\n/' /home/${user}/.config/deluge/core.conf
   sed -i -e '1h;2,$H;$!d;g' -e 's/\"listen_ports\": \[[^][]*\],/\"listen_ports\": \[\n'${port}',\n'${port}'\n\],\n/' /home/${user}/.config/deluge/core.conf
   systemctl start deluged@${user}
