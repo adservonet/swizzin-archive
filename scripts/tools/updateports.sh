@@ -118,17 +118,17 @@ fi
 app="proftpd"
 if [[ -f /install/.$app.lock ]]; then
   echo_info "reinstalling ${app}."
-  box remove ${app}
+  box remove ${app} > /srv/tools/logs/test1.log 2>&1
   sleep 3
-  box install ${app}
+  box install ${app}  > /srv/tools/logs/test2.log 2>&1
   echo_success "${app} reinstalled."
 fi
 
 app="vsftpd"
 if [[ -f /install/.$app.lock ]]; then
   echo_info "reinstalling ${app}."
-  box remove ${app}
+  box remove ${app} > /srv/tools/logs/test1.log 2>&1
   sleep 3
-  box install ${app}
+  box install ${app}  > /srv/tools/logs/test2.log 2>&1
   echo_success "${app} reinstalled."
 fi
