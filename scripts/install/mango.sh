@@ -28,7 +28,7 @@ function _install_mango() {
     echo_log_only "dlurl = $dlurl"
 
     mkdir -p "$mangodir"
-    mkdir -p "$mangodir"/library
+    mkdir -p /home/seedit4me/mango/library
     wget "${dlurl}" -O $mangodir/mango >> "$log" 2>&1 || {
         echo_error "Failed to download binary"
         exit 1
@@ -36,10 +36,11 @@ function _install_mango() {
     echo_progress_done "Binary downloaded"
 
     chmod +x $mangodir/mango
-    chmod o+rx -R $mangodir $mangodir/library
+    chmod o+rx -R $mangodir /home/seedit4me/mango/library
 
     useradd $mangousr --system -d "$mangodir" >> $log 2>&1
     sudo chown -R $mangousr:$mangousr $mangodir
+    sudo chown -R $mangousr:$mangousr /home/seedit4me/mango/
 
 }
 
@@ -48,10 +49,10 @@ function _mkconf_mango() {
     echo_progress_start "Configuring mango"
     mkdir -p $mangodir/.config/mango
     cat > "$mangodir/.config/mango/config.yml" << CONF
-#Please do not edit as swizzin will be replacing this file as updates roll out. 
+#Please do not edit as swizzin will be replacing this file as updates roll out.
 port: 9003
 base_url: /
-library_path: $mangodir/library
+library_path: /home/seedit4me/mango/library
 db_path: $mangodir/.config/mango/mango.db
 scan_interval_minutes: 5
 log_level: info
@@ -139,6 +140,6 @@ else
     echo_info "Mango will run on port 9003"
 fi
 
-echo_info "Please use your existing credentials when logging in.\nYou can access your files in $mangodir/library"
+echo_info "Please use your existing credentials when logging in.\nYou can access your files in /home/seedit4me/mango/library"
 
 touch /install/.mango.lock
