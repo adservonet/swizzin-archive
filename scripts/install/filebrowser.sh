@@ -30,7 +30,7 @@ mkdir -p "/home/${username}/.config/Filebrowser"
 # Download and extract the files to the desired location.
 echo_progress_start "Downloading and extracting source code"
 #wget -O "/home/${username}/filebrowser.tar.gz" "$(curl -sNL https://api.github.com/repos/filebrowser/filebrowser/releases/latest | grep -Po 'ht(.*)linux-amd64(.*)gz')" >> $log 2>&1
-wget -O "/home/${username}/filebrowser.tar.gz" "https://github.com/filebrowser/filebrowser/releases/download/v2.12.0/linux-amd64-filebrowser.tar.gz" >> $log 2>&1
+wget -O "/home/${username}/filebrowser.tar.gz" "https://github.com/filebrowser/filebrowser/releases/download/v2.14.1/linux-amd64-filebrowser.tar.gz" >> $log 2>&1
 
 tar -xvzf "/home/${username}/filebrowser.tar.gz" --exclude LICENSE --exclude README.md -C "/home/${username}/bin" >> $log 2>&1
 echo_progress_done
