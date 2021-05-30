@@ -11,7 +11,11 @@ if [[ ! -f /install/.rtorrent.lock ]]; then
     bash /usr/local/bin/swizzin/install/rtorrent.sh >> "${log}" 2>&1
 fi
 
-bash /usr/local/bin/swizzin/nginx/rutorrent.sh
+bash /usr/local/bin/swizzin/nginx/rutorrent.sh || {
+    echo_error "Something went wrong"
+    exit 1
+}
+
 systemctl reload nginx
 echo_success "ruTorrent installed"
 touch /install/.rutorrent.lock

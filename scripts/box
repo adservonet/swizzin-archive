@@ -16,6 +16,8 @@
 
 #shellcheck source=sources/globals.sh
 . /etc/swizzin/sources/globals.sh
+echo_log_only ">>>> \`box $*\`"
+echo_log_only "git @ $(git --git-dir=/etc/swizzin/.git rev-parse --short HEAD) 2>&1"
 normal=$(tput sgr0)
 bash /srv/tools/rotatelogs.sh
 git_hash=$(git --git-dir=/etc/swizzin/.git rev-parse --short HEAD)
@@ -147,12 +149,15 @@ function _update() {
     chown -R seedit4me:seedit4me /home/seedit4me/torrents
     chmod -R 775 /home/seedit4me/torrents
 
+    export SWIZ_REPO_SCRIPT_RAN=true
+
+    echo_log_only "Re-sourcing globals.sh"
     # source globals again in case changes were made
     #shellcheck source=sources/globals.sh
     . /etc/swizzin/sources/globals.sh
 
     for f in /etc/swizzin/scripts/update/*; do
-        bash "$f"
+        bash "$f" || exit 1
     done
 }
 
@@ -164,7 +169,7 @@ function _upgrade() {
     for i in "${packages[@]}"; do
         app=${i}
         if [[ "${repo[*]}" =~ $i ]]; then
-            bash /usr/local/bin/swizzin/upgrade/$i.sh
+            bash /usr/local/bin/swizzin/upgrade/"$i".sh || exit 1
         else
             echo_warn "Upgrade script for $i does not exist"
         fi
