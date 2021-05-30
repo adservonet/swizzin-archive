@@ -50,9 +50,11 @@ function _source_setup() {
     fi
 
     ln -s /etc/swizzin/scripts/ /usr/local/bin/swizzin
-    chmod -R 700 /etc/swizzin/scripts
     #shellcheck source=sources/globals.sh
     . /etc/swizzin/sources/globals.sh
+
+    # Set correct permissions on swizzin files
+    bash /etc/swizzin/scripts/update/04-setpermissions.sh
     echo
 }
 _source_setup "$@"
@@ -190,7 +192,7 @@ _os() {
         echo_error "Your distribution ($distribution) is not supported. Swizzin requires Ubuntu or Debian."
         exit 1
     fi
-    if [[ ! $codename =~ ("xenial"|"bionic"|"stretch"|"buster"|"focal") ]]; then
+    if [[ ! $codename =~ ("bionic"|"stretch"|"buster"|"focal") ]]; then
         echo_error "Your release ($codename) of $distribution is not supported."
         exit 1
     fi

@@ -30,3 +30,4 @@ sed -i 's/url_base.*/url_base = \/couchpotato/g' /home/${user}/.config/couchpota
 #if [[ $isactive == "active" ]]; then
 systemctl restart couchpotato
 #fi
+ 
