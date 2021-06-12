@@ -46,7 +46,7 @@ for u in "${users[@]}"; do
         systemctl stop deluge-web@$u
     fi
 
-    sed -i 's/"interface": "0.0.0.0"/"interface": "127.0.0.1"/g' /home/$u/.config/deluge/web.conf
+    #sed -i 's/"interface": "0.0.0.0"/"interface": "127.0.0.1"/g' /home/$u/.config/deluge/web.conf
     sed -i 's/"https": true/"https": false/g' /home/$u/.config/deluge/web.conf
 
     if [[ $isactive == "active" ]]; then
