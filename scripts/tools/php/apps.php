@@ -97,7 +97,7 @@ $apps = array(
     array("name" => "medusa",         "service" => "medusa",            "user" => $username),
     array("name" => "netdata",        "service" => "netdata",           "user" => ""),
     array("name" => "rar2fs",         "service" => "mountrar2fs",       "user" => ""),
-    array("name" => "sonarr",         "service" => "sonarr",            "user" => $username),
+    array("name" => "sonarr",         "service" => "sonarr",            "user" => ""),
     array("name" => "sonarrv3",       "service" => "sonarr",            "user" => ""),
     array("name" => "subsonic",       "service" => "subsonic",          "user" => ""),
     array("name" => "syncthing",      "service" => "syncthing",         "user" => $username),
