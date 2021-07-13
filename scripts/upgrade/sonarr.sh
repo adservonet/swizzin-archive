@@ -4,5 +4,6 @@
 #    echo_error "Sonarr v2 not detected. Exiting!"
 #    exit 1
 #fi
-box remove sonarr
-box install sonarr
+bash /etc/swizzin/scripts/box remove sonarr
+sleep 5
+bash /etc/swizzin/scripts/box install sonarr
