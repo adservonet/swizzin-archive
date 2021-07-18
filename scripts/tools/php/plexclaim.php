@@ -13,6 +13,7 @@ if (isset($_POST['token']))
 
 if ($token != null)
 {
+    $token = preg_replace("/[^a-zA-Z0-9\-\_]+/", "", $token);
     $out = shell_exec("sudo -u plex /srv/tools/plexclaim.sh " . $token ." 2>&1");
 //    echo "out '" . $out."'\n";
     if (strpos($out, 'success') !== false) {
