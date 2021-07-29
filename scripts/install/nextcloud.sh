@@ -17,33 +17,17 @@ user=$(cut -d: -f1 </root/.master.info)
 nextpass=$(cut -d: -f2 </root/.master.info)
 password=$(cut -d: -f2 </root/.master.info)
 
-inst=$(which mysql)
+inst=$(mysql -V)
 ip=$(ip route get 1 | sed -n 's/^.*src \([0-9.]*\) .*$/\1/p')
 if [[ ! -f /install/.nginx.lock ]]; then
   echo_error "Web server not detected. Please install nginx and restart panel install."
   exit 1
 else
-  #echo_query "Please choose a password for the nextcloud mysql user." "hidden"
-  #read -s 'nextpass'
-  #echo
-  #Check for existing mysql and install if not found
-  if [[ -n $inst ]]; then
-    echo_warn "Existing mysql server detected!"
-    #echo_query "Please enter mysql root password so that installation may continue." "hidden"
-    #read -s 'password'
-    #echo
-  else
-    #while [ -z "$password" ]; do
-    #    echo_query "Please enter a mysql root password" "hidden"
-    #    read -s 'pass1'
-    #    echo_query "Re-enter password to verify" "hidden"
-    #    read -s 'pass2'
-    #    if [ $pass1 = $pass2 ]; then
-    #        password=$pass1
-    #    else
-    #        echo_warn "Passwords do not match"
-    #    fi
-    #done
+  mariadb_required=(10.3)
+  err=0; for item in ${mariadb_required[@]}; { [[ "$inst" =~ $item ]] || ((err++)); }; ((err>0)) && mariadb_install=true
+
+  if [[ -n $mariadb_install ]]; then
+    echo_warn "(Re) isntalling mariadb"
     echo_progress_start "Installing database"
 
     systemctl stop mariadb
