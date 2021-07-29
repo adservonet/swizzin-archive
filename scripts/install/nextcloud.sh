@@ -45,10 +45,19 @@ else
     #    fi
     #done
     echo_progress_start "Installing database"
-    apt_install mariadb-server
+
+    cd /tmp/
+    wget https://downloads.mariadb.com/MariaDB/mariadb_repo_setup
+    echo "32e01fbe65b4cecc074e19f04c719d1a600e314236c3bb40d91e555b7a2abbfc mariadb_repo_setup" | sha256sum -c -
+    chmod +x mariadb_repo_setup
+    sudo ./mariadb_repo_setup --mariadb-server-version="mariadb-10.3"
+    rm -rf mariadb_repo_setup
+    apt_install mariadb-server mariadb-backup
+
     if [[ $(systemctl is-active mysql) != "active" ]]; then
       systemctl start mysql
     fi
+
     mysqladmin -u root password ${password}
     echo_progress_done "Database installed"
   fi
