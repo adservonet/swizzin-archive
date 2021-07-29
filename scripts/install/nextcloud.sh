@@ -30,6 +30,11 @@ else
     echo_warn "(Re) isntalling mariadb"
     echo_progress_start "Installing database"
 
+    mysqladmin drop mysql -f -u root -p${password}
+    mysqladmin drop nextcloud -f -u root -p${password}
+    mysqladmin drop information_schema -f -u root -p${password}
+    mysqladmin drop performance_schema -f -u root -p${password}
+
     systemctl stop mysql
     apt_remove --purge "mariadb-*"
     apt_remove --purge galera
@@ -44,7 +49,7 @@ else
 
     systemctl restart mysql
 
-    mysqladmin -u root password ${password}
+    mysqladmin -u root -p${password}
     echo_progress_done "Database installed"
   fi
 
