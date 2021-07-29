@@ -31,8 +31,8 @@ else
     echo_progress_start "Installing database"
 
     systemctl stop mariadb
-    apt remove "mariadb-*"
-    apt remove galera
+    apt_remove "mariadb-*"
+    apt_remove galera
 
     cd /tmp/
     wget https://downloads.mariadb.com/MariaDB/mariadb_repo_setup
