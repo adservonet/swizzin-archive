@@ -46,6 +46,10 @@ else
     #done
     echo_progress_start "Installing database"
 
+    systemctl stop mariadb
+    apt remove "mariadb-*"
+    apt remove galera
+
     cd /tmp/
     wget https://downloads.mariadb.com/MariaDB/mariadb_repo_setup
     echo "32e01fbe65b4cecc074e19f04c719d1a600e314236c3bb40d91e555b7a2abbfc mariadb_repo_setup" | sha256sum -c -
