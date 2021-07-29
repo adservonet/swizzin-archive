@@ -30,12 +30,11 @@ else
     echo_warn "(Re) isntalling mariadb"
     echo_progress_start "Installing database"
 
-    systemctl stop mariadb
     systemctl stop mysql
-    apt_remove "mariadb-*"
-    apt_remove galera
+    apt_remove --purge "mariadb-*"
+    apt_remove --purge galera
 
-    cd /tmp/
+    apt_install software-properties-common
     wget https://downloads.mariadb.com/MariaDB/mariadb_repo_setup
     echo "32e01fbe65b4cecc074e19f04c719d1a600e314236c3bb40d91e555b7a2abbfc mariadb_repo_setup" | sha256sum -c -
     chmod +x mariadb_repo_setup
@@ -43,7 +42,6 @@ else
     rm -rf mariadb_repo_setup
     apt_install mariadb-server
 
-    systemctl restart mariadb
     systemctl restart mysql
 
     mysqladmin -u root password ${password}
