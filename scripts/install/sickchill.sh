@@ -55,17 +55,19 @@ install_rar
 
 echo_progress_start "Installing systemd service"
 cat > /etc/systemd/system/sickchill.service << SCSD
+
 [Unit]
-Description=SickChill
-After=syslog.target network.target
+Description=SickChill Daemon
+Wants=network-online.target
+After=network-online.target
 
 [Service]
+User=sickchill
+Group=sickchill
+
 Type=forking
 GuessMainPID=no
-User=${user}
-Group=${user}
-ExecStart=/opt/.venv/sickchill/bin/python3 /opt/sickchill/SickChill.py -q --datadir=/opt/sickchill
-
+ExecStart=/opt/.venv/sickchill/bin/python3 /opt/sickchill/SickChill.py -q --daemon --nolaunch --datadir=/opt/sickchill
 
 [Install]
 WantedBy=multi-user.target
@@ -73,6 +75,8 @@ SCSD
 
 systemctl enable -q --now sickchill 2>&1 | tee -a $log
 echo_progress_done "Sickchill started"
+
+sleep 5
 
 if [[ -f /install/.nginx.lock ]]; then
     echo_progress_start "Configuring nginx"
