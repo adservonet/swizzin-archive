@@ -29,6 +29,7 @@ function _install_mango() {
 
     mkdir -p "$mangodir"
     mkdir -p /home/seedit4me/mango/library
+    chmod -R 775 /home/seedit4me/mango
     wget "${dlurl}" -O $mangodir/mango >> "$log" 2>&1 || {
         echo_error "Failed to download binary"
         exit 1
