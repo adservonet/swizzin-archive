@@ -75,7 +75,7 @@ SCSD
 systemctl enable -q --now sickchill 2>&1 | tee -a $log
 echo_progress_done "Sickchill started"
 
-sleep 5
+sleep 15
 
 if [[ -f /install/.nginx.lock ]]; then
     echo_progress_start "Configuring nginx"
