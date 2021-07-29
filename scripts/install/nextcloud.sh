@@ -27,7 +27,7 @@ else
   err=0; for item in ${mariadb_required[@]}; { [[ "$inst" =~ $item ]] || ((err++)); }; ((err>0)) && mariadb_install=true
 
   if [[ -n $mariadb_install ]]; then
-    echo_warn "(Re) isntalling mariadb"
+    echo_warn "(Re)installing mariadb"
     echo_progress_start "Installing database"
 
     mysqladmin drop mysql -f -u root -p${password}
@@ -45,11 +45,12 @@ else
     chmod +x mariadb_repo_setup
     sudo ./mariadb_repo_setup --mariadb-server-version="mariadb-10.3"
     rm -rf mariadb_repo_setup
+    rm /etc/apt/sources.list.d/mariadb.list.*
     apt_install mariadb-server
 
+    mysqladmin -u root password ${password}
+    
     systemctl restart mysql
-
-    mysqladmin -u root -p${password}
     echo_progress_done "Database installed"
   fi
 
