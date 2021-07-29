@@ -64,7 +64,7 @@ Type=forking
 GuessMainPID=no
 User=${user}
 Group=${user}
-ExecStart=/opt/.venv/sickchill/bin/python3 /opt/sickchill/SickChill.py -q --daemon --nolaunch --datadir=/opt/sickchill
+ExecStart=/opt/.venv/sickchill/bin/python3 /opt/sickchill/SickChill.py -q --datadir=/opt/sickchill
 
 
 [Install]
