@@ -31,6 +31,7 @@ else
     echo_progress_start "Installing database"
 
     systemctl stop mariadb
+    systemctl stop mysql
     apt_remove "mariadb-*"
     apt_remove galera
 
@@ -40,15 +41,15 @@ else
     chmod +x mariadb_repo_setup
     sudo ./mariadb_repo_setup --mariadb-server-version="mariadb-10.3"
     rm -rf mariadb_repo_setup
-    apt_install mariadb-server mariadb-backup
+    apt_install mariadb-server
 
-    if [[ $(systemctl is-active mysql) != "active" ]]; then
-      systemctl start mysql
-    fi
+    systemctl restart mariadb
+    systemctl restart mysql
 
     mysqladmin -u root password ${password}
     echo_progress_done "Database installed"
   fi
+
   #Depends
   apt_install unzip php8.0-mysql libxml2-dev php8.0-common php8.0-gd php8.0-curl php8.0-zip php8.0-xml php8.0-mbstring php8.0-fpm php8.0-cli
   #a2enmod rewrite > /dev/null 2>&1
