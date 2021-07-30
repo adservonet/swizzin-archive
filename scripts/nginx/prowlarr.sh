@@ -32,6 +32,8 @@ location /$app_baseurl {
   proxy_http_version 1.1;
   proxy_set_header Upgrade \$http_upgrade;
   proxy_set_header Connection \$http_connection;
+  proxy_cache_bypass \$http_upgrade;
+  proxy_buffering off;
  }
   # Allow the App API
   location /$app_baseurl/api { auth_request off;
