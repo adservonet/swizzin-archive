@@ -60,6 +60,7 @@ db_path: $mangodir/.config/mango/mango.db
 scan_interval_minutes: 5
 log_level: info
 upload_path: $mangodir/uploads
+plugin_path: $mangodir/plugins
 disable_ellipsis_truncation: false
 mangadex:
   base_url: https://mangadex.org
