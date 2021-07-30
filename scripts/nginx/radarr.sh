@@ -55,8 +55,8 @@ fi
 
 chown -R "$user":"$user" /home/"$user"/.config/Radarr
 
-if [[ $isactive != "active" ]]; then
-    systemctl stop radarr
+if [[ $isactive == "active" ]]; then
+    systemctl start radarr
 fi
 
 

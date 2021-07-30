@@ -69,10 +69,16 @@ cat > "$app_configdir"/config.xml << PROWLARR
   <LaunchBrowser>False</LaunchBrowser>
   <ApiKey>${apikey}</ApiKey>
   <AuthenticationMethod>None</AuthenticationMethod>
+  <SslCertHash></SslCertHash>
   <UrlBase>$app_baseurl</UrlBase>
   <Branch>$app_branch</Branch>
 </Config>
 PROWLARR
+
+if [[ -f /install/.rutorrent.lock ]]; then
+    sqlite3 /home/"$user"/.config/Prowlarr/prowlarr.db "INSERT or REPLACE INTO Config VALUES('6', 'certificatevalidation', 'DisabledForLocalAddresses');"
+fi
+
 
 chown -R "$user":"$user" "$app_configdir"
 
