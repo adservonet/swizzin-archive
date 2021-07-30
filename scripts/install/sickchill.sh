@@ -31,8 +31,8 @@ fi
 
 if [[ $codename == "stretch" ]]; then
     pyenv_install
-    pyenv_install_version 3.6.2
-    pyenv_create_venv 3.6.2 /opt/.venv/sickchill
+    pyenv_install_version 3.7.7
+    pyenv_create_venv 3.7.7 /opt/.venv/sickchill
 else
     LIST='git python3-dev python3-venv python3-pip'
     apt_install $LIST
@@ -43,7 +43,7 @@ fi
 
 chown -R ${user}: /opt/.venv/sickchill
 echo_progress_start "Cloning SickChill"
-git clone --branch v2021.06.16-1 https://github.com/SickChill/SickChill.git /opt/sickchill >> ${log} 2>&1
+git clone --branch v2021.03.07-1 https://github.com/SickChill/SickChill.git /opt/sickchill >> ${log} 2>&1
 chown -R $user: /opt/sickchill
 echo_progress_done
 
