@@ -30,7 +30,7 @@ _install_radarr() {
     echo_progress_done "Archive downloaded"
 
     echo_progress_start "Extracting archive"
-    tar -xvf /tmp/Radarr.tar.gz -C /opt >> "$log" 2>&1
+    tar -xvf /tmp/Radarr.tar.gz -C /usr/lib >> "$log" 2>&1
     echo_progress_done "Archive extracted"
 
     touch /install/.radarr.lock
@@ -49,14 +49,14 @@ Group=${radarrOwner}
 Type=simple
 
 # Change the path to Radarr here if it is in a different location for you.
-ExecStart=/opt/Radarr/Radarr -nobrowser -data=/home/$radarrOwner/.config/Radarr/
+ExecStart=/usr/lib/Radarr/Radarr -nobrowser -data=/home/$radarrOwner/.config/Radarr/
 TimeoutStopSec=20
 KillMode=process
 Restart=on-failure
 
 # These lines optionally isolate (sandbox) Radarr from the rest of the system.
 # Make sure to add any paths it might use to the list below (space-separated).
-#ReadWritePaths=/opt/Radarr /path/to/movies/folder
+#ReadWritePaths=/usr/lib/Radarr /path/to/movies/folder
 #ProtectSystem=strict
 #PrivateDevices=true
 #ProtectHome=true
@@ -64,7 +64,7 @@ Restart=on-failure
 [Install]
 WantedBy=multi-user.target
 EOF
-    chown -R "$radarrOwner":"$radarrOwner" /opt/Radarr
+    chown -R "$radarrOwner":"$radarrOwner" /usr/lib/Radarr
     systemctl -q daemon-reload
     systemctl enable --now -q radarr
     sleep 1
