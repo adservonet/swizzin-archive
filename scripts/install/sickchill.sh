@@ -43,7 +43,7 @@ fi
 
 chown -R ${user}: /opt/.venv/sickchill
 echo_progress_start "Cloning SickChill"
-git clone https://github.com/SickChill/SickChill.git /opt/sickchill >> ${log} 2>&1
+git clone --branch v2021.06.16-1 https://github.com/SickChill/SickChill.git /opt/sickchill >> ${log} 2>&1
 chown -R $user: /opt/sickchill
 echo_progress_done
 
@@ -55,11 +55,9 @@ install_rar
 
 echo_progress_start "Installing systemd service"
 cat > /etc/systemd/system/sickchill.service << SCSD
-
 [Unit]
-Description=SickChill Daemon
-Wants=network-online.target
-After=network-online.target
+Description=SickChill
+After=syslog.target network.target
 
 [Service]
 Type=forking
@@ -68,14 +66,13 @@ User=${user}
 Group=${user}
 ExecStart=/opt/.venv/sickchill/bin/python3 /opt/sickchill/SickChill.py -q --daemon --nolaunch --datadir=/opt/sickchill
 
+
 [Install]
 WantedBy=multi-user.target
 SCSD
 
 systemctl enable -q --now sickchill 2>&1 | tee -a $log
 echo_progress_done "Sickchill started"
-
-sleep 15
 
 if [[ -f /install/.nginx.lock ]]; then
     echo_progress_start "Configuring nginx"
