@@ -10,6 +10,9 @@
 #   under the GPL along with build & install instructions.
 
 codename=$(lsb_release -cs)
+
+badradarr="false"
+badsonarr="false"
 _install() {
 
     user=$(cut -d: -f1 < /root/.master.info)
@@ -101,7 +104,7 @@ SONC
             radarrbase=$(grep -oP "UrlBase>\K[^<]+" "${radarrConfigFile}")
         else
             echo_warn "Radarr configuration was not found in ${radarrConfigFile}, configure api key, port and url base manually in bazarr"
-            badradarr=true
+            badradarr="true"
         fi
 
         cat >> /opt/bazarr/data/config/config.ini << RADC
