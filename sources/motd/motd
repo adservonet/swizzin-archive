@@ -1,24 +1,23 @@
-^[[32m                       ___ __  __ __      ^[[m^O
-^[[32m    ________  ___  ___/ (_) /_/ // /____  ___     ^[[m^O
-^[[32m   / ___/ _ \/ _ \/ _  / / __/ // //    \/ _ \    ^[[m^O
-^[[32m  (__  )  __/  __/ // / / /_/__  // / / /  __/    ^[[m^O
-^[[32m /____/\___/\___/\_._/_/\__/  /_//_/_/_/\___/     ^[[m^O
-^[[32m  ^[[m^O
+  ------------------------------------------------------------
+                              ___ __  __ __
+           ________  ___  ___/ (_) /_/ // /____  ___
+          / ___/ _ \/ _ \/ _  / / __/ // //    \/ _ \
+         (__  )  __/  __/ // / / /_/__  // / / /  __/
+        /____/\___/\___/\_._/_/\__/  /_//_/_/_/\___/
 
-  Important Warning Please Read
+              IMPORTANT WARNING PLEASE READ
 
-  Do not try to upgrade the ubuntu distribution or change the
-  OS of the seedbox. Newer versions are not (yet) supported
-  and will result in us formatting your seedbox, wiping all data.
+  DO NOT TRY TO UPGRADE THE UBUNTU DISTRIBUTION OR CHANGE THE
+  OS OF THE SEEDBOX. NEWER VERSIONS ARE NOT (YET) SUPPORTED
+  AND WILL RESULT IN US FORMATTING YOUR SEEDBOX, WIPING ALL DATA.
 
-  From here on, you are on your own. Please note if you break
-  anything via SSH you will need to format, so you better know
-  what you're doing. Seedit4.me offers NO support or advice
-  for anything a client does via SSH.
+  FROM HERE ON, YOU ARE ON YOUR OWN. PLEASE NOTE IF YOU BREAK
+  ANYTHING VIA SSH YOU WILL NEED TO FORMAT, SO YOU BETTER KNOW
+  WHAT YOU'RE DOING. SEEDIT4.ME OFFERS NO SUPPORT OR ADVICE
+  FOR ANYTHING A CLIENT DOES VIA SSH.
 
-  All data should be kept to the /home/seedit4me directory.
-  Filling up the root partition wil result in your box getting
-  formatted without notice.
+  ALL DATA SHOULD BE KEPT TO THE /HOME/SEEDIT4ME DIRECTORY.
+  FILLING UP THE ROOT PARTITION WIL RESULT IN YOUR BOX GETTING
+  FORMATTED WITHOUT NOTICE.
 
   ------------------------------------------------------------
-
