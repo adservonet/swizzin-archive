@@ -100,6 +100,7 @@ $apps = array(
     array("name" => "netdata",        "service" => "netdata",           "user" => ""),
     array("name" => "rar2fs",         "service" => "mountrar2fs",       "user" => ""),
     array("name" => "sonarr",         "service" => "sonarr",            "user" => ""),
+    array("name" => "readarr",        "service" => "readarr",           "user" => ""),
     array("name" => "sonarrv3",       "service" => "sonarr",            "user" => ""),
     array("name" => "subsonic",       "service" => "subsonic",          "user" => ""),
     array("name" => "syncthing",      "service" => "syncthing",         "user" => $username),
