@@ -7,7 +7,7 @@ fi
 
 rm /etc/apt/sources.list.d/ombi.list
 
-if ask "Would you like to purge the configuration?" Y; then
+#if ask "Would you like to purge the configuration?" Y; then
     apt_remove ombi --purge
     if [[ -d /opt/ombi ]]; then
         rm -rf /opt/ombi
@@ -18,8 +18,8 @@ if ask "Would you like to purge the configuration?" Y; then
         rm -rf /opt/Ombi
         rm -rf /etc/Ombi
     fi
-else
-    apt_remove ombi
-fi
+#else
+#    apt_remove ombi
+#fi
 
 rm /install/.ombi.lock
