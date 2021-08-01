@@ -24,18 +24,19 @@ RADARR
 isactive=$(systemctl is-active radarr)
 
 if [[ $isactive == "active" ]]; then
-    echo_log_only "Stopping radarr"
     systemctl stop radarr
 fi
-user=$(grep User /etc/systemd/system/radarr.service | cut -d= -f2)
+user=$(grep User= /etc/systemd/system/radarr.service | cut -d= -f2)
+
 echo_log_only "Radarr user detected as $user"
-apikey=$(grep -oPm1 "(?<=<ApiKey>)[^<]+" /home/"$user"/.config/Radarr/config.xml)
+apikey=$(awk -F '[<>]' '/ApiKey/{print $3}' /home/"$user"/.config/Radarr/config.xml)
 echo_log_only "Apikey = $apikey" >> "$log"
 
 cat > /home/"$user"/.config/Radarr/config.xml << RADARR
 <Config>
   <LogLevel>info</LogLevel>
   <UpdateMechanism>BuiltIn</UpdateMechanism>
+
   <BindAddress>127.0.0.1</BindAddress>
   <Port>7878</Port>
   <SslPort>9898</SslPort>
@@ -43,29 +44,39 @@ cat > /home/"$user"/.config/Radarr/config.xml << RADARR
   <LaunchBrowser>False</LaunchBrowser>
   <ApiKey>${apikey}</ApiKey>
   <AuthenticationMethod>None</AuthenticationMethod>
+  <SslCertHash></SslCertHash>
   <UrlBase>radarr</UrlBase>
 </Config>
 RADARR
 
+if [[ -f /install/.rutorrent.lock ]]; then
+    sqlite3 /home/"$user"/.config/Radarr/radarr.db "INSERT or REPLACE INTO Config VALUES('6', 'certificatevalidation', 'DisabledForLocalAddresses');"
+fi
+
 chown -R "$user":"$user" /home/"$user"/.config/Radarr
 
-#shellcheck source=sources/functions/utils
-. /etc/swizzin/sources/functions/utils
-systemctl start radarr -q # Switch radarr on regardless whether it was off before or not as we need to have it online to trigger this cahnge
-if ! timeout 15 bash -c -- "while ! curl -fL \"http://127.0.0.1:7878/api/v3/system/status?apiKey=${apikey}\" >> \"$log\" 2>&1; do sleep 5; done"; then
-    echo_error "Radarr API did not respond as expected. Please make sure Radarr is on v3 and running."
-    exit 1
-else
-    urlbase="$(curl -sL "http://127.0.0.1:7878/api/v3/config/host?apikey=${apikey}" | jq '.urlBase' | cut -d '"' -f 2)"
-    echo_log_only "Radarr API tested and reachable"
+if [[ $isactive == "active" ]]; then
+    systemctl start radarr
 fi
 
-payload=$(curl -sL "http://127.0.0.1:7878/api/v3/config/host?apikey=${apikey}" | jq ".certificateValidation = \"disabledForLocalAddresses\"")
-echo_log_only "Payload = \n${payload}"
-echo_log_only "Return from radarr after PUT ="
-curl -s "http://127.0.0.1:7878${urlbase}/api/v3/config/host?apikey=${apikey}" -X PUT -H 'Accept: application/json, text/javascript, */*; q=0.01' --compressed -H 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' --data-raw "${payload}" >> "$log"
 
-# Switch radarr back off if it was dead before
-if [[ $isactive != "active" ]]; then
-    systemctl stop radarr
-fi
+##shellcheck source=sources/functions/utils
+#. /etc/swizzin/sources/functions/utils
+#systemctl start radarr -q # Switch radarr on regardless whether it was off before or not as we need to have it online to trigger this cahnge
+#if ! timeout 15 bash -c -- "while ! curl -fL \"http://127.0.0.1:7878/api/v3/system/status?apiKey=${apikey}\" >> \"$log\" 2>&1; do sleep 5; done"; then
+#    echo_error "Radarr API did not respond as expected. Please make sure Radarr is on v3 and running."
+#    exit 1
+#else
+#    urlbase="$(curl -sL "http://127.0.0.1:7878/api/v3/config/host?apikey=${apikey}" | jq '.urlBase' | cut -d '"' -f 2)"
+#    echo_log_only "Radarr API tested and reachable"
+#fi
+#
+#payload=$(curl -sL "http://127.0.0.1:7878/api/v3/config/host?apikey=${apikey}" | jq ".certificateValidation = \"disabledForLocalAddresses\"")
+#echo_log_only "Payload = \n${payload}"
+#echo_log_only "Return from radarr after PUT ="
+#curl -s "http://127.0.0.1:7878${urlbase}/api/v3/config/host?apikey=${apikey}" -X PUT -H 'Accept: application/json, text/javascript, */*; q=0.01' --compressed -H 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' --data-raw "${payload}" >> "$log"
+#
+## Switch radarr back off if it was dead before
+#if [[ $isactive != "active" ]]; then
+#    systemctl stop radarr
+#fi

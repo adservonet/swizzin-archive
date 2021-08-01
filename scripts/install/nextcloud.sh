@@ -17,41 +17,43 @@ user=$(cut -d: -f1 </root/.master.info)
 nextpass=$(cut -d: -f2 </root/.master.info)
 password=$(cut -d: -f2 </root/.master.info)
 
-inst=$(which mysql)
+inst=$(mysql -V)
 ip=$(ip route get 1 | sed -n 's/^.*src \([0-9.]*\) .*$/\1/p')
 if [[ ! -f /install/.nginx.lock ]]; then
   echo_error "Web server not detected. Please install nginx and restart panel install."
   exit 1
 else
-  #echo_query "Please choose a password for the nextcloud mysql user." "hidden"
-  #read -s 'nextpass'
-  #echo
-  #Check for existing mysql and install if not found
-  if [[ -n $inst ]]; then
-    echo_warn "Existing mysql server detected!"
-    #echo_query "Please enter mysql root password so that installation may continue." "hidden"
-    #read -s 'password'
-    #echo
-  else
-    #while [ -z "$password" ]; do
-    #    echo_query "Please enter a mysql root password" "hidden"
-    #    read -s 'pass1'
-    #    echo_query "Re-enter password to verify" "hidden"
-    #    read -s 'pass2'
-    #    if [ $pass1 = $pass2 ]; then
-    #        password=$pass1
-    #    else
-    #        echo_warn "Passwords do not match"
-    #    fi
-    #done
+  mariadb_required=(10.3)
+  err=0; for item in ${mariadb_required[@]}; { [[ "$inst" =~ $item ]] || ((err++)); }; ((err>0)) && mariadb_install=true
+
+  if [[ -n $mariadb_install ]]; then
+    echo_warn "(Re)installing mariadb"
     echo_progress_start "Installing database"
+
+    mysqladmin drop mysql -f -u root -p${password}
+    mysqladmin drop nextcloud -f -u root -p${password}
+    mysqladmin drop information_schema -f -u root -p${password}
+    mysqladmin drop performance_schema -f -u root -p${password}
+
+    systemctl stop mysql
+    apt_remove --purge "mariadb-*"
+    apt_remove --purge galera
+
+    apt_install software-properties-common
+    wget https://downloads.mariadb.com/MariaDB/mariadb_repo_setup
+    echo "32e01fbe65b4cecc074e19f04c719d1a600e314236c3bb40d91e555b7a2abbfc mariadb_repo_setup" | sha256sum -c -
+    chmod +x mariadb_repo_setup
+    sudo ./mariadb_repo_setup --mariadb-server-version="mariadb-10.3"
+    rm -rf mariadb_repo_setup
+    rm /etc/apt/sources.list.d/mariadb.list.*
     apt_install mariadb-server
-    if [[ $(systemctl is-active mysql) != "active" ]]; then
-      systemctl start mysql
-    fi
+
     mysqladmin -u root password ${password}
+    
+    systemctl restart mysql
     echo_progress_done "Database installed"
   fi
+
   #Depends
   apt_install unzip php8.0-mysql libxml2-dev php8.0-common php8.0-gd php8.0-curl php8.0-zip php8.0-xml php8.0-mbstring php8.0-fpm php8.0-cli
   #a2enmod rewrite > /dev/null 2>&1
