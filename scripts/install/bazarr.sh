@@ -10,6 +10,9 @@
 #   under the GPL along with build & install instructions.
 
 codename=$(lsb_release -cs)
+
+badradarr="false"
+badsonarr="false"
 _install() {
 
     user=$(cut -d: -f1 < /root/.master.info)
@@ -32,7 +35,7 @@ _install() {
     fi
 
     echo_progress_start "Downloading bazarr source"
-    wget https://github.com/morpheus65535/bazarr/releases/latest/download/bazarr.zip -O /tmp/bazarr.zip >> $log 2>&1 || {
+    wget https://github.com/morpheus65535/bazarr/releases/download/v0.9.7-beta.7/bazarr.zip -O /tmp/bazarr.zip >> $log 2>&1 || {
         echo_error "Failed to download"
         exit 1
     }
@@ -77,7 +80,7 @@ _config() {
 
         cat >> /opt/bazarr/data/config/config.ini << SONC
 [sonarr]
-apikey = ${sonarrapi} 
+apikey = ${sonarrapi}
 full_update = Daily
 ip = 127.0.0.1
 only_monitored = False
@@ -101,7 +104,7 @@ SONC
             radarrbase=$(grep -oP "UrlBase>\K[^<]+" "${radarrConfigFile}")
         else
             echo_warn "Radarr configuration was not found in ${radarrConfigFile}, configure api key, port and url base manually in bazarr"
-            badradarr=true
+            badradarr="true"
         fi
 
         cat >> /opt/bazarr/data/config/config.ini << RADC
