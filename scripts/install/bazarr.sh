@@ -32,7 +32,7 @@ _install() {
     fi
 
     echo_progress_start "Downloading bazarr source"
-    wget https://github.com/morpheus65535/bazarr/releases/latest/download/bazarr.zip -O /tmp/bazarr.zip >> $log 2>&1 || {
+    wget https://github.com/morpheus65535/bazarr/releases/download/v0.9.7-beta.7/bazarr.zip -O /tmp/bazarr.zip >> $log 2>&1 || {
         echo_error "Failed to download"
         exit 1
     }
@@ -77,7 +77,7 @@ _config() {
 
         cat >> /opt/bazarr/data/config/config.ini << SONC
 [sonarr]
-apikey = ${sonarrapi} 
+apikey = ${sonarrapi}
 full_update = Daily
 ip = 127.0.0.1
 only_monitored = False
