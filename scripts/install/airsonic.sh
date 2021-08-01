@@ -5,7 +5,7 @@
 master=$(_get_master_username)
 distribution=$(lsb_release -is)
 
-airsonicdir="/home/seedit4me/airsonic" #Where to install airosnic
+airsonicdir="/opt/airsonic" #Where to install airosnic
 airsonicusr="airsonic"      #Who to run airsonic as
 
 #shellcheck source=sources/functions/java
@@ -15,7 +15,6 @@ install_java8
 airsonic_dl() {
     echo_progress_start "Downloading Airsonic binary"
     mkdir $airsonicdir -p
-    mkdir $airsonicdir"/music" -p
     latest_version=$(curl -fsSLI -o /dev/null -w %{url_effective} https://github.com/airsonic/airsonic/releases/latest | grep -oP '([^\/]+$)')
     dlurl=https://github.com/airsonic/airsonic/releases/download/${latest_version}/airsonic.war
     echo_log_only "dlurl = $dlurl"
