@@ -8,6 +8,8 @@ done < "$input"
 /usr/local/bin/swizzin/remove/tools.sh
 /usr/local/bin/swizzin/install/tools.sh
 
+cp /etc/swizzin/sources/motd/motd /etc/motd
+
 . /etc/swizzin/sources/functions/php
 restart_php_fpm
 systemctl reload nginx
