@@ -24,7 +24,8 @@ function rutorrent_install() {
             echo_error "Failed to clone rutorrent"
             exit 1
         }
-        git reset --hard bb49599614aa60defed4431d6f98b9da6ea861d8
+        cd /srv/rutorrent
+        git reset --hard 6bffcb1d3fd0a25dcba9100a6bbbc6cb8de7af29
         chown -R www-data:www-data /srv/rutorrent
         #rm -rf /srv/rutorrent/plugins/throttle
         rm -rf /srv/rutorrent/plugins/_cloudflare
