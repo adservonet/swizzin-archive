@@ -1,6 +1,6 @@
 #!/bin/bash
 
-find /home -mindepth 1 -maxdepth 1 -type d -exec chmod 750 {} \;
+find /home -mindepth 1 -maxdepth 1 -type d -exec chmod 770 {} \;
 master=$(cut -d: -f1 < /root/.master.info)
 if [[ -f /install/.plex.lock ]]; then
     if [[ -z $(groups plex | grep ${master}) ]]; then
