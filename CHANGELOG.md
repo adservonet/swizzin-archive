@@ -1,5 +1,43 @@
 # Changelog
 
+## [3.2.0]
+
+## January 1, 2022
+
+Happy new year! Due to some recent, major bugs, swizzin is getting an update today to fix some issues with AutoDL and Deluge 1.3. Also a few new apps and some other fixes.
+
+Enjoy!
+
+### Added
+ - Navidrome
+ - Mylar
+ - Debug functions
+
+### Updated
+  - Node to 16 LTS
+
+### Fixed
+ - Some bazarr variables were returning as null and creating chatter
+ - Incorrect python version being used during `box chpasswd` with Deluge 1.3 installed
+ - Branch used when installing 1.3-stable of Deluge
+ - Calibre-web installer to update venv requirements on upgrade and remove the deprecated `-f` flag
+ - Pinned ruTorrent to a known working commit to prevent a fatal error with outdated autodl
+ - Nextcloud broke download links for older versions
+
+## [3.1.1]
+
+## October 14, 2021
+
+### Added
+ - `populate_var` function for swizdb toolkit
+
+### Updated
+ - Node version bump to 14 LTS.
+   - We will no longer clobber your choices if you are running a newer node version than is required by swizzin packages
+
+### Fixed
+ - apt function `check_install` was sometimes improperly returning the installed status of dependencies
+
 ## [3.1.0]
 
 ## September 20, 2021
