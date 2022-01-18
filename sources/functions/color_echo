@@ -91,6 +91,7 @@ export -f echo_info
 # - `$1` = a URL suffix such as `applications/panel`
 echo_docs() {
     #colorprint "${cyan}${bold}DOCS" "${nc}${cyan}${italic}Further reference: ${under}https://swizzin.ltd/$1"
+    echo ""
 }
 export -f echo_docs
 
