@@ -23,12 +23,12 @@ export nc="$(tput sgr0)"
 export bold=$(tput bold || tput md) # Start boldrbold="\e[21m"
 export dim=$(tput dim)              # Start dim
 export rdim="\e[22m"
-export under=$(tput smul || tput us)   # Start under
-export runder=$(tput rmul || tput ue)  # End   under
+export under=$(tput smul || tput us)  # Start under
+export runder=$(tput rmul || tput ue) # End   under
 #export italic=$(tput sitm || tput ZH)  # Start italic
 #export eitalic=$(tput ritm || tput ZR) # End   italic
-export stout=$(tput smso || tput so)   # Start stand-out
-export estout=$(tput rmso || tput se)  # End stand-out
+export stout=$(tput smso || tput so)  # Start stand-out
+export estout=$(tput rmso || tput se) # End stand-out
 # resetAllModes="\e[21m\e[22m\e[24m\e[25m\e[27m\e[28m"
 
 ring_the_bell() {
@@ -90,7 +90,7 @@ export -f echo_info
 # Parameters:
 # - `$1` = a URL suffix such as `applications/panel`
 echo_docs() {
-    colorprint "${cyan}${bold}DOCS" "${nc}${cyan}${italic}Further reference: ${under}https://swizzin.ltd/$1"
+    #colorprint "${cyan}${bold}DOCS" "${nc}${cyan}${italic}Further reference: ${under}https://swizzin.ltd/$1"
 }
 export -f echo_docs
 

@@ -30,8 +30,8 @@ fi
 
 if [[ ! -f /install/.calibre.lock ]]; then    # If it's not installed from swizzin
     if [ ! -e "$CALIBRE_LIBRARY_PATH" ]; then # If the default location does not exist OR the variable is not set...
-        echo_warn "Calibre not installed, and no alternative library path is specified."
-        echo_info "While having a calibre library is functionally required to use calibreweb, the calibreweb installer will not fail without it. You can create a calibre library at a later stage."
+        #echo_warn "Calibre not installed, and no alternative library path is specified."
+        #echo_info "While having a calibre library is functionally required to use calibreweb, the calibreweb installer will not fail without it. You can create a calibre library at a later stage."
         # if ask "Install Calibre through swizzin now?" Y; then
         bash /etc/swizzin/scripts/install/calibre.sh || {
             echo_info "Installer failed, please try again"
@@ -152,11 +152,11 @@ _post_libdir() {
 _post_changepass() {
     sleep 5
     pass="$(_get_user_password "$CALIBRE_LIBRARY_USER")"
-    /opt/.venv/calibreweb/bin/python3 /opt/calibreweb/cps.py -s admin:"${pass}" >> "$log" 2>&1 || {
+    /opt/.venv/calibreweb/bin/python3 /opt/calibreweb/cps.py -s seedit4me:"${pass}" >> "$log" 2>&1 || {
         echo_info "Could not change password, please use admin:admin123 to log in and change credentials immediately."
         return 1
     }
-    echo_info "Please use the username \"admin\" (literally that, NOT your master username) and the password of $CALIBRE_LIBRARY_USER to log in to calibreweb"
+    echo_info "Please use the username \"seedit4me\" and the password of $CALIBRE_LIBRARY_USER to log in to calibreweb"
 }
 
 _install_dependencies_calibreweb
