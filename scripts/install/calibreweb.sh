@@ -152,11 +152,11 @@ _post_libdir() {
 _post_changepass() {
     sleep 5
     pass="$(_get_user_password "$CALIBRE_LIBRARY_USER")"
-    /opt/.venv/calibreweb/bin/python3 /opt/calibreweb/cps.py -s seedit4me:"${pass}" >> "$log" 2>&1 || {
+    /opt/.venv/calibreweb/bin/python3 /opt/calibreweb/cps.py -s admin:"${pass}" >> "$log" 2>&1 || {
         echo_info "Could not change password, please use admin:admin123 to log in and change credentials immediately."
         return 1
     }
-    echo_info "Please use the username \"seedit4me\" and the password of $CALIBRE_LIBRARY_USER to log in to calibreweb"
+    echo_info "Please use the username \"admin\" and the password of $CALIBRE_LIBRARY_USER to log in to calibreweb"
 }
 
 _install_dependencies_calibreweb
@@ -171,4 +171,4 @@ _post_changepass
 
 touch /install/.calibreweb.lock
 echo_success "calibreweb installed"
-echo_docs "applications/calibreweb#post-install"
+# echo_docs "applications/calibreweb#post-install"
