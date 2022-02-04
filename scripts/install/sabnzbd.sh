@@ -24,7 +24,7 @@ latestversion=$(echo $latest | awk -F "/" '{print $NF}' | cut -d- -f2)
 systempy3_ver=$(get_candidate_version python3)
 
 #Version 3.2 is going to raise the min python version to 3.6 so we have to differentiate whether or not to build a pyenv
-if dpkg --compare-versions ${systempy3_ver} lt 3.6.0 && dpkg --compare-versions ${latestversion} ge 3.2.0; then
+if dpkg --compare-versions ${systempy3_ver} lt 3.7.0 && dpkg --compare-versions ${latestversion} ge 3.4.0; then
     LIST='par2 p7zip-full libffi-dev libssl-dev libglib2.0-dev libdbus-1-dev'
     PYENV=True
 else
