@@ -3,7 +3,7 @@
 
 # shellcheck source=sources/functions/utils
 . /etc/swizzin/sources/functions/utils
-mangodir="/opt/mango"
+mangodir="/home/seedit4me/mango"
 mangousr="mango"
 
 # Downloading the latest binary
@@ -28,8 +28,7 @@ function _install_mango() {
     echo_log_only "dlurl = $dlurl"
 
     mkdir -p "$mangodir"
-    mkdir -p /home/seedit4me/mango/library
-    chmod -R 775 /home/seedit4me/mango
+    mkdir -p "$mangodir"/library
     wget "${dlurl}" -O $mangodir/mango >> "$log" 2>&1 || {
         echo_error "Failed to download binary"
         exit 1
@@ -37,7 +36,7 @@ function _install_mango() {
     echo_progress_done "Binary downloaded"
 
     chmod +x $mangodir/mango
-    chmod o+rx -R $mangodir /home/seedit4me/mango/library
+    chmod o+rx -R $mangodir $mangodir/library
 
     useradd $mangousr --system -d "$mangodir" >> $log 2>&1
     usermod -a -G seedit4me mango
@@ -47,33 +46,7 @@ function _install_mango() {
 
 }
 
-## Creating config
-function _mkconf_mango() {
-    echo_progress_start "Configuring mango"
-    mkdir -p $mangodir/.config/mango
-    cat > "$mangodir/.config/mango/config.yml" << CONF
-#Please do not edit as swizzin will be replacing this file as updates roll out.
-port: 9003
-base_url: /
-library_path: /home/seedit4me/mango/library
-db_path: $mangodir/.config/mango/mango.db
-scan_interval_minutes: 5
-log_level: info
-upload_path: $mangodir/uploads
-plugin_path: $mangodir/plugins
-disable_ellipsis_truncation: false
-mangadex:
-  base_url: https://mangadex.org
-  api_url: https://mangadex.org/api
-  download_wait_seconds: 5
-  download_retries: 4
-  download_queue_db_path: $mangodir/.config/mango/queue.db
-  chapter_rename_rule: '[Vol.{volume} ][Ch.{chapter} ]{title|id}'
-  manga_rename_rule: '{title}'
-CONF
-    chown $mangousr:$mangousr -R $mangodir
-    chmod o-rwx $mangodir/.config
-    echo_progress_done
+
 }
 
 # Creating systemd unit
@@ -133,7 +106,11 @@ if [[ -n $1 ]]; then
 fi
 
 _install_mango
+
+# shellcheck source=sources/functions/mango
+. /etc/swizzin/sources/functions/mango
 _mkconf_mango
+
 _addusers_mango
 _mkservice_mango
 
@@ -144,6 +121,6 @@ else
     echo_info "Mango will run on port 9003"
 fi
 
-echo_info "Please use your existing credentials when logging in.\nYou can access your files in /home/seedit4me/mango/library"
+echo_info "Please use your existing credentials when logging in.\nYou can access your files in $mangodir/library"
 
 touch /install/.mango.lock
