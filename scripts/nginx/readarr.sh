@@ -15,13 +15,14 @@ app_sslport="6868"
 app_baseurl="$app_name"
 app_configdir="/home/$user/.config/${app_name^}"
 app_servicefile="${app_name}.service"
-app_branch="nightly"
+app_branch="develop"
 
 cat > /etc/nginx/apps/$app_name.conf << ARRNGINX
 location /$app_baseurl {
     proxy_pass          http://127.0.0.1:$app_port/$app_baseurl;
     proxy_set_header    Host                \$proxy_host;
     proxy_set_header    X-Forwarded-For     \$proxy_add_x_forwarded_for;
+    proxy_set_header    X-Forwarded-Host    \$host;
     proxy_set_header    X-Forwarded-Proto   \$scheme;
     proxy_redirect      off;
     proxy_buffering off;
@@ -39,19 +40,6 @@ location /$app_baseurl/api {
     auth_request    off;
     proxy_pass      http://127.0.0.1:$app_port/$app_baseurl/api;
 }
-
-# Allow Content
-location /$app_baseurl/Content {
-    auth_request    off;
-    proxy_pass      http://127.0.0.1:$app_port/$app_baseurl/Content;
-}
-
-# Allow Indexers  $1 matches the regex
-location ~ /$app_baseurl/[0-9]+/api {
-    auth_request    off;
-    proxy_pass      http://127.0.0.1:$app_port/$app_baseurl/\$1/api;
-}
-
 ARRNGINX
 
 wasActive=$(systemctl is-active $app_servicefile)

@@ -26,7 +26,7 @@ app_servicefile="$app_name.service"
 app_dir="/opt/${app_name^}"
 app_binary="${app_name^}"
 app_lockname="${app_name//-/}"
-app_branch="nightly" # Change to develop/stable when available, tell users to migrate manually.
+app_branch="develop" # Change to stable when available, tell users to migrate manually.
 
 if [ ! -d "$swiz_configdir" ]; then
     mkdir -p "$swiz_configdir"
@@ -113,16 +113,22 @@ Restart=on-failure
 WantedBy=multi-user.target
 EOF
 
+    systemctl -q daemon-reload
     systemctl enable --now -q "$app_servicefile"
     sleep 1
-
     echo_progress_done "${app_name^} service installed and enabled"
-
+    # In theory there should be no updating needed, so let's generalize this
+    echo_progress_start "${app_name^} is loading..."
+    if ! timeout 30 bash -c -- "while ! curl -sIL http://127.0.0.1:$app_port >> \"$log\" 2>&1; do sleep 2; done"; then
+        echo_error "The ${app_name^} web server has taken longer than 30 seconds to start."
+        exit 1
+    fi
+    echo_progress_done "Loading finished"
 }
 
 _install
-_nginx
 _systemd
+_nginx
 
 touch "/install/.$app_lockname.lock"
 echo_success "${app_name^} installed"
