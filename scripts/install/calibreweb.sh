@@ -81,8 +81,9 @@ function _install_calibreweb() {
 
     echo_progress_start "Installing python dependencies"
     apt_install libbz2-dev liblzma-dev libjpeg-dev zlib1g-dev
-    sudo -u ${clbWebUser} bash -c "/opt/.venv/calibreweb/bin/pip3 install setuptools_rust wheel Pillow rust" >> $log 2>&1
     sudo -u ${clbWebUser} bash -c "/opt/.venv/calibreweb/bin/pip3 install --upgrade pip" >> $log 2>&1
+    sudo -u ${clbWebUser} bash -c "/opt/.venv/calibreweb/bin/pip3 install wheel" >> $log 2>&1
+    sudo -u ${clbWebUser} bash -c "/opt/.venv/calibreweb/bin/pip3 install setuptools_rust Pillow rust" >> $log 2>&1
     sudo -u ${clbWebUser} bash -c "/opt/.venv/calibreweb/bin/pip3 install -r $calibrewebdir/requirements.txt" >> $log 2>&1
     #fuck ldap. all my homies hate ldap
     sed '/ldap/Id' -i $calibrewebdir/optional-requirements.txt
