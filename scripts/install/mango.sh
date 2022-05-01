@@ -42,7 +42,7 @@ function _install_mango() {
     usermod -a -G seedit4me mango
     usermod -a -G mango seedit4me
     sudo chown -R $mangousr:$mangousr $mangodir
-    sudo chown -R $mangousr:$mangousr /home/seedit4me/mango/
+    # sudo chown -R $mangousr:$mangousr /home/seedit4me/mango/
 
 }
 

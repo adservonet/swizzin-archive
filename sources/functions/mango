@@ -2,7 +2,7 @@
 
 function _mkconf_mango() {
     echo_progress_start "Configuring mango"
-    mangodir="/opt/mango"
+    mangodir="/home/seedit4me/mango"
     mangousr="mango"
     mkdir -p $mangodir/.config/mango
 
