@@ -3,7 +3,7 @@
 function _mkconf_mango() {
     echo_progress_start "Configuring mango"
     mangodir="/home/seedit4me/mango"
-    mangousr="mango"
+    mangousr="seedit4me"
     mkdir -p $mangodir/.config/mango
 
     # Determine base path
