@@ -46,9 +46,6 @@ function _install_mango() {
 
 }
 
-
-}
-
 # Creating systemd unit
 function _mkservice_mango() {
     echo_progress_start "Installing systemd service"
