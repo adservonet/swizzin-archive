@@ -142,8 +142,9 @@ function _update() {
     echo_progress_done "Local repository updated"
 
     chmod -R 700 /etc/swizzin/scripts
-    chown -R seedit4me:seedit4me /home/seedit4me/torrents
-    chmod -R 775 /home/seedit4me/torrents
+    # chown -R seedit4me:seedit4me /home/seedit4me/torrents
+    # chmod -R 775 /home/seedit4me/torrents
+
     export SWIZ_REPO_SCRIPT_RAN=true
 
     echo_log_only "Re-sourcing globals.sh"
