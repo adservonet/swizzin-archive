@@ -3,6 +3,7 @@
 if [ -f /install/.rutorrent.lock ]; then
     #Update club-QuickBox with latest changes
     if [[ -d /srv/rutorrent/plugins/theme/themes/club-QuickBox ]]; then
+        find /srv/rutorrent/plugins/theme/themes/club-QuickBox -user root -exec chown www-data: {} \;
         cqbdir="/srv/rutorrent/plugins/theme/themes/club-QuickBox"
         sudo -u www-data git -C "$cqbdir" fetch
         if [[ ! $(sudo -u www-data git -C "$cqbdir" rev-parse HEAD) == $(sudo -u www-data git -C "$cqbdir" rev-parse @{u}) ]]; then
