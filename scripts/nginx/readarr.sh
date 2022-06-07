@@ -6,14 +6,14 @@ master=$(_get_master_username)
 app_name="readarr"
 
 if ! READARR_OWNER="$(swizdb get $app_name/owner)"; then
-    READARR_OWNER=$(_get_master_username)
+    READARR_OWNER=$master
 fi
 user="$READARR_OWNER"
 
 app_port="8787"
 app_sslport="6868"
-app_baseurl="$app_name"
 app_configdir="/home/$user/.config/${app_name^}"
+app_baseurl="$app_name"
 app_servicefile="${app_name}.service"
 app_branch="develop"
 
@@ -55,7 +55,7 @@ apikey=$(grep -oPm1 "(?<=<ApiKey>)[^<]+" "$app_configdir"/config.xml)
 # ToDo: Logs back to Info
 cat > "$app_configdir"/config.xml << ARRCONFIG
 <Config>
-  <LogLevel>debug</LogLevel>
+  <LogLevel>trace</LogLevel>
   <UpdateMechanism>BuiltIn</UpdateMechanism>
   <BindAddress>127.0.0.1</BindAddress>
   <Port>$app_port</Port>
