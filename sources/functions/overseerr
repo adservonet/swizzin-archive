@@ -19,14 +19,14 @@ overseerr_install() {
     if ! which python >> "$log" 2>&1; then #TODO make this a more specific check as this could interfere with other things possibly
         npm config set python "$(which python3)"
     fi
-    /usr/local/bin/yarn install --cwd /opt/overseerr >> "$log" 2>&1 || {
+    yarn install --cwd /opt/overseerr >> "$log" 2>&1 || {
         echo_error "Failed to install dependencies"
         exit 1
     }
     echo_progress_done "Dependencies installed"
 
     echo_progress_start "Building overseerr"
-    /usr/local/bin/yarn --cwd /opt/overseerr build >> "$log" 2>&1 || {
+    yarn --cwd /opt/overseerr build >> "$log" 2>&1 || {
         echo_error "Failed to build overseerr sqlite"
         exit 1
     }
