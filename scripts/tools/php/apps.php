@@ -116,6 +116,7 @@ $apps = array(
     array("name" => "navidrome",      "service" => "navidrome",         "user" => ""),
     array("name" => "calibreweb",     "service" => "calibreweb",        "user" => ""),
     array("name" => "mylar",          "service" => "mylar",             "user" => ""),
+    array("name" => "flaresolverr",   "service" => "flaresolverr",      "user" => ""),
     array("name" => "autobrr",        "service" => "autobrr",           "user" => $username),
     array("name" => "znc",            "service" => "znc",               "user" => "")
 );
