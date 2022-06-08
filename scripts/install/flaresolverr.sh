@@ -34,7 +34,11 @@ EOF
 ##############################
 
 apt_install libgtk-3-0 libdbus-glib-1-2
+
+#shellcheck source=sources/functions/npm
+. /etc/swizzin/sources/functions/npm
 npm_install
+
 git clone https://github.com/FlareSolverr/FlareSolverr /opt/flaresolverr
 cd /opt/flaresolverr
 
