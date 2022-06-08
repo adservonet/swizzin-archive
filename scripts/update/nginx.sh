@@ -40,16 +40,16 @@ function update_nginx() {
     phpv=$(ls -d */ | cut -d/ -f1)
     if [[ $phpv =~ 7\\.1 ]]; then
         if [[ $phpv =~ 7\\.0 ]]; then
-            apt_remove purge php7.0-fpm
+            apt_remove --purge php7.0-fpm
         fi
     fi
 
     if [[ -d /etc/php/7.4 ]]; then
-        apt_remove purge php7*
+        apt_remove --purge php7*
     elif [[ -d /etc/php/7.1 ]]; then
-        apt_remove purge php7*
+        apt_remove --purge php7*
     elif [[ -d /etc/php/8.1 ]]; then
-        apt_remove purge php8.1*
+        apt_remove --purge php8.1*
     fi
 
     . /etc/swizzin/sources/functions/php
