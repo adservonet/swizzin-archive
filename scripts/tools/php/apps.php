@@ -96,7 +96,7 @@ $apps = array(
     array("name" => "qbittorrent",    "service" => "qbittorrent",       "user" => $username),
     array("name" => "sabnzbd",        "service" => "sabnzbd",           "user" => ""),
     array("name" => "sickchill",      "service" => "sickchill",         "user" => ""),
-    array("name" => "medusa",         "service" => "medusa",            "user" => $username),
+    array("name" => "medusa",         "service" => "medusa",            "user" => ""),
     array("name" => "netdata",        "service" => "netdata",           "user" => ""),
     array("name" => "rar2fs",         "service" => "mountrar2fs",       "user" => ""),
     array("name" => "sonarr",         "service" => "sonarr",            "user" => ""),
@@ -113,6 +113,8 @@ $apps = array(
     array("name" => "shellinabox",    "service" => "shellinabox",       "user" => ""),
     array("name" => "csf",            "service" => "csf",               "user" => ""),
     array("name" => "sickgear",       "service" => "sickgear",          "user" => ""),
+    array("name" => "navidrome",      "service" => "navidrome",         "user" => ""),
+    array("name" => "calibreweb",     "service" => "calibreweb",        "user" => ""),
     array("name" => "znc",            "service" => "znc",               "user" => "")
 );
 
