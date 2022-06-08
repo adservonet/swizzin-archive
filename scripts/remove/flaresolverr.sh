@@ -9,7 +9,7 @@ function _remove_flaresolverr() {
     systemctl disable --now -q flaresolverr
 
     rm -f /etc/systemd/system/flaresolverr.service
-    rm -f /opt/FlareSolverr
+    rm -rf /opt/FlareSolverr
 
     systemctl daemon-reload -q
 

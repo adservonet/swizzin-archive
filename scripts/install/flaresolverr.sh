@@ -38,8 +38,9 @@ apt_install nodejs npm libgtk-3-0 libdbus-glib-1-2
 cd /opt
 git clone https://github.com/FlareSolverr/FlareSolverr
 cd FlareSolverr/
-npm install  jest@^27.0.0
 
+export PUPPETEER_PRODUCT=firefox
+npm install jest@^27.0.0
 npm install
 
 _systemd
