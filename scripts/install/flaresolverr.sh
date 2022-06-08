@@ -6,7 +6,7 @@
 
 _systemd() {
     echo_progress_start "Installing Systemd service"
-    cat > /etc/systemd/system/flaresolverr@.service << EOF
+    cat > /etc/systemd/system/flaresolverr.service << EOF
 [Unit]
 Description=FlareSolverr
 After=network.target
