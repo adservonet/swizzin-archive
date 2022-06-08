@@ -20,8 +20,8 @@ User=flaresolverr
 Group=flaresolverr
 Environment="LOG_LEVEL=info"
 Environment="CAPTCHA_SOLVER=none"
-WorkingDirectory=/opt/FlareSolverr
-ExecStart=/opt/FlareSolverr/flaresolverr
+WorkingDirectory=/opt/flaresolverr
+ExecStart=/opt/flaresolverr/node_modules/typescript/bin/tsc && node /opt/flaresolverr/dist/server.js
 TimeoutStopSec=30
 
 [Install]
@@ -35,8 +35,7 @@ EOF
 ##############################
 
 apt_install nodejs npm libgtk-3-0 libdbus-glib-1-2
-cd /opt
-git clone https://github.com/FlareSolverr/FlareSolverr
+git clone https://github.com/FlareSolverr/FlareSolverr /opt/flaresolverr
 cd FlareSolverr/
 
 export PUPPETEER_PRODUCT=firefox
