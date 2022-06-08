@@ -201,9 +201,15 @@ function build_deluge() {
     if [[ -n $PIP ]]; then
         . /etc/swizzin/sources/functions/pyenv
         python_getpip
-        for p in $PIP; do
-            pip install $p >> $log 2>&1
-        done
+        if [[ $pythonver == python2.7 ]]; then
+            for p in $PIP; do
+                python2.7 -m pip install $p >> $log 2>&1
+            done
+        else
+            for p in $PIP; do
+                pip install $p >> $log 2>&1
+            done
+        fi
     fi
 
     if [[ $pythonver == python3 ]]; then
