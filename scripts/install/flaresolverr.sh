@@ -28,6 +28,8 @@ TimeoutStopSec=30
 WantedBy=multi-user.target
 EOF
     echo_progress_done "Service installed"
+
+    systemctl enable -q --now flaresolverr 2>&1 | tee -a $log
 }
 
 ##############################
@@ -39,7 +41,6 @@ cd FlareSolverr/
 npm install  jest@^27.0.0
 
 npm install
-
 
 _systemd
 
