@@ -274,14 +274,16 @@ function apt_install_deluge() {
     fi
 
     #apt_install deluged deluge-web deluge-console
-    wget -O /tmp/deluge-console_1.3.15-2_all.deb http://archive.ubuntu.com/ubuntu/pool/universe/d/deluge/deluge-console_1.3.15-2_all.deb
-    wget -O /tmp/deluge-gtk_1.3.15-2_all.deb http://archive.ubuntu.com/ubuntu/pool/universe/d/deluge/deluge-gtk_1.3.15-2_all.deb
+    #wget -O /tmp/deluge-common_1.3.15-2_all.deb http://archive.ubuntu.com/ubuntu/pool/universe/d/deluge/deluge-common_1.3.15-2_all.deb
     wget -O /tmp/deluge_1.3.15-2_all.deb http://archive.ubuntu.com/ubuntu/pool/universe/d/deluge/deluge_1.3.15-2_all.deb
+    wget -O /tmp/deluge-web_1.3.15-2_all.deb http://archive.ubuntu.com/ubuntu/pool/universe/d/deluge/deluge-web_1.3.15-2_all.deb
+    wget -O /tmp/deluge-console_1.3.15-2_all.deb http://archive.ubuntu.com/ubuntu/pool/universe/d/deluge/deluge-console_1.3.15-2_all.deb
     apt install /tmp/deluge*.deb
 
     apt-mark hold deluged
     apt-mark hold deluge-web
     apt-mark hold deluge-console
+    #apt-mark hold deluge-common
 
     dver=$(deluged -v | grep deluged | grep -oP '\d+\.\d+\.\d+')
     if [[ $dver =~ ^1\. ]]; then
