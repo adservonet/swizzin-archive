@@ -16,12 +16,11 @@ SyslogIdentifier=flaresolverr
 Restart=always
 RestartSec=5
 Type=simple
-User=flaresolverr
-Group=flaresolverr
+User=root
 Environment="LOG_LEVEL=info"
 Environment="CAPTCHA_SOLVER=none"
 WorkingDirectory=/opt/flaresolverr
-ExecStart=/opt/flaresolverr/node_modules/typescript/bin/tsc && node /opt/flaresolverr/dist/server.js
+ExecStart="/opt/flaresolverr/flaresolverr
 TimeoutStopSec=30
 
 [Install]
@@ -41,6 +40,10 @@ cd /opt/flaresolverr
 export PUPPETEER_PRODUCT=firefox
 npm install jest@^27.0.0
 npm install
+node build-binaries.js
+
+cp /opt/flaresolverr/bin/flaresolverr-linux /opt/flaresolverr/flaresolverr
+cp -r /opt/flaresolverr/bin/puppeteer/linux-103.0a1/firefox/ /opt/flaresolverr/firefox
 
 _systemd
 
