@@ -40,10 +40,10 @@ cd /opt/flaresolverr
 export PUPPETEER_PRODUCT=firefox
 npm install jest@^27.0.0
 npm install
-node build-binaries.js
+npm run-script package
 
 cp /opt/flaresolverr/bin/flaresolverr-linux /opt/flaresolverr/flaresolverr
-cp -r /opt/flaresolverr/bin/puppeteer/linux-103.0a1/firefox/ /opt/flaresolverr/firefox
+cp -r /opt/flaresolverr/bin/puppeteer/linux-103.0a1/firefox /opt/flaresolverr/firefox
 
 _systemd
 
