@@ -33,7 +33,8 @@ EOF
 
 ##############################
 
-apt_install nodejs npm libgtk-3-0 libdbus-glib-1-2
+apt_install libgtk-3-0 libdbus-glib-1-2
+npm_install
 git clone https://github.com/FlareSolverr/FlareSolverr /opt/flaresolverr
 cd /opt/flaresolverr
 
