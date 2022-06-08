@@ -162,7 +162,7 @@ PYAU
 
 sleep 3
 
-saltedpasswd=$(python /opt/pyload/adduser.py)
+saltedpasswd=$(/opt/.venv/pyload/bin/python2 /opt/pyload/adduser.py)
 
 sleep 1
 
