@@ -83,7 +83,7 @@ $apps = array(
     array("name" => "glances",        "service" => "glancesweb",        "user" => ""),
     array("name" => "lounge",         "service" => "lounge",            "user" => ""),
     array("name" => "nzbget",         "service" => "nzbget",            "user" => $username),
-    array("name" => "nzbhydra",       "service" => "nzbhydra",          "user" => $username),
+    array("name" => "nzbhydra",       "service" => "nzbhydra",          "user" => ""),
     array("name" => "ombi",           "service" => "ombi",              "user" => ""),
     array("name" => "mango",          "service" => "mango",             "user" => ""),
     array("name" => "plex",           "service" => "plexmediaserver",   "user" => ""),
@@ -105,7 +105,7 @@ $apps = array(
     array("name" => "subsonic",       "service" => "subsonic",          "user" => ""),
     array("name" => "syncthing",      "service" => "syncthing",         "user" => $username),
     array("name" => "jackett",        "service" => "jackett",           "user" => $username),
-    array("name" => "couchpotato",    "service" => "couchpotato",       "user" => $username),
+    array("name" => "couchpotato",    "service" => "couchpotato",       "user" => ""),
     array("name" => "quassel",        "service" => "quasselcore",       "user" => ""),
     array("name" => "webmin",         "service" => "webmin",            "user" => ""),
     array("name" => "wireguard",      "service" => "wg-quick",          "user" => "wg1000"),
@@ -115,6 +115,8 @@ $apps = array(
     array("name" => "sickgear",       "service" => "sickgear",          "user" => ""),
     array("name" => "navidrome",      "service" => "navidrome",         "user" => ""),
     array("name" => "calibreweb",     "service" => "calibreweb",        "user" => ""),
+    array("name" => "mylar",          "service" => "mylar",             "user" => ""),
+    array("name" => "autobrr",        "service" => "autobrr",           "user" => $username),
     array("name" => "znc",            "service" => "znc",               "user" => "")
 );
 
