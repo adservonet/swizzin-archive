@@ -20,7 +20,7 @@ User=root
 Environment="LOG_LEVEL=info"
 Environment="CAPTCHA_SOLVER=none"
 WorkingDirectory=/opt/flaresolverr
-ExecStart="/opt/flaresolverr/flaresolverr
+ExecStart=/opt/flaresolverr/flaresolverr
 TimeoutStopSec=30
 
 [Install]
