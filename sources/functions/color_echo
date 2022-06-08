@@ -70,7 +70,7 @@ export -f echo_warn
 echo_error() {
     ring_the_bell
     colorprint "${red}${bold}ERROR" "$1"
-    colorprint "${red}${italic}" "Please consult the above and/or check the log (less -R +G $log)"
+    colorprint "${red}${bold}" "Please consult the above and/or check the log (less -R +G $log)"
 }
 export -f echo_error
 
@@ -90,7 +90,7 @@ export -f echo_info
 # Parameters:
 # - `$1` = a URL suffix such as `applications/panel`
 echo_docs() {
-    #colorprint "${cyan}${bold}DOCS" "${nc}${cyan}${italic}Further reference: ${under}https://swizzin.ltd/$1"
+    #colorprint "${cyan}${bold}DOCS" "${nc}${cyan}${bold}Further reference: ${under}https://swizzin.ltd/$1"
     echo ""
 }
 export -f echo_docs
@@ -117,7 +117,7 @@ echo_progress_done() {
     else
         message="$1"
     fi
-    colorprint "" "${green}${dim}\u2714   ${italic}$message"
+    colorprint "" "${green}${dim}\u2714   ${bold}$message"
 }
 export -f echo_progress_done
 
@@ -141,7 +141,7 @@ export -f echo_success
 # - `$1` = Query string
 # - `$2` = Default or hint printed in parentheses on the second line before the caret.
 echo_query() {
-    colorprint "${blue}${bold}INPUT" "${italic}$1"
+    colorprint "${blue}${bold}INPUT" "$1"
     if [[ -n $2 ]]; then
         options="($2) "
     else
