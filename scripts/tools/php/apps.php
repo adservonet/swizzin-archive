@@ -118,6 +118,7 @@ $apps = array(
     array("name" => "mylar",          "service" => "mylar",             "user" => ""),
     array("name" => "flaresolverr",   "service" => "flaresolverr",      "user" => ""),
     array("name" => "overseerr",      "service" => "overseerr",         "user" => ""),
+    array("name" => "whisparr",       "service" => "whisparr",          "user" => ""),
     array("name" => "autobrr",        "service" => "autobrr",           "user" => $username),
     array("name" => "znc",            "service" => "znc",               "user" => "")
 );

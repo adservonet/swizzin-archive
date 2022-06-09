@@ -34,11 +34,14 @@ location /$app_baseurl {
   proxy_set_header Connection \$http_connection;
   proxy_cache_bypass \$http_upgrade;
   proxy_buffering off;
- }
-  # Allow the App API
-  location /$app_baseurl/api { auth_request off;
-    proxy_pass http://127.0.0.1:$app_port/$app_baseurl/api;
- }
+}
+
+# Allow the App API
+
+location /$app_baseurl/api { 
+  auth_request off;
+  proxy_pass http://127.0.0.1:$app_port/$app_baseurl/api;
+}
 WHISPARR
 
 wasActive=$(systemctl is-active $app_servicefile)
