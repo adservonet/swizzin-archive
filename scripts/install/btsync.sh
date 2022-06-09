@@ -68,6 +68,18 @@ function _installBTSync6() {
     systemctl restart resilio-sync >> $log 2>&1
 }
 
+_nginx() {
+
+    if [[ -f /install/.nginx.lock ]]; then
+        echo_progress_start "Configuring nginx"
+        sleep 3
+        bash /usr/local/bin/swizzin/nginx/btsync.sh
+        systemctl reload nginx
+        echo_progress_done "nginx configured"
+    fi
+}
+
+
 echo_progress_start "Installing btsync keys and sources"
 _installBTSync1
 echo_progress_done "Keys and sources added"
@@ -87,5 +99,7 @@ echo_progress_done "Configured"
 echo_progress_start "Starting btsync"
 _installBTSync6
 echo_progress_done "Started"
+
+_nginx
 
 echo_success "BTSync installed"
