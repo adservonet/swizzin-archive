@@ -1,17 +1,5 @@
 #!/bin/bash
 if [[ -f /install/.btsync.lock ]]; then
-
-    if [[ ! -f /etc/nginx/apps/btsync.conf ]]; then
-        if [[ -f /install/.nginx.lock ]]; then
-            echo_progress_start "Configuring nginx"
-            sleep 3
-            bash /usr/local/bin/swizzin/nginx/btsync.sh
-            systemctl reload nginx
-            echo_progress_done "nginx configured"
-        fi
-    fi
-
-
     if [[ ! -f /etc/systemd/system/resilio-sync.service ]]; then
         active=$(systemctl is-active resilo-sync)
         if [[ $active == "active" ]]; then
