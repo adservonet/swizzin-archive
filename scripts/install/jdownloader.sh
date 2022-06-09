@@ -94,7 +94,7 @@ function _install() {
             rm "$tmp_log"
         fi
         if [[ -e "$JD_HOME"/logs ]]; then
-            tmp_log="$(get_most_recent_dir "$JD_HOME"/logs)/Log.L.log.0"
+            tmp_log=$JD_HOME/logs/Log.L.log.0
             $command >"$tmp_log" 2>&1 &
         else
             $command >"/dev/null" 2>&1 &
