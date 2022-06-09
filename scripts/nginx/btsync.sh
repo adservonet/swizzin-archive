@@ -5,7 +5,7 @@
 . /etc/swizzin/sources/functions/utils
 port=$(cat /home/seedit4me/.btsync_port)
 
-cat > /etc/nginx/apps/btsync.conf << BTSYNC
+cat > /etc/nginx/apps/autobrr.conf << BTSYNC
  location /btsync/ {
          rewrite ^/btsync/gui(.*) /btsync$1 last;
          proxy_pass              http://127.0.0.1:$port/gui/;
