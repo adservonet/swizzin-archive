@@ -3,7 +3,7 @@ if [[ -f /install/.btsync.lock ]]; then
 
     if [[ ! -f /etc/nginx/apps/btsync.conf ]]; then
         if [[ -f /install/.nginx.lock ]]; then
-            echo_progress_start "Configuring nginx"
+            echo_progress_start "nginx not yet configured for btsync"
             sleep 3
             bash /usr/local/bin/swizzin/nginx/btsync.sh
             systemctl reload nginx
