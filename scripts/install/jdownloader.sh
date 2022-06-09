@@ -51,7 +51,7 @@ function _install() {
              inject="false"
     #     fi
     # else
-         echo_info "Bypassing MyJDownloader detail entering because of unattended variable."
+    #     echo_info "Bypassing MyJDownloader detail entering because of unattended variable."
     # fi
 
     echo_progress_start "Downloading JDownloader.jar..."
@@ -79,92 +79,92 @@ function _install() {
     fi
 
     # TODO: Currently, we need something here to disable all currently running JDownloader installations, or the MyJD verification logic will cause a loop. Would rather we didn't.
-    for each_user in "${users[@]}"; do # disable all instances
-        systemctl disable --now "jdownloader@$each_user" --quiet
-    done
+    # for each_user in "${users[@]}"; do # disable all instances
+    #     systemctl disable --now "jdownloader@$each_user" --quiet
+    # done
 
     # TODO: Figure out if this would be a WHOLE lot simpler if I didn't run the `-norestart` flag *facepalm*
-    command="java -jar $JD_HOME/JDownloader.jar -norestart"
+    # command="java -jar $JD_HOME/JDownloader.jar -norestart"
 
-    echo_progress_start "Attempting JDownloader2 initialisation"
-    end_initialisation_loop="false"
-    while [[ $end_initialisation_loop == "false" ]]; do # Run command until a certain file is created.
-        echo_info "Running temporary JDownloader process..." # TODO: This should be echo_log_only at PR end.
-        if [[ -e "$tmp_log" ]]; then # Remove the tmp log if exists
-            rm "$tmp_log"
-        fi
-        if [[ -e "$JD_HOME"/logs ]]; then
-            tmp_log=$JD_HOME/logs/Log.L.log.0
-            $command >"$tmp_log" 2>&1 &
-        else
-            $command >"/dev/null" 2>&1 &
-        fi
-        kill_process="false"
-        pid=$!
-        #shellcheck disable=SC2064
-        trap "kill $pid 2> /dev/null" EXIT # Set trap to kill background process if this script ends.
-        process_died="false"
-        while [[ $process_died == "false" ]]; do # While background command is still running...
+    # echo_progress_start "Attempting JDownloader2 initialisation"
+    # end_initialisation_loop="false"
+    # while [[ $end_initialisation_loop == "false" ]]; do # Run command until a certain file is created.
+    #     echo_info "Running temporary JDownloader process..." # TODO: This should be echo_log_only at PR end.
+    #     if [[ -e "$tmp_log" ]]; then # Remove the tmp log if exists
+    #         rm "$tmp_log"
+    #     fi
+    #     if [[ -e "$JD_HOME"/logs ]]; then
+    #         tmp_log=$JD_HOME/logs/Log.L.log.0
+    #         $command >"$tmp_log" 2>&1 &
+    #     else
+    #         $command >"/dev/null" 2>&1 &
+    #     fi
+    #     kill_process="false"
+    #     pid=$!
+    #     #shellcheck disable=SC2064
+    #     trap "kill $pid 2> /dev/null" EXIT # Set trap to kill background process if this script ends.
+    #     process_died="false"
+    #     while [[ $process_died == "false" ]]; do # While background command is still running...
 
-            echo_info "Background command is still running..." # TODO: This should be removed at PR end.
-            sleep 1                                            # Pace this out a bit, no need to check what JDownloader is doing more frequently than this.
-            # If any of specified strings are found in the log, kill the last called background command.
-            if [[ -e "$tmp_log" ]]; then
+    #         echo_info "Background command is still running..." # TODO: This should be removed at PR end.
+    #         sleep 1                                            # Pace this out a bit, no need to check what JDownloader is doing more frequently than this.
+    #         # If any of specified strings are found in the log, kill the last called background command.
+    #         if [[ -e "$tmp_log" ]]; then
 
-                if grep -q "Create ExitThread" -F "$tmp_log"; then # JDownloader exited gracefully on it's own. Usually this will only happen first run.
-                    echo_info "JDownloader exited gracefully." # TODO: This should be echo_log_only at PR end.
-                fi
+    #             if grep -q "Create ExitThread" -F "$tmp_log"; then # JDownloader exited gracefully on it's own. Usually this will only happen first run.
+    #                 echo_info "JDownloader exited gracefully." # TODO: This should be echo_log_only at PR end.
+    #             fi
 
-                if grep -q "Initialisation finished" -F "$tmp_log"; then #
-                    echo_info "JDownloader started successfully." # TODO: This should be echo_log_only at PR end.
+    #             if grep -q "Initialisation finished" -F "$tmp_log"; then #
+    #                 echo_info "JDownloader started successfully." # TODO: This should be echo_log_only at PR end.
 
-                    # Pretty sure this will remove the long pause.
-                    keep_sleeping="true"
-                    while [[ ! $keep_sleeping == "false" ]]; do
-                        if grep -q "No Console Available" -F "$tmp_log" || grep -q "Start HTTP Server" -F "$tmp_log"; then
-                            keep_sleeping="false"
-                        else
-                            sleep 1 # Wait until JDownloader has attempted launching the HTTP server.
-                        fi
-                    done
+    #                 # Pretty sure this will remove the long pause.
+    #                 keep_sleeping="true"
+    #                 while [[ ! $keep_sleeping == "false" ]]; do
+    #                     if grep -q "No Console Available" -F "$tmp_log" || grep -q "Start HTTP Server" -F "$tmp_log"; then
+    #                         keep_sleeping="false"
+    #                     else
+    #                         sleep 1 # Wait until JDownloader has attempted launching the HTTP server.
+    #                     fi
+    #                 done
 
-                    if grep -q "No Console Available" -F "$tmp_log"; then
-                        echo_warn "MyJDownloader account details were incorrect. They won't be able to use the web UI."
-                        if [[ $inject == "true" ]]; then
-                            echo_info "Please enter the MyJDownloader details again."
-                            inject_myjdownloader # Get account info for this user. and insert it into this installation
-                        else
-                            end_initialisation_loop="true"
-                        fi
-                        kill_process="true"
-                    fi
+    #                 if grep -q "No Console Available" -F "$tmp_log"; then
+    #                     echo_warn "MyJDownloader account details were incorrect. They won't be able to use the web UI."
+    #                     if [[ $inject == "true" ]]; then
+    #                         echo_info "Please enter the MyJDownloader details again."
+    #                         inject_myjdownloader # Get account info for this user. and insert it into this installation
+    #                     else
+    #                         end_initialisation_loop="true"
+    #                     fi
+    #                     kill_process="true"
+    #                 fi
 
-                    # This only works for verification if it is the first JDownloader instance to attempt connecting to MyJDownloader. I assume other instances use the same HTTP server.
+    #                 # This only works for verification if it is the first JDownloader instance to attempt connecting to MyJDownloader. I assume other instances use the same HTTP server.
 
-                    if grep -q "Start HTTP Server" -F "$tmp_log"; then
-                        echo_info "MyJDownloader account details verified."
-                        kill_process="true"
-                        end_initialisation_loop="true"
-                    fi
+    #                 if grep -q "Start HTTP Server" -F "$tmp_log"; then
+    #                     echo_info "MyJDownloader account details verified."
+    #                     kill_process="true"
+    #                     end_initialisation_loop="true"
+    #                 fi
 
-                fi
-            fi
+    #             fi
+    #         fi
 
-            if kill -0 $pid 2>/dev/null; then
-                if [[ $kill_process == "true" ]]; then
-                    echo_info "Kill JDownloader." # TODO: This should be echo_log_only at PR end.
-                    kill $pid                       # Kill the background command
-                    sleep 1                         # Give it a second to actually die.
-                    process_died="true"
-                fi
-            else
-                echo_info "Background command died without being killed." # TODO: This should be echo_log_only at PR end.
-                process_died="true"
-            fi
+    #         if kill -0 $pid 2>/dev/null; then
+    #             if [[ $kill_process == "true" ]]; then
+    #                 echo_info "Kill JDownloader." # TODO: This should be echo_log_only at PR end.
+    #                 kill $pid                       # Kill the background command
+    #                 sleep 1                         # Give it a second to actually die.
+    #                 process_died="true"
+    #             fi
+    #         else
+    #             echo_info "Background command died without being killed." # TODO: This should be echo_log_only at PR end.
+    #             process_died="true"
+    #         fi
 
-        done
-        trap - EXIT # Disable the trap on a normal exit.
-    done
+    #     done
+    #     trap - EXIT # Disable the trap on a normal exit.
+    # done
     echo_progress_done "Initialisation concluded"
 
     chown -R "$user": "$JD_HOME" # Set owner on JDownloader folder.
