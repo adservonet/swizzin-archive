@@ -7,7 +7,6 @@ if [[ -f /install/.btsync.lock ]]; then
             sleep 3
             bash /usr/local/bin/swizzin/nginx/btsync.sh
             systemctl reload nginx
-            systemctl restart resilo-sync
             echo_progress_done "nginx configured"
         fi
     fi

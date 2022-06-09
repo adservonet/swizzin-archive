@@ -96,10 +96,10 @@ echo_progress_start "Setting up btsync configurations"
 _installBTSync5
 echo_progress_done "Configured"
 
-_nginx
-
 echo_progress_start "Starting btsync"
 _installBTSync6
 echo_progress_done "Started"
+
+_nginx
 
 echo_success "BTSync installed"
