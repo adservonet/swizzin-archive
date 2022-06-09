@@ -12,11 +12,11 @@ app_servicefile="${app_name}.service"
 app_dir="/opt/${app_name^}"
 app_lockname="$app_name"
 
-if ask "Would you like to purge the configuration?" Y; then
+# if ask "Would you like to purge the configuration?" Y; then
     purgeapp="True"
-else
-    purgeapp="False"
-fi
+# else
+#     purgeapp="False"
+# fi
 
 systemctl disable --now -q "$app_servicefile"
 rm /etc/systemd/system/"$app_servicefile"
