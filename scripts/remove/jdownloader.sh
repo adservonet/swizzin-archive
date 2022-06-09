@@ -12,17 +12,18 @@ users=("$(_get_user_list)")
 # TODO: Move purging functionality to a function outside this script
 
 # Do a check to see if they want to purge JDownloader configurations.
-if ask "Do you want to purge ANY JDownloader configurations?" N; then
+# if ask "Do you want to purge ANY JDownloader configurations?" N; then
     purge_some="true" # If yes
-    if ask "Do you want to purge ALL JDownloader configurations?" N; then
-        purge_all="true" # If yes
-    else
-        purge_all="false" # If no
-    fi
-else
-    purge_some="false" # If no
-    echo_info "Each user's JDownloader configuration can be found in their home folder under the sub-directory 'jd2'"
-fi
+    purge_all="true"
+#     if ask "Do you want to purge ALL JDownloader configurations?" N; then
+#         purge_all="true" # If yes
+#     else
+#         purge_all="false" # If no
+#     fi
+# else
+#     purge_some="false" # If no
+#     echo_info "Each user's JDownloader configuration can be found in their home folder under the sub-directory 'jd2'"
+# fi
 
 # The following line cannot follow SC2068 because it will cause the list to become a string.
 # shellcheck disable=SC2068
