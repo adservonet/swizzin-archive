@@ -86,7 +86,6 @@ users=($(cut -d: -f1 < /etc/htpasswd))
 if [[ -n $1 ]]; then
     users=($1)
     _autoconf
-    systemctl enable --now irssi@${users[0]}
     exit 0
 fi
 
