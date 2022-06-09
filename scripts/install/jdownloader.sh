@@ -40,6 +40,7 @@ function _install() {
     echo_info "Setting up JDownloader for $user"
     JD_HOME="/home/$user/jd2"
     mkdir -p "$JD_HOME"
+    MYJD_BYPASS="crappy"
 
     # TODO: Test environment variable 'MYJD_BYPASS' to bypass the following block. For unattended installs.
     if [[ ! -z $MYJD_BYPASS ]]; then
