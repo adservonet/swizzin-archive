@@ -40,20 +40,19 @@ function _install() {
     echo_info "Setting up JDownloader for $user"
     JD_HOME="/home/$user/jd2"
     mkdir -p "$JD_HOME"
-    MYJD_BYPASS="crappy"
 
     # TODO: Test environment variable 'MYJD_BYPASS' to bypass the following block. For unattended installs.
-    if [[ ! -z $MYJD_BYPASS ]]; then
-        if ask "Do you want to inject MyJDownloader details for $user?" N; then
-            inject="true"
-            echo_info "Injecting MyJDownloader details for $user"
-            inject_myjdownloader # Get account info for this user. and insert it into this installation
-        else
-            inject="false"
-        fi
-    else
-        echo_info "Bypassing MyJDownloader detail entering because of unattended variable."
-    fi
+    # if [[ ! -z $MYJD_BYPASS ]]; then
+    #     if ask "Do you want to inject MyJDownloader details for $user?" N; then
+    #         inject="true"
+    #         echo_info "Injecting MyJDownloader details for $user"
+    #         inject_myjdownloader # Get account info for this user. and insert it into this installation
+    #     else
+             inject="false"
+    #     fi
+    # else
+         echo_info "Bypassing MyJDownloader detail entering because of unattended variable."
+    # fi
 
     echo_progress_start "Downloading JDownloader.jar..."
     while [[ ! -e "/tmp/JDownloader.jar" ]]; do
