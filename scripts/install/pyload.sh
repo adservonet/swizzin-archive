@@ -110,7 +110,7 @@ reconnect - "Reconnect":
         time startTime : "Start" = 0:00
 
 remote - "Remote":
-        bool activated : "Activated" = True
+        bool activated : "Activated" = False
         ip listenaddr : "Adress" = 0.0.0.0
         bool nolocalauth : "No authentication on local connections" = True
         int port : "Port" = 7227
@@ -122,6 +122,7 @@ ssl - "SSL":
 
 webinterface - "Webinterface":
         bool activated : "Activated" = True
+        bool basicauth : "Use basic auth" = False
         ip host : "IP" = 0.0.0.0
         bool https : "Use HTTPS" = False
         int port : "Port" = 8712
