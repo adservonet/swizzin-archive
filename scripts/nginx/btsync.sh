@@ -7,7 +7,7 @@ port=$(cat /home/seedit4me/.btsync_port)
 
 cat > /etc/nginx/apps/btsync.conf << BTSYNC
  location /btsync/ {
-         rewrite ^/btsync/gui(.*) /btsync\$1 last;
+         rewrite ^/btsync/gui(.*) /btsync$1 last;
          proxy_pass              http://127.0.0.1:$port/gui/;
          proxy_redirect  /gui/ /btsync/;
          proxy_buffering         off;
