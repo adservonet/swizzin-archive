@@ -3,8 +3,8 @@
 
 # shellcheck source=sources/functions/utils
 . /etc/swizzin/sources/functions/utils
-mangodir="/opt/mango"
-mangousr="mango"
+mangodir="/home/seedit4me/mango"
+mangousr="seedit4me"
 
 # Downloading the latest binary
 function _install_mango() {
@@ -28,8 +28,7 @@ function _install_mango() {
     echo_log_only "dlurl = $dlurl"
 
     mkdir -p "$mangodir"
-    mkdir -p /home/seedit4me/mango/library
-    chmod -R 775 /home/seedit4me/mango
+    mkdir -p "$mangodir"/library
     wget "${dlurl}" -O $mangodir/mango >> "$log" 2>&1 || {
         echo_error "Failed to download binary"
         exit 1
@@ -37,13 +36,11 @@ function _install_mango() {
     echo_progress_done "Binary downloaded"
 
     chmod +x $mangodir/mango
-    chmod o+rx -R $mangodir /home/seedit4me/mango/library
+    chmod o+rx -R $mangodir $mangodir/library
 
     useradd $mangousr --system -d "$mangodir" >> $log 2>&1
-    usermod -a -G seedit4me mango
-    usermod -a -G mango seedit4me
     sudo chown -R $mangousr:$mangousr $mangodir
-    sudo chown -R $mangousr:$mangousr /home/seedit4me/mango/
+
 }
 
 # Creating systemd unit
@@ -57,7 +54,7 @@ After=network.target
 
 [Service]
 User=$mangousr
-ExecStart=$mangodir/mango
+ExecStart=$mangodir/mango -c $mangodir/.config/mango/config.yml
 Restart=on-abort
 TimeoutSec=20
 
@@ -118,6 +115,6 @@ else
     echo_info "Mango will run on port 9003"
 fi
 
-echo_info "Please use your existing credentials when logging in.\nYou can access your files in /home/seedit4me/mango/library"
+echo_info "Please use your existing credentials when logging in.\nYou can access your files in $mangodir/library"
 
 touch /install/.mango.lock
