@@ -7,6 +7,7 @@ username=$(cut -d: -f1 < /root/.master.info)
 echo_progress_start "Downloading and extracting plexdrive"
 
 mkdir -p /home/$username/plexdrive
+mkdir -p /home/$username/plexdrivemount
 cd /home/$username/plexdrive
 wget "https://github.com/plexdrive/plexdrive/releases/download/${version}/plexdrive-linux-amd64" >> "$log" 2>&1
 chmod +x plexdrive-linux-amd64
@@ -18,13 +19,13 @@ function _service() {
     cat > "/etc/systemd/system/plexdrive.service" << PLEXDRIVE
 [Unit]
 Description=Plexdrive
-AssertPathIsDirectory=/mnt/plexdrive
+AssertPathIsDirectory=/home/$username/plexdrivemount
 After=network-online.target
 
 [Service]
 Type=notify
-ExecStart=/home/$username/plexdrive/plexdrive mount -v 2 /mnt/plexdrive
-ExecStopPost=-/bin/fusermount -quz /mnt/plexdrive
+ExecStart=/home/$username/plexdrive/plexdrive mount -v 2 /home/$username/plexdrivemount
+ExecStopPost=-/bin/fusermount -quz /home/$username/plexdrivemount
 Restart=on-abort
 
 [Install]
