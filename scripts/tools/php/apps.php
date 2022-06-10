@@ -119,6 +119,8 @@ $apps = array(
     array("name" => "flaresolverr",   "service" => "flaresolverr",      "user" => ""),
     array("name" => "overseerr",      "service" => "overseerr",         "user" => ""),
     array("name" => "whisparr",       "service" => "whisparr",          "user" => ""),
+    array("name" => "jdownloader",    "service" => "jdownloader",       "user" => ""),
+    array("name" => "unpackerr",      "service" => "unpackerr",         "user" => ""),
     array("name" => "autobrr",        "service" => "autobrr",           "user" => $username),
     array("name" => "znc",            "service" => "znc",               "user" => "")
 );
