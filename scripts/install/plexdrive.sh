@@ -13,32 +13,28 @@ chmod +x plexdrive-linux-amd64
 echo_progress_done
 
 
-# function _service() {
-#     echo_progress_start "Creating systemd service"
-#     cat > "/etc/systemd/system/irssi@.service" << ADC
-# [Unit]
-# Description=AutoDL IRSSI
-# After=network.target
+function _service() {
+    echo_progress_start "Creating systemd service"
+    cat > "/etc/systemd/system/plexdrive.service" << PLEXDRIVE
+[Unit]
+Description=Plexdrive
+AssertPathIsDirectory=/mnt/plexdrive
+After=network-online.target
 
-# [Service]
-# Type=forking
-# KillMode=none
-# User=%i
-# ExecStart=/usr/bin/screen -d -m -fa -S irssi /usr/bin/irssi
-# ExecStop=/usr/bin/screen -S irssi -X stuff '/quit\n'
-# WorkingDirectory=/home/%i/
-# Restart=on-failure
-# RestartSec=5s
+[Service]
+Type=notify
+ExecStart=/home/$username/plexdrive/plexdrive mount -v 2 /mnt/plexdrive
+ExecStopPost=-/bin/fusermount -quz /mnt/plexdrive
+Restart=on-abort
 
-# [Install]
-# WantedBy=multi-user.target
-# ADC
+[Install]
+WantedBy=default.target
+PLEXDRIVE
+    systemctl enable -q --now plexdrive 2>&1 | tee -a $log
+    echo_progress_done
+}
 
-#     for u in "${users[@]}"; do
-#         systemctl enable -q --now irssi@${u} 2>&1 | tee -a $log
-#     done
-#     echo_progress_done
-# }
+_service
 
 touch /install/.plexdrive.lock
 echo_success "plexdrive installed"
