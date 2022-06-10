@@ -8,8 +8,7 @@ echo_progress_start "Downloading and extracting plexdrive"
 
 mkdir -p /home/$username/plexdrive
 mkdir -p /home/$username/plexdrivemount
-cd /home/$username/plexdrive
-wget "https://github.com/plexdrive/plexdrive/releases/download/${version}/plexdrive-linux-amd64" >> "$log" 2>&1
+wget -O /home/$username/plexdrive/plexdrive "https://github.com/plexdrive/plexdrive/releases/download/${version}/plexdrive-linux-amd64" >> "$log" 2>&1
 chmod +x plexdrive-linux-amd64
 echo_progress_done
 
