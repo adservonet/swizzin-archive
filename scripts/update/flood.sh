@@ -3,8 +3,8 @@
 if [ -f /etc/systemd/system/flood@.service ]; then
 
     ## somehow ask if flood can be migrated
-    if ask "Flood should be upgraded to a maintained fork. A reconfiguration will be necessary. Continue?"; then
-        echo_progress_start "Removing old flood"
+    #if ask "Flood should be upgraded to a maintained fork. A reconfiguration will be necessary. Continue?"; then
+        echo_progress_start "Flood needs to be upgraded to a maintained fork. Removing old flood"
         #!/bin/bash
         # Flood uninstaller
         # Author: liara
@@ -26,6 +26,5 @@ if [ -f /etc/systemd/system/flood@.service ]; then
 
         echo_progress_start "Installing new flood"
         bash /etc/swizzin/scripts/install/flood.sh
-    fi
-
+    #fi
 fi
