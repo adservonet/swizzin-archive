@@ -76,7 +76,7 @@ if [[ -f /install/.jellyfin.lock ]]; then
         #
         # install jellyfin and jellyfin-ffmepg using apt functions.
         apt_update #forces apt refresh
-        apt_install jellyfin jellyfin-ffmpeg
+        apt_install jellyfin jellyfin-ffmpeg5
         #
         # Configure the new jellyfin service.
         systemctl -q stop jellyfin.service
