@@ -249,11 +249,18 @@ FIAC
     fi
 
     # Upgrade SSL Protocols
-    if grep -q 'ssl_protocols TLSv1 TLSv1.1 TLSv1.2;' /etc/nginx/snippets/ssl-params.conf; then
+    # if grep -q 'ssl_protocols TLSv1 TLSv1.1 TLSv1.2;' /etc/nginx/snippets/ssl-params.conf; then
+    #     # Upgrades protocols to 1.2/1.3
+    #     sed 's|ssl_protocols TLSv1 TLSv1.1 TLSv1.2;|ssl_protocols TLSv1.2 TLSv1.3;|g' -i /etc/nginx/snippets/ssl-params.conf
+    #     # Changes cyphers
+    #     sed 's|ssl_ciphers "EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH";|ssl_ciphers ECDHE-RSA-AES256-GCM-SHA512:DHE-RSA-AES256-GCM-SHA512:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES256-GCM-SHA384:EECDH+AESGCM:EDH+AESGCM;|g' -i /etc/nginx/snippets/ssl-params.conf
+    # fi
+
+    if grep -q 'ssl_protocols TLSv1.2 TLSv1.3;' /etc/nginx/snippets/ssl-params.conf; then
         # Upgrades protocols to 1.2/1.3
-        sed 's|ssl_protocols TLSv1 TLSv1.1 TLSv1.2;|ssl_protocols TLSv1.2 TLSv1.3;|g' -i /etc/nginx/snippets/ssl-params.conf
+        sed 's|ssl_protocols TLSv1.2 TLSv1.3;|ssl_protocols TLSv1 TLSv1.1 TLSv1.2;|g' -i /etc/nginx/snippets/ssl-params.conf
         # Changes cyphers
-        sed 's|ssl_ciphers "EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH";|ssl_ciphers ECDHE-RSA-AES256-GCM-SHA512:DHE-RSA-AES256-GCM-SHA512:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES256-GCM-SHA384:EECDH+AESGCM:EDH+AESGCM;|g' -i /etc/nginx/snippets/ssl-params.conf
+        sed 's|ssl_ciphers ECDHE-RSA-AES256-GCM-SHA512:DHE-RSA-AES256-GCM-SHA512:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES256-GCM-SHA384:EECDH+AESGCM:EDH+AESGCM;|ssl_ciphers "EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH";|g' -i /etc/nginx/snippets/ssl-params.conf
     fi
 
     # Upgrade to http/2
@@ -270,7 +277,7 @@ FIAC
 # we will do this in tools update
 #    . /etc/swizzin/sources/functions/php
 #    restart_php_fpm
-#    systemctl reload nginx
+    systemctl reload nginx
 }
 
 if [[ -f /install/.nginx.lock ]]; then update_nginx; fi

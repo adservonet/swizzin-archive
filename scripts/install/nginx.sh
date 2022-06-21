@@ -106,8 +106,8 @@ server {
 
 # SSL configuration
 server {
-  listen 443 ssl http2 default_server;
-  listen [::]:443 ssl http2 default_server;
+  listen 443 ssl default_server;
+  listen [::]:443 ssl default_server;
   server_name _;
   ssl_certificate /etc/ssl/certs/ssl-cert-snakeoil.pem;
   ssl_certificate_key /etc/ssl/private/ssl-cert-snakeoil.key;
@@ -134,9 +134,9 @@ cd /etc/nginx/ssl
 openssl dhparam -out dhparam.pem 2048 >> $log 2>&1
 
 cat > /etc/nginx/snippets/ssl-params.conf << SSC
-ssl_protocols TLSv1.2 TLSv1.3;
+ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
 ssl_prefer_server_ciphers on;
-ssl_ciphers ECDHE-RSA-AES256-GCM-SHA512:DHE-RSA-AES256-GCM-SHA512:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES256-GCM-SHA384:EECDH+AESGCM:EDH+AESGCM;
+ssl_ciphers "EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH";
 ssl_ecdh_curve secp384r1;
 ssl_session_cache shared:SSL:10m;
 ssl_session_tickets off;
