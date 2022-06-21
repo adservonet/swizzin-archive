@@ -37,6 +37,10 @@ if [[ -f /install/.jellyfin.lock ]]; then
         [[ -d "/home/${username}/.config/Jellyfin/metadata" ]] && cp -fRT "/home/${username}/.config/Jellyfin/metadata" /var/lib/jellyfin/metadata
         [[ -d "/home/${username}/.config/Jellyfin/root" ]] && cp -fRT "/home/${username}/.config/Jellyfin/root" /var/lib/jellyfin/root
         #
+
+        sed -r 's#<CertificatePath />#<CertificatePath>/home/'${username}'/.ssl/'${username}'-self-signed.pfx</CertificatePath>#g' -i /etc/jellyfin/network.xml
+    	sed -r 's#<EnableHttps>(.*)</EnableHttps>#<EnableHttps>true</EnableHttps>#g' -i /etc/jellyfin/network.xml
+
         sed -r 's#<PublicPort>(.*)</PublicPort>#<PublicPort>8096</PublicPort>#g' -i /etc/jellyfin/system.xml
         sed -r 's#<PublicHttpsPort>(.*)</PublicHttpsPort>#<PublicHttpsPort>8920</PublicHttpsPort>#g' -i /etc/jellyfin/system.xml
         sed -r 's#<HttpServerPortNumber>(.*)</HttpServerPortNumber>#<HttpServerPortNumber>8096</HttpServerPortNumber>#g' -i /etc/jellyfin/system.xml
