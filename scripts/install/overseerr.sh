@@ -2,6 +2,8 @@
 
 # Overseer installer by flying sausages 2020 GPLv3
 
+port=$(cat /home/seedit4me/.overseerr_port)
+
 _dependencies() {
     apt_install libsqlite3-dev sqlite3
 
@@ -47,7 +49,7 @@ EOF
 
     cat > /opt/overseerr/env.conf << EOF
 # specify on which port to listen
-PORT=5055
+PORT=$port
 EOF
 
     systemctl daemon-reload
