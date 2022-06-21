@@ -129,6 +129,8 @@ sleep 5
 if [[ -f /install/.nginx.lock ]]; then
     bash /usr/local/bin/swizzin/nginx/jellyfin.sh
     systemctl -q restart nginx.service
+	systemctl -q restart jellyfin.service
+sleep 5
 else
     echo_info "Jellyfin will run on port 8920"
 fi
