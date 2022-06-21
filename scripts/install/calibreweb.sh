@@ -166,6 +166,15 @@ _post_changepass() {
 _install_dependencies_calibreweb
 _install_calibreweb
 _install_kepubify
+
+#sqlite hack 	3.35.4
+codename=$(lsb_release -cs)
+if [[ $codename =~ ("stretch"|"buster"|"bionic") ]]; then
+    pip3 install --no-cache-dir -U pysqlite3-binary
+    ln -fs $(find /usr/local/lib/python3.6/dist-packages/pysqlite3/_sqlite3.*.so) /opt/calibreweb/_sqlite3.so
+fi
+
+
 _systemd_calibreweb
 _nginx_calibreweb
 _post_libdir || {
