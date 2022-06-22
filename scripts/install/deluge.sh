@@ -37,7 +37,7 @@ fi
 
 #whiptail_deluge
 
-export DELUGE_VERSION=repo
+export DELUGE_VERSION=1.3-stable
 
 case $DELUGE_VERSION in
     [Rr][Ee][Pp][Oo])

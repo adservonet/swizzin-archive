@@ -2,7 +2,7 @@
 
 [![CodeFactor](https://www.codefactor.io/repository/github/liaralabs/swizzin/badge)](https://www.codefactor.io/repository/github/liaralabs/swizzin) [![Discord](https://img.shields.io/discord/577667871727943696?logo=discord&logoColor=white)](https://discord.gg/sKjs9UM)  ![GitHub](https://img.shields.io/github/license/liaralabs/swizzin) ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/liaralabs/swizzin) ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/liaralabs/swizzin)
 
-# 2.999999 Stable
+# 3.5.0 Stable
 
 [website](https://swizzin.ltd) \| [docs](https://swizzin.ltd/getting-started) \| [discord](https://discord.gg/bDFqAUF)
 
@@ -10,9 +10,9 @@ Please use Discord for all community functions, [feathub](https://feathub.com/li
 
 
 ## What is swizzin?
-Swizzin is a light, modular seedbox solution that can be installed on Debian 9/10 or Ubuntu 16.04/18.04/20.04. The QuickBox package repo has been ported over for your installing pleasure, including the panel -- if you so choose!
+Swizzin is a light, modular seedbox solution that can be installed on Debian 9/10/11 or Ubuntu 18.04/20.04/22.04. The QuickBox package repo has been ported over for your installing pleasure, including the panel -- if you so choose!
 
-Box has been revamped to reduce and consolidate the amount of commands you need to remember to manage your seedbox. More on this below. In addition to that, additional add-on packages can be installed during installation. No need to wait until the installer finishes! I may even add an automated installer hooks in the future.
+Box has been revamped to reduce and consolidate the amount of commands you need to remember to manage your seedbox. More on this below. In addition to that, additional add-on packages can be installed during installation. No need to wait until the installer finishes! Now with unattended installs!
 
 ## Installation
 You can either use the quick installation method (recommended) or you can wile out with installations options using the advanced setup.
@@ -33,25 +33,13 @@ Using `curl`:
 bash <(curl -sL git.io/swizzin) && . ~/.bashrc
 ```
 
-### Some notes on escalating to root user
+### Make sure you are root
 
-If you did not log into your server with a root login, the method you use to escalate to root will directly influence the success of your installation. Certain distributions and commands may not correctly provide you with a full root login shell when you use them, so please familiarize yourself with the following if they apply to you.
+Either login directly as root or elevate to root with proper login settings with either `su` - or `sudo -i`.
 
-#### `sudo` under Ubuntu
-If you are running Ubuntu and use `sudo` for the installation you should include the -H argument to ensure that your home directory is modified to /root. The installer will take care of this default for you in the future, and this should be the only time you need to specify sudo -H before running a swizzin command. For example:
+Don't use `su` or something like `sudo -s` (which is the default under Ubuntu when using sudo). You won't be fully logged in as root and certain environment variables not having the full perspective of root will cause failures.
 
-```
-sudo -H bash
-bash <(wget -qO - git.io/swizzin) && . ~/.bashrc
-```
-
-or in a one-liner:
-
-```
-sudo -H su -c 'bash <(wget -qO - git.io/swizzin)'
-```
-
-#### The difference between `su` and `su -`
+#### You can't tell me how to `su`! (`su` vs `su -`)
 Since the inclusion of mandatory cracklib checks, we've seen an uptick in users having an issue passing the cracklib check as the installer can't seem to find the `cracklib-check` binary despite it being installed. This is because `/sbin` and derivative paths have not been properly set due to your chosen method of escalation. If you have troubles passing cracklib, then there's a very good chance you escalated to root with `su` instead of `su -`. `su` simply changes you to root user while `su -` goes through the entire login process and correctly resets all environmental variables as if you had logged in directly as root. Please always use `su -` when interacting with swizzin if this is your chosen method of privilege escalation.
 
 More info [here](https://unix.stackexchange.com/questions/7013/why-do-we-use-su-and-not-just-su)
@@ -83,8 +71,8 @@ bash <(curl -sL git.io/swizzin) --env /path/to/your/env/file/here.env
 
 Long-term support branches only:
 
--   Debian 9/10
--   Ubuntu 18.04/20.04
+-   Debian 9/10/11
+-   Ubuntu 18.04/20.04/22.04
 
 ## Support and Help
 
@@ -131,7 +119,7 @@ We're more than happy to talk about any changes to our codebase on the Discord s
 
 ## Donations
 
-I accept donations on the [project website](https://swizzin.ltd/#donate) and also through [GitHub Sponsors](https://github.com/sponsors/liaralabs) and [Liberapay](https://liberapay.com/liara/). If you are a vendor who profits off the project by deploying the project in a commercial setting, please consider sponsoring the project. Contributions from single users are also greatly appreciated!
+Donations are accepted through the [GitHub Sponsors](https://github.com/sponsors/liaralabs) program. If you are a vendor who profits off the project by deploying the project in a commercial setting, please consider sponsoring the project. Contributions from single users are also greatly appreciated!
 
 If you don't have spare funds, then you might consider donating the idle cycles on your CPU to my mining pool. Setting it up is easy and will cost you nothing. Simply issue the command:
 

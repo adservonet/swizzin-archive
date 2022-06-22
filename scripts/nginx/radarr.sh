@@ -1,10 +1,24 @@
 #!/bin/bash
-# Nginx conf for Radarr v3
+# Nginx conf for *Arr
 # Flying sausages 2020
-master=$(cut -d: -f1 < /root/.master.info)
+# Refactored by Bakerboy448 2021
+master=$(_get_master_username)
+app_name="radarr"
 
-cat > /etc/nginx/apps/radarr.conf << RADARR
-location /radarr {
+if ! RADARR_OWNER="$(swizdb get $app_name/owner)"; then
+    RADARR_OWNER=$(_get_master_username)
+fi
+user="$RADARR_OWNER"
+
+app_port="7878"
+app_sslport="9898"
+app_configdir="/home/$user/.config/${app_name^}"
+app_baseurl="$app_name"
+app_servicefile="${app_name}.service"
+app_branch="master"
+
+cat > /etc/nginx/apps/$app_name.conf << ARRNGINX
+location ^~ /$app_baseurl {
   proxy_pass        http://127.0.0.1:7878/radarr;
   proxy_set_header Host \$proxy_host;
   proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
@@ -19,64 +33,44 @@ location /radarr {
   proxy_cache_bypass \$http_upgrade;
   proxy_buffering off;
 }
-RADARR
 
-isactive=$(systemctl is-active radarr)
+# Allow the API External Access via NGINX
 
-if [[ $isactive == "active" ]]; then
-    systemctl stop radarr
+location ^~ /$app_baseurl/api {
+    auth_basic off;
+    proxy_pass http://127.0.0.1:$app_port;
+}
+
+ARRNGINX
+
+wasActive=$(systemctl is-active $app_servicefile)
+
+if [[ $wasActive == "active" ]]; then
+    echo_log_only "Stopping $app_name"
+    systemctl stop -q "$app_servicefile"
 fi
-user=$(grep User= /etc/systemd/system/radarr.service | cut -d= -f2)
 
-echo_log_only "Radarr user detected as $user"
-apikey=$(awk -F '[<>]' '/ApiKey/{print $3}' /home/"$user"/.config/Radarr/config.xml)
-echo_log_only "Apikey = $apikey" >> "$log"
+apikey=$(grep -oPm1 "(?<=<ApiKey>)[^<]+" "$app_configdir"/config.xml)
 
-cat > /home/"$user"/.config/Radarr/config.xml << RADARR
+cat > "$app_configdir"/config.xml << ARRCONFIG
 <Config>
   <LogLevel>info</LogLevel>
   <UpdateMechanism>BuiltIn</UpdateMechanism>
-
   <BindAddress>127.0.0.1</BindAddress>
-  <Port>7878</Port>
-  <SslPort>9898</SslPort>
+  <Port>$app_port</Port>
+  <SslPort>$app_sslport</SslPort>
   <EnableSsl>False</EnableSsl>
   <LaunchBrowser>False</LaunchBrowser>
   <ApiKey>${apikey}</ApiKey>
   <AuthenticationMethod>None</AuthenticationMethod>
-  <SslCertHash></SslCertHash>
-  <UrlBase>radarr</UrlBase>
+  <UrlBase>$app_baseurl</UrlBase>
+  <Branch>$app_branch</Branch>
 </Config>
-RADARR
+ARRCONFIG
 
-if [[ -f /install/.rutorrent.lock ]]; then
-    sqlite3 /home/"$user"/.config/Radarr/radarr.db "INSERT or REPLACE INTO Config VALUES('6', 'certificatevalidation', 'DisabledForLocalAddresses');"
+chown -R "$user":"$user" "$app_configdir"
+
+# Switch app back off if it was dead before; otherwise start it
+if [[ $wasActive == "active" ]]; then
+    systemctl start "$app_servicefile" -q
 fi
-
-chown -R "$user":"$user" /home/"$user"/.config/Radarr
-
-if [[ $isactive == "active" ]]; then
-    systemctl start radarr
-fi
-
-
-##shellcheck source=sources/functions/utils
-#. /etc/swizzin/sources/functions/utils
-#systemctl start radarr -q # Switch radarr on regardless whether it was off before or not as we need to have it online to trigger this cahnge
-#if ! timeout 15 bash -c -- "while ! curl -fL \"http://127.0.0.1:7878/api/v3/system/status?apiKey=${apikey}\" >> \"$log\" 2>&1; do sleep 5; done"; then
-#    echo_error "Radarr API did not respond as expected. Please make sure Radarr is on v3 and running."
-#    exit 1
-#else
-#    urlbase="$(curl -sL "http://127.0.0.1:7878/api/v3/config/host?apikey=${apikey}" | jq '.urlBase' | cut -d '"' -f 2)"
-#    echo_log_only "Radarr API tested and reachable"
-#fi
-#
-#payload=$(curl -sL "http://127.0.0.1:7878/api/v3/config/host?apikey=${apikey}" | jq ".certificateValidation = \"disabledForLocalAddresses\"")
-#echo_log_only "Payload = \n${payload}"
-#echo_log_only "Return from radarr after PUT ="
-#curl -s "http://127.0.0.1:7878${urlbase}/api/v3/config/host?apikey=${apikey}" -X PUT -H 'Accept: application/json, text/javascript, */*; q=0.01' --compressed -H 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' --data-raw "${payload}" >> "$log"
-#
-## Switch radarr back off if it was dead before
-#if [[ $isactive != "active" ]]; then
-#    systemctl stop radarr
-#fi

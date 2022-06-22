@@ -24,7 +24,6 @@ dist_info # get our distribution ID, set to DIST_ID, and VERSION_CODENAME, set t
 
 #clean up leftovers from bad install
 rm -rf /home/${username}/jellyfin
-rm /var/lib/jellyfin
 rm -rf /var/lib/jellyfin
 
 if [[ $(systemctl is-active emby) == "active" ]]; then
@@ -95,12 +94,12 @@ cat > /etc/jellyfin/system.xml <<- CONFIG
 CONFIG
 #
 # Add the jellyfin official repository and key to our installation so we can use apt-get to install it jellyfin and jellyfin-ffmepg.
-wget -q -O - "https://repo.jellyfin.org/$DIST_ID/jellyfin_team.gpg.key" | apt-key add - >> "${log}" 2>&1
-echo "deb [arch=$(dpkg --print-architecture)] https://repo.jellyfin.org/$DIST_ID $DIST_CODENAME main" > /etc/apt/sources.list.d/jellyfin.list
+curl -s "https://repo.jellyfin.org/$DIST_ID/jellyfin_team.gpg.key" | gpg --dearmor > /usr/share/keyrings/jellyfin-archive-keyring.gpg 2>> "${log}"
+echo "deb [signed-by=/usr/share/keyrings/jellyfin-archive-keyring.gpg arch=$(dpkg --print-architecture)] https://repo.jellyfin.org/$DIST_ID $DIST_CODENAME main" > /etc/apt/sources.list.d/jellyfin.list
 #
 # install jellyfin and jellyfin-ffmepg using apt functions.
 apt_update #forces apt refresh
-apt_install jellyfin jellyfin-ffmpeg
+apt_install jellyfin jellyfin-ffmpeg5
 #
 # Add the jellyfin user to the master user's group.
 usermod -a -G "${username}" jellyfin
@@ -122,16 +121,19 @@ chown jellyfin:jellyfin /etc/jellyfin/system.xml
 chown jellyfin:root /etc/jellyfin/logging.json
 chown jellyfin:adm /etc/jellyfin
 #
+# Restart the jellyfin service to make sure our changes take effect
+systemctl -q start "jellyfin.service"
+sleep 5
+#
 # Configure the nginx proxypass using positional parameters.
 if [[ -f /install/.nginx.lock ]]; then
     bash /usr/local/bin/swizzin/nginx/jellyfin.sh
     systemctl -q restart nginx.service
+	systemctl -q restart jellyfin.service
+sleep 5
 else
     echo_info "Jellyfin will run on port 8920"
 fi
-#
-# Restart the jellyfin service to make sure our changes take effect
-systemctl -q start "jellyfin.service"
 #
 # This file is created after installation to prevent reinstalling. You will need to remove the app first which deletes this file.
 touch /install/.jellyfin.lock

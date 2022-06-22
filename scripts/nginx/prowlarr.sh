@@ -6,10 +6,9 @@ master=$(_get_master_username)
 app_name="prowlarr"
 
 if ! PROWLARR_OWNER="$(swizdb get $app_name/owner)"; then
-    PROWLARR_OWNER=$(_get_master_username)
-else
-    PROWLARR_OWNER="$(swizdb get $app_name/owner)"
+    PROWLARR_OWNER=$master
 fi
+user="$PROWLARR_OWNER"
 
 app_port="9696"
 app_sslport="6969"
@@ -17,7 +16,8 @@ user="$PROWLARR_OWNER"
 app_servicefile="${app_name}.service"
 app_configdir="/home/$user/.config/${app_name^}"
 app_baseurl="$app_name"
-app_branch="nightly"
+app_branch="develop"
+
 
 cat > /etc/nginx/apps/$app_name.conf << PROWLARR
 location /$app_baseurl {
@@ -54,7 +54,7 @@ wasActive=$(systemctl is-active $app_servicefile)
 
 if [[ $wasActive == "active" ]]; then
     echo_log_only "Stopping $app_name"
-    systemctl stop "$app_servicefile"
+    systemctl stop -q "$app_servicefile"
 fi
 apikey=$(grep -oPm1 "(?<=<ApiKey>)[^<]+" "$app_configdir"/config.xml)
 

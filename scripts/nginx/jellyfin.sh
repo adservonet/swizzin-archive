@@ -1,9 +1,15 @@
 #!/usr/bin/env bash
 #
 # A functions for reused commands.
+. /etc/swizzin/sources/functions/utils
+username="$(_get_master_username)"
+
 function reused_commands() {
     sed -r 's#<string>0.0.0.0</string>#<string>127.0.0.1</string>#g' -i /etc/jellyfin/network.xml
     sed -r 's#<BaseUrl />#<BaseUrl>/jellyfin</BaseUrl>#g' -i /etc/jellyfin/network.xml
+	sed -r 's#<CertificatePath />#<CertificatePath>/home/'${username}'/.ssl/'${username}'-self-signed.pfx</CertificatePath>#g' -i /etc/jellyfin/network.xml
+	sed -r 's#<EnableHttps>(.*)</EnableHttps>#<EnableHttps>true</EnableHttps>#g' -i /etc/jellyfin/network.xml
+
     chown jellyfin:jellyfin /etc/jellyfin/system.xml
 }
 #

@@ -10,9 +10,6 @@
 #   under the GPL along with build & install instructions.
 
 codename=$(lsb_release -cs)
-
-badradarr="false"
-badsonarr="false"
 _install() {
 
     user=$(cut -d: -f1 < /root/.master.info)
@@ -35,7 +32,7 @@ _install() {
     fi
 
     echo_progress_start "Downloading bazarr source"
-    wget https://github.com/morpheus65535/bazarr/releases/download/v0.9.7/bazarr.zip -O /tmp/bazarr.zip >> $log 2>&1 || {
+    wget https://github.com/morpheus65535/bazarr/releases/latest/download/bazarr.zip -O /tmp/bazarr.zip >> $log 2>&1 || {
         echo_error "Failed to download"
         exit 1
     }
@@ -67,20 +64,21 @@ _config() {
         echo_progress_start "Configuring bazarr to work with sonarr"
 
         # TODO: Use owner when the updaters are merged
-        sonarrConfigFile=/home/${user}/.config/sonarr/config.xml
+        sonarrConfigFile=/home/${user}/.config/Sonarr/config.xml
 
-        if [[ -f ${sonarrConfigFile} ]]; then
+        if [[ -f "${sonarrConfigFile}" ]]; then
             sonarrapi=$(grep -oP "ApiKey>\K[^<]+" "${sonarrConfigFile}")
             sonarrport=$(grep -oP "\<Port>\K[^<]+" "${sonarrConfigFile}")
             sonarrbase=$(grep -oP "UrlBase>\K[^<]+" "${sonarrConfigFile}")
+            sonarr_config="true"
         else
             echo_warn "Sonarr configuration was not found in ${sonarrConfigFile}, configure api key, port and url base manually in bazarr"
-            badsonarr="true"
+            sonarr_config="false"
         fi
 
         cat >> /opt/bazarr/data/config/config.ini << SONC
 [sonarr]
-apikey = ${sonarrapi}
+apikey = ${sonarrapi} 
 full_update = Daily
 ip = 127.0.0.1
 only_monitored = False
@@ -98,13 +96,14 @@ SONC
         # TODO: Use owner when the updaters are merged
         radarrConfigFile=/home/${user}/.config/Radarr/config.xml
 
-        if [[ -f ${radarrConfigFile} ]]; then
+        if [[ -f "${radarrConfigFile}" ]]; then
             radarrapi=$(grep -oP "ApiKey>\K[^<]+" "${radarrConfigFile}")
             radarrport=$(grep -oP "\<Port>\K[^<]+" "${radarrConfigFile}")
             radarrbase=$(grep -oP "UrlBase>\K[^<]+" "${radarrConfigFile}")
+            radarr_config="true"
         else
             echo_warn "Radarr configuration was not found in ${radarrConfigFile}, configure api key, port and url base manually in bazarr"
-            badradarr="true"
+            radarr_config="false"
         fi
 
         cat >> /opt/bazarr/data/config/config.ini << RADC
@@ -127,13 +126,13 @@ ip = 0.0.0.0
 base_url = /
 BAZC
 
-    if [ -f /install/.sonarr.lock ] && [ $badsonarr != "true" ]; then
+    if [[ -f /install/.sonarr.lock ]] && [[ "${sonarr_config}" == "true" ]]; then
         echo "use_sonarr = True" >> /opt/bazarr/data/config/config.ini
     else
         echo "use_sonarr = False" >> /opt/bazarr/data/config/config.ini
     fi
 
-    if [ -f /install/.radarr.lock ] && [ $badradarr != "true" ]; then
+    if [[ -f /install/.radarr.lock ]] && [[ "${radarr_config}" == "true" ]]; then
         echo "use_radarr = True" >> /opt/bazarr/data/config/config.ini
     else
         echo "use_radarr = False" >> /opt/bazarr/data/config/config.ini

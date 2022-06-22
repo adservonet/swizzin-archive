@@ -37,6 +37,10 @@ if [[ -f /install/.jellyfin.lock ]]; then
         [[ -d "/home/${username}/.config/Jellyfin/metadata" ]] && cp -fRT "/home/${username}/.config/Jellyfin/metadata" /var/lib/jellyfin/metadata
         [[ -d "/home/${username}/.config/Jellyfin/root" ]] && cp -fRT "/home/${username}/.config/Jellyfin/root" /var/lib/jellyfin/root
         #
+
+        sed -r 's#<CertificatePath />#<CertificatePath>/home/'${username}'/.ssl/'${username}'-self-signed.pfx</CertificatePath>#g' -i /etc/jellyfin/network.xml
+    	sed -r 's#<EnableHttps>(.*)</EnableHttps>#<EnableHttps>true</EnableHttps>#g' -i /etc/jellyfin/network.xml
+
         sed -r 's#<PublicPort>(.*)</PublicPort>#<PublicPort>8096</PublicPort>#g' -i /etc/jellyfin/system.xml
         sed -r 's#<PublicHttpsPort>(.*)</PublicHttpsPort>#<PublicHttpsPort>8920</PublicHttpsPort>#g' -i /etc/jellyfin/system.xml
         sed -r 's#<HttpServerPortNumber>(.*)</HttpServerPortNumber>#<HttpServerPortNumber>8096</HttpServerPortNumber>#g' -i /etc/jellyfin/system.xml
@@ -71,12 +75,12 @@ if [[ -f /install/.jellyfin.lock ]]; then
         echo_info "Moving Jellyfin to apt-managed installation"
         #
         # Add the jellyfin official repository and key to our installation so we can use apt-get to install it jellyfin and jellyfin-ffmepg.
-        wget -q -O - "https://repo.jellyfin.org/$DIST_ID/jellyfin_team.gpg.key" | apt-key add - >> "${log}" 2>&1
-        echo "deb [arch=$(dpkg --print-architecture)] https://repo.jellyfin.org/$DIST_ID $DIST_CODENAME main" > /etc/apt/sources.list.d/jellyfin.list
+        curl -s https://repo.jellyfin.org/$DIST_ID/jellyfin_team.gpg.key | gpg --dearmor > /usr/share/keyrings/jellyfin-archive-keyring.gpg 2>> "${log}"
+        echo "deb [signed-by=/usr/share/keyrings/jellyfin-archive-keyring.gpg arch=$(dpkg --print-architecture)] https://repo.jellyfin.org/$DIST_ID $DIST_CODENAME main" > /etc/apt/sources.list.d/jellyfin.list
         #
         # install jellyfin and jellyfin-ffmepg using apt functions.
         apt_update #forces apt refresh
-        apt_install jellyfin jellyfin-ffmpeg
+        apt_install jellyfin jellyfin-ffmpeg5
         #
         # Configure the new jellyfin service.
         systemctl -q stop jellyfin.service
