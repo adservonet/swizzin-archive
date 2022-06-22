@@ -1,12 +1,15 @@
 #!/bin/bash
 
-apt_remove --purge sonarr
-rm -rf /var/lib/sonarr
-rm -rf /usr/lib/sonarr
-
+user=$(grep User= /etc/systemd/system/sonarr.service | cut -d= -f2)
+#if ask "Would you like to purge the configuration?" Y; then
+    if [[ -d /home/${user}/.config/Sonarr ]]; then
+        rm -rf "/home/${user}/.config/Sonarr"
+    fi
+#fi
+rm -rf /opt/Sonarr
 if [[ -f /install/.nginx.lock ]]; then
-rm /etc/nginx/apps/sonarr.conf
-systemctl reload nginx >> "$log" 2>&1
+    rm /etc/nginx/apps/sonarr.conf
+    systemctl reload nginx >> "$log" 2>&1
 fi
 
 #Mark mono depends as automatically installed
