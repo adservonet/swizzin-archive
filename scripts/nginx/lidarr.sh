@@ -32,6 +32,8 @@ location ^~ /$app_baseurl {
 
     auth_basic "What's the password?";
     auth_basic_user_file /etc/htpasswd.d/htpasswd.${master};
+    proxy_cache_bypass \$http_upgrade;
+    proxy_buffering off;
 }
 
 # Allow the API External Access via NGINX

@@ -41,7 +41,7 @@ _sonarrold_flow() {
             if [[ ! -d /home/"${sonarroldowner}"/.config/NzbDrone ]]; then
                 echo_error "No Sonarr config folder found for $sonarroldowner. Exiting"
                 exit 1
-    fi
+            fi
 
             apikey=$(awk -F '[<>]' '/ApiKey/{print $3}' /home/"${sonarroldowner}"/.config/NzbDrone/config.xml)
             echo_log_only "apikey = $apikey"
@@ -56,7 +56,7 @@ _sonarrold_flow() {
                 echo_warn "Failure triggering backup (see logs). Current Sonarr config and previous weekly backups will be backed up up and copied for migration"
                 if ! ask "Continue without triggering internal Sonarr backup?" N; then
                     exit 1
-    fi
+                fi
             else
                 echo_log_only "Sonarr backup Job ID = $id, waiting to finish"
 
@@ -75,8 +75,8 @@ _sonarrold_flow() {
                     echo_progress_done "Backup complete"
                 else
                     echo_error "Sonarr returned unexpected status ($status). Terminating. Please try again."
-        exit 1
-    fi
+                    exit 1
+                fi
             fi
         fi
 

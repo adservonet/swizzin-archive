@@ -48,7 +48,7 @@ npm install
 npm run-script package
 
 cp /opt/flaresolverr/bin/flaresolverr-linux /opt/flaresolverr/flaresolverr
-cp -r /opt/flaresolverr/bin/puppeteer/linux-103.0a1/firefox /opt/flaresolverr/firefox
+cp -r /opt/flaresolverr/bin/puppeteer/linux-*/firefox /opt/flaresolverr/firefox
 
 _systemd
 
