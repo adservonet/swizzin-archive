@@ -72,19 +72,19 @@ _addusers_mango() {
     for u in "${users[@]}"; do
         echo_progress_start "Adding $u to mango"
         pass=$(_get_user_password "$u")
-        #if [[ $u = "$master" ]]; then
+        if [[ $u = "$master" ]]; then
             su $mangousr -c "$mangodir/mango admin user add -u $master -p $pass --admin"
-        #else
+        else
             # pass=$(cut -d: -f2 < /root/"$u".info)
-            #passlen=${#pass}
-            #if [[ $passlen -ge 6 ]]; then
-            #    su $mangousr -c "$mangodir/mango admin user add -u $u -p $pass"
-            #else
-            #    pass=$(openssl rand -base64 32)
-            #    echo_warn "$u's password too short for mango, please change the password using 'box chpasswd $u'.\nMango account temporarily set up with the password '$pass'"
-            #    su $mangousr -c "$mangodir/mango admin user add -u $u -p $pass"
-            #fi
-        #fi
+            passlen=${#pass}
+            if [[ $passlen -ge 6 ]]; then
+                su $mangousr -c "$mangodir/mango admin user add -u $u -p $pass"
+            else
+                pass=$(openssl rand -base64 32)
+                echo_warn "$u's password too short for mango, please change the password using 'box chpasswd $u'.\nMango account temporarily set up with the password '$pass'"
+                su $mangousr -c "$mangodir/mango admin user add -u $u -p $pass"
+            fi
+        fi
         echo_progress_done "$u added to mango"
     done
 }
