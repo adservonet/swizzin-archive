@@ -17,6 +17,7 @@ location /transmission.downloads {
 
   }
 }
+
 location /transmission.downloads.plain {
   alias /home/\$remote_user/torrents/transmission;
   auth_basic "What's the password?";
