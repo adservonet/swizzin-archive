@@ -43,12 +43,13 @@ fi
 
 chown -R ${user}: /opt/.venv/sickchill
 echo_progress_start "Cloning SickChill"
-git clone --branch v2021.03.07-1 https://github.com/SickChill/SickChill.git /opt/sickchill >> ${log} 2>&1
+git clone https://github.com/SickChill/SickChill.git /opt/sickchill >> ${log} 2>&1
 chown -R $user: /opt/sickchill
 echo_progress_done
 
 echo_progress_start "Installing requirements.txt with pip"
 sudo -u ${user} bash -c "/opt/.venv/sickchill/bin/pip3 install -r /opt/sickchill/requirements.txt" >> $log 2>&1
+sudo -u ${user} bash -c "/opt/.venv/sickchill/bin/pip install --upgrade --target /opt/sickchill sickchill" >> $log 2>&1
 echo_progress_done
 
 install_rar
@@ -64,7 +65,7 @@ Type=forking
 GuessMainPID=no
 User=${user}
 Group=${user}
-ExecStart=/opt/.venv/sickchill/bin/python3 /opt/sickchill/SickChill.py -q --daemon --nolaunch --datadir=/opt/sickchill
+ExecStart=/opt/.venv/sickchill/bin/python3 /opt/sickchill/SickChill.py -q --daemon --nolaunch --datadir=/opt/sickchill --config /opt/sickchill/config.ini
 
 
 [Install]
