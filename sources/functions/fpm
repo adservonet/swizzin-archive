@@ -4,6 +4,12 @@ function install_fpm() {
     fpm -h > /dev/null 2>&1
     exit=$?
     if [[ ! $exit == '0' ]]; then
+        if [[ $codename =~ ("bionic") ]]; then
+            echo_progress_start "bionic fpm fix"
+            rm /bin/fpm
+            rm /usr/local/bin/fpm
+            gem install public_suffix -v 4.0.7
+        fi
         apt_install ruby ruby-dev libffi-dev
         echo_progress_start "Installing fpm through ruby/gem"
         gem install fpm >> $log 2>&1
