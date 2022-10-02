@@ -35,6 +35,7 @@ mangadex:
   manga_rename_rule: '{title}'
 CONF
     chown $mangousr:$mangousr -R $mangodir
-    chmod o-rwx /home/seedit4me/.config/mango
+    chmod 777 /home/seedit4me/.config/mango
+    chmod 777 $mangodir
     echo_progress_done
 }
