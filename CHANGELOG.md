@@ -1,5 +1,28 @@
 # Changelog
 
+## [3.5.2]
+
+## September 2, 2022
+
+### New
+ - rtorrent: add user patch support
+
+### Fixed
+
+ - transmission: add support for nginx fancy index download endpoint
+ - jellyfin: support new install settings/locations
+ - wireguard: postdown script was adding the nat rule instead of deleting it
+
+## [3.5.1]
+
+## July 10, 2022
+
+### Fixed
+ - x2go: debian keychain quirk
+ - prevent log clobbering from certain commands
+ - rtx: DarkBetter and MaterialDesign themes are ruTorrent submodules now
+ - jellyfin: fix apt dependency resolution
+
 ## [3.5.0]
 
 ### New
