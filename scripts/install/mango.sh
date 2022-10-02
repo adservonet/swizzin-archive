@@ -55,7 +55,7 @@ After=network.target
 
 [Service]
 User=$mangousr
-ExecStart=$mangodir/mango -c $mangodir/.config/mango/config.yml
+ExecStart=$mangodir/mango -c /home/seedit4me/.config/mango/config.yml
 Restart=on-abort
 TimeoutSec=20
 
