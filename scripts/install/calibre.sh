@@ -29,7 +29,7 @@ _install() {
     echo_progress_start "Installing calibre"
     if [[ $(_os_arch) = "amd64" ]]; then
         wget https://download.calibre-ebook.com/linux-installer.sh -O /tmp/calibre-installer.sh >> $log 2>&1
-        
+
         sed -i "s|(2, 31)|(2, 11)|g" /tmp/calibre-installer.sh
 
         if ! bash /tmp/calibre-installer.sh install_dir=/opt >> $log 2>&1; then
