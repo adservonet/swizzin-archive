@@ -50,6 +50,8 @@ function update_nginx() {
         apt_remove --purge php7*
     elif [[ -d /etc/php/8.1 ]]; then
         apt_remove --purge php8.1*
+    elif [[ -d /etc/php/8.2 ]]; then
+        apt_remove --purge php8.2*
     fi
 
     . /etc/swizzin/sources/functions/php
