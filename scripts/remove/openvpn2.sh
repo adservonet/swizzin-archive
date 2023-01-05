@@ -154,7 +154,9 @@ function removeOpenVPN() {
 }
 
 # Check for root, TUN, OS...
-initialCheck
+# initialCheck
+source /etc/os-release
+OS="ubuntu"
 
 removeOpenVPN
 
