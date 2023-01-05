@@ -39,12 +39,12 @@ function checkOS() {
                 echo "However, if you're using Ubuntu > 17 or beta, then you can continue."
                 echo "Keep in mind they are not supported, though."
                 echo ""
-                until [[ $CONTINUE =~ (y|n) ]]; do
-                    read -rp "Continue? [y/n]: " -e CONTINUE
-                done
-                if [[ "$CONTINUE" = "n" ]]; then
-                    exit 1
-                fi
+                # until [[ $CONTINUE =~ (y|n) ]]; do
+                #     read -rp "Continue? [y/n]: " -e CONTINUE
+                # done
+                # if [[ "$CONTINUE" = "n" ]]; then
+                #     exit 1
+                # fi
             fi
         fi
     elif [[ -e /etc/fedora-release ]]; then
@@ -154,9 +154,7 @@ function removeOpenVPN() {
 }
 
 # Check for root, TUN, OS...
-# initialCheck
-source /etc/os-release
-OS="ubuntu"
+initialCheck
 
 removeOpenVPN
 
