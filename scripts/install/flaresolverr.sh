@@ -40,7 +40,7 @@ unzip flaresolverr-v2.2.10-linux-x64.zip
 rm flaresolverr-v2.2.10-linux-x64.zip
 # cd flaresolverr
 
-# apt_install libgtk-3-0 libdbus-glib-1-2
+apt_install libgtk-3-0 libdbus-glib-1-2
 
 # #shellcheck source=sources/functions/npm
 # . /etc/swizzin/sources/functions/npm
