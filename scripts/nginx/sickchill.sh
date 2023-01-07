@@ -25,12 +25,20 @@ fi
 sleep 5s
 systemctl restart sickchill
 sleep 5s
+
+i=0
+#some migration got stuck here
+while [[ ! -f /opt/sickchill/config.ini ]] && [[ $i -lt 20 ]]; do
+    sleep 2
+    ((i++))
+done
+unset i
+
 systemctl stop sickchill
 sleep 5s
-## wtf 
 
 sed -i "s/web_root.*/web_root = \/sickchill/g" /opt/sickchill/config.ini
 sed -i "s/web_host.*/web_host = 127.0.0.1/g" /opt/sickchill/config.ini
 #if [[ $isactive == "active" ]]; then
-    systemctl start sickchill
+systemctl start sickchill
 #fi
