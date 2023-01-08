@@ -37,14 +37,14 @@ function detect_libtorrent_rasterbar_conflict() {
         )
     fi
     if [[ $staticconflict == true ]]; then
-#        echo_warn "In order to continue, your server will compile static libtorrent libraries."
-#        if ask "Do you agree? Vendor customizations or patches will be lost unless you provide a patch yourself (/root/libtorrent-{RC_1_1,RC_1_2}.patch).
-#No changes will be made if you say no."; then
-            libtorrent_resolve_shared_conflict
-#        else
-#            echo_info "Install will now exit"
-#            exit 1
-#        fi
+        #        echo_warn "In order to continue, your server will compile static libtorrent libraries."
+        #        if ask "Do you agree? Vendor customizations or patches will be lost unless you provide a patch yourself (/root/libtorrent-{RC_1_1,RC_1_2}.patch).
+        #No changes will be made if you say no."; then
+        libtorrent_resolve_shared_conflict
+        #        else
+        #            echo_info "Install will now exit"
+        #            exit 1
+        #        fi
     fi
 }
 
@@ -151,12 +151,12 @@ function booststrap() {
     if [[ ! -d ${BOOST_ROOT} ]]; then
         echo_progress_start "Installing boost"
         cd /opt
-        wget https://boostorg.jfrog.io/artifactory/main/release/${BOOST_VERSION//_/.}/source/boost_${BOOST_VERSION}.tar.gz >> ${log} 2>&1 || {
-            echo_warn "Could not download boost from main mirror, attempting fallback."
-            wget https://deac-ams.dl.sourceforge.net/project/boost/boost/${BOOST_VERSION//_/.}/boost_${BOOST_VERSION}.tar.gz >> ${log} 2>&1 || {
-                echo_error "Boost could not be downloaded. Setup will exit."
-                exit 1
-            }
+        wget http://media.seedit4.me/media/boost_${BOOST_VERSION}.tar.gz >> ${log} 2>&1 || {
+            # echo_warn "Could not download boost from main mirror, attempting fallback."
+            # wget https://deac-ams.dl.sourceforge.net/project/boost/boost/${BOOST_VERSION//_/.}/boost_${BOOST_VERSION}.tar.gz >> ${log} 2>&1 || {
+            #     echo_error "Boost could not be downloaded. Setup will exit."
+            #     exit 1
+            # }
         }
         tar xvf boost_${BOOST_VERSION}.tar.gz >> ${log} 2>&1
         rm -f boost_${BOOST_VERSION}.tar.gz
