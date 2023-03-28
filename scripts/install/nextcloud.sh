@@ -41,7 +41,7 @@ else
 
     apt_install software-properties-common
     wget https://downloads.mariadb.com/MariaDB/mariadb_repo_setup
-    echo "32e01fbe65b4cecc074e19f04c719d1a600e314236c3bb40d91e555b7a2abbfc mariadb_repo_setup" | sha256sum -c -
+    echo "367a80b01083c34899958cdd62525104a3de6069161d309039e84048d89ee98b mariadb_repo_setup" | sha256sum -c -
     chmod +x mariadb_repo_setup
     sudo ./mariadb_repo_setup --mariadb-server-version="mariadb-10.3"
     rm -rf mariadb_repo_setup

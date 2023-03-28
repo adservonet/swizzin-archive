@@ -33,22 +33,29 @@ EOF
 
 ##############################
 
+mkdir -p /opt/flaresolverr
+cd /opt
+wget https://github.com/FlareSolverr/FlareSolverr/releases/download/v2.2.10/flaresolverr-v2.2.10-linux-x64.zip
+unzip flaresolverr-v2.2.10-linux-x64.zip
+rm flaresolverr-v2.2.10-linux-x64.zip
+# cd flaresolverr
+
 apt_install libgtk-3-0 libdbus-glib-1-2
 
-#shellcheck source=sources/functions/npm
-. /etc/swizzin/sources/functions/npm
-npm_install
+# #shellcheck source=sources/functions/npm
+# . /etc/swizzin/sources/functions/npm
+# npm_install
 
-git clone https://github.com/FlareSolverr/FlareSolverr /opt/flaresolverr
-cd /opt/flaresolverr
+# git clone https://github.com/FlareSolverr/FlareSolverr /opt/flaresolverr
+# cd /opt/flaresolverr
 
-export PUPPETEER_PRODUCT=firefox
-npm install jest@^27.0.0
-npm install
-npm run-script package
+# export PUPPETEER_PRODUCT=firefox
+# npm install jest@^27.0.0
+# npm install
+# npm run-script package
 
-cp /opt/flaresolverr/bin/flaresolverr-linux /opt/flaresolverr/flaresolverr
-cp -r /opt/flaresolverr/bin/puppeteer/linux-*/firefox /opt/flaresolverr/firefox
+# cp /opt/flaresolverr/bin/flaresolverr-linux /opt/flaresolverr/flaresolverr
+# cp -r /opt/flaresolverr/bin/puppeteer/linux-*/firefox /opt/flaresolverr/firefox
 
 _systemd
 
