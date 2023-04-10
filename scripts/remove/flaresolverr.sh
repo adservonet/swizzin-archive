@@ -12,7 +12,12 @@ function _remove_flaresolverr() {
     rm -f /etc/systemd/system/flaresolverr.service
     rm -rf /opt/flaresolverr
 
+    rm -rf /opt/.venv/flaresolverr
+
+    apt_remove chromium xvfb
+
     systemctl daemon-reload -q
+    systemctl reload nginx
 
     rm /install/.flaresolverr.lock
 }
