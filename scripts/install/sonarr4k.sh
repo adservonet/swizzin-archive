@@ -12,6 +12,11 @@ touch $log
 # Set variables
 user=$(_get_master_username)
 
+if [ ! -f "/install/.sonarrv3.lock" ]; then
+    echo_error "sonarrv3 is not installed."
+    exit 1
+fi
+
 echo_progress_start "Making data directory and owning it to ${user}"
 mkdir -p "/home/$user/.config/sonarr4k"
 chown -R "$user":"$user" /home/$user/.config/sonarr4k
