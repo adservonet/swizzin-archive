@@ -12,8 +12,8 @@ touch $log
 # Set variables
 user=$(_get_master_username)
 
-if [ ! -f "/install/.sonarrv3.lock" ]; then
-    echo_error "sonarrv3 is not installed."
+if [ ! -f "/install/.sonarr.lock" ]; then
+    echo_error "sonarr is not installed."
     exit 1
 fi
 
