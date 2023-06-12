@@ -28,7 +28,7 @@ cat >/etc/systemd/system/sonarr4k.service <<-SERV
 # Instead use 'dpkg-reconfigure -plow sonarr' to modify User/Group/UMask/-data
 # Or use systemd built-in override functionality using 'systemctl edit sonarr'
 [Unit]
-Description=Sonarr Daemon
+Description=Sonarr4k Daemon
 After=network.target
 
 [Service]
