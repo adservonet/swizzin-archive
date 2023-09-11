@@ -14,14 +14,7 @@ cp /etc/swizzin/sources/motd/motd /etc/motd
 restart_php_fpm
 systemctl reload nginx
 
-codename=$(lsb_release -cs)
-if [[ $codename =~ ("focal") ]]; then
-    sed -i "s%http://ppa.launchpad.net/ondrej/php/ubuntu%http://apt.seedit4.me/mirror/ppa.launchpad.net/ondrej/php/ubuntu%g" /etc/apt/sources.list.d/ondrej-ubuntu-php-focal.list
-else
-    sed -i "s%http://ppa.launchpad.net/ondrej/php/ubuntu%http://apt.seedit4.me/mirror/ppa.launchpad.net/ondrej/php/ubuntu%g" /etc/apt/sources.list.d/ondrej-ubuntu-php-bionic.list
-fi
-
-
+sed -i "s%http://ppa.launchpad.net/ondrej/php/ubuntu%http://apt.seedit4.me/mirror/ppa.launchpad.net/ondrej/php/ubuntu%g" /etc/apt/sources.list.d/ondrej-ubuntu-php-bionic.list
 sed -i "s%http://archive.ubuntu.com/ubuntu%http://apt.seedit4.me/mirror/archive.ubuntu.com/ubuntu%g" /etc/apt/sources.list
 
 apt update
